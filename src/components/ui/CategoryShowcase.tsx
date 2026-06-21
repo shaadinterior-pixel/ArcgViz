@@ -27,9 +27,9 @@ function useIsLowEnd(): boolean {
 
 // ─── Easing configs ───────────────────────────────────────────────────────────
 
-const SMOOTH_SPRING = { stiffness: 100, damping: 22, mass: 0.4 };
-const FAST_SPRING   = { stiffness: 300, damping: 30 };
-const NAV_SPRING    = { type: 'spring' as const, stiffness: 500, damping: 35 };
+const SMOOTH_SPRING = { stiffness: 200, damping: 24, mass: 0.3 };
+const FAST_SPRING   = { stiffness: 400, damping: 30 };
+const NAV_SPRING    = { type: 'spring' as const, stiffness: 600, damping: 30 };
 
 // ─── CategoryShowcase (root) ──────────────────────────────────────────────────
 
@@ -243,27 +243,28 @@ function SectionHeader({ category }: { category: Category }) {
     >
       <div className="max-w-2xl">
         <motion.h2
-          initial={{ opacity: 0, y: 28 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-3 text-foreground leading-[1.05]"
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-3 text-foreground leading-[1.05] gpu-layer"
         >
           {category.title}
         </motion.h2>
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-          className="text-base md:text-lg text-muted-foreground"
+          transition={{ duration: 0.25, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+          className="text-base md:text-lg text-muted-foreground gpu-layer"
         >
           {category.description}
         </motion.p>
       </div>
 
       <motion.div
-        initial={{ opacity: 0, x: 12 }}
+        initial={{ opacity: 0, x: 10 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.25, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        className="gpu-layer"
       >
         <Link
           href={`/categories/${category.id}`}
@@ -294,13 +295,14 @@ function CardItem({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 32, scale: 0.96 }}
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
       animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{
-        duration: 0.3,
-        delay: idx * 0.04,
+        duration: 0.2,
+        delay: idx * 0.03,
         ease: [0.22, 1, 0.36, 1],
       }}
+      className="gpu-layer"
     >
       <Link
         href={`/products?category=${categoryId}&type=${card.name.toLowerCase().replace(/\s+/g, '-')}`}

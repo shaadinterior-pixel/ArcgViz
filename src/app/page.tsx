@@ -41,8 +41,8 @@ const STATS = [
 
 const FLOATING_WORDS = ['Materials', 'Models', 'Textures', 'Scenes', 'Renders'];
 
-// ── Spring config (tuned for snappy feel) ────────────────────────────────────
-const SPRING_CONFIG = { stiffness: 120, damping: 22, mass: 0.4 };
+// ── Spring config (tuned for snappy, buttery feel) ───────────────────────────
+const SPRING_CONFIG = { stiffness: 300, damping: 30, mass: 0.2 };
 
 // ── Detect low-end device (runs once on mount) ──────────────────────────────
 function useIsLowEnd(): boolean {
@@ -140,8 +140,8 @@ export default function Home() {
   // Spring-smoothed (on capable devices); on low-end skip springs → direct values
   const bgY = useSpring(rawBgY, isLowEnd ? { stiffness: 300, damping: 30 } : SPRING_CONFIG);
   const contentY = useSpring(rawContentY, isLowEnd ? { stiffness: 300, damping: 30 } : SPRING_CONFIG);
-  const opacity = useSpring(rawOpacity, isLowEnd ? { stiffness: 300, damping: 30 } : { stiffness: 150, damping: 22 });
-  const orbScale = useSpring(rawOrbScale, isLowEnd ? { stiffness: 300, damping: 30 } : SPRING_CONFIG);
+  const opacity = useSpring(rawOpacity, isLowEnd ? { stiffness: 400, damping: 40 } : { stiffness: 250, damping: 25 });
+  const orbScale = useSpring(rawOrbScale, isLowEnd ? { stiffness: 400, damping: 40 } : SPRING_CONFIG);
 
   const [wordIndex, setWordIndex] = useState(0);
   useEffect(() => {
@@ -203,8 +203,8 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 14, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-            className="flex items-center gap-2 py-1.5 px-4 rounded-full mb-8 border border-primary/30 bg-primary/10 backdrop-blur-sm"
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="flex items-center gap-2 py-1.5 px-4 rounded-full mb-8 border border-primary/30 bg-primary/10 backdrop-blur-sm gpu-layer"
           >
             <motion.span
               className="w-2 h-2 rounded-full bg-primary"
@@ -217,20 +217,20 @@ export default function Home() {
           {/* Headline */}
           <div className="overflow-hidden mb-4">
             <motion.h1
-              initial={{ y: 50, opacity: 0 }}
+              initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.45, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl"
+              transition={{ duration: 0.3, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl gpu-layer"
             >
               Elevate Your
             </motion.h1>
           </div>
           <div className="overflow-hidden mb-2">
             <motion.div
-              initial={{ y: 50, opacity: 0 }}
+              initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.45, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl flex items-center gap-4 justify-center"
+              transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl flex items-center gap-4 justify-center gpu-layer"
             >
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-300 to-accent">
                 3D
@@ -239,10 +239,10 @@ export default function Home() {
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={wordIndex}
-                    initial={{ y: 40, opacity: 0 }}
+                    initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -40, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                    exit={{ y: -30, opacity: 0 }}
+                    transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     className="block text-foreground"
                   >
                     {FLOATING_WORDS[wordIndex]}
@@ -256,8 +256,8 @@ export default function Home() {
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.25 }}
-            className="text-base sm:text-lg md:text-xl text-muted-foreground mt-8 mb-10 max-w-2xl leading-relaxed"
+            transition={{ duration: 0.3, delay: 0.15 }}
+            className="text-base sm:text-lg md:text-xl text-muted-foreground mt-8 mb-10 max-w-2xl leading-relaxed gpu-layer"
           >
             Discover world-class 3D models, PBR materials, and complete interior scenes crafted by elite industry professionals.
           </motion.p>
@@ -266,8 +266,8 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.32 }}
-            className="flex flex-col sm:flex-row gap-4 mb-16"
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className="flex flex-col sm:flex-row gap-4 mb-16 gpu-layer"
           >
             <Link href="/products">
               <Button size="lg" className="group relative h-14 px-8 text-base overflow-hidden">
@@ -295,15 +295,15 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.4 }}
-            className="flex flex-wrap gap-8 sm:gap-12 justify-center items-center"
+            transition={{ duration: 0.3, delay: 0.25 }}
+            className="flex flex-wrap gap-8 sm:gap-12 justify-center items-center gpu-layer"
           >
             {STATS.map((stat, i) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.45 + i * 0.06, type: "spring", stiffness: 200, damping: 18 }}
+                transition={{ delay: 0.3 + i * 0.04, type: "spring", stiffness: 300, damping: 20 }}
                 className="flex flex-col items-center gap-1 group"
               >
                 <span className="text-2xl sm:text-3xl font-black text-foreground group-hover:text-primary transition-colors duration-300">
@@ -351,8 +351,8 @@ export default function Home() {
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.35 }}
-            className="flex flex-col md:flex-row justify-between items-start md:items-end mb-14"
+            transition={{ duration: 0.25 }}
+            className="flex flex-col md:flex-row justify-between items-start md:items-end mb-14 gpu-layer"
           >
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-3">This Week</p>
@@ -375,11 +375,11 @@ export default function Home() {
             {trendingProducts.map((product, index) => (
               <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.3, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                className="h-full"
+                transition={{ duration: 0.25, delay: index * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                className="h-full gpu-layer"
               >
                 <Link href={`/products/${product.id}`} className="block h-full group">
                   <div className="h-full flex flex-col rounded-2xl overflow-hidden border border-border bg-card hover:border-primary/40 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5">

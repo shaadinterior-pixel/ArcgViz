@@ -143,10 +143,11 @@ export default function ProductsPage() {
                 {filteredProducts.map((product, index) => (
                   <motion.div
                     key={product.id}
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 6 }}
-                    transition={{ duration: 0.18, delay: Math.min(index * 0.03, 0.2) }}
+                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                    transition={{ duration: 0.15, delay: Math.min(index * 0.02, 0.15) }}
+                    className="gpu-layer"
                   >
                     <Link href={`/products/${product.slug || product.id}`}>
                       <Card className="group overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(212,175,55,0.1)] transition-all duration-200 rounded-2xl h-full flex flex-col">
@@ -157,7 +158,7 @@ export default function ProductsPage() {
                             alt={product.name}
                             fill
                             sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                            className="object-cover group-hover:scale-105 transition-transform duration-400 ease-out"
+                            className="object-cover group-hover:scale-105 transition-transform duration-300 ease-out gpu-layer"
                             quality={75}
                           />
                           <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs font-medium border border-white/10 flex items-center justify-center">
