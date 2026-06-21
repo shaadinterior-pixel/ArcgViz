@@ -3,7 +3,7 @@
 import React, { useState, useDeferredValue, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, ChevronDown, Star, Search, ShoppingCart } from 'lucide-react';
+import { Filter, ChevronDown, Star, Search, ShoppingCart, Download } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
