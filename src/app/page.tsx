@@ -17,7 +17,7 @@ const CategoryShowcase = dynamic(
   { ssr: false }
 );
 
-import { fetchProducts, onStoreUpdate, type Product } from '@/lib/store';
+import { fetchProducts, fetchSettings, onStoreUpdate, type Product } from '@/lib/store';
 
 // ── 60-second in-memory cache so navigating back doesn't re-fetch ──────────────
 let _productsCache: any[] | null = null;
@@ -29,6 +29,8 @@ async function fetchCached() {
   _cacheTime = Date.now();
   return data;
 }
+
+const DEFAULT_HERO = 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920';
 
 const STATS = [
   { value: '12K+', label: 'Premium Assets' },
@@ -96,13 +98,15 @@ export default function Home() {
   
   // ── True Data Fetching from Supabase ───────────────────────────────────────
   const [trendingProducts, setTrendingProducts] = useState<any[]>([]);
+  const [heroImageUrl, setHeroImageUrl] = useState(DEFAULT_HERO);
 
   useEffect(() => {
     let mounted = true;
     const load = async () => {
       try {
-        const data = await fetchCached();
+        const [data, siteSettings] = await Promise.all([fetchCached(), fetchSettings()]);
         if (!mounted) return;
+        if (siteSettings?.heroImageUrl) setHeroImageUrl(siteSettings.heroImageUrl);
         const sorted = data
           .sort((a, b) => (b.sales || 0) - (a.sales || 0))
           .slice(0, 3)
@@ -154,7 +158,7 @@ export default function Home() {
         <motion.div className="absolute inset-0 z-0 gpu-layer" style={{ y: bgY }}>
           <div className="relative w-full h-[130%]">
             <Image
-              src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920"
+              src={heroImageUrl}
               alt="Hero background"
               fill
               priority

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Save, Store, Mail, CreditCard, AlertTriangle, RefreshCw, Settings } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { Save, Store, Mail, CreditCard, AlertTriangle, RefreshCw, Settings, ImageIcon, Upload, Link as LinkIcon } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -15,6 +16,7 @@ const DEFAULT: StoreSettings = {
   razorpayEnabled: true,
   stripeEnabled: false,
   maintenanceMode: false,
+  heroImageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920',
 };
 
 export default function AdminSettingsPage() {
@@ -114,7 +116,74 @@ export default function AdminSettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Payment */}
+      {/* Hero Image */}
+      <Card className="bg-card border-border">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <ImageIcon className="w-4 h-4 text-primary" /> Hero Image
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Live Preview */}
+          <div className="relative w-full h-48 rounded-xl overflow-hidden bg-secondary/50 border border-border">
+            {settings.heroImageUrl ? (
+              <Image
+                src={settings.heroImageUrl}
+                alt="Hero preview"
+                fill
+                className="object-cover"
+                unoptimized={settings.heroImageUrl.startsWith('blob:')}
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full text-foreground/30 gap-2">
+                <ImageIcon className="w-10 h-10" />
+                <span className="text-sm">No image set</span>
+              </div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <span className="absolute bottom-3 left-3 text-white text-xs font-medium bg-black/50 px-2 py-1 rounded-md">Homepage Hero Preview</span>
+          </div>
+
+          {/* URL input */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50 flex items-center gap-1.5">
+              <LinkIcon className="w-3 h-3" /> Image URL
+            </label>
+            <Input
+              className="bg-secondary/40 border-border font-mono text-xs"
+              placeholder="https://images.unsplash.com/..."
+              value={settings.heroImageUrl || ''}
+              onChange={e => setSettings(s => ({ ...s, heroImageUrl: e.target.value }))}
+            />
+            <p className="text-xs text-foreground/40">Paste any public image URL (Unsplash, Cloudinary, etc.) — the preview updates live.</p>
+          </div>
+
+          {/* Quick presets */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Quick Presets</label>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { label: 'Interior 1', url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920' },
+                { label: 'Interior 2', url: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&q=80&w=1920' },
+                { label: 'Interior 3', url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=1920' },
+              ].map(preset => (
+                <button
+                  key={preset.label}
+                  onClick={() => setSettings(s => ({ ...s, heroImageUrl: preset.url }))}
+                  className={`relative h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                    settings.heroImageUrl === preset.url ? 'border-primary shadow-[0_0_10px_rgba(212,175,55,0.4)]' : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <Image src={preset.url} alt={preset.label} fill className="object-cover" />
+                  <div className="absolute inset-0 bg-black/30 flex items-end p-1">
+                    <span className="text-white text-[10px] font-medium">{preset.label}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
       <Card className="bg-card border-border">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-semibold flex items-center gap-2">

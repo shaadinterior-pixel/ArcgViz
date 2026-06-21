@@ -58,6 +58,7 @@ export type StoreSettings = {
   razorpayEnabled: boolean;
   stripeEnabled: boolean;
   maintenanceMode: boolean;
+  heroImageUrl: string;
 };
 
 export type CardEntry = { name: string; count: string; image: string };
@@ -233,6 +234,7 @@ export async function fetchSettings(): Promise<StoreSettings> {
     razorpayEnabled: true,
     stripeEnabled: false,
     maintenanceMode: false,
+    heroImageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920',
   };
 }
 
