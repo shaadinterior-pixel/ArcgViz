@@ -1,0 +1,8 @@
+{
+  "storeName": "ArchViz Market",
+  "supportEmail": "support@archvizmarket.com",
+  "currency": "INR",
+  "razorpayEnabled": true,
+  "stripeEnabled": false,
+  "maintenanceMode": false
+}

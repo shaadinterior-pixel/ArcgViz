@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  
+  --animate-fade-in: fade-in 0.5s ease-out forwards;
+  --animate-slide-up: slide-up 0.5s ease-out forwards;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-background/50 backdrop-blur-md border border-border;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* GPU-promoted layer — use sparingly on scroll-animated elements */
+  .gpu-layer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
+
+:root {
+  --background: #F9FAFB;
+  --foreground: #111827;
+  --primary: #D4AF37;
+  --primary-foreground: #000000;
+  --secondary: #E5E7EB;
+  --secondary-foreground: #111827;
+  --accent: #8B7355;
+  --accent-foreground: #FFFFFF;
+  --card: #FFFFFF;
+  --border: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  --background: #050505;
+  --foreground: #F9FAFB;
+  --primary: #D4AF37;
+  --primary-foreground: #000000;
+  --secondary: #111111;
+  --secondary-foreground: #FFFFFF;
+  --accent: #8B7355;
+  --accent-foreground: #FFFFFF;
+  --card: #0A0A0A;
+  --border: rgba(255, 255, 255, 0.1);
+}
+
+/* ─── Base body ─── */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent layout thrashing on scrollbar appearance */
+  overflow-y: scroll;
+}
+
+/* ─── Smooth scrolling (only when not doing route transitions) ─── */
+html[data-scroll-behavior="smooth"] {
+  scroll-behavior: smooth;
+}
+
+/* ─── Keyframes ─── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+  /* GPU composite the marquee — it's always animating */
+  will-change: transform;
+  transform: translateZ(0);
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ─── Performance: content-visibility ─── */
+/* Skip rendering off-screen sections until near the viewport.
+   This is a *huge* win on long pages — saves layout, paint and compositing
+   for sections that are thousands of pixels away. */
+section:not(:first-child),
+footer {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px;
+}
+
+/* ─── Performance: passive touch + instant taps ─── */
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ─── Performance: image rendering ─── */
+img {
+  /* Prevent images from being rendered at higher-than-necessary quality */
+  image-rendering: auto;
+  /* Content-fit avoids upscaling small images */
+  content-visibility: auto;
+}
+
+/* ─── Performance: backdrop-filter containment ─── */
+/* Backdrop filters are expensive on low-end GPUs.
+   Containment tells the browser to limit the filter area. */
+.backdrop-blur-md,
+.backdrop-blur-sm,
+.backdrop-blur-lg,
+.backdrop-blur-xl {
+  contain: paint;
+}
+
+/* ─── Respect prefers-reduced-motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-marquee {
+    animation: none !important;
+  }
+}
+
+/* ─── Responsive: reduce visual weight on very small screens ─── */
+@media (max-width: 480px) {
+  /* Smaller text sizes to prevent overflow */
+  h1 { font-size: clamp(1.75rem, 8vw, 3rem) !important; }
+  h2 { font-size: clamp(1.5rem, 6vw, 2.5rem) !important; }
+
+  /* Remove backdrop-blur entirely on very low-end (saves GPU) */
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* ─── Print: clean output ─── */
+@media print {
+  nav, footer, .animate-marquee, [data-motion] { display: none !important; }
+  body { background: white !important; color: black !important; }
+}

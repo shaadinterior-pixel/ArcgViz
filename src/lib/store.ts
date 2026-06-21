@@ -1,0 +1,291 @@
+import { supabase } from './supabase';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export type Product = {
+  id: string;
+  name: string;
+  slug: string;
+  price: string;
+  category: string;
+  status: 'Active' | 'Draft';
+  sales: number;
+  date: string;
+  // Legacy single image (kept for backward compat)
+  image: string;
+  author: string;
+  rating: string;
+  description?: string;
+  // Extended fields
+  thumbnail_url: string;
+  gallery_images: string[];
+  google_drive_share_link: string;
+  google_drive_file_id: string;
+  download_url: string;
+  software_support: string[];
+  file_formats: string[];
+  poly_count: string;
+  texture_resolution: string;
+  file_size: string;
+  features: string[];
+  updated_at?: string;
+};
+
+export type Customer = {
+  id: string;
+  name: string;
+  email: string;
+  spent: number;
+  orders: number;
+  status: 'Active' | 'Inactive';
+  joinDate: string;
+};
+
+export type Order = {
+  id: string;
+  customer: string;
+  email: string;
+  product: string;
+  amount: string;
+  status: 'Completed' | 'Pending' | 'Refunded';
+  date: string;
+};
+
+export type StoreSettings = {
+  storeName: string;
+  supportEmail: string;
+  currency: string;
+  razorpayEnabled: boolean;
+  stripeEnabled: boolean;
+  maintenanceMode: boolean;
+};
+
+export type CardEntry = { name: string; count: string; image: string };
+export type Category = { id: string; title: string; description: string; cards: CardEntry[] };
+
+export type Purchase = {
+  id: string;
+  user_id: string;
+  product_id: string;
+  purchased_at: string;
+};
+
+// ─── Products ─────────────────────────────────────────────────────────────────
+
+export async function fetchProducts(): Promise<Product[]> {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .order('date', { ascending: false });
+  if (error) throw error;
+  return (data || []).map(normalizeProduct);
+}
+
+export async function fetchProductBySlug(slug: string): Promise<Product | null> {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('slug', slug)
+    .single();
+  if (error) return null;
+  return data ? normalizeProduct(data) : null;
+}
+
+export async function fetchProductById(id: string): Promise<Product | null> {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', id)
+    .single();
+  if (error) return null;
+  return data ? normalizeProduct(data) : null;
+}
+
+export async function fetchAllSlugs(): Promise<string[]> {
+  const { data, error } = await supabase
+    .from('products')
+    .select('slug')
+    .eq('status', 'Active');
+  if (error) return [];
+  return (data || []).map((p: { slug: string }) => p.slug).filter(Boolean);
+}
+
+export async function saveProducts(products: Product[]): Promise<void> {
+  const rows = products.map(p => ({
+    ...p,
+    // Ensure slug is set
+    slug: p.slug || generateSlug(p.name),
+    // Sync thumbnail_url with image for backward compat
+    thumbnail_url: p.thumbnail_url || p.image || '',
+    image: p.image || p.thumbnail_url || '',
+  }));
+  const { error } = await supabase.from('products').upsert(rows);
+  if (error) throw error;
+}
+
+export async function deleteProduct(id: string): Promise<void> {
+  const { error } = await supabase.from('products').delete().eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Normalise a raw Supabase row into a fully-typed Product */
+function normalizeProduct(row: Record<string, unknown>): Product {
+  return {
+    id:                      String(row.id ?? ''),
+    name:                    String(row.name ?? ''),
+    slug:                    String(row.slug ?? row.id ?? ''),
+    price:                   String(row.price ?? ''),
+    category:                String(row.category ?? ''),
+    status:                  (row.status as 'Active' | 'Draft') ?? 'Draft',
+    sales:                   Number(row.sales ?? 0),
+    date:                    String(row.date ?? ''),
+    image:                   String(row.image ?? ''),
+    author:                  String(row.author ?? ''),
+    rating:                  String(row.rating ?? '5.0'),
+    description:             String(row.description ?? ''),
+    thumbnail_url:           String(row.thumbnail_url ?? row.image ?? ''),
+    gallery_images:          Array.isArray(row.gallery_images) ? row.gallery_images as string[] : [],
+    google_drive_share_link: String(row.google_drive_share_link ?? ''),
+    google_drive_file_id:    String(row.google_drive_file_id ?? ''),
+    download_url:            String(row.download_url ?? ''),
+    software_support:        Array.isArray(row.software_support) ? row.software_support as string[] : [],
+    file_formats:            Array.isArray(row.file_formats) ? row.file_formats as string[] : [],
+    poly_count:              String(row.poly_count ?? ''),
+    texture_resolution:      String(row.texture_resolution ?? ''),
+    file_size:               String(row.file_size ?? ''),
+    features:                Array.isArray(row.features) ? row.features as string[] : [],
+    updated_at:              row.updated_at ? String(row.updated_at) : undefined,
+  };
+}
+
+export function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .substring(0, 80);
+}
+
+// ─── Customers ─────────────────────────────────────────────────────────────────
+
+export async function fetchCustomers(): Promise<Customer[]> {
+  const { data, error } = await supabase
+    .from('customers')
+    .select('*')
+    .order('joinDate', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function saveCustomers(customers: Customer[]): Promise<void> {
+  const { error } = await supabase.from('customers').upsert(customers);
+  if (error) throw error;
+}
+
+export async function deleteCustomer(id: string): Promise<void> {
+  const { error } = await supabase.from('customers').delete().eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Orders ────────────────────────────────────────────────────────────────────
+
+export async function fetchOrders(): Promise<Order[]> {
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*')
+    .order('date', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function saveOrder(order: Order): Promise<void> {
+  const { error } = await supabase.from('orders').upsert([order]);
+  if (error) throw error;
+}
+
+export async function deleteOrder(id: string): Promise<void> {
+  const { error } = await supabase.from('orders').delete().eq('id', id);
+  if (error) throw error;
+}
+
+export async function updateOrderStatus(id: string, status: Order['status']): Promise<void> {
+  const { error } = await supabase.from('orders').update({ status }).eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Settings ──────────────────────────────────────────────────────────────────
+
+export async function fetchSettings(): Promise<StoreSettings> {
+  const { data, error } = await supabase
+    .from('settings')
+    .select('*')
+    .eq('id', 1)
+    .single();
+  if (error && error.code !== 'PGRST116') throw error;
+  return data || {
+    storeName: 'ArchViz Market',
+    supportEmail: 'support@archvizmarket.com',
+    currency: 'INR',
+    razorpayEnabled: true,
+    stripeEnabled: false,
+    maintenanceMode: false,
+  };
+}
+
+export async function saveSettings(settings: StoreSettings): Promise<void> {
+  const { error } = await supabase.from('settings').upsert({ id: 1, ...settings });
+  if (error) throw error;
+}
+
+// ─── Categories ────────────────────────────────────────────────────────────────
+
+export async function fetchCategories(): Promise<Category[]> {
+  const { data, error } = await supabase.from('categories').select('*');
+  if (error) throw error;
+  return data || [];
+}
+
+export async function saveCategories(categories: Category[]): Promise<void> {
+  const { error } = await supabase.from('categories').upsert(categories);
+  if (error) throw error;
+}
+
+export async function deleteCategory(id: string): Promise<void> {
+  const { error } = await supabase.from('categories').delete().eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Purchases ─────────────────────────────────────────────────────────────────
+
+export async function fetchPurchases(): Promise<Purchase[]> {
+  const { data, error } = await supabase
+    .from('purchases')
+    .select('*')
+    .order('purchased_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function grantPurchase(userId: string, productId: string): Promise<void> {
+  const { error } = await supabase
+    .from('purchases')
+    .upsert({ user_id: userId, product_id: productId });
+  if (error) throw error;
+}
+
+// ─── Realtime ──────────────────────────────────────────────────────────────────
+
+export function onStoreUpdate(table: string, callback: () => void): () => void {
+  if (typeof window === 'undefined') return () => {};
+
+  const channel = supabase
+    .channel(`${table}-changes`)
+    .on('postgres_changes', { event: '*', schema: 'public', table }, () => callback())
+    .subscribe();
+
+  return () => { supabase.removeChannel(channel); };
+}

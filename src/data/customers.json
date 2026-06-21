@@ -1,0 +1,47 @@
+[
+  {
+    "id": "c1",
+    "name": "Alex Johnson",
+    "email": "alex.j@example.com",
+    "spent": 12500,
+    "orders": 4,
+    "status": "Active",
+    "joinDate": "Jan 15, 2024"
+  },
+  {
+    "id": "c2",
+    "name": "Sarah Miller",
+    "email": "sarah.m@studio.co",
+    "spent": 34990,
+    "orders": 12,
+    "status": "Active",
+    "joinDate": "Nov 22, 2023"
+  },
+  {
+    "id": "c3",
+    "name": "David Chen",
+    "email": "d.chen@archviz.net",
+    "spent": 4500,
+    "orders": 1,
+    "status": "Inactive",
+    "joinDate": "Mar 05, 2024"
+  },
+  {
+    "id": "c4",
+    "name": "Emma Wilson",
+    "email": "emma@designs.com",
+    "spent": 8900,
+    "orders": 3,
+    "status": "Active",
+    "joinDate": "Feb 10, 2024"
+  },
+  {
+    "id": "c5",
+    "name": "Michael Brown",
+    "email": "mbrown@3d.co",
+    "spent": 0,
+    "orders": 0,
+    "status": "Active",
+    "joinDate": "Apr 01, 2024"
+  }
+]

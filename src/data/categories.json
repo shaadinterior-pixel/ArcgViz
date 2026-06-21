@@ -1,0 +1,67 @@
+[
+  {
+    "id": "pbr-materials",
+    "title": "PBR Materials",
+    "description": "Ultra-realistic 4K/8K textures for photorealistic rendering.",
+    "cards": [
+      { "name": "Wood Materials", "count": "1,204 Assets", "image": "https://images.unsplash.com/photo-1546412414-8035e1776c9a?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Marble Materials", "count": "845 Assets", "image": "https://images.unsplash.com/photo-1501183638710-841bf8f155a9?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Concrete Materials", "count": "520 Assets", "image": "https://images.unsplash.com/photo-1550604169-21b924976c6c?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Fabric Materials", "count": "932 Assets", "image": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Metal Materials", "count": "412 Assets", "image": "https://images.unsplash.com/photo-1535813547-99c456a41d4a?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Tiles Materials", "count": "634 Assets", "image": "https://images.unsplash.com/photo-1523413363574-c30aa1c2a516?auto=format&fit=crop&q=80&w=600&h=800" }
+    ]
+  },
+  {
+    "id": "furniture-models",
+    "title": "Furniture Models",
+    "description": "High-poly, production-ready furniture 3D models.",
+    "cards": [
+      { "name": "Sofas", "count": "2,100 Assets", "image": "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Chairs", "count": "1,500 Assets", "image": "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Dining Sets", "count": "800 Assets", "image": "https://images.unsplash.com/photo-1617806118233-18e1c0945594?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Beds", "count": "950 Assets", "image": "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Cabinets", "count": "600 Assets", "image": "https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Coffee Tables", "count": "1,200 Assets", "image": "https://images.unsplash.com/photo-1532372576444-dda954194ad0?auto=format&fit=crop&q=80&w=600&h=800" }
+    ]
+  },
+  {
+    "id": "interior-scenes",
+    "title": "Interior Scene Packs",
+    "description": "Fully lit and textured interior scenes ready to render.",
+    "cards": [
+      { "name": "Living Room Scenes", "count": "340 Assets", "image": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Bedroom Scenes", "count": "280 Assets", "image": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Kitchen Scenes", "count": "310 Assets", "image": "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Office Scenes", "count": "150 Assets", "image": "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Luxury Villas", "count": "90 Assets", "image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Commercial Spaces", "count": "120 Assets", "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600&h=800" }
+    ]
+  },
+  {
+    "id": "lighting-assets",
+    "title": "Lighting Assets",
+    "description": "Photorealistic lighting fixtures and HDRI setups.",
+    "cards": [
+      { "name": "Chandeliers", "count": "450 Assets", "image": "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Floor Lamps", "count": "520 Assets", "image": "https://images.unsplash.com/photo-1513506003901-1e6a229e9d15?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Pendant Lights", "count": "890 Assets", "image": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Wall Lights", "count": "340 Assets", "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Spotlights", "count": "610 Assets", "image": "https://images.unsplash.com/photo-1518002171953-a080ee817e1f?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Outdoor Lights", "count": "290 Assets", "image": "https://images.unsplash.com/photo-1534349762230-e0cadf78f5da?auto=format&fit=crop&q=80&w=600&h=800" }
+    ]
+  },
+  {
+    "id": "decor-assets",
+    "title": "Decor Assets",
+    "description": "High-quality props to bring your interior scenes to life.",
+    "cards": [
+      { "name": "Plants", "count": "1,800 Assets", "image": "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Paintings", "count": "1,200 Assets", "image": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Mirrors", "count": "450 Assets", "image": "https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Curtains", "count": "320 Assets", "image": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Vases", "count": "890 Assets", "image": "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?auto=format&fit=crop&q=80&w=600&h=800" },
+      { "name": "Sculptures", "count": "410 Assets", "image": "https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&q=80&w=600&h=800" }
+    ]
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "1",
+    "name": "Modern Minimalist Living Room",
+    "price": "₹3,499",
+    "category": "Interior Scenes",
+    "status": "Active",
+    "sales": 124,
+    "date": "Oct 12, 2024",
+    "image": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=600&h=400",
+    "author": "ArchViz Studio",
+    "rating": "4.9"
+  },
+  {
+    "id": "2",
+    "name": "Luxury Velvet Sofa Model",
+    "price": "₹1,299",
+    "category": "Furniture",
+    "status": "Active",
+    "sales": 43,
+    "date": "Oct 10, 2024",
+    "image": "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&q=80&w=600&h=400",
+    "author": "Furniture3D",
+    "rating": "4.7"
+  },
+  {
+    "id": "3",
+    "name": "Premium Concrete PBR",
+    "price": "₹1,999",
+    "category": "PBR Materials",
+    "status": "Active",
+    "sales": 89,
+    "date": "Oct 09, 2024",
+    "image": "https://images.unsplash.com/photo-1518002171953-a080ee817e1f?auto=format&fit=crop&q=80&w=600&h=400",
+    "author": "TextureMaster",
+    "rating": "5.0"
+  },
+  {
+    "id": "4",
+    "name": "Wooden Coffee Table 3D",
+    "price": "₹999",
+    "category": "Furniture",
+    "status": "Active",
+    "sales": 112,
+    "date": "Oct 05, 2024",
+    "image": "https://images.unsplash.com/photo-1532372576444-dda954194ad0?auto=format&fit=crop&q=80&w=600&h=400",
+    "author": "WoodCraft",
+    "rating": "4.6"
+  },
+  {
+    "id": "5",
+    "name": "Photorealistic Marble Texture",
+    "price": "₹1,499",
+    "category": "PBR Materials",
+    "status": "Active",
+    "sales": 210,
+    "date": "Oct 01, 2024",
+    "image": "https://images.unsplash.com/photo-1546412414-8035e1776c9a?auto=format&fit=crop&q=80&w=600&h=400",
+    "author": "TextureMaster",
+    "rating": "4.8"
+  },
+  {
+    "id": "6",
+    "name": "Scandinavian Bedroom Scene",
+    "price": "₹4,999",
+    "category": "Interior Scenes",
+    "status": "Active",
+    "sales": 56,
+    "date": "Sep 28, 2024",
+    "image": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=600&h=400",
+    "author": "ArchViz Studio",
+    "rating": "4.9"
+  },
+  {
+    "id": "7",
+    "name": "Modern Chandelier",
+    "price": "₹899",
+    "category": "Lighting",
+    "status": "Active",
+    "sales": 34,
+    "date": "Sep 25, 2024",
+    "image": "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&q=80&w=600&h=400",
+    "author": "LightWorks",
+    "rating": "4.5"
+  },
+  {
+    "id": "8",
+    "name": "Low Poly Trees Pack",
+    "price": "₹1,199",
+    "category": "3D Models",
+    "status": "Active",
+    "sales": 340,
+    "date": "Sep 20, 2024",
+    "image": "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&q=80&w=600&h=400",
+    "author": "PolyGen",
+    "rating": "4.7"
+  }
+]
