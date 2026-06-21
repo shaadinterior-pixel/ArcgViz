@@ -25,14 +25,17 @@ export default function DashboardPage() {
           .order('purchased_at', { ascending: false });
         
         if (data) {
-          setPurchases(data.map(p => ({
-            id: 'ORD-' + p.id.substring(0, 4).toUpperCase(),
-            date: new Date(p.purchased_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
-            item: p.products?.name || 'Unknown Product',
-            price: p.products?.price || '—',
-            product_id: p.products?.id,
-            status: 'Completed',
-          })));
+          setPurchases(data.map(p => {
+            const product = Array.isArray(p.products) ? p.products[0] : p.products;
+            return {
+              id: 'ORD-' + p.id.substring(0, 4).toUpperCase(),
+              date: new Date(p.purchased_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
+              item: (product as any)?.name || 'Unknown Product',
+              price: (product as any)?.price || '—',
+              product_id: (product as any)?.id,
+              status: 'Completed',
+            };
+          }));
         }
       }
       setLoading(false);
