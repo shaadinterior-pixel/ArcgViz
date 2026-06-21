@@ -2,6 +2,7 @@
 
 import React, { useState, useDeferredValue, useMemo, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, ChevronDown, Star, Search, ShoppingCart, Download } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -151,12 +152,13 @@ export default function ProductsPage() {
                       <Card className="group overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(212,175,55,0.1)] transition-all duration-300 rounded-2xl h-full flex flex-col">
                         <div className="relative aspect-[4/3] overflow-hidden bg-secondary/50 shrink-0">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img 
-                            src={product.image} 
+                          <Image 
+                            src={product.image || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800'} 
                             alt={product.name}
-                            loading="lazy"
-                            decoding="async"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                            className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                            quality={75}
                           />
                           <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs font-medium border border-white/10 flex items-center justify-center">
                             {product.category}

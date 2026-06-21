@@ -2,9 +2,10 @@
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { motion, useScroll, useTransform, AnimatePresence, useSpring } from 'framer-motion';
-import { ArrowRight, Star, Download, Cuboid, Image as ImageIcon, Play } from 'lucide-react';
+import { ArrowRight, Star, Download, Play } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { SoftwareMarquee } from '@/components/ui/SoftwareMarquee';
 
@@ -17,6 +18,17 @@ const CategoryShowcase = dynamic(
 );
 
 import { fetchProducts, onStoreUpdate, type Product } from '@/lib/store';
+
+// ── 60-second in-memory cache so navigating back doesn't re-fetch ──────────────
+let _productsCache: any[] | null = null;
+let _cacheTime = 0;
+async function fetchCached() {
+  if (_productsCache && Date.now() - _cacheTime < 60_000) return _productsCache;
+  const data = await fetchProducts();
+  _productsCache = data;
+  _cacheTime = Date.now();
+  return data;
+}
 
 const STATS = [
   { value: '12K+', label: 'Premium Assets' },
@@ -89,7 +101,7 @@ export default function Home() {
     let mounted = true;
     const load = async () => {
       try {
-        const data = await fetchProducts();
+        const data = await fetchCached();
         if (!mounted) return;
         const sorted = data
           .sort((a, b) => (b.sales || 0) - (a.sales || 0))
@@ -138,14 +150,19 @@ export default function Home() {
       {/* ─── HERO SECTION ─── */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
 
-        {/* Parallax background — GPU composited */}
+        {/* Parallax background — GPU composited, using next/image for optimization */}
         <motion.div className="absolute inset-0 z-0 gpu-layer" style={{ y: bgY }}>
-          <div
-            className="w-full h-[130%] bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: 'url(https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920)',
-            }}
-          />
+          <div className="relative w-full h-[130%]">
+            <Image
+              src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920"
+              alt="Hero background"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+              quality={80}
+            />
+          </div>
         </motion.div>
 
         {/* Gradient overlays */}
@@ -365,13 +382,13 @@ export default function Home() {
 
                     {/* Image */}
                     <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/10' }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={product.image}
+                      <Image
+                        src={product.image || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800'}
                         alt={product.title}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        quality={75}
                       />
                       <div className="absolute inset-0 bg-background/0 group-hover:bg-background/30 transition-colors duration-500" />
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
