@@ -82,7 +82,7 @@ function FloatingParticles({ skip }: { skip: boolean }) {
       {particles.map(p => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full bg-primary/30"
+          className="absolute rounded-full bg-primary/30 gpu-layer"
           style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size }}
           animate={{ y: [0, -40, 0], opacity: [0, 0.8, 0], scale: [0.5, 1.2, 0.5] }}
           transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "easeInOut" }}
@@ -131,17 +131,11 @@ export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
 
-  // Raw transforms
-  const rawBgY = useTransform(scrollYProgress, [0, 1], [0, 180]);
-  const rawContentY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const rawOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
-  const rawOrbScale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
-
-  // Spring-smoothed (on capable devices); on low-end skip springs → direct values
-  const bgY = useSpring(rawBgY, isLowEnd ? { stiffness: 300, damping: 30 } : SPRING_CONFIG);
-  const contentY = useSpring(rawContentY, isLowEnd ? { stiffness: 300, damping: 30 } : SPRING_CONFIG);
-  const opacity = useSpring(rawOpacity, isLowEnd ? { stiffness: 400, damping: 40 } : { stiffness: 250, damping: 25 });
-  const orbScale = useSpring(rawOrbScale, isLowEnd ? { stiffness: 400, damping: 40 } : SPRING_CONFIG);
+  // Direct mapped values (no spring delay) for 1:1 buttery smooth scrolling without lag
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '10%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+  const orbScale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
 
   const [wordIndex, setWordIndex] = useState(0);
   useEffect(() => {
@@ -154,9 +148,9 @@ export default function Home() {
       {/* ─── HERO SECTION ─── */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
 
-        {/* Parallax background — GPU composited, using next/image for optimization */}
-        <motion.div className="absolute inset-0 z-0 gpu-layer" style={{ y: bgY }}>
-          <div className="relative w-full h-[130%]">
+        {/* Parallax background — GPU composited, direct scroll mapping */}
+        <motion.div className="absolute inset-0 z-0 gpu-layer pointer-events-none" style={{ y: bgY }}>
+          <div className="relative w-full h-[115%]">
             <Image
               src={heroImageUrl}
               alt="Hero background"
@@ -169,22 +163,22 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Gradient overlays */}
-        <div className="absolute inset-0 z-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
-        <div className="absolute inset-0 z-0 bg-gradient-to-r from-background/80 via-transparent to-background/80" />
+        {/* Gradient overlays - optimized for compositing */}
+        <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-t from-background via-background/70 to-transparent" />
+        <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-r from-background/80 via-transparent to-background/80" />
 
         {/* Orbs — skip on low-end (pure decoration, GPU-heavy) */}
         {!isLowEnd && (
           <>
             <motion.div
-              className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full pointer-events-none"
-              style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 70%)', scale: orbScale }}
+              className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full pointer-events-none gpu-layer"
+              style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 60%)', scale: orbScale }}
               animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
               transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.div
-              className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
-              style={{ background: 'radial-gradient(circle, rgba(139,115,85,0.15) 0%, transparent 70%)' }}
+              className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none gpu-layer"
+              style={{ background: 'radial-gradient(circle, rgba(139,115,85,0.1) 0%, transparent 60%)' }}
               animate={{ scale: [1.2, 1, 1.2], x: [0, -20, 0], y: [0, 30, 0] }}
               transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
             />
