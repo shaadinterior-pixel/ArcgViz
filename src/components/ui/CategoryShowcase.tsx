@@ -27,9 +27,9 @@ function useIsLowEnd(): boolean {
 
 // ─── Easing configs ───────────────────────────────────────────────────────────
 
-const SMOOTH_SPRING = { stiffness: 60, damping: 20, mass: 0.6 };
-const FAST_SPRING   = { stiffness: 200, damping: 30 };        // Low-end: fewer spring frames
-const NAV_SPRING    = { type: 'spring' as const, stiffness: 380, damping: 35 };
+const SMOOTH_SPRING = { stiffness: 100, damping: 22, mass: 0.4 };
+const FAST_SPRING   = { stiffness: 300, damping: 30 };
+const NAV_SPRING    = { type: 'spring' as const, stiffness: 500, damping: 35 };
 
 // ─── CategoryShowcase (root) ──────────────────────────────────────────────────
 
@@ -169,7 +169,7 @@ function StackedSection({
   });
 
   const springCfg = isLowEnd ? FAST_SPRING : SMOOTH_SPRING;
-  const scaleCfg  = isLowEnd ? FAST_SPRING : { stiffness: 80, damping: 25 };
+  const scaleCfg  = isLowEnd ? FAST_SPRING : { stiffness: 140, damping: 22 };
 
   const rawX       = useTransform(scrollYProgress, [0, 0.82], [0, -scrollRange]);
   const rawScale   = useTransform(scrollYProgress, [0.78, 1], [1, 0.93]);
@@ -245,7 +245,7 @@ function SectionHeader({ category }: { category: Category }) {
         <motion.h2
           initial={{ opacity: 0, y: 28 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-3 text-foreground leading-[1.05]"
         >
           {category.title}
@@ -253,7 +253,7 @@ function SectionHeader({ category }: { category: Category }) {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
           className="text-base md:text-lg text-muted-foreground"
         >
           {category.description}
@@ -263,7 +263,7 @@ function SectionHeader({ category }: { category: Category }) {
       <motion.div
         initial={{ opacity: 0, x: 12 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
       >
         <Link
           href={`/categories/${category.id}`}
@@ -297,8 +297,8 @@ function CardItem({
       initial={{ opacity: 0, y: 32, scale: 0.96 }}
       animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{
-        duration: 0.5,
-        delay: idx * 0.07,
+        duration: 0.3,
+        delay: idx * 0.04,
         ease: [0.22, 1, 0.36, 1],
       }}
     >
@@ -307,7 +307,7 @@ function CardItem({
         className="group relative flex-shrink-0 block w-[220px] sm:w-[280px] md:w-[340px] lg:w-[400px] aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer border border-border/50 bg-secondary"
       >
         {/* Subtle dark wash */}
-        <div className="absolute inset-0 bg-background/15 group-hover:bg-transparent transition-colors duration-500 z-10" />
+        <div className="absolute inset-0 bg-background/15 group-hover:bg-transparent transition-colors duration-300 z-10" />
 
         {/* Image — lazy, async decode, GPU-composited hover scale */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -316,14 +316,14 @@ function CardItem({
           alt={card.name}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.07] gpu-layer"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-400 ease-out group-hover:scale-[1.07] gpu-layer"
         />
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent z-20" />
 
         {/* Text */}
-        <div className="absolute bottom-0 left-0 w-full p-5 md:p-7 z-30 translate-y-1 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+        <div className="absolute bottom-0 left-0 w-full p-5 md:p-7 z-30 translate-y-1 group-hover:translate-y-0 transition-transform duration-300 ease-out">
           <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-foreground mb-1.5 leading-tight">
             {card.name}
           </h3>

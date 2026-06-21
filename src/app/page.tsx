@@ -41,8 +41,8 @@ const STATS = [
 
 const FLOATING_WORDS = ['Materials', 'Models', 'Textures', 'Scenes', 'Renders'];
 
-// ── Spring config ────────────────────────────────────────────────────────────
-const SPRING_CONFIG = { stiffness: 55, damping: 20, mass: 0.8 };
+// ── Spring config (tuned for snappy feel) ────────────────────────────────────
+const SPRING_CONFIG = { stiffness: 120, damping: 22, mass: 0.4 };
 
 // ── Detect low-end device (runs once on mount) ──────────────────────────────
 function useIsLowEnd(): boolean {
@@ -63,13 +63,13 @@ function FloatingParticles({ skip }: { skip: boolean }) {
 
   const particles = useMemo(
     () =>
-      Array.from({ length: skip ? 0 : 14 }, (_, i) => ({
+      Array.from({ length: skip ? 0 : 10 }, (_, i) => ({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
         size: Math.random() * 3 + 1,
-        duration: Math.random() * 8 + 6,
-        delay: Math.random() * 4,
+        duration: Math.random() * 5 + 4,
+        delay: Math.random() * 2,
       })),
     [skip]
   );
@@ -140,12 +140,12 @@ export default function Home() {
   // Spring-smoothed (on capable devices); on low-end skip springs → direct values
   const bgY = useSpring(rawBgY, isLowEnd ? { stiffness: 300, damping: 30 } : SPRING_CONFIG);
   const contentY = useSpring(rawContentY, isLowEnd ? { stiffness: 300, damping: 30 } : SPRING_CONFIG);
-  const opacity = useSpring(rawOpacity, isLowEnd ? { stiffness: 300, damping: 30 } : { stiffness: 80, damping: 25 });
+  const opacity = useSpring(rawOpacity, isLowEnd ? { stiffness: 300, damping: 30 } : { stiffness: 150, damping: 22 });
   const orbScale = useSpring(rawOrbScale, isLowEnd ? { stiffness: 300, damping: 30 } : SPRING_CONFIG);
 
   const [wordIndex, setWordIndex] = useState(0);
   useEffect(() => {
-    const interval = setInterval(() => setWordIndex(i => (i + 1) % FLOATING_WORDS.length), 2000);
+    const interval = setInterval(() => setWordIndex(i => (i + 1) % FLOATING_WORDS.length), 1800);
     return () => clearInterval(interval);
   }, []);
 
@@ -180,13 +180,13 @@ export default function Home() {
               className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full pointer-events-none"
               style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 70%)', scale: orbScale }}
               animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.div
               className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
               style={{ background: 'radial-gradient(circle, rgba(139,115,85,0.15) 0%, transparent 70%)' }}
               animate={{ scale: [1.2, 1, 1.2], x: [0, -20, 0], y: [0, 30, 0] }}
-              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
             />
           </>
         )}
@@ -201,9 +201,9 @@ export default function Home() {
         >
           {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            initial={{ opacity: 0, y: 14, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
             className="flex items-center gap-2 py-1.5 px-4 rounded-full mb-8 border border-primary/30 bg-primary/10 backdrop-blur-sm"
           >
             <motion.span
@@ -217,9 +217,9 @@ export default function Home() {
           {/* Headline */}
           <div className="overflow-hidden mb-4">
             <motion.h1
-              initial={{ y: 80, opacity: 0 }}
+              initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.45, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
               className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl"
             >
               Elevate Your
@@ -227,9 +227,9 @@ export default function Home() {
           </div>
           <div className="overflow-hidden mb-2">
             <motion.div
-              initial={{ y: 80, opacity: 0 }}
+              initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.45, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl flex items-center gap-4 justify-center"
             >
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-300 to-accent">
@@ -239,10 +239,10 @@ export default function Home() {
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={wordIndex}
-                    initial={{ y: 60, opacity: 0 }}
+                    initial={{ y: 40, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -60, opacity: 0 }}
-                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    exit={{ y: -40, opacity: 0 }}
+                    transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                     className="block text-foreground"
                   >
                     {FLOATING_WORDS[wordIndex]}
@@ -254,9 +254,9 @@ export default function Home() {
 
           {/* Sub-headline */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.55 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
             className="text-base sm:text-lg md:text-xl text-muted-foreground mt-8 mb-10 max-w-2xl leading-relaxed"
           >
             Discover world-class 3D models, PBR materials, and complete interior scenes crafted by elite industry professionals.
@@ -264,9 +264,9 @@ export default function Home() {
 
           {/* CTA buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.7 }}
+            transition={{ duration: 0.4, delay: 0.32 }}
             className="flex flex-col sm:flex-row gap-4 mb-16"
           >
             <Link href="/products">
@@ -276,7 +276,7 @@ export default function Home() {
                     className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0"
                     initial={{ x: '-100%' }}
                     animate={{ x: '200%' }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+                    transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
                   />
                 )}
                 Explore Marketplace
@@ -293,17 +293,17 @@ export default function Home() {
 
           {/* Stats */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.9 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
             className="flex flex-wrap gap-8 sm:gap-12 justify-center items-center"
           >
             {STATS.map((stat, i) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1 + i * 0.1, type: "spring", stiffness: 100 }}
+                transition={{ delay: 0.45 + i * 0.06, type: "spring", stiffness: 200, damping: 18 }}
                 className="flex flex-col items-center gap-1 group"
               >
                 <span className="text-2xl sm:text-3xl font-black text-foreground group-hover:text-primary transition-colors duration-300">
@@ -325,7 +325,7 @@ export default function Home() {
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
+          transition={{ delay: 0.8 }}
         >
           <span className="text-xs text-muted-foreground uppercase tracking-widest">Scroll to explore</span>
           <motion.div
@@ -351,7 +351,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.35 }}
             className="flex flex-col md:flex-row justify-between items-start md:items-end mb-14"
           >
             <div>
@@ -375,14 +375,14 @@ export default function Home() {
             {trendingProducts.map((product, index) => (
               <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.3, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
                 className="h-full"
               >
                 <Link href={`/products/${product.id}`} className="block h-full group">
-                  <div className="h-full flex flex-col rounded-2xl overflow-hidden border border-border bg-card hover:border-primary/40 transition-all duration-500 hover:shadow-xl hover:shadow-primary/5">
+                  <div className="h-full flex flex-col rounded-2xl overflow-hidden border border-border bg-card hover:border-primary/40 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5">
 
                     {/* Image */}
                     <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/10' }}>
@@ -391,12 +391,12 @@ export default function Home() {
                         alt={product.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="object-cover transition-transform duration-400 group-hover:scale-105"
                         quality={75}
                       />
-                      <div className="absolute inset-0 bg-background/0 group-hover:bg-background/30 transition-colors duration-500" />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-                        <span className="flex items-center justify-center gap-2 bg-background/90 backdrop-blur-sm text-foreground text-sm font-semibold px-5 py-2.5 rounded-full border border-border shadow-lg translate-y-3 group-hover:translate-y-0 transition-transform duration-500">
+                      <div className="absolute inset-0 bg-background/0 group-hover:bg-background/30 transition-colors duration-300" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                        <span className="flex items-center justify-center gap-2 bg-background/90 backdrop-blur-sm text-foreground text-sm font-semibold px-5 py-2.5 rounded-full border border-border shadow-lg translate-y-3 group-hover:translate-y-0 transition-transform duration-300">
                           View Details <ArrowRight className="w-4 h-4" />
                         </span>
                       </div>
@@ -411,14 +411,14 @@ export default function Home() {
                       <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                         {product.author}
                       </span>
-                      <h3 className="text-base font-bold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-300">
+                      <h3 className="text-base font-bold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-200">
                         {product.title}
                       </h3>
                       <div className="flex-1" />
                       <div className="h-px bg-border/60" />
                       <div className="flex items-center justify-between">
                         <span className="text-xl font-black text-foreground">{product.price}</span>
-                        <button className="flex items-center justify-center gap-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground px-4 py-2 rounded-full transition-all duration-300">
+                        <button className="flex items-center justify-center gap-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground px-4 py-2 rounded-full transition-all duration-200">
                           <Download className="w-3.5 h-3.5" />
                           <span className="font-bold text-xs leading-none mt-px">Get</span>
                         </button>
