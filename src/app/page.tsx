@@ -148,9 +148,13 @@ export default function Home() {
       {/* ─── HERO SECTION ─── */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ contain: 'paint layout' }}>
 
-        {/* Parallax background — GPU composited, direct scroll mapping */}
+        {/* Parallax background — GPU composited, direct scroll mapping with breathing animation */}
         <motion.div className="absolute inset-0 z-0 gpu-layer pointer-events-none" style={{ y: bgY }}>
-          <div className="relative w-full h-[115%]">
+          <motion.div 
+            className="relative w-full h-[115%] origin-center"
+            animate={{ scale: [1, 1.04, 1] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          >
             <Image
               src={heroImageUrl}
               alt="Hero background"
@@ -160,7 +164,7 @@ export default function Home() {
               className="object-cover object-center"
               quality={80}
             />
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* Gradient overlays - optimized for compositing */}
@@ -226,18 +230,23 @@ export default function Home() {
               transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl flex items-center gap-4 justify-center gpu-layer"
             >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-300 to-accent">
+              <motion.span 
+                className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-200 to-primary bg-[length:200%_auto] inline-block"
+                animate={{ backgroundPosition: ['0% center', '200% center'] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              >
                 3D
-              </span>
+              </motion.span>
               <span className="relative overflow-hidden inline-flex h-[1.1em] items-center">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={wordIndex}
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -30, opacity: 0 }}
-                    transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                    className="block text-foreground"
+                    initial={{ y: 40, opacity: 0, rotateX: -80 }}
+                    animate={{ y: 0, opacity: 1, rotateX: 0 }}
+                    exit={{ y: -40, opacity: 0, rotateX: 80 }}
+                    transition={{ duration: 0.4, type: "spring", stiffness: 300, damping: 25 }}
+                    style={{ transformOrigin: "center center", perspective: 1000 }}
+                    className="block text-foreground gpu-layer"
                   >
                     {FLOATING_WORDS[wordIndex]}
                   </motion.span>
@@ -298,17 +307,22 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3 + i * 0.04, type: "spring", stiffness: 300, damping: 20 }}
-                className="flex flex-col items-center gap-1 group"
               >
-                <span className="text-2xl sm:text-3xl font-black text-foreground group-hover:text-primary transition-colors duration-300">
-                  {stat.icon ? (
-                    <span className="flex items-center gap-1">
-                      {stat.value}
-                      <stat.icon className="w-5 h-5 text-primary fill-primary" />
-                    </span>
-                  ) : stat.value}
-                </span>
-                <span className="text-xs text-muted-foreground uppercase tracking-widest">{stat.label}</span>
+                <motion.div
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 4 + i * 0.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }}
+                  className="flex flex-col items-center gap-1 group"
+                >
+                  <span className="text-2xl sm:text-3xl font-black text-foreground group-hover:text-primary transition-colors duration-300">
+                    {stat.icon ? (
+                      <span className="flex items-center gap-1">
+                        {stat.value}
+                        <stat.icon className="w-5 h-5 text-primary fill-primary" />
+                      </span>
+                    ) : stat.value}
+                  </span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-widest">{stat.label}</span>
+                </motion.div>
               </motion.div>
             ))}
           </motion.div>
