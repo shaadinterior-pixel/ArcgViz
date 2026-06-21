@@ -146,7 +146,7 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* ─── HERO SECTION ─── */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ contain: 'paint layout' }}>
 
         {/* Parallax background — GPU composited, direct scroll mapping */}
         <motion.div className="absolute inset-0 z-0 gpu-layer pointer-events-none" style={{ y: bgY }}>

@@ -168,28 +168,21 @@ function StackedSection({
     offset: ['start start', 'end start'],
   });
 
-  const springCfg = isLowEnd ? FAST_SPRING : SMOOTH_SPRING;
-  const scaleCfg  = isLowEnd ? FAST_SPRING : { stiffness: 140, damping: 22 };
-
-  const rawX       = useTransform(scrollYProgress, [0, 0.82], [0, -scrollRange]);
-  const rawScale   = useTransform(scrollYProgress, [0.78, 1], [1, 0.93]);
-  const rawOpacity = useTransform(scrollYProgress, [0.78, 1], [1, 0.35]);
-  const rawOverlay = useTransform(scrollYProgress, [0.78, 1], [0, 0.65]);
-
-  const x              = useSpring(rawX, springCfg);
-  const scale          = useSpring(rawScale, scaleCfg);
-  const opacity        = useSpring(rawOpacity, scaleCfg);
-  const overlayOpacity = useSpring(rawOverlay, scaleCfg);
+  // Direct mapped values for zero-latency scroll syncing
+  const x              = useTransform(scrollYProgress, [0, 0.82], [0, -scrollRange]);
+  const scale          = useTransform(scrollYProgress, [0.78, 1], [1, 0.93]);
+  const opacity        = useTransform(scrollYProgress, [0.78, 1], [1, 0.35]);
+  const overlayOpacity = useTransform(scrollYProgress, [0.78, 1], [0, 0.65]);
 
   return (
     <div
       id={category.id}
       ref={containerRef}
       className={`category-parent relative w-full ${isLast ? 'h-[150vh]' : 'h-[260vh]'}`}
-      style={{ zIndex: index }}
+      style={{ zIndex: index, contain: 'paint layout' }}
     >
       <motion.div
-        className="sticky top-32 w-full flex flex-col bg-card overflow-hidden shadow-2xl origin-top border-t border-border/60"
+        className="sticky top-32 w-full flex flex-col bg-card overflow-hidden shadow-2xl origin-top border-t border-border/60 gpu-layer"
         style={{
           scale,
           opacity,
