@@ -1,0 +1,15 @@
+name = "shaad3d"
+compatibility_date = "2024-03-20"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".open-next/cloudflare-pages"
+
+# Do not commit secrets to this file!
+# Use wrangler secret put <NAME> or set them in the Cloudflare dashboard.
+# 
+# Required secrets for your project:
+# NEXT_PUBLIC_SUPABASE_URL
+# NEXT_PUBLIC_SUPABASE_ANON_KEY
+# SUPABASE_SERVICE_ROLE_KEY
+# NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+# CLOUDINARY_API_KEY
+# CLOUDINARY_API_SECRET
