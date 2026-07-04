@@ -29,10 +29,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [connected, setConnected] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Ping Supabase to check connectivity
+    // Ping Supabase — use a simple RPC that doesn't need RLS clearance
     (async () => {
-      const { error } = await supabase.from('products').select('id').limit(1);
-      setConnected(!error);
+      try {
+        const { error } = await supabase.from('products').select('id', { count: 'exact', head: true });
+        // PGRST116 = no rows, but that still means connected
+        setConnected(!error || error.code === 'PGRST116');
+      } catch {
+        setConnected(false);
+      }
     })();
   }, []);
 
@@ -71,7 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-bold text-sm leading-none">Admin Panel</p>
-              <p className="text-[10px] text-foreground/40 mt-0.5">ArchViz Market</p>
+              <p className="text-[10px] text-foreground/40 mt-0.5">Design Walla</p>
             </div>
             {/* Connection indicator */}
             <div
