@@ -15,7 +15,7 @@ const EMPTY: Omit<Product,'id'> = {
   image:'', thumbnail_url:'', gallery_images:[], status:'Active',
   sales:0, rating:'5.0', author:'ArchViz Studio',
   date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
-  google_drive_share_link:'', google_drive_file_id:'', download_url:'',
+  google_drive_share_link:'', google_drive_file_id:'', download_url:'', model_url:'',
   software_support:[], file_formats:[], poly_count:'', texture_resolution:'', file_size:'', features:[],
 };
 
@@ -297,18 +297,44 @@ export default function AdminProductsPage() {
                     </div>
                   ))}
                   <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Features <span className="normal-case font-normal opacity-60">one per line</span></label>
-                    <textarea rows={3} placeholder={"Fully textured\nIncludes lighting\nRoyalty-free license"} className="w-full bg-secondary/40 border border-border rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-                      value={(editing.features??[]).join('\n')}
-                      onChange={e=>setField('features',e.target.value.split('\n').map(s=>s.trim()).filter(Boolean))}/>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Technical Properties</label>
+                    <div className="flex flex-wrap gap-4 mt-1">
+                      {['Rigged', 'Animated', 'Game-Ready', '3D Printable'].map(feat => (
+                        <label key={feat} className="flex items-center gap-2 text-sm cursor-pointer">
+                          <input type="checkbox" className="rounded border-border text-primary focus:ring-primary" 
+                            checked={(editing.features??[]).includes(feat)}
+                            onChange={(e) => {
+                              const current = editing.features || [];
+                              if (e.target.checked) setField('features', [...current, feat]);
+                              else setField('features', current.filter(f => f !== feat));
+                            }}
+                          />
+                          <span>{feat}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="sm:col-span-2 space-y-1.5 mt-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Other Features <span className="normal-case font-normal opacity-60">one per line</span></label>
+                    <textarea rows={3} placeholder={"Fully textured\nIncludes lighting"} className="w-full bg-secondary/40 border border-border rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                      value={(editing.features??[]).filter(f => !['Rigged', 'Animated', 'Game-Ready', '3D Printable'].includes(f)).join('\n')}
+                      onChange={e=>{
+                        const standard = ['Rigged', 'Animated', 'Game-Ready', '3D Printable'].filter(f => (editing.features??[]).includes(f));
+                        const custom = e.target.value.split('\n').map(s=>s.trim()).filter(Boolean);
+                        setField('features', [...standard, ...custom]);
+                      }}/>
                   </div>
                 </div>
               </section>
 
-              {/* Images */}
+              {/* Media & 3D Viewer */}
               <section className="space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/40">Product Images</h3>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/40">Media & 3D Viewer</h3>
                 <div className="space-y-3">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">3D Model URL (.glb / .gltf)</label>
+                    <Input placeholder="https://example.com/model.glb" className="bg-secondary/40 border-border flex-1" value={editing.model_url ?? ''} onChange={e=>setField('model_url',e.target.value)}/>
+                  </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Main Thumbnail</label>
                     <div className="flex items-center gap-3">
