@@ -8,6 +8,7 @@ import { motion, useScroll, useTransform, AnimatePresence, useSpring } from 'fra
 import { ArrowRight, Star, Download, Play, Search } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { SoftwareMarquee } from '@/components/ui/SoftwareMarquee';
+import { CategoryMarquee } from '@/components/ui/CategoryMarquee';
 
 // ── Lazy-load the heaviest component (CategoryShowcase) ──────────────────────
 // It contains 5 stacked scroll-driven sections with spring physics.
@@ -158,16 +159,36 @@ export default function Home() {
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           {/* Left Column: Text & CTAs */}
-          <div className="flex flex-col gap-6">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-foreground leading-[1.1]">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, staggerChildren: 0.2 }}
+            className="flex flex-col gap-6"
+          >
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-foreground leading-[1.1]"
+            >
               One Platform. Infinite <br/> Creative Possibilities.
-            </h1>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-xl font-medium leading-relaxed">
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-base sm:text-lg text-muted-foreground max-w-xl font-medium leading-relaxed"
+            >
               All-Business Digital Ecosystem, Website Templates, Motion Design,
               Imeononjessititos, Gommonnce, Motion Graphics, Digital sirectors,
               Tennniises, Brand Kits, Digital Products, and Exonowore
-            </p>
-            <div className="flex flex-wrap gap-4 mt-4">
+            </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex flex-wrap gap-4 mt-4"
+            >
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-lg px-6 text-sm font-bold shadow-md shadow-primary/20">
                 [Explore Marketplace]
               </Button>
@@ -177,8 +198,8 @@ export default function Home() {
               <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-border/80 hover:bg-secondary/10 bg-white/80 dark:bg-black/50 backdrop-blur-sm">
                 [Download Free Assets]
               </Button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Right Column: Static Floating Cards - Crisp Light Theme */}
           <div className="relative h-[500px] w-full hidden lg:block">
@@ -284,6 +305,9 @@ export default function Home() {
 
       {/* Software Marquee */}
       <SoftwareMarquee />
+
+      {/* Category Marquee */}
+      <CategoryMarquee />
 
       {/* Category Showcase — lazy loaded, only rendered when scrolled near */}
       <CategoryShowcase />
