@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, ChevronDown, Upload, Bookmark } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { ThemeToggle } from '../theme/ThemeToggle';
@@ -43,48 +43,34 @@ export function Navbar() {
       <div className="h-16 flex items-center justify-between bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 border border-border/40 rounded-full px-6 shadow-sm">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3 shrink-0">
-          <Image src="/DESIGN WALLA LOGO .jpg" alt="Design Walla Logo" width={36} height={36} className="rounded-full object-cover shadow-sm" />
-          <span className="font-bold text-xl tracking-tight hidden sm:inline-block">DESIGN WALLA</span>
+          <Image src="/DESIGN WALLA LOGO .jpg" alt="Design Walla Logo" width={40} height={40} className="rounded-md object-cover shadow-sm" />
+          <div className="hidden sm:flex flex-col">
+            <span className="font-bold text-xl tracking-tight leading-none text-black dark:text-white">DESIGN WALLA</span>
+            <span className="text-[10px] text-muted-foreground font-medium mt-0.5">Smart Logon Ka Smart Solution</span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-          <Link href="/" className="transition-colors hover:text-primary">Home</Link>
-          <Link href="/products" className="transition-colors hover:text-primary">Marketplace</Link>
-          <Link href="/collections" className="transition-colors hover:text-primary text-foreground/60">Collections</Link>
-          <Link href="/about" className="transition-colors hover:text-primary text-foreground/60">About</Link>
+          <Link href="/products" className="transition-colors hover:text-primary flex items-center gap-1">Marketplace <ChevronDown className="w-3 h-3" /></Link>
+          <Link href="/services" className="transition-colors hover:text-primary flex items-center gap-1 text-foreground/80">Services <ChevronDown className="w-3 h-3" /></Link>
+          <Link href="/resources" className="transition-colors hover:text-primary flex items-center gap-1 text-foreground/80">Resources <ChevronDown className="w-3 h-3" /></Link>
+          <Link href="/pricing" className="transition-colors hover:text-primary text-foreground/80">Pricing</Link>
         </nav>
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center space-x-4">
-          <form onSubmit={handleSearch} className="relative w-64 flex items-center">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search assets..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-secondary/50 border-border/50 pl-9 pr-12 focus-visible:ring-1 focus-visible:ring-primary rounded-full h-9 transition-colors hover:bg-secondary/80 focus:bg-background"
-            />
-            <button
-              type="submit"
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 px-3 text-xs font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors"
-            >
-              Search
-            </button>
-          </form>
-          <ThemeToggle />
-          <Link href="/cart">
-            <Button variant="ghost" size="icon" className="relative rounded-full">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
-            </Button>
+          <Link href="/login" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors text-foreground/90">
+            <User className="w-4 h-4" />
+            Login
           </Link>
-          <Link href="/login">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="h-5 w-5" />
-            </Button>
-          </Link>
+          <Button className="bg-black text-white hover:bg-black/90 rounded-full h-10 px-5 flex items-center gap-2 font-semibold">
+            <Upload className="w-4 h-4" />
+            Upload
+          </Button>
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <Bookmark className="w-5 h-5 text-foreground/80" />
+          </Button>
         </div>
 
         {/* Mobile Action Row */}
