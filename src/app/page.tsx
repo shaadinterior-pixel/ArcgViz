@@ -166,9 +166,9 @@ export default function Home() {
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
       <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-[#F0F7F3] pt-28 pb-12">
 
-        {/* Animated gradient orbs */}
-        <div className="animate-orb-drift absolute -bottom-48 -left-48 w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-[#24B86C]/20 via-[#11998E]/10 to-transparent filter blur-[130px] pointer-events-none" />
-        <div className="animate-orb-drift-reverse absolute -top-32 -right-48 w-[600px] h-[600px] rounded-full bg-gradient-to-bl from-[#11998E]/15 to-transparent filter blur-[110px] pointer-events-none" />
+        {/* Animated gradient orbs - Optimized with radial gradients instead of heavy blur filters */}
+        <div className="animate-orb-drift absolute -bottom-48 -left-48 w-[700px] h-[700px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.15)_0,transparent_60%)] pointer-events-none" />
+        <div className="animate-orb-drift-reverse absolute -top-32 -right-48 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.12)_0,transparent_60%)] pointer-events-none" />
 
         {/* DW Watermark — styled like logo lettering */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0 select-none">
