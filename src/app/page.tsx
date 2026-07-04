@@ -85,13 +85,17 @@ const HERO_CARDS = [
 function HeroCard({ card, delay }: { card: typeof HERO_CARDS[0]; delay: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28, scale: 0.9 }}
+      initial={{ opacity: 0, y: 40, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
       className={`absolute ${card.floatClass} cursor-pointer group`}
       style={{ ...card.style, width: card.w, zIndex: card.style.zIndex || 20 }}
     >
-      <div className="bg-white/40 backdrop-blur-[20px] rounded-3xl p-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-white/60 hover:bg-white/50 transition-all duration-300">
+      <motion.div 
+        animate={{ y: [0, -8, 0] }} 
+        transition={{ duration: 4 + Math.random() * 2, repeat: Infinity, ease: "easeInOut" }}
+        className="bg-white/60 backdrop-blur-2xl rounded-3xl p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] border border-white hover:bg-white/80 hover:shadow-[0_20px_80px_rgba(0,229,153,0.15)] transition-all duration-500"
+      >
         <div className={`relative w-full ${card.aspect} rounded-2xl overflow-hidden shadow-inner`}>
           <Image src={card.img} alt={card.label} fill className="object-cover" quality={75} sizes="300px" />
           {card.dark && (
@@ -105,10 +109,10 @@ function HeroCard({ card, delay }: { card: typeof HERO_CARDS[0]; delay: number }
             <CheckCircle2 className="w-4 h-4 text-white" />
           </div>
         </div>
-        <div className="px-2 pt-3 pb-1 text-center">
-          <span className={`font-bold text-[#111111] ${card.featured ? 'text-[15px]' : 'text-[13px]'}`}>{card.label}</span>
+        <div className="px-3 pt-3 pb-2 text-center">
+          <span className={`font-black text-transparent bg-clip-text bg-gradient-to-br from-zinc-800 to-zinc-500 tracking-tight ${card.featured ? 'text-[15px]' : 'text-[13px]'}`}>{card.label}</span>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -122,9 +126,13 @@ function IconCard({ card, delay }: { card: typeof ICON_CARDS[0]; delay: number }
       className={`absolute ${card.floatClass} z-10`}
       style={card.style}
     >
-      <div className="w-11 h-11 glass-card rounded-xl flex items-center justify-center shadow-lg text-xl border border-white/50 bg-white/40">
+      <motion.div 
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, ease: "easeInOut" }}
+        className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.08)] text-2xl border border-white/80 bg-white/70 backdrop-blur-xl"
+      >
         {card.emoji}
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -161,20 +169,20 @@ export default function Home() {
     <div className="flex flex-col">
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden bg-white pt-24 pb-32">
+      <section className="relative min-h-[95vh] flex flex-col justify-center overflow-hidden bg-[#FAFCFB] pt-24 pb-32">
 
-        {/* Animated gradient orbs - Optimized with radial gradients instead of heavy blur filters */}
-        <div className="animate-orb-drift absolute -bottom-48 -left-48 w-[700px] h-[700px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.15)_0,transparent_60%)] pointer-events-none" />
-        <div className="animate-orb-drift-reverse absolute -top-32 -right-48 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.12)_0,transparent_60%)] pointer-events-none" />
+        {/* Ethereal Mesh Gradients */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />
+        <div className="animate-orb-drift absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,229,153,0.12)_0,transparent_70%)] blur-3xl pointer-events-none" />
+        <div className="animate-orb-drift-reverse absolute bottom-[-20%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,161,255,0.08)_0,transparent_70%)] blur-3xl pointer-events-none" />
 
-        {/* DW Watermark — styled exactly like logo lettering with glowing green */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0 select-none opacity-80">
+        {/* Refined DW Background Watermark */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0 select-none opacity-[0.03]">
           <span
-            className="font-black leading-none text-transparent bg-clip-text bg-gradient-to-br from-[#00E599]/40 to-transparent blur-[2px]"
+            className="font-black leading-none text-zinc-900"
             style={{
-              fontSize: 'clamp(300px, 60vw, 800px)',
-              letterSpacing: '-0.06em',
-              textShadow: '0 0 120px rgba(0, 229, 153, 0.4)',
+              fontSize: 'clamp(300px, 60vw, 900px)',
+              letterSpacing: '-0.08em',
               fontFamily: 'system-ui, -apple-system, sans-serif',
               transform: 'translateY(-5%)'
             }}
@@ -191,48 +199,53 @@ export default function Home() {
 
             {/* Platform badge */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#24B86C]/10 border border-[#24B86C]/20 text-[#24B86C] text-xs font-bold tracking-widest uppercase">
-                ✦ All-in-One Creative Platform
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#E2EDE8] text-zinc-600 text-xs font-bold tracking-widest uppercase shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-[#00E599] animate-pulse" /> All-in-One Creative Platform
               </span>
             </motion.div>
 
             {/* Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="text-5xl sm:text-6xl lg:text-[5.5rem] font-bold tracking-tight text-[#111111] leading-[1.1]"
+              transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05]"
             >
-              One Platform. Infinite <br />Creative Possibilities.
+              One Platform. <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E599] via-[#00d08a] to-[#00A1FF]">
+                Infinite Creative
+              </span><br/>
+              Possibilities.
             </motion.h1>
 
             {/* Sub */}
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.25 }}
-              className="text-[17px] font-medium text-zinc-800 max-w-[540px] leading-relaxed"
+              transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="text-lg font-medium text-zinc-500 max-w-[540px] leading-relaxed"
             >
-              All-Business Digital Ecosystem, Website Templates, Motion Design, Interior Design, Brand Kits, Digital Products, and Exonowore
+              The ultimate digital ecosystem. Elevate your brand with premium Website Templates, Motion Design, Interior Renders, and high-end 3D Assets.
             </motion.p>
 
             {/* CTAs */}
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.35 }}
-              className="flex flex-wrap gap-4 mt-2"
+              transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-wrap gap-4 mt-4"
             >
               <Link href="/products">
-                <Button className="h-12 px-6 rounded-lg bg-[#00E599] hover:bg-[#00D08A] text-white font-bold text-sm shadow-[0_8px_20px_rgba(0,229,153,0.3)] transition-all">
-                  [Explore Marketplace]
+                <Button className="h-14 px-8 rounded-full bg-[#111111] hover:bg-[#00E599] text-white hover:text-[#111] font-bold text-[15px] shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 group">
+                  Explore Marketplace
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button variant="outline" className="h-12 px-6 rounded-lg border-2 border-zinc-300 text-zinc-800 font-bold text-sm hover:border-zinc-800 hover:bg-zinc-50 transition-all bg-transparent backdrop-blur-sm">
-                  [Hire Our Team]
+                <Button variant="outline" className="h-14 px-8 rounded-full border border-zinc-200 text-zinc-700 font-bold text-[15px] hover:border-[#111111] hover:text-[#111111] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] transition-all duration-300">
+                  Hire Our Team
                 </Button>
               </Link>
               <Link href="/resources">
-                <Button variant="outline" className="h-12 px-6 rounded-lg border-2 border-zinc-300 text-zinc-800 font-bold text-sm hover:border-zinc-800 hover:bg-zinc-50 transition-all bg-transparent backdrop-blur-sm">
-                  [Download Free Assets]
+                <Button variant="outline" className="h-14 px-8 rounded-full border border-zinc-200 text-zinc-700 font-bold text-[15px] hover:border-[#111111] hover:text-[#111111] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] transition-all duration-300">
+                  Free Assets
                 </Button>
               </Link>
             </motion.div>
