@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { CategoryMarquee } from '@/components/ui/CategoryMarquee';
 import { WhatWeDoSection } from '@/components/ui/WhatWeDoSection';
 import { HowWeWorkSection } from '@/components/ui/HowWeWorkSection';
+import { SoftwareMarquee } from '@/components/ui/SoftwareMarquee';
 
 // ── Lazy-load the heaviest component (CategoryShowcase) ──────────────────────
 // It contains 5 stacked scroll-driven sections with spring physics.
