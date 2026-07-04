@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { motion, useScroll, useTransform, AnimatePresence, useSpring } from 'framer-motion';
-import { ArrowRight, Star, Download, Play } from 'lucide-react';
+import { ArrowRight, Star, Download, Play, Search } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { SoftwareMarquee } from '@/components/ui/SoftwareMarquee';
 
@@ -265,33 +265,40 @@ export default function Home() {
             Discover world-class 3D models, PBR materials, and complete interior scenes crafted by elite industry professionals.
           </motion.p>
 
-          {/* CTA buttons */}
+          {/* Hero Search */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.2 }}
-            className="flex flex-col sm:flex-row gap-4 mb-16 gpu-layer"
+            className="w-full max-w-2xl mb-16 gpu-layer relative"
           >
-            <Link href="/products">
-              <Button size="lg" className="group relative h-14 px-8 text-base overflow-hidden">
-                {!isLowEnd && (
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0"
-                    initial={{ x: '-100%' }}
-                    animate={{ x: '200%' }}
-                    transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
-                  />
-                )}
-                Explore Marketplace
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link href="/collections">
-              <Button size="lg" variant="glass" className="h-14 px-8 text-base border border-border/60 hover:border-primary/40 backdrop-blur-sm gap-2">
-                <Play className="w-4 h-4 fill-current" />
-                View Collections
-              </Button>
-            </Link>
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const query = formData.get('search');
+                if (query) {
+                  window.location.href = `/products?search=${encodeURIComponent(query as string)}`;
+                }
+              }}
+              className="relative flex items-center w-full group"
+            >
+              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                <Search className="h-6 w-6 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
+              <input
+                type="text"
+                name="search"
+                className="w-full h-16 pl-14 pr-32 rounded-full border border-border bg-background/80 backdrop-blur-md text-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent shadow-lg transition-all"
+                placeholder="Search models, textures, designs..."
+                autoComplete="off"
+              />
+              <div className="absolute inset-y-0 right-2 flex items-center">
+                <Button type="submit" className="h-12 px-8 rounded-full text-base font-bold shadow-md hover:shadow-lg">
+                  Search
+                </Button>
+              </div>
+            </form>
           </motion.div>
 
           {/* Stats */}
@@ -381,16 +388,12 @@ export default function Home() {
           {/* Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {trendingProducts.map((product, index) => (
-              <motion.div
+              <div
                 key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.25, delay: index * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                className="h-full gpu-layer"
+                className="h-full"
               >
                 <Link href={`/products/${product.id}`} className="block h-full group">
-                  <div className="h-full flex flex-col rounded-2xl overflow-hidden border border-border bg-card hover:border-primary/40 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5">
+                  <div className="h-full flex flex-col rounded-2xl overflow-hidden border border-border bg-card">
 
                     {/* Image */}
                     <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/10' }}>
@@ -399,15 +402,9 @@ export default function Home() {
                         alt={product.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover transition-transform duration-400 group-hover:scale-105"
+                        className="object-cover"
                         quality={75}
                       />
-                      <div className="absolute inset-0 bg-background/0 group-hover:bg-background/30 transition-colors duration-300" />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        <span className="flex items-center justify-center gap-2 bg-background/90 backdrop-blur-sm text-foreground text-sm font-semibold px-5 py-2.5 rounded-full border border-border shadow-lg translate-y-3 group-hover:translate-y-0 transition-transform duration-300">
-                          View Details <ArrowRight className="w-4 h-4" />
-                        </span>
-                      </div>
                       <div className="absolute top-3 right-3 flex items-center justify-center gap-1 bg-background/80 backdrop-blur-sm text-foreground text-xs font-bold px-2.5 py-1 rounded-lg border border-border/60">
                         <Star className="w-3 h-3 text-primary fill-primary" />
                         {product.rating}
@@ -419,14 +416,14 @@ export default function Home() {
                       <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                         {product.author}
                       </span>
-                      <h3 className="text-base font-bold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-200">
+                      <h3 className="text-base font-bold text-foreground leading-snug line-clamp-2">
                         {product.title}
                       </h3>
                       <div className="flex-1" />
                       <div className="h-px bg-border/60" />
                       <div className="flex items-center justify-between">
                         <span className="text-xl font-black text-foreground">{product.price}</span>
-                        <button className="flex items-center justify-center gap-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground px-4 py-2 rounded-full transition-all duration-200">
+                        <button className="flex items-center justify-center gap-1.5 bg-primary/10 text-primary px-4 py-2 rounded-full">
                           <Download className="w-3.5 h-3.5" />
                           <span className="font-bold text-xs leading-none mt-px">Get</span>
                         </button>
@@ -434,7 +431,7 @@ export default function Home() {
                     </div>
                   </div>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
 
