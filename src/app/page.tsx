@@ -90,22 +90,22 @@ function HeroCard({ card, delay }: { card: typeof HERO_CARDS[0]; delay: number }
       className={`absolute ${card.floatClass} cursor-pointer group`}
       style={{ ...card.style, width: card.w, zIndex: card.style.zIndex || 20 }}
     >
-      <div className="glass-card rounded-2xl overflow-hidden shadow-xl border border-white/60 hover:shadow-[0_20px_60px_rgba(36,184,108,0.3)] hover:scale-[1.03] transition-all duration-300">
-        <div className={`relative w-full ${card.aspect} ${card.dark ? 'bg-indigo-950' : 'bg-slate-100'}`}>
+      <div className="bg-white/40 backdrop-blur-[20px] rounded-3xl p-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-white/60 hover:bg-white/50 transition-all duration-300">
+        <div className={`relative w-full ${card.aspect} rounded-2xl overflow-hidden shadow-inner`}>
           <Image src={card.img} alt={card.label} fill className="object-cover" quality={75} sizes="300px" />
           {card.dark && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-10 h-10 rounded-xl bg-purple-600/80 backdrop-blur-sm flex items-center justify-center">
-                <Play className="w-5 h-5 text-white fill-white" />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+              <div className="w-12 h-12 rounded-[14px] bg-[#9333EA] flex items-center justify-center shadow-lg">
+                <Play className="w-5 h-5 text-white fill-white ml-1" />
               </div>
             </div>
           )}
-          <div className="absolute top-2 right-2 w-5 h-5 bg-[#24B86C] rounded-full flex items-center justify-center shadow-md">
-            <CheckCircle2 className="w-3 h-3 text-white" />
+          <div className="absolute top-2.5 right-2.5 w-6 h-6 bg-[#00E599] rounded-full flex items-center justify-center shadow-md border-2 border-white">
+            <CheckCircle2 className="w-4 h-4 text-white" />
           </div>
         </div>
-        <div className="px-3 py-2 bg-white/95 backdrop-blur-sm">
-          <span className={`font-bold text-[#0D1A12] ${card.featured ? 'text-[15px]' : 'text-[13px]'}`}>{card.label}</span>
+        <div className="px-2 pt-3 pb-1 text-center">
+          <span className={`font-bold text-[#111111] ${card.featured ? 'text-[15px]' : 'text-[13px]'}`}>{card.label}</span>
         </div>
       </div>
     </motion.div>
@@ -155,32 +155,27 @@ export default function Home() {
     return () => { mounted = false; unsub(); };
   }, []);
 
-  const stats = [
-    { value: heroContent.stat1_value, label: heroContent.stat1_label },
-    { value: heroContent.stat2_value, label: heroContent.stat2_label },
-    { value: heroContent.stat3_value, label: heroContent.stat3_label },
-    { value: heroContent.stat4_value, label: heroContent.stat4_label },
-  ];
 
   return (
     <div className="flex flex-col">
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-[#F0F7F3] pt-28 pb-12">
+      <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden bg-white pt-24 pb-32">
 
         {/* Animated gradient orbs - Optimized with radial gradients instead of heavy blur filters */}
         <div className="animate-orb-drift absolute -bottom-48 -left-48 w-[700px] h-[700px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.15)_0,transparent_60%)] pointer-events-none" />
         <div className="animate-orb-drift-reverse absolute -top-32 -right-48 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.12)_0,transparent_60%)] pointer-events-none" />
 
-        {/* DW Watermark — styled like logo lettering */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0 select-none">
+        {/* DW Watermark — styled exactly like logo lettering with glowing green */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0 select-none opacity-80">
           <span
-            className="font-black leading-none text-[#24B86C] opacity-[0.06]"
+            className="font-black leading-none text-transparent bg-clip-text bg-gradient-to-br from-[#00E599]/40 to-transparent blur-[2px]"
             style={{
-              fontSize: 'clamp(200px, 42vw, 600px)',
-              letterSpacing: '-0.05em',
-              textShadow: '0 0 80px rgba(36,184,108,0.3)',
+              fontSize: 'clamp(300px, 60vw, 800px)',
+              letterSpacing: '-0.06em',
+              textShadow: '0 0 120px rgba(0, 229, 153, 0.4)',
               fontFamily: 'system-ui, -apple-system, sans-serif',
+              transform: 'translateY(-5%)'
             }}
           >
             DW
@@ -204,60 +199,41 @@ export default function Home() {
             <motion.h1
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.15 }}
-              className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-[#0D1A12] leading-[1.05]"
+              className="text-5xl sm:text-6xl lg:text-[5.5rem] font-bold tracking-tight text-[#111111] leading-[1.1]"
             >
-              {heroContent.headline_line1}
-              <br />
-              <span className="bg-gradient-to-r from-[#24B86C] to-[#11998E] bg-clip-text text-transparent">
-                {heroContent.headline_line2}
-              </span>
+              One Platform. Infinite <br />Creative Possibilities.
             </motion.h1>
 
             {/* Sub */}
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.25 }}
-              className="text-base text-[#4B5563] max-w-lg leading-relaxed"
+              className="text-[17px] font-medium text-zinc-800 max-w-[540px] leading-relaxed"
             >
-              {heroContent.subheadline}
+              All-Business Digital Ecosystem, Website Templates, Motion Design, Interior Design, Brand Kits, Digital Products, and Exonowore
             </motion.p>
 
             {/* CTAs */}
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.35 }}
-              className="flex flex-wrap gap-3"
+              className="flex flex-wrap gap-4 mt-2"
             >
-              <Link href={heroContent.cta1_link}>
-                <Button className="relative overflow-hidden bg-gradient-to-r from-[#24B86C] to-[#11998E] text-white rounded-xl px-7 py-5 text-sm font-bold shadow-lg shadow-[#24B86C]/30 border-0 group hover:shadow-xl hover:shadow-[#24B86C]/40 transition-all duration-300">
-                  <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent group-hover:animate-shine" />
-                  <span className="relative flex items-center gap-2">{heroContent.cta1_text} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
+              <Link href="/products">
+                <Button className="h-12 px-6 rounded-lg bg-[#00E599] hover:bg-[#00D08A] text-white font-bold text-sm shadow-[0_8px_20px_rgba(0,229,153,0.3)] transition-all">
+                  [Explore Marketplace]
                 </Button>
               </Link>
-              <Link href={heroContent.cta2_link}>
-                <Button variant="outline" className="rounded-xl px-7 py-5 text-sm font-bold border-2 border-[#24B86C] text-[#24B86C] hover:bg-[#24B86C]/8 bg-white/70 backdrop-blur-sm">
-                  {heroContent.cta2_text}
+              <Link href="/contact">
+                <Button variant="outline" className="h-12 px-6 rounded-lg border-2 border-zinc-300 text-zinc-800 font-bold text-sm hover:border-zinc-800 hover:bg-zinc-50 transition-all bg-transparent backdrop-blur-sm">
+                  [Hire Our Team]
                 </Button>
               </Link>
-              <Link href={heroContent.cta3_link}>
-                <Button variant="outline" className="rounded-xl px-7 py-5 text-sm font-bold border-2 border-[#11998E]/50 text-[#11998E] hover:bg-[#11998E]/8 bg-white/70 backdrop-blur-sm">
-                  {heroContent.cta3_text}
+              <Link href="/resources">
+                <Button variant="outline" className="h-12 px-6 rounded-lg border-2 border-zinc-300 text-zinc-800 font-bold text-sm hover:border-zinc-800 hover:bg-zinc-50 transition-all bg-transparent backdrop-blur-sm">
+                  [Download Free Assets]
                 </Button>
               </Link>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.45 }}
-              className="flex flex-wrap gap-2 mt-1"
-            >
-              {stats.map((s, i) => (
-                <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[#24B86C]/15 shadow-sm">
-                  <span className="text-sm font-black text-[#24B86C]">{s.value}</span>
-                  <span className="text-xs text-[#6B7280] font-medium">{s.label}</span>
-                </div>
-              ))}
             </motion.div>
           </motion.div>
 
