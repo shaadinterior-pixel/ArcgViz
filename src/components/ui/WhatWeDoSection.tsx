@@ -124,7 +124,7 @@ export function WhatWeDoSection() {
         {/* Header Row */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12">
           <div>
-            <h4 className="text-[#FF4500] font-bold text-sm tracking-[0.2em] uppercase mb-4">WHAT WE DO</h4>
+            <h4 className="text-[#24B86C] font-bold text-sm tracking-[0.2em] uppercase mb-4">WHAT WE DO</h4>
             <h2 className="text-6xl md:text-7xl font-black tracking-tight leading-[0.9]">
               <span className="text-white">Ten crafts.</span><br />
               <span className="text-zinc-600">One studio.</span>
@@ -145,7 +145,7 @@ export function WhatWeDoSection() {
                 onClick={() => setActiveTab(service.id)}
                 className={`whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border ${
                   isActive 
-                    ? 'bg-[#FF4500] border-[#FF4500] text-white' 
+                    ? 'bg-gradient-to-r from-[#24B86C] to-[#11998E] border-transparent text-white shadow-lg shadow-[#24B86C]/20' 
                     : 'bg-transparent border-zinc-800 text-zinc-300 hover:border-zinc-500'
                 }`}
               >
@@ -180,7 +180,7 @@ export function WhatWeDoSection() {
                 
                 {/* Image Overlay Text */}
                 <div className="absolute bottom-0 left-0 p-8 w-full">
-                  <p className="text-[#FF4500] font-bold tracking-widest text-xs uppercase mb-2">
+                  <p className="bg-gradient-to-r from-[#24B86C] to-[#11998E] bg-clip-text text-transparent font-bold tracking-widest text-xs uppercase mb-2">
                     SERVICE {String(serviceIndex).padStart(2, '0')}
                   </p>
                   <h3 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2">
@@ -216,15 +216,16 @@ export function WhatWeDoSection() {
                 <ul className="space-y-4 mb-10 flex-1">
                   {activeService.includes.map((item, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-[#FF4500] shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-5 h-5 text-[#24B86C] shrink-0 mt-0.5" />
                       <span className="text-zinc-300 text-sm">{item}</span>
                     </li>
                   ))}
                 </ul>
 
-                <button className="w-full bg-[#FF4500] hover:bg-[#E63E00] text-white font-bold py-4 rounded-xl flex items-center justify-between px-6 transition-colors duration-300">
-                  <span>Start a {activeService.category} project</span>
-                  <ArrowUpRight className="w-5 h-5" />
+                <button className="relative overflow-hidden w-full bg-gradient-to-r from-[#24B86C] to-[#11998E] text-white font-bold py-4 rounded-xl flex items-center justify-between px-6 transition-all duration-300 shadow-lg shadow-[#24B86C]/20 group hover:shadow-xl hover:shadow-[#24B86C]/40 border-0">
+                  <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover:animate-shine" />
+                  <span className="relative z-10">Start a {activeService.category} project</span>
+                  <ArrowUpRight className="relative z-10 w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
                 </button>
               </motion.div>
             </AnimatePresence>
