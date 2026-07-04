@@ -68,10 +68,7 @@ export function Navbar() {
             <User className="w-4 h-4" />
             Login
           </Link>
-          <Button className="bg-black text-white hover:bg-black/90 rounded-full h-10 px-5 flex items-center gap-2 font-semibold">
-            <Upload className="w-4 h-4" />
-            Upload
-          </Button>
+
           <Button variant="ghost" size="icon" className="rounded-full">
             <Bookmark className="w-5 h-5 text-foreground/80" />
           </Button>
