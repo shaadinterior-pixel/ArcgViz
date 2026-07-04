@@ -4,7 +4,7 @@ import { Box, Twitter, Instagram, Linkedin, Github } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/40 bg-secondary/20 relative overflow-hidden">
+    <footer className="border-t border-[#E2EDE8] bg-white relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
       
@@ -12,19 +12,19 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
           <div className="md:col-span-4 lg:col-span-5">
             <Link href="/" className="flex items-center space-x-2 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Box className="w-6 h-6 text-primary" />
+              <div className="w-10 h-10 rounded-xl bg-[#24B86C]/10 flex items-center justify-center">
+                <Box className="w-6 h-6 text-[#24B86C]" />
               </div>
-              <span className="font-bold text-2xl tracking-tight">ArchViz Market</span>
+              <span className="font-bold text-2xl tracking-tight text-[#0D1A12]">Design Walla</span>
             </Link>
-            <p className="text-foreground/60 mb-8 leading-relaxed max-w-sm">
-              The world&apos;s most premium digital marketplace for Interior Architecture, ArchViz assets, and PBR materials.
+            <p className="text-[#6B7280] mb-8 leading-relaxed max-w-sm">
+              The world&apos;s most premium digital marketplace for Design, 3D Models, Website Templates, Brand Kits, and Digital Products.
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="w-10 h-10 rounded-full bg-background flex items-center justify-center text-foreground/60 hover:text-primary hover:scale-110 transition-all duration-300 border border-border/50"><Twitter className="w-4 h-4" /></Link>
-              <Link href="#" className="w-10 h-10 rounded-full bg-background flex items-center justify-center text-foreground/60 hover:text-primary hover:scale-110 transition-all duration-300 border border-border/50"><Instagram className="w-4 h-4" /></Link>
-              <Link href="#" className="w-10 h-10 rounded-full bg-background flex items-center justify-center text-foreground/60 hover:text-primary hover:scale-110 transition-all duration-300 border border-border/50"><Linkedin className="w-4 h-4" /></Link>
-              <Link href="#" className="w-10 h-10 rounded-full bg-background flex items-center justify-center text-foreground/60 hover:text-primary hover:scale-110 transition-all duration-300 border border-border/50"><Github className="w-4 h-4" /></Link>
+              <Link href="#" className="w-10 h-10 rounded-full bg-[#F8FAF9] border border-[#E2EDE8] flex items-center justify-center text-[#6B7280] hover:text-[#24B86C] hover:border-[#24B86C]/30 hover:scale-110 transition-all duration-300"><Twitter className="w-4 h-4" /></Link>
+              <Link href="#" className="w-10 h-10 rounded-full bg-[#F8FAF9] border border-[#E2EDE8] flex items-center justify-center text-[#6B7280] hover:text-[#24B86C] hover:border-[#24B86C]/30 hover:scale-110 transition-all duration-300"><Instagram className="w-4 h-4" /></Link>
+              <Link href="#" className="w-10 h-10 rounded-full bg-[#F8FAF9] border border-[#E2EDE8] flex items-center justify-center text-[#6B7280] hover:text-[#24B86C] hover:border-[#24B86C]/30 hover:scale-110 transition-all duration-300"><Linkedin className="w-4 h-4" /></Link>
+              <Link href="#" className="w-10 h-10 rounded-full bg-[#F8FAF9] border border-[#E2EDE8] flex items-center justify-center text-[#6B7280] hover:text-[#24B86C] hover:border-[#24B86C]/30 hover:scale-110 transition-all duration-300"><Github className="w-4 h-4" /></Link>
             </div>
           </div>
           
@@ -66,8 +66,8 @@ export function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-border/30 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-foreground/50">
-          <p>&copy; {new Date().getFullYear()} ArchViz Market. All rights reserved.</p>
+        <div className="border-t border-[#E2EDE8] mt-16 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-[#9CA3AF]">
+          <p>&copy; {new Date().getFullYear()} Design Walla. All rights reserved.</p>
           <div className="mt-4 md:mt-0 flex space-x-6">
             <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
