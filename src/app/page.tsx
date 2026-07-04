@@ -30,49 +30,96 @@ async function fetchCached() {
   if (_productsCache && Date.now() - _cacheTime < 60_000) return _productsCache;
   const data = await fetchProducts();
   _productsCache = data; _cacheTime = Date.now();
-  return data;
-}
+// ── Small icon-only decorative cards ─────────────────────────────────────────
+const ICON_CARDS = [
+  { id: 'ic1', emoji: '🖼️', floatClass: 'animate-float-2', style: { top: '35%', left: '8%' } },
+  { id: 'ic2', emoji: '💎', floatClass: 'animate-float-4', style: { top: '5%', right: '35%' } },
+  { id: 'ic3', emoji: '📦', floatClass: 'animate-float-6', style: { bottom: '28%', right: '12%' } },
+  { id: 'ic4', emoji: '🎬', floatClass: 'animate-float-1', style: { bottom: '15%', left: '22%' } },
+  { id: 'ic5', emoji: '✏️', floatClass: 'animate-float-3', style: { top: '65%', left: '15%' } },
+];
 
-// ── Main hero elegant cards ───────────────────────────────────────────────────────────
+// ── Main hero elegant constellation cards ─────────────────────────────────────────
 const HERO_CARDS = [
   {
-    id: 'back', label: 'Website Templates', 
+    id: 'interior', label: 'Interior Design', floatClass: 'animate-float-1',
+    img: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=300',
+    style: { top: '2%', left: '2%' }, w: 200, aspect: 'aspect-[4/3]'
+  },
+  {
+    id: 'food', label: 'Food Cart Design', floatClass: 'animate-float-2',
+    img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=300',
+    style: { top: '0%', right: '5%' }, w: 220, aspect: 'aspect-video'
+  },
+  {
+    id: 'web', label: 'Website Templates', floatClass: 'animate-float-3',
     img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=400',
-    className: 'absolute top-[10%] right-[10%] w-[260px] lg:w-[300px] z-10 rotate-6 shadow-xl opacity-80 animate-float-2',
-    aspect: 'aspect-[4/3]'
+    style: { top: '35%', left: '22%', zIndex: 30 }, w: 280, featured: true, aspect: 'aspect-[16/10]'
   },
   {
-    id: 'front', label: 'Interior Design', featured: true,
-    img: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=400',
-    className: 'absolute top-[25%] right-[25%] w-[320px] lg:w-[380px] z-30 shadow-2xl animate-float-1',
-    aspect: 'aspect-[16/10]'
+    id: 'motion', label: 'Motion Graphics', floatClass: 'animate-float-4',
+    img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=300',
+    style: { top: '40%', right: '0%' }, w: 230, dark: true, aspect: 'aspect-video'
   },
   {
-    id: 'bottom', label: 'Brand Kits', 
+    id: 'brand', label: 'Brand Kits', floatClass: 'animate-float-5',
     img: 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=300',
-    className: 'absolute bottom-[10%] right-[15%] w-[220px] lg:w-[260px] z-20 -rotate-3 shadow-xl opacity-90 animate-float-3',
-    aspect: 'aspect-square'
+    style: { bottom: '5%', left: '0%' }, w: 180, aspect: 'aspect-video'
+  },
+  {
+    id: '3d', label: '3D Models', floatClass: 'animate-float-6',
+    img: 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=300',
+    style: { bottom: '2%', left: '35%' }, w: 200, aspect: 'aspect-square'
+  },
+  {
+    id: 'digital', label: 'Digital Products', floatClass: 'animate-float-7',
+    img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=300',
+    style: { bottom: '5%', right: '10%' }, w: 210, aspect: 'aspect-video'
   },
 ];
 
 function HeroCard({ card, delay }: { card: typeof HERO_CARDS[0]; delay: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      initial={{ opacity: 0, y: 28, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={`${card.className} cursor-pointer group`}
+      transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={`absolute ${card.floatClass} cursor-pointer group`}
+      style={{ ...card.style, width: card.w, zIndex: card.style.zIndex || 20 }}
     >
-      <div className="glass-card rounded-2xl overflow-hidden hover:shadow-[0_20px_60px_rgba(36,184,108,0.3)] hover:scale-[1.02] transition-all duration-300 border border-white/60">
-        <div className={`relative w-full ${card.aspect} bg-slate-100`}>
-          <Image src={card.img} alt={card.label} fill className="object-cover" quality={75} sizes="400px" />
-          <div className="absolute top-3 right-3 w-6 h-6 bg-[#24B86C] rounded-full flex items-center justify-center shadow-lg">
-            <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+      <div className="glass-card rounded-2xl overflow-hidden shadow-xl border border-white/60 hover:shadow-[0_20px_60px_rgba(36,184,108,0.3)] hover:scale-[1.03] transition-all duration-300">
+        <div className={`relative w-full ${card.aspect} ${card.dark ? 'bg-indigo-950' : 'bg-slate-100'}`}>
+          <Image src={card.img} alt={card.label} fill className="object-cover" quality={75} sizes="300px" />
+          {card.dark && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-purple-600/80 backdrop-blur-sm flex items-center justify-center">
+                <Play className="w-5 h-5 text-white fill-white" />
+              </div>
+            </div>
+          )}
+          <div className="absolute top-2 right-2 w-5 h-5 bg-[#24B86C] rounded-full flex items-center justify-center shadow-md">
+            <CheckCircle2 className="w-3 h-3 text-white" />
           </div>
         </div>
-        <div className="px-4 py-3 bg-white/95 backdrop-blur-md">
-          <span className={`font-black text-[#0D1A12] ${card.featured ? 'text-base' : 'text-sm'}`}>{card.label}</span>
+        <div className="px-3 py-2 bg-white/95 backdrop-blur-sm">
+          <span className={`font-bold text-[#0D1A12] ${card.featured ? 'text-[15px]' : 'text-[13px]'}`}>{card.label}</span>
         </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function IconCard({ card, delay }: { card: typeof ICON_CARDS[0]; delay: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, delay, ease: 'backOut' }}
+      className={`absolute ${card.floatClass} z-10`}
+      style={card.style}
+    >
+      <div className="w-11 h-11 glass-card rounded-xl flex items-center justify-center shadow-lg text-xl border border-white/50 bg-white/40">
+        {card.emoji}
       </div>
     </motion.div>
   );
@@ -211,9 +258,10 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          {/* RIGHT — Clean Elegant Presentation */}
+          {/* RIGHT — Properly Organized Premium Scatter */}
           <div className="relative h-[540px] w-full hidden lg:block">
-            {HERO_CARDS.map((card, i) => <HeroCard key={card.id} card={card} delay={0.2 + i * 0.15} />)}
+            {HERO_CARDS.map((card, i) => <HeroCard key={card.id} card={card} delay={0.2 + i * 0.08} />)}
+            {ICON_CARDS.map((card, i) => <IconCard key={card.id} card={card} delay={0.5 + i * 0.07} />)}
           </div>
 
           {/* RIGHT — Mobile scrollable strip */}
