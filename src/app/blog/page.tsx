@@ -4,8 +4,8 @@ import { ArrowLeft, Edit3 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export const metadata = {
-  title: 'Blog | ArchViz Market',
-  description: 'Read the latest news and articles from ArchViz Market.',
+  title: 'Blog | Design Walla',
+  description: 'Read the latest news and articles from Design Walla.',
 };
 
 export default function BlogPage() {

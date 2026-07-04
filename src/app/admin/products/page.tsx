@@ -13,7 +13,7 @@ const CATEGORIES = ['3D Models','PBR Materials','Interior Scenes','Furniture','L
 const EMPTY: Omit<Product,'id'> = {
   name:'', slug:'', price:'₹', category:'3D Models', description:'',
   image:'', thumbnail_url:'', gallery_images:[], status:'Active',
-  sales:0, rating:'5.0', author:'ArchViz Studio',
+  sales:0, rating:'5.0', author:'Design Walla Studio',
   date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
   google_drive_share_link:'', google_drive_file_id:'', download_url:'', model_url:'',
   software_support:[], file_formats:[], poly_count:'', texture_resolution:'', file_size:'', features:[],
@@ -255,7 +255,7 @@ export default function AdminProductsPage() {
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Author</label>
-                    <Input placeholder="ArchViz Studio" className="bg-secondary/40 border-border" value={editing.author} onChange={e=>setField('author',e.target.value)}/>
+                    <Input placeholder="Design Walla Studio" className="bg-secondary/40 border-border" value={editing.author} onChange={e=>setField('author',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Rating</label>

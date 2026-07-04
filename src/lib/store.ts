@@ -289,8 +289,8 @@ export async function fetchSettings(): Promise<StoreSettings> {
     .single();
   if (error && error.code !== 'PGRST116') throw error;
   return data || {
-    storeName: 'ArchViz Market',
-    supportEmail: 'support@archvizmarket.com',
+    storeName: 'Design Walla',
+    supportEmail: 'support@designwalla.com',
     currency: 'INR',
     razorpayEnabled: true,
     stripeEnabled: false,

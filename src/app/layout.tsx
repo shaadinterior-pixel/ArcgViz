@@ -24,8 +24,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "ArchViz Market | Premium 3D Interior Assets",
-  description: "World-class digital marketplace for selling Interior Architecture and ArchViz assets.",
+  title: "Design Walla | Premium 3D Interior Assets",
+  description: "World-class digital marketplace for selling Interior Architecture and Design Walla assets.",
 };
 
 export default function RootLayout({

@@ -4,7 +4,7 @@ import { ArrowRight, Box } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export const metadata = {
-  title: 'Curated Collections | ArchViz Market',
+  title: 'Curated Collections | Design Walla',
   description: 'Browse our exclusive curated collections of premium 3D assets and interior scenes.',
 };
 

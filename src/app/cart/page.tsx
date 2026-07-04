@@ -11,7 +11,7 @@ const MOCK_CART = [
   {
     id: '1',
     name: 'Modern Minimalist Living Room',
-    author: 'ArchViz Studio',
+    author: 'Design Walla Studio',
     price: 3499,
     image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=600&h=400',
     category: 'Interior Scenes'

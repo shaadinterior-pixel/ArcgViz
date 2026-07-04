@@ -1,5 +1,5 @@
 -- =============================================================
--- ArchViz Market — Migration: Google Drive Asset System
+-- Design Walla — Migration: Google Drive Asset System
 -- Run this in Supabase SQL Editor AFTER supabase_setup.sql
 -- =============================================================
 

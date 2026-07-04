@@ -1,6 +1,6 @@
 {
-  "storeName": "ArchViz Market",
-  "supportEmail": "support@archvizmarket.com",
+  "storeName": "Design Walla",
+  "supportEmail": "support@designwalla.com",
   "currency": "INR",
   "razorpayEnabled": true,
   "stripeEnabled": false,

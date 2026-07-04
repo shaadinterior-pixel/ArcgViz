@@ -4,8 +4,8 @@ import { ArrowLeft, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export const metadata = {
-  title: 'Terms of Service | ArchViz Market',
-  description: 'Terms and conditions for using ArchViz Market.',
+  title: 'Terms of Service | Design Walla',
+  description: 'Terms and conditions for using Design Walla.',
 };
 
 export default function TermsPage() {
@@ -16,7 +16,7 @@ export default function TermsPage() {
       </div>
       <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Terms of Service</h1>
       <p className="text-xl text-foreground/60 max-w-2xl mb-8">
-        By using ArchViz Market, you agree to our terms of service. The full document will be available here shortly.
+        By using Design Walla, you agree to our terms of service. The full document will be available here shortly.
       </p>
       <Link href="/">
         <Button size="lg" className="rounded-full">

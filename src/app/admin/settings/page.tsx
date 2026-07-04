@@ -10,8 +10,8 @@ import { useToast } from '@/components/ui/Toast';
 import { fetchSettings, saveSettings, onStoreUpdate, type StoreSettings } from '@/lib/store';
 
 const DEFAULT: StoreSettings = {
-  storeName: 'ArchViz Market',
-  supportEmail: 'support@archvizmarket.com',
+  storeName: 'Design Walla',
+  supportEmail: 'support@designwalla.com',
   currency: 'INR',
   razorpayEnabled: true,
   stripeEnabled: false,
@@ -257,7 +257,7 @@ export default function AdminSettingsPage() {
               size="sm"
               className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500"
               onClick={() => {
-                ['archviz_products','archviz_customers','archviz_settings'].forEach(k => localStorage.removeItem(k));
+                ['designwalla_products','designwalla_customers','designwalla_settings'].forEach(k => localStorage.removeItem(k));
                 toast('Cache cleared — reload to reset', 'info');
               }}
             >

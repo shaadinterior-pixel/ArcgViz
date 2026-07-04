@@ -13,9 +13,9 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
   const product = await fetchProductBySlug(slug);
-  if (!product) return { title: 'Product Not Found | ArchViz Market' };
+  if (!product) return { title: 'Product Not Found | Design Walla' };
   return {
-    title: `${product.name} | ArchViz Market`,
+    title: `${product.name} | Design Walla`,
     description: product.description ?? `High-quality 3D asset by ${product.author}`,
     openGraph: {
       images: [product.thumbnail_url || product.image].filter(Boolean),

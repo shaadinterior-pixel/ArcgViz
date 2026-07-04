@@ -1,5 +1,5 @@
 -- =============================================================
--- ArchViz Market — Migration: 3D Viewer support
+-- Design Walla — Migration: 3D Viewer support
 -- Run this in Supabase SQL Editor
 -- =============================================================
 

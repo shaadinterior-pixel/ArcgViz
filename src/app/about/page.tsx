@@ -4,8 +4,8 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export const metadata = {
-  title: 'About ArchViz Market | Premium 3D Assets',
-  description: 'Learn more about ArchViz Market and our mission to provide world-class 3D assets.',
+  title: 'About Design Walla | Premium 3D Assets',
+  description: 'Learn more about Design Walla and our mission to provide world-class 3D assets.',
 };
 
 export default function AboutPage() {
@@ -17,11 +17,11 @@ export default function AboutPage() {
         </Button>
       </Link>
       
-      <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">About ArchViz Market</h1>
+      <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">About Design Walla</h1>
       
       <div className="prose prose-invert prose-lg max-w-none text-foreground/80 space-y-6">
         <p>
-          ArchViz Market was created with a single mission: to provide architects, 3D artists, and interior designers with the highest quality, most production-ready assets available on the market today.
+          Design Walla was created with a single mission: to provide architects, 3D artists, and interior designers with the highest quality, most production-ready assets available on the market today.
         </p>
         <p>
           We know that in architectural visualization, the details matter. That's why every model, every PBR texture, and every complete scene in our marketplace goes through a rigorous quality assurance process. We ensure that our assets are optimized for rendering engines like V-Ray, Corona, and Cycles, saving you hours of setup time.

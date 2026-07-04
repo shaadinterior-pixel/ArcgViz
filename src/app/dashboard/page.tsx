@@ -43,8 +43,8 @@ export default function DashboardPage() {
 
   const user = {
     name: authUser?.user_metadata?.full_name || 'Creative User',
-    email: authUser?.email?.includes('@archviz.com') 
-      ? authUser.email.replace('@archviz.com', '') 
+    email: authUser?.email?.includes('@designwalla.com') 
+      ? authUser.email.replace('@designwalla.com', '') 
       : (authUser?.email || 'Loading...'),
     joinDate: authUser?.created_at 
       ? new Date(authUser.created_at).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) 

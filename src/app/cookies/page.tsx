@@ -4,7 +4,7 @@ import { ArrowLeft, Cookie } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export const metadata = {
-  title: 'Cookie Policy | ArchViz Market',
+  title: 'Cookie Policy | Design Walla',
   description: 'How we use cookies to improve your experience.',
 };
 

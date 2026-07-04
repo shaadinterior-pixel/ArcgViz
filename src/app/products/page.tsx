@@ -181,7 +181,7 @@ export default function ProductsPage() {
                         </div>
                         <CardContent className="p-5 flex-1 flex flex-col justify-between">
                           <div>
-                            <div className="text-[11px] font-bold text-muted-foreground mb-2 tracking-[0.15em] uppercase">{product.author || 'ArchViz Studio'}</div>
+                            <div className="text-[11px] font-bold text-muted-foreground mb-2 tracking-[0.15em] uppercase">{product.author || 'Design Walla Studio'}</div>
                             <h3 className="font-bold text-lg leading-snug mb-4 line-clamp-2 group-hover:text-primary transition-colors">{product.name}</h3>
                           </div>
                           

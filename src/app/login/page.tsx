@@ -21,7 +21,7 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
     try {
-      await signIn(`${mobile}@archviz.com`, password);
+      await signIn(`${mobile}@designwalla.com`, password);
       router.push('/dashboard');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Sign in failed. Check your credentials.');

@@ -1,7 +1,7 @@
 -- database: /path/to/database.db
 
 -- =============================================================
--- ArchViz Market – Supabase Setup Script
+-- Design Walla – Supabase Setup Script
 -- Run this in your Supabase project > SQL Editor
 -- =============================================================
 
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.products (
   sales       INTEGER NOT NULL DEFAULT 0,
   date        TEXT NOT NULL,
   image       TEXT DEFAULT '',
-  author      TEXT DEFAULT 'ArchViz Studio',
+  author      TEXT DEFAULT 'Design Walla Studio',
   rating      TEXT DEFAULT '5.0',
   description TEXT DEFAULT ''
 );
@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS public.customers (
 -- ─── 3. SETTINGS ─────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.settings (
   id               INTEGER PRIMARY KEY DEFAULT 1,
-  "storeName"      TEXT NOT NULL DEFAULT 'ArchViz Market',
-  "supportEmail"   TEXT NOT NULL DEFAULT 'support@archvizmarket.com',
+  "storeName"      TEXT NOT NULL DEFAULT 'Design Walla',
+  "supportEmail"   TEXT NOT NULL DEFAULT 'support@designwalla.com',
   currency         TEXT NOT NULL DEFAULT 'INR',
   "razorpayEnabled" BOOLEAN NOT NULL DEFAULT TRUE,
   "stripeEnabled"  BOOLEAN NOT NULL DEFAULT FALSE,
@@ -90,12 +90,12 @@ ALTER TABLE public.orders     DISABLE ROW LEVEL SECURITY;
 
 -- Default settings row
 INSERT INTO public.settings (id, "storeName", "supportEmail", currency, "razorpayEnabled", "stripeEnabled", "maintenanceMode")
-VALUES (1, 'ArchViz Market', 'support@archvizmarket.com', 'INR', TRUE, FALSE, FALSE)
+VALUES (1, 'Design Walla', 'support@designwalla.com', 'INR', TRUE, FALSE, FALSE)
 ON CONFLICT (id) DO NOTHING;
 
 -- Sample products
 INSERT INTO public.products (id, name, price, category, status, sales, date, image, author, rating, description) VALUES
-  ('modern-living-room-001', 'Modern Minimalist Living Room', '₹3,499', 'Interior Scenes', 'Active', 124, 'Jun 20, 2025', 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400', 'ArchViz Studio', '4.9', 'A clean, modern living room scene with natural lighting and premium furniture models.'),
+  ('modern-living-room-001', 'Modern Minimalist Living Room', '₹3,499', 'Interior Scenes', 'Active', 124, 'Jun 20, 2025', 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400', 'Design Walla Studio', '4.9', 'A clean, modern living room scene with natural lighting and premium furniture models.'),
   ('velvet-sofa-002', 'Luxury Velvet Sofa Model', '₹1,299', 'Furniture', 'Active', 89, 'Jun 19, 2025', 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400', 'Design Lab', '4.8', 'High-poly luxury velvet sofa with multiple fabric textures.'),
   ('concrete-pbr-003', 'Premium Concrete PBR Pack', '₹1,999', 'PBR Materials', 'Active', 203, 'Jun 18, 2025', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400', 'TextureForge', '4.7', 'Professional concrete PBR texture set — 4K resolution, includes normal, roughness, and AO maps.'),
   ('scandinavian-bedroom-004', 'Scandinavian Bedroom Scene', '₹4,999', 'Interior Scenes', 'Active', 67, 'Jun 17, 2025', 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400', 'Nordic3D', '5.0', 'Full bedroom scene with Scandinavian design aesthetic, ready for rendering.'),

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 const FREE_RESOURCES = [
   {
     id: 1,
-    title: "Premium ArchViz Moodboard",
+    title: "Premium Design Walla Moodboard",
     category: "Figma Template",
     icon: <Figma className="w-5 h-5 text-[#F24E1E]" />,
     image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=600",

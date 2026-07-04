@@ -22,7 +22,7 @@ export default function SignupPage() {
     if (password.length < 6) { setError('Password must be at least 6 characters.'); return; }
     setIsLoading(true);
     try {
-      await signUp(`${mobile}@archviz.com`, password, name);
+      await signUp(`${mobile}@designwalla.com`, password, name);
       setDone(true);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Sign up failed. Please try again.');
@@ -53,7 +53,7 @@ export default function SignupPage() {
           </div>
           <CardTitle className="text-2xl font-bold tracking-tight">Create an account</CardTitle>
           <p className="text-sm text-foreground/60">
-            Join the premium ArchViz marketplace today
+            Join the premium Design Walla marketplace today
           </p>
         </CardHeader>
         <CardContent>

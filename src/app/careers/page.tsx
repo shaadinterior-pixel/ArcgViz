@@ -4,8 +4,8 @@ import { ArrowLeft, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export const metadata = {
-  title: 'Careers | ArchViz Market',
-  description: 'Join our team at ArchViz Market.',
+  title: 'Careers | Design Walla',
+  description: 'Join our team at Design Walla.',
 };
 
 export default function CareersPage() {

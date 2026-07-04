@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://archvizmarket.com';
+  const baseUrl = 'https://designwalla.com';
 
   // Mock dynamic products
   const products = [1, 2, 3, 4].map((id) => ({
