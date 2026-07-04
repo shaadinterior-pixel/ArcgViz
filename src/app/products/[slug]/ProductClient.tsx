@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Script from 'next/script';
 import {
   Star, Check, Box, FileText, Download, ShieldCheck,
   Heart, Share2, Image as ImageIcon, X, ChevronLeft,
@@ -32,6 +33,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   const [activeIdx, setActiveIdx] = useState(0);
   const [lightbox, setLightbox] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState(0);
+  const [viewMode, setViewMode] = useState<'2d' | '3d'>(product.model_url ? '3d' : '2d');
 
   // ── Auth & purchase state ─────────────────────────────────────────────────
   const [user, setUser] = useState<{ id: string } | null>(null);
@@ -119,44 +121,79 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
           {/* ── Left Column (Content) ── */}
           <div className="w-full lg:flex-1 min-w-0 flex flex-col">
             
-            {/* Main Image Gallery */}
+            {/* Main Image Gallery / 3D Viewer */}
             <div
-              className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-[#E2EDE8] border border-[#E2EDE8] shadow-sm cursor-zoom-in group"
-              onTouchStart={onTouchStart}
-              onTouchEnd={onTouchEnd}
-              onClick={() => openLightbox(activeIdx)}
+              className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-[#E2EDE8] border border-[#E2EDE8] shadow-sm group"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={allImages[activeIdx]}
-                alt={product.name}
-                className="w-full h-full object-contain bg-[#111] transition-opacity duration-300"
-              />
-              
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
-                <ZoomIn className="w-8 h-8 text-white drop-shadow-md" />
-              </div>
-              
-              <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md rounded-full p-2 text-white">
-                <ZoomIn className="w-5 h-5" />
-              </div>
-              
-              {/* Nav arrows */}
-              {allImages.length > 1 && (
+              {viewMode === '3d' && product.model_url ? (
                 <>
-                  <button
-                    onClick={e => { e.stopPropagation(); setActiveIdx(i => (i - 1 + allImages.length) % allImages.length); }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-colors border border-white/10"
-                  >
-                    <ChevronLeft className="w-6 h-6"/>
-                  </button>
-                  <button
-                    onClick={e => { e.stopPropagation(); setActiveIdx(i => (i + 1) % allImages.length); }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-colors border border-white/10"
-                  >
-                    <ChevronRight className="w-6 h-6"/>
-                  </button>
+                  <Script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js" />
+                  {/* @ts-ignore */}
+                  <model-viewer
+                    src={product.model_url}
+                    auto-rotate
+                    camera-controls
+                    shadow-intensity="1"
+                    environment-image="neutral"
+                    style={{ width: '100%', height: '100%', backgroundColor: '#111' }}
+                  />
+                  <div className="absolute top-4 left-4 z-10 flex gap-2">
+                    <button onClick={() => setViewMode('2d')} className="px-4 py-2 bg-black/60 backdrop-blur-md text-white text-xs font-bold rounded-lg border border-white/20 hover:bg-black/80 transition-colors">
+                      View 2D Gallery
+                    </button>
+                    <button className="px-4 py-2 bg-[#00E599]/20 text-[#00E599] text-xs font-bold rounded-lg border border-[#00E599]/50 backdrop-blur-md cursor-help" title="Wireframe mode coming soon">
+                      Wireframe
+                    </button>
+                  </div>
                 </>
+              ) : (
+                <div
+                  className="w-full h-full relative cursor-zoom-in"
+                  onTouchStart={onTouchStart}
+                  onTouchEnd={onTouchEnd}
+                  onClick={() => openLightbox(activeIdx)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={allImages[activeIdx]}
+                    alt={product.name}
+                    className="w-full h-full object-contain bg-[#111] transition-opacity duration-300"
+                  />
+                  
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 pointer-events-none">
+                    <ZoomIn className="w-8 h-8 text-white drop-shadow-md" />
+                  </div>
+                  
+                  <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md rounded-full p-2 text-white pointer-events-none">
+                    <ZoomIn className="w-5 h-5" />
+                  </div>
+                  
+                  {product.model_url && (
+                    <div className="absolute top-4 left-4 z-10">
+                      <button onClick={(e) => { e.stopPropagation(); setViewMode('3d'); }} className="px-4 py-2 bg-[#00A1FF]/20 text-[#00A1FF] text-xs font-bold rounded-lg border border-[#00A1FF]/50 backdrop-blur-md hover:bg-[#00A1FF]/40 transition-colors">
+                        Interactive 3D View
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Nav arrows */}
+                  {allImages.length > 1 && (
+                    <>
+                      <button
+                        onClick={e => { e.stopPropagation(); setActiveIdx(i => (i - 1 + allImages.length) % allImages.length); }}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-colors border border-white/10"
+                      >
+                        <ChevronLeft className="w-6 h-6"/>
+                      </button>
+                      <button
+                        onClick={e => { e.stopPropagation(); setActiveIdx(i => (i + 1) % allImages.length); }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-colors border border-white/10"
+                      >
+                        <ChevronRight className="w-6 h-6"/>
+                      </button>
+                    </>
+                  )}
+                </div>
               )}
             </div>
 
