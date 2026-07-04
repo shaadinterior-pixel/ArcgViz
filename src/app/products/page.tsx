@@ -37,6 +37,7 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
 
   // useDeferredValue keeps the UI responsive while typing
   const deferredSearch = useDeferredValue(searchQuery);
@@ -49,9 +50,10 @@ export default function ProductsPage() {
         const matchesSearch = product.name?.toLowerCase().includes(deferredSearch.toLowerCase()) ||
                               product.author?.toLowerCase().includes(deferredSearch.toLowerCase());
         const matchesCategory = deferredCategory === 'All' || product.category === deferredCategory;
-        return matchesSearch && matchesCategory;
+        const matchesProperties = selectedProperties.every(prop => (product.features || []).includes(prop));
+        return matchesSearch && matchesCategory && matchesProperties;
       }),
-    [products, deferredSearch, deferredCategory]
+    [products, deferredSearch, deferredCategory, selectedProperties]
   );
 
   return (
@@ -123,12 +125,18 @@ export default function ProductsPage() {
           </div>
           
           <div className="bg-secondary/20 p-6 rounded-2xl border border-border/50">
-            <h3 className="font-semibold mb-4 pb-3 border-b border-border/50 text-lg">Software</h3>
+            <h3 className="font-semibold mb-4 pb-3 border-b border-border/50 text-lg">Properties</h3>
             <div className="space-y-3">
-              {['Blender', '3ds Max', 'Unreal Engine', 'Cinema 4D', 'Maya'].map((software) => (
-                <label key={software} className="flex items-center space-x-3 cursor-pointer group">
-                  <input type="checkbox" className="form-checkbox h-5 w-5 rounded border-border bg-transparent text-primary focus:ring-primary/50" />
-                  <span className="text-sm text-foreground/70 group-hover:text-foreground transition-colors">{software}</span>
+              {['Rigged', 'Animated', 'Game-Ready', '3D Printable'].map((prop) => (
+                <label key={prop} className="flex items-center space-x-3 cursor-pointer group">
+                  <input type="checkbox" className="form-checkbox h-5 w-5 rounded border-border bg-transparent text-primary focus:ring-primary/50" 
+                    checked={selectedProperties.includes(prop)}
+                    onChange={(e) => {
+                      if (e.target.checked) setSelectedProperties([...selectedProperties, prop]);
+                      else setSelectedProperties(selectedProperties.filter(p => p !== prop));
+                    }}
+                  />
+                  <span className="text-sm text-foreground/70 group-hover:text-foreground transition-colors">{prop}</span>
                 </label>
               ))}
             </div>
