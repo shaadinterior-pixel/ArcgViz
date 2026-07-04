@@ -1,77 +1,131 @@
 import React from 'react';
 import Link from 'next/link';
-import { Box, Twitter, Instagram, Linkedin, Github } from 'lucide-react';
+import Image from 'next/image';
+import { Twitter, Instagram, Linkedin, Youtube, ArrowRight } from 'lucide-react';
+
+const FOOTER_LINKS = {
+  Marketplace: [
+    { label: 'All Products', href: '/products' },
+    { label: 'Interior Design', href: '/products?category=interior' },
+    { label: '3D Models', href: '/products?category=3d' },
+    { label: 'Brand Kits', href: '/products?category=branding' },
+    { label: 'Website Templates', href: '/products?category=web' },
+    { label: 'Motion Graphics', href: '/products?category=motion' },
+  ],
+  Services: [
+    { label: 'Interior Design', href: '/services' },
+    { label: 'Digital Marketing', href: '/services' },
+    { label: 'Branding & Identity', href: '/services' },
+    { label: 'Web Development', href: '/services' },
+    { label: 'Hire Our Team', href: '/services' },
+  ],
+  Company: [
+    { label: 'About Us', href: '/about' },
+    { label: 'Blog', href: '/blog' },
+    { label: 'Careers', href: '/careers' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms of Service', href: '/terms' },
+  ],
+};
+
+const SOCIALS = [
+  { icon: Twitter,   href: '#', label: 'Twitter' },
+  { icon: Instagram, href: '#', label: 'Instagram' },
+  { icon: Linkedin,  href: '#', label: 'LinkedIn' },
+  { icon: Youtube,   href: '#', label: 'YouTube' },
+];
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#E2EDE8] bg-white relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-      
-      <div className="container mx-auto px-4 py-16 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-          <div className="md:col-span-4 lg:col-span-5">
-            <Link href="/" className="flex items-center space-x-2 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-[#24B86C]/10 flex items-center justify-center">
-                <Box className="w-6 h-6 text-[#24B86C]" />
+    <footer className="bg-white border-t border-[#E2EDE8] relative overflow-hidden">
+      {/* Top accent line */}
+      <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#24B86C]/40 to-transparent" />
+      {/* Subtle bg orb */}
+      <div className="absolute bottom-0 right-0 w-[500px] h-[300px] bg-gradient-to-tl from-[#24B86C]/5 to-transparent rounded-full filter blur-[80px] pointer-events-none" />
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+        {/* ── Main grid ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-12 py-16 border-b border-[#E2EDE8]">
+
+          {/* Brand column */}
+          <div>
+            <Link href="/" className="flex items-center gap-3 mb-6">
+              <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm border border-[#E2EDE8]">
+                <Image src="/DESIGN WALLA LOGO .jpg" alt="Design Walla" fill className="object-cover" />
               </div>
-              <span className="font-bold text-2xl tracking-tight text-[#0D1A12]">Design Walla</span>
+              <div>
+                <p className="font-black text-lg leading-none text-[#0D1A12]">
+                  DESIGN <span className="bg-gradient-to-r from-[#24B86C] to-[#11998E] bg-clip-text text-transparent">WALLA</span>
+                </p>
+                <p className="text-[10px] text-[#9CA3AF] mt-0.5">Smart Logon Ka Smart Solution</p>
+              </div>
             </Link>
-            <p className="text-[#6B7280] mb-8 leading-relaxed max-w-sm">
-              The world&apos;s most premium digital marketplace for Design, 3D Models, Website Templates, Brand Kits, and Digital Products.
+
+            <p className="text-sm text-[#6B7280] leading-relaxed max-w-xs mb-6">
+              India's premium all-in-one design marketplace — Website Templates, Brand Kits, 3D Models, Interior Design, and Digital Products.
             </p>
-            <div className="flex space-x-4">
-              <Link href="#" className="w-10 h-10 rounded-full bg-[#F8FAF9] border border-[#E2EDE8] flex items-center justify-center text-[#6B7280] hover:text-[#24B86C] hover:border-[#24B86C]/30 hover:scale-110 transition-all duration-300"><Twitter className="w-4 h-4" /></Link>
-              <Link href="#" className="w-10 h-10 rounded-full bg-[#F8FAF9] border border-[#E2EDE8] flex items-center justify-center text-[#6B7280] hover:text-[#24B86C] hover:border-[#24B86C]/30 hover:scale-110 transition-all duration-300"><Instagram className="w-4 h-4" /></Link>
-              <Link href="#" className="w-10 h-10 rounded-full bg-[#F8FAF9] border border-[#E2EDE8] flex items-center justify-center text-[#6B7280] hover:text-[#24B86C] hover:border-[#24B86C]/30 hover:scale-110 transition-all duration-300"><Linkedin className="w-4 h-4" /></Link>
-              <Link href="#" className="w-10 h-10 rounded-full bg-[#F8FAF9] border border-[#E2EDE8] flex items-center justify-center text-[#6B7280] hover:text-[#24B86C] hover:border-[#24B86C]/30 hover:scale-110 transition-all duration-300"><Github className="w-4 h-4" /></Link>
+
+            {/* Social links */}
+            <div className="flex gap-3">
+              {SOCIALS.map(({ icon: Icon, href, label }) => (
+                <Link
+                  key={label} href={href}
+                  className="w-9 h-9 rounded-full bg-[#F0F7F3] border border-[#E2EDE8] flex items-center justify-center text-[#6B7280] hover:text-[#24B86C] hover:border-[#24B86C]/30 hover:bg-[#24B86C]/5 hover:scale-110 transition-all duration-200"
+                  aria-label={label}
+                >
+                  <Icon className="w-4 h-4" />
+                </Link>
+              ))}
+            </div>
+
+            {/* Newsletter mini */}
+            <div className="mt-8">
+              <p className="text-xs font-bold text-[#0D1A12] uppercase tracking-wider mb-3">Get free assets monthly</p>
+              <form className="flex gap-2" onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  className="flex-1 h-10 px-4 text-sm rounded-xl border border-[#E2EDE8] bg-[#F8FAF9] focus:outline-none focus:border-[#24B86C]/50 transition-colors text-[#0D1A12] placeholder:text-[#9CA3AF]"
+                />
+                <button
+                  type="submit"
+                  className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#24B86C] to-[#11998E] flex items-center justify-center text-white hover:opacity-90 transition-opacity shadow-sm"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </form>
             </div>
           </div>
-          
-          <div className="md:col-span-2 lg:col-span-2">
-            <h4 className="font-semibold text-lg mb-6">Marketplace</h4>
-            <ul className="space-y-4 text-foreground/60">
-              <li><Link href="/products" className="hover:text-primary hover:translate-x-1 inline-block transition-transform duration-300">All Products</Link></li>
-              <li><Link href="/collections/3d-models" className="hover:text-primary hover:translate-x-1 inline-block transition-transform duration-300">3D Models</Link></li>
-              <li><Link href="/collections/textures" className="hover:text-primary hover:translate-x-1 inline-block transition-transform duration-300">PBR Textures</Link></li>
-              <li><Link href="/collections/scenes" className="hover:text-primary hover:translate-x-1 inline-block transition-transform duration-300">Interior Scenes</Link></li>
-            </ul>
-          </div>
-          
-          <div className="md:col-span-2 lg:col-span-2">
-            <h4 className="font-semibold text-lg mb-6">Company</h4>
-            <ul className="space-y-4 text-foreground/60">
-              <li><Link href="/about" className="hover:text-primary hover:translate-x-1 inline-block transition-transform duration-300">About Us</Link></li>
-              <li><Link href="/blog" className="hover:text-primary hover:translate-x-1 inline-block transition-transform duration-300">Blog</Link></li>
-              <li><Link href="/careers" className="hover:text-primary hover:translate-x-1 inline-block transition-transform duration-300">Careers</Link></li>
-              <li><Link href="/contact" className="hover:text-primary hover:translate-x-1 inline-block transition-transform duration-300">Contact</Link></li>
-            </ul>
-          </div>
-          
-          <div className="md:col-span-4 lg:col-span-3">
-            <h4 className="font-semibold text-lg mb-6">Newsletter</h4>
-            <p className="text-foreground/60 mb-4 text-sm leading-relaxed">
-              Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.
-            </p>
-            <div className="flex flex-col space-y-3">
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
-                className="bg-background border border-border/50 rounded-xl px-4 py-3 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
-              />
-              <button className="bg-primary text-primary-foreground font-medium rounded-xl px-4 py-3 hover:bg-primary/90 transition-colors">
-                Subscribe
-              </button>
+
+          {/* Link columns */}
+          {Object.entries(FOOTER_LINKS).map(([title, links]) => (
+            <div key={title}>
+              <h4 className="text-xs font-black uppercase tracking-[0.18em] text-[#0D1A12] mb-5">{title}</h4>
+              <ul className="space-y-3">
+                {links.map(link => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-[#6B7280] hover:text-[#24B86C] hover:translate-x-1 inline-block transition-all duration-200"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          ))}
         </div>
-        
-        <div className="border-t border-[#E2EDE8] mt-16 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-[#9CA3AF]">
-          <p>&copy; {new Date().getFullYear()} Design Walla. All rights reserved.</p>
-          <div className="mt-4 md:mt-0 flex space-x-6">
-            <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
-            <Link href="/cookies" className="hover:text-primary transition-colors">Cookie Policy</Link>
+
+        {/* ── Bottom bar ── */}
+        <div className="flex flex-col sm:flex-row items-center justify-between py-6 gap-4 text-xs text-[#9CA3AF]">
+          <p>&copy; {new Date().getFullYear()} Design Walla. All rights reserved. Made with ♥ in India.</p>
+          <div className="flex gap-5">
+            <Link href="/privacy" className="hover:text-[#24B86C] transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-[#24B86C] transition-colors">Terms</Link>
+            <Link href="/cookies" className="hover:text-[#24B86C] transition-colors">Cookies</Link>
           </div>
         </div>
       </div>
