@@ -121,6 +121,15 @@ html[data-scroll-behavior="smooth"] {
   animation-play-state: paused;
 }
 
+@keyframes shine {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  20%, 100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+.animate-shine {
+  animation: shine 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* ─── Performance: content-visibility ─── */
 /* Skip rendering off-screen sections until near the viewport.
    This is a *huge* win on long pages — saves layout, paint and compositing
