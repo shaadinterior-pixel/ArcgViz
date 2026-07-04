@@ -40,7 +40,7 @@ export function Navbar() {
 
   return (
     <header suppressHydrationWarning className="sticky top-4 z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="h-16 flex items-center justify-between bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 border border-border/40 rounded-full px-6 shadow-sm">
+      <div className="h-16 flex items-center justify-between bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 border border-[#E2EDE8] rounded-full px-6 shadow-[0_4px_24px_rgba(36,184,108,0.08)]">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3 shrink-0">
           <Image src="/DESIGN WALLA LOGO .jpg" alt="Design Walla Logo" width={40} height={40} className="rounded-md object-cover shadow-sm" />
