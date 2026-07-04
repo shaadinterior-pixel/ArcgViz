@@ -48,37 +48,37 @@ const HERO_CARDS = [
   {
     id: 'interior', label: 'Interior Design', floatClass: 'animate-float-1',
     img: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=300',
-    style: { top: '2%', left: '2%' }, w: 200, aspect: 'aspect-[4/3]'
+    style: { top: '-5%', left: '0%' }, w: 180, aspect: 'aspect-[4/3]'
   },
   {
     id: 'food', label: 'Food Cart Design', floatClass: 'animate-float-2',
     img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=300',
-    style: { top: '0%', right: '5%' }, w: 220, aspect: 'aspect-video'
+    style: { top: '-2%', right: '2%' }, w: 190, aspect: 'aspect-video'
   },
   {
     id: 'web', label: 'Website Templates', floatClass: 'animate-float-3',
     img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=400',
-    style: { top: '35%', left: '22%', zIndex: 30 }, w: 280, featured: true, aspect: 'aspect-[16/10]'
+    style: { top: '30%', left: '18%', zIndex: 30 }, w: 260, featured: true, aspect: 'aspect-[16/10]'
   },
   {
     id: 'motion', label: 'Motion Graphics', floatClass: 'animate-float-4',
     img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=300',
-    style: { top: '40%', right: '0%' }, w: 230, dark: true, aspect: 'aspect-video'
+    style: { top: '28%', right: '-4%' }, w: 200, dark: true, aspect: 'aspect-video'
   },
   {
     id: 'brand', label: 'Brand Kits', floatClass: 'animate-float-5',
     img: 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=300',
-    style: { bottom: '5%', left: '0%' }, w: 180, aspect: 'aspect-video'
+    style: { bottom: '-2%', left: '-2%' }, w: 170, aspect: 'aspect-video'
   },
   {
     id: '3d', label: '3D Models', floatClass: 'animate-float-6',
     img: 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=300',
-    style: { bottom: '2%', left: '35%' }, w: 200, aspect: 'aspect-square'
+    style: { bottom: '-6%', left: '38%' }, w: 180, aspect: 'aspect-square'
   },
   {
     id: 'digital', label: 'Digital Products', floatClass: 'animate-float-7',
     img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=300',
-    style: { bottom: '5%', right: '10%' }, w: 210, aspect: 'aspect-video'
+    style: { bottom: '2%', right: '4%' }, w: 190, aspect: 'aspect-video'
   },
 ];
 
@@ -211,7 +211,7 @@ export default function Home() {
               className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05]"
             >
               One Platform. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E599] via-[#00d08a] to-[#00A1FF]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E599] to-[#00A1FF]">
                 Infinite Creative
               </span><br/>
               Possibilities.
@@ -221,7 +221,7 @@ export default function Home() {
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="text-lg font-medium text-zinc-500 max-w-[540px] leading-relaxed"
+              className="text-[17px] font-medium text-zinc-600 max-w-[540px] leading-relaxed"
             >
               The ultimate digital ecosystem. Elevate your brand with premium Website Templates, Motion Design, Interior Renders, and high-end 3D Assets.
             </motion.p>
@@ -233,19 +233,18 @@ export default function Home() {
               className="flex flex-wrap gap-4 mt-4"
             >
               <Link href="/products">
-                <Button className="h-14 px-8 rounded-full bg-[#111111] hover:bg-[#00E599] text-white hover:text-[#111] font-bold text-[15px] shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 group">
+                <Button className="h-12 px-6 rounded-lg bg-[#24B86C] hover:bg-[#1fa35f] text-white font-bold text-[15px] shadow-[0_8px_20px_rgba(36,184,108,0.25)] transition-all">
                   Explore Marketplace
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button variant="outline" className="h-14 px-8 rounded-full border border-zinc-200 text-zinc-700 font-bold text-[15px] hover:border-[#111111] hover:text-[#111111] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] transition-all duration-300">
+                <Button variant="outline" className="h-12 px-6 rounded-lg border-2 border-[#E2EDE8] hover:border-[#24B86C]/40 text-zinc-700 font-bold text-[15px] hover:bg-[#24B86C]/5 transition-all bg-transparent backdrop-blur-sm">
                   Hire Our Team
                 </Button>
               </Link>
               <Link href="/resources">
-                <Button variant="outline" className="h-14 px-8 rounded-full border border-zinc-200 text-zinc-700 font-bold text-[15px] hover:border-[#111111] hover:text-[#111111] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] transition-all duration-300">
-                  Free Assets
+                <Button variant="outline" className="h-12 px-6 rounded-lg border-2 border-[#E2EDE8] hover:border-[#24B86C]/40 text-zinc-700 font-bold text-[15px] hover:bg-[#24B86C]/5 transition-all bg-transparent backdrop-blur-sm">
+                  Download Free Assets
                 </Button>
               </Link>
             </motion.div>
