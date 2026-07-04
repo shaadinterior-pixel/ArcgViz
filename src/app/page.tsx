@@ -149,9 +149,9 @@ export default function Home() {
       {/* ─── HERO SECTION ─── */}
       <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden bg-background pt-24 pb-16">
         
-        {/* DW Watermark Background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-7xl max-h-[80vh] opacity-[0.04] dark:opacity-[0.08] pointer-events-none flex items-center justify-center -z-10 mix-blend-multiply dark:mix-blend-lighten">
-           <Image src="/DESIGN WALLA LOGO .jpg" alt="DW Watermark" fill className="object-contain scale-[1.3] opacity-60" priority />
+        {/* DW Watermark Background - Optimized for light theme */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-[80vw] max-h-[80vh] opacity-[0.05] dark:opacity-[0.08] pointer-events-none flex items-center justify-center -z-10 mix-blend-multiply dark:mix-blend-lighten">
+           <Image src="/DESIGN WALLA LOGO .jpg" alt="DW Watermark" fill className="object-contain scale-110" priority quality={100} />
         </div>
 
         {/* Main grid */}
@@ -171,19 +171,19 @@ export default function Home() {
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-lg px-6 text-sm font-bold shadow-md shadow-primary/20">
                 [Explore Marketplace]
               </Button>
-              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-border hover:bg-secondary/10 bg-background/50 backdrop-blur-sm">
+              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-border/80 hover:bg-secondary/10 bg-white/80 dark:bg-black/50 backdrop-blur-sm">
                 [Hire Our Team]
               </Button>
-              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-border hover:bg-secondary/10 bg-background/50 backdrop-blur-sm">
+              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-border/80 hover:bg-secondary/10 bg-white/80 dark:bg-black/50 backdrop-blur-sm">
                 [Download Free Assets]
               </Button>
             </div>
           </div>
 
-          {/* Right Column: Static Floating Cards */}
+          {/* Right Column: Static Floating Cards - Crisp Light Theme */}
           <div className="relative h-[500px] w-full hidden lg:block">
             {/* Food Cart Design */}
-            <div className="absolute top-[5%] right-[5%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-40 z-20">
+            <div className="absolute top-[5%] right-[5%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-40 z-20">
               <div className="w-full aspect-video bg-[#FCD34D] rounded-xl relative overflow-hidden flex items-center justify-center">
                 <span className="text-3xl">🌭</span>
                 <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
@@ -192,7 +192,7 @@ export default function Home() {
             </div>
             
             {/* Interior Design */}
-            <div className="absolute top-[25%] left-[5%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-44 z-20">
+            <div className="absolute top-[25%] left-[5%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-44 z-20">
               <div className="w-full aspect-video bg-[#E7E5E4] rounded-xl relative overflow-hidden flex items-center justify-center">
                 <span className="text-3xl">🛋️</span>
                 <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
@@ -201,7 +201,7 @@ export default function Home() {
             </div>
 
             {/* Website Templates */}
-            <div className="absolute top-[40%] right-[25%] bg-white/70 dark:bg-black/70 backdrop-blur-md border border-white/60 dark:border-border/60 p-4 rounded-3xl shadow-2xl flex flex-col items-center gap-3 w-56 z-30 transform scale-110 ring-1 ring-primary/10">
+            <div className="absolute top-[40%] right-[25%] bg-white/95 dark:bg-black/90 backdrop-blur-xl border border-black/5 dark:border-border/60 p-4 rounded-3xl shadow-[0_20px_50px_rgb(0,0,0,0.12)] flex flex-col items-center gap-3 w-56 z-30 transform scale-110 ring-1 ring-black/5 dark:ring-primary/10">
               <div className="w-full aspect-[16/10] bg-white dark:bg-zinc-900 rounded-xl relative overflow-hidden flex flex-col items-center justify-center border border-border/20 shadow-inner p-2">
                  <div className="w-full h-3 bg-zinc-100 dark:bg-zinc-800 rounded-md mb-2 flex items-center px-2 space-x-1">
                    <div className="w-1.5 h-1.5 rounded-full bg-red-400"></div><div className="w-1.5 h-1.5 rounded-full bg-yellow-400"></div><div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
@@ -213,7 +213,7 @@ export default function Home() {
             </div>
             
             {/* Brand Kits */}
-            <div className="absolute top-[55%] left-[-5%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-36 z-10">
+            <div className="absolute top-[55%] left-[-5%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-36 z-10">
               <div className="w-full aspect-video bg-[#F1F5F9] rounded-xl relative overflow-hidden flex items-center justify-center">
                 <span className="text-3xl">🎨</span>
                 <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
@@ -222,7 +222,7 @@ export default function Home() {
             </div>
             
             {/* Motion Graphics */}
-            <div className="absolute top-[60%] right-[-5%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-40 z-10">
+            <div className="absolute top-[60%] right-[-5%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-40 z-10">
               <div className="w-full aspect-video bg-indigo-950 rounded-xl relative overflow-hidden flex items-center justify-center border border-indigo-900">
                 <Play className="w-8 h-8 text-indigo-400 fill-indigo-400" />
                 <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
@@ -231,7 +231,7 @@ export default function Home() {
             </div>
             
             {/* 3D Models */}
-            <div className="absolute bottom-[-10%] left-[20%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-40 z-20">
+            <div className="absolute bottom-[-10%] left-[20%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-40 z-20">
               <div className="w-full aspect-video bg-[#E5E5E5] rounded-xl relative overflow-hidden flex items-center justify-center">
                 <span className="text-3xl">🧊</span>
                 <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
@@ -240,7 +240,7 @@ export default function Home() {
             </div>
             
             {/* Digital Products */}
-            <div className="absolute bottom-[0%] right-[20%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-44 z-20">
+            <div className="absolute bottom-[0%] right-[20%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-44 z-20">
               <div className="w-full aspect-video bg-blue-50 rounded-xl relative overflow-hidden flex items-center justify-center">
                 <span className="text-3xl">📱</span>
                 <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
