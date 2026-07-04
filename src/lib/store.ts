@@ -261,6 +261,38 @@ export async function deleteCategory(id: string): Promise<void> {
   if (error) throw error;
 }
 
+// ─── Services ──────────────────────────────────────────────────────────────────
+
+export type ServiceDetail = {
+  id: string;
+  category: string;
+  title: string;
+  tagline: string;
+  image: string;
+  description: string;
+  includes: string[];
+};
+
+export async function fetchServices(): Promise<ServiceDetail[]> {
+  const { data, error } = await supabase.from('services').select('*');
+  if (error) return [];
+  // Parse JSON if needed
+  return data?.map(d => ({
+    ...d,
+    includes: typeof d.includes === 'string' ? JSON.parse(d.includes) : d.includes
+  })) || [];
+}
+
+export async function saveService(service: ServiceDetail): Promise<void> {
+  const { error } = await supabase.from('services').upsert(service);
+  if (error) throw error;
+}
+
+export async function deleteService(id: string): Promise<void> {
+  const { error } = await supabase.from('services').delete().eq('id', id);
+  if (error) throw error;
+}
+
 // ─── Purchases ─────────────────────────────────────────────────────────────────
 
 export async function fetchPurchases(): Promise<Purchase[]> {
