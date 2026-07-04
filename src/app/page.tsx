@@ -194,14 +194,15 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-wrap gap-4 mt-4"
             >
-              <Button size="lg" className="bg-[#24B86C] hover:bg-[#24B86C]/90 text-white rounded-lg px-6 text-sm font-bold shadow-md shadow-[#24B86C]/20 border border-[#24B86C]">
-                [Explore Marketplace]
+              <Button size="lg" className="relative overflow-hidden bg-gradient-to-r from-[#24B86C] to-[#11998E] text-white rounded-lg px-8 py-6 text-base font-bold shadow-lg shadow-[#24B86C]/30 border-0 group hover:shadow-xl hover:shadow-[#24B86C]/40 transition-all duration-300">
+                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover:animate-shine" />
+                <span className="relative z-10 flex items-center gap-2">Explore Marketplace <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></span>
               </Button>
-              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-[#24B86C] text-[#24B86C] hover:bg-[#24B86C]/10 bg-transparent">
-                [Hire Our Team]
+              <Button size="lg" variant="outline" className="rounded-lg px-8 py-6 text-base font-bold border-2 border-[#24B86C] text-[#24B86C] hover:bg-[#24B86C]/5 bg-transparent transition-colors duration-300">
+                Hire Our Team
               </Button>
-              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-[#24B86C] text-[#24B86C] hover:bg-[#24B86C]/10 bg-transparent">
-                [Download Free Assets]
+              <Button size="lg" variant="outline" className="rounded-lg px-8 py-6 text-base font-bold border-2 border-[#11998E] text-[#11998E] hover:bg-[#11998E]/5 bg-transparent transition-colors duration-300">
+                Download Free Assets
               </Button>
             </motion.div>
           </motion.div>
