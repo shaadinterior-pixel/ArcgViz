@@ -41,13 +41,13 @@
 
 :root {
   --background: #FFFFFF;
-  --foreground: #0F172A;
-  --primary: #0F172A;
+  --foreground: #000000;
+  --primary: #24B86C;
   --primary-foreground: #FFFFFF;
-  --secondary: #F1F5F9;
-  --secondary-foreground: #0F172A;
+  --secondary: #11998E;
+  --secondary-foreground: #FFFFFF;
   --accent: #F1F5F9;
-  --accent-foreground: #0F172A;
+  --accent-foreground: #000000;
   --card: #FFFFFF;
   --border: #E2E8F0;
 }
