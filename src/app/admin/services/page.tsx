@@ -80,7 +80,12 @@ export default function AdminServicesPage() {
                 <Button variant="outline" size="sm" onClick={() => handleSave(service)}>
                   <Save className="w-4 h-4 mr-2" /> Save
                 </Button>
-                <Button variant="destructive" size="sm" onClick={() => handleDelete(service.id)}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-red-500 text-red-500 hover:bg-red-500/10"
+                  onClick={() => handleDelete(service.id)}
+                >
                   <Trash className="w-4 h-4" />
                 </Button>
               </div>
