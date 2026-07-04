@@ -41,12 +41,12 @@
 
 :root {
   --background: #F9FAFB;
-  --foreground: #111827;
-  --primary: #D4AF37;
-  --primary-foreground: #000000;
-  --secondary: #E5E7EB;
-  --secondary-foreground: #111827;
-  --accent: #8B7355;
+  --foreground: #000000;
+  --primary: #24B86C;
+  --primary-foreground: #FFFFFF;
+  --secondary: #11998E;
+  --secondary-foreground: #FFFFFF;
+  --accent: #000000;
   --accent-foreground: #FFFFFF;
   --card: #FFFFFF;
   --border: rgba(0, 0, 0, 0.1);
@@ -55,11 +55,11 @@
 .dark {
   --background: #050505;
   --foreground: #F9FAFB;
-  --primary: #D4AF37;
+  --primary: #24B86C;
   --primary-foreground: #000000;
-  --secondary: #111111;
+  --secondary: #11998E;
   --secondary-foreground: #FFFFFF;
-  --accent: #8B7355;
+  --accent: #000000;
   --accent-foreground: #FFFFFF;
   --card: #0A0A0A;
   --border: rgba(255, 255, 255, 0.1);
