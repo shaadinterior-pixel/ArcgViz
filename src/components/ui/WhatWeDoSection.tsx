@@ -120,8 +120,8 @@ export function WhatWeDoSection() {
   return (
     <section className="w-full bg-white dark:bg-[#0A0A0A] py-24 relative overflow-hidden">
       {/* Decorative Gradients for Translucent effect */}
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-[#24B86C]/10 via-[#11998E]/5 to-transparent rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] pointer-events-none opacity-70" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-[#11998E]/10 via-[#24B86C]/5 to-transparent rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] pointer-events-none opacity-70" />
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.06)_0,transparent_60%)] pointer-events-none opacity-70" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.06)_0,transparent_60%)] pointer-events-none opacity-70" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
