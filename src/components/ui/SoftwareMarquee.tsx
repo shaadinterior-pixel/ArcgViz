@@ -21,18 +21,20 @@ const marqueeItems = [...softwareLogos, ...softwareLogos, ...softwareLogos, ...s
 
 export function SoftwareMarquee() {
   return (
-    <div className="w-full py-12 overflow-hidden border-y border-border/10 bg-secondary/10 relative">
+    <div className="w-full py-12 overflow-hidden border-y border-[#E2EDE8] bg-white relative">
 
       <div className="container mx-auto px-4 mb-6 text-center">
-        <p className="text-sm font-medium text-foreground/50 uppercase tracking-widest">Compatible with industry standards</p>
+        <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-widest">Compatible with industry standards</p>
       </div>
 
       <div className="relative flex overflow-hidden">
+        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
         <div className="flex whitespace-nowrap items-center gap-16 md:gap-24 px-8 w-max animate-marquee">
           {marqueeItems.map((logo, index) => (
             <div 
               key={`${logo.name}-${index}`} 
-              className="flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity duration-300 group"
+              className="flex items-center justify-center opacity-40 hover:opacity-100 transition-opacity duration-300 group"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
@@ -42,7 +44,7 @@ export function SoftwareMarquee() {
                 height={56}
                 loading="lazy"
                 decoding="async"
-                className="h-10 md:h-14 object-contain max-w-[120px] grayscale transition-[filter] duration-300 group-hover:grayscale-0"
+                className="h-10 md:h-12 object-contain max-w-[120px] grayscale transition-[filter] duration-300 group-hover:grayscale-0"
                 title={logo.name}
               />
             </div>
