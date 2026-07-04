@@ -57,7 +57,7 @@ export function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           <Link href="/products" className="transition-colors hover:text-primary flex items-center gap-1">Marketplace <ChevronDown className="w-3 h-3" /></Link>
-          <Link href="/services" className="transition-colors hover:text-primary flex items-center gap-1 text-foreground/80">Services <ChevronDown className="w-3 h-3" /></Link>
+          <Link href="/#services" className="transition-colors hover:text-primary flex items-center gap-1 text-foreground/80">Services <ChevronDown className="w-3 h-3" /></Link>
           <Link href="/resources" className="transition-colors hover:text-primary flex items-center gap-1 text-foreground/80">Resources <ChevronDown className="w-3 h-3" /></Link>
           <Link href="/pricing" className="transition-colors hover:text-primary text-foreground/80">Pricing</Link>
         </nav>
