@@ -69,6 +69,9 @@ export function Navbar() {
             Login
           </Link>
 
+          <Link href="/profile" className="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 transition-colors border border-zinc-200">
+            <User className="w-5 h-5 text-zinc-600" />
+          </Link>
           <Button variant="ghost" size="icon" className="rounded-full">
             <Bookmark className="w-5 h-5 text-foreground/80" />
           </Button>
