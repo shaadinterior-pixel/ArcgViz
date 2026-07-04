@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Star, Check, Box, FileText, Download, ShieldCheck,
   Heart, Share2, Image as ImageIcon, X, ChevronLeft,
-  ChevronRight, ZoomIn, LogIn, Loader2, Monitor, MessageCircle, ArrowRight
+  ChevronRight, ZoomIn, LogIn, Loader2, Monitor, MessageCircle, ArrowRight,
+  ChevronDown, Bookmark, Info
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
@@ -110,250 +112,290 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   ].filter(s => s.value !== '—');
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      {/* Breadcrumb */}
-      <div className="text-sm text-foreground/50 mb-8 flex items-center gap-2 flex-wrap">
-        <Link href="/" className="hover:text-primary">Home</Link>
-        <span>/</span>
-        <Link href="/products" className="hover:text-primary">Products</Link>
-        <span>/</span>
-        <span className="text-foreground">{product.name}</span>
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-12">
-        {/* ── Left: Image Gallery ── */}
-        <div className="w-full lg:w-2/3">
-          {/* Main image */}
-          <div
-            className="relative aspect-[16/9] md:aspect-[4/3] lg:aspect-[16/10] overflow-hidden rounded-xl bg-secondary mb-4 border border-border cursor-zoom-in group"
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-            onClick={() => openLightbox(activeIdx)}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={allImages[activeIdx]}
-              alt={product.name}
-              className="w-full h-full object-cover transition-opacity duration-300"
-            />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
-              <ZoomIn className="w-8 h-8 text-white drop-shadow" />
-            </div>
-            {/* Nav arrows */}
-            {allImages.length > 1 && (
-              <>
-                <button
-                  onClick={e => { e.stopPropagation(); setActiveIdx(i => (i - 1 + allImages.length) % allImages.length); }}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
-                >
-                  <ChevronLeft className="w-5 h-5"/>
-                </button>
-                <button
-                  onClick={e => { e.stopPropagation(); setActiveIdx(i => (i + 1) % allImages.length); }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
-                >
-                  <ChevronRight className="w-5 h-5"/>
-                </button>
-              </>
-            )}
-            {/* Dot indicators */}
-            {allImages.length > 1 && (
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-                {allImages.map((_, i) => (
-                  <span key={i} className={`w-1.5 h-1.5 rounded-full transition-all ${i === activeIdx ? 'bg-white w-4' : 'bg-white/50'}`}/>
-                ))}
+    <div className="bg-[#F8FAF9] min-h-screen pt-8 pb-24">
+      <div className="container mx-auto px-4 max-w-[1400px]">
+        
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* ── Left Column (Content) ── */}
+          <div className="w-full lg:flex-1 min-w-0 flex flex-col">
+            
+            {/* Main Image Gallery */}
+            <div
+              className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-[#E2EDE8] border border-[#E2EDE8] shadow-sm cursor-zoom-in group"
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              onClick={() => openLightbox(activeIdx)}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={allImages[activeIdx]}
+                alt={product.name}
+                className="w-full h-full object-contain bg-[#111] transition-opacity duration-300"
+              />
+              
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
+                <ZoomIn className="w-8 h-8 text-white drop-shadow-md" />
               </div>
-            )}
-          </div>
-
-          {/* Thumbnail strip */}
-          {allImages.length > 1 && (
-            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 mb-10">
-              {allImages.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveIdx(i)}
-                  className={`relative aspect-[4/3] rounded-lg overflow-hidden border-2 transition-all ${activeIdx === i ? 'border-primary' : 'border-transparent hover:border-primary/50'}`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img} alt={`Preview ${i + 1}`} loading="lazy" className="w-full h-full object-cover"/>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Description */}
-          {product.description && (
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold mb-6 pb-4 border-b border-border">Description</h2>
-              <p className="text-foreground/80 leading-relaxed whitespace-pre-line mb-8">{product.description}</p>
-            </div>
-          )}
-
-          {/* Features */}
-          {(product.features ?? []).length > 0 && (
-            <div className="mb-10">
-              <h3 className="text-xl font-bold mb-4">Features</h3>
-              <ul className="space-y-3">
-                {product.features.map((f, i) => (
-                  <li key={i} className="flex items-start text-foreground/80">
-                    <Check className="w-5 h-5 text-primary mr-3 shrink-0 mt-0.5"/>
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-
-        {/* ── Right: Details & Purchase ── */}
-        <div className="w-full lg:w-1/3">
-          <div className="sticky top-24 bg-card border border-border rounded-xl p-6 md:p-8 shadow-lg space-y-6">
-            <div>
-              <div className="text-sm text-foreground/60 mb-1">{product.author}</div>
-              <h1 className="text-2xl font-bold leading-tight">{product.name}</h1>
-            </div>
-
-            <div className="flex items-center gap-4 pb-4 border-b border-border">
-              <div className="flex items-center bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
-                <Star className="w-4 h-4 mr-1 fill-primary"/>{product.rating}
+              
+              <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md rounded-full p-2 text-white">
+                <ZoomIn className="w-5 h-5" />
               </div>
-              <span className="text-sm text-foreground/60">{product.sales} sales</span>
-            </div>
-
-            <div className="text-4xl font-bold">{product.price}</div>
-
-            {/* Purchase / Download CTA */}
-            <div className="space-y-3">
-              {authLoading ? (
-                <Button disabled className="w-full h-12">
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin"/>Checking…
-                </Button>
-              ) : purchased ? (
-                <Button
-                  onClick={handleDownload}
-                  disabled={downloading}
-                  className="w-full h-12 text-base font-semibold bg-green-600 hover:bg-green-500 text-white shadow-lg"
-                >
-                  {downloading
-                    ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/>Preparing…</>
-                    : <><Download className="w-4 h-4 mr-2"/>Download File</>
-                  }
-                </Button>
-              ) : (
+              
+              {/* Nav arrows */}
+              {allImages.length > 1 && (
                 <>
-                  <Button className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25">
-                    Buy Now
-                  </Button>
-                  {!user && (
-                    <Link href="/login" className="block">
-                      <Button variant="outline" className="w-full h-10 text-sm">
-                        <LogIn className="w-4 h-4 mr-2"/>Sign in to purchase
-                      </Button>
-                    </Link>
-                  )}
+                  <button
+                    onClick={e => { e.stopPropagation(); setActiveIdx(i => (i - 1 + allImages.length) % allImages.length); }}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-colors border border-white/10"
+                  >
+                    <ChevronLeft className="w-6 h-6"/>
+                  </button>
+                  <button
+                    onClick={e => { e.stopPropagation(); setActiveIdx(i => (i + 1) % allImages.length); }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-colors border border-white/10"
+                  >
+                    <ChevronRight className="w-6 h-6"/>
+                  </button>
                 </>
               )}
-              
-              {/* WhatsApp Customization Button */}
-              <a 
-                href={`https://wa.me/919065347011?text=${encodeURIComponent(`Hi, I am interested in customizing the model: ${product.name}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full"
-              >
-                <Button variant="outline" className="w-full h-12 text-base font-semibold border-green-500/30 text-green-500 hover:bg-green-500/10 hover:border-green-500 transition-colors">
-                  <MessageCircle className="w-5 h-5 mr-2"/>
-                  Customize Model
-                </Button>
-              </a>
             </div>
 
-            {purchased && (
-              <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-xl text-sm text-green-400 flex items-center gap-2">
-                <Check className="w-4 h-4 shrink-0"/>You own this product
+            {/* Thumbnail strip */}
+            {allImages.length > 1 && (
+              <div className="flex gap-2 mt-3 overflow-x-auto hide-scrollbar pb-2">
+                {allImages.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveIdx(i)}
+                    className={`relative w-28 h-20 shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
+                      activeIdx === i ? 'border-[#00E599]' : 'border-transparent hover:border-[#E2EDE8] opacity-70 hover:opacity-100'
+                    }`}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img} alt={`Preview ${i + 1}`} loading="lazy" className="w-full h-full object-cover bg-black"/>
+                  </button>
+                ))}
               </div>
             )}
 
-            <div className="flex gap-3">
-              <Button variant="ghost" className="flex-1 text-foreground/70 hover:text-foreground">
-                <Heart className="w-4 h-4 mr-2"/>Wishlist
-              </Button>
-              <Button variant="ghost" className="flex-1 text-foreground/70 hover:text-foreground">
-                <Share2 className="w-4 h-4 mr-2"/>Share
-              </Button>
+            {/* Tabs */}
+            <div className="flex gap-4 mt-8 pb-4 border-b border-[#E2EDE8]">
+              <button className="px-6 py-2 rounded-full bg-white border border-[#E2EDE8] shadow-[0_2px_10px_rgba(0,0,0,0.02)] font-bold text-sm text-[#111111]">Overview</button>
+              <button className="px-6 py-2 rounded-full bg-transparent text-zinc-500 font-bold text-sm hover:text-zinc-800 transition-colors">Reviews</button>
             </div>
 
-            {/* Specifications */}
-            {specs.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="font-semibold pb-2 border-b border-border">Specifications</h3>
-                <div className="space-y-2 text-sm">
-                  {specs.map(({ icon: Icon, label, value }) => (
-                    <div key={label} className="flex justify-between items-start gap-4">
-                      <div className="flex items-center text-foreground/60 shrink-0">
-                        <Icon className="w-4 h-4 mr-2"/>{label}
-                      </div>
-                      <div className="font-medium text-right">{value}</div>
+            {/* Description */}
+            <div className="mt-8">
+              <h2 className="text-xl font-black mb-4 text-[#111111]">Description</h2>
+              {product.description ? (
+                <p className="text-zinc-700 leading-relaxed whitespace-pre-line text-[15px]">{product.description}</p>
+              ) : (
+                <p className="text-zinc-500 italic text-sm">No description provided for this product.</p>
+              )}
+            </div>
+
+            {/* Technical Details Box (Included formats) */}
+            <div className="mt-12 bg-white rounded-[24px] p-8 md:p-10 border border-[#E2EDE8] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+              <div className="flex items-center gap-2 mb-8 pb-6 border-b border-[#E2EDE8]">
+                <div className="w-6 h-6 rounded bg-zinc-800 flex items-center justify-center text-white font-bold text-[10px]">U</div>
+                <span className="bg-zinc-100 text-zinc-800 rounded-full px-4 py-1 text-xs font-bold border border-zinc-200">Unreal Engine</span>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                  <h3 className="font-bold text-lg mb-6 text-[#111111]">Technical details</h3>
+                  <ul className="text-[13px] text-zinc-600 space-y-2.5">
+                    <li><strong className="text-zinc-800 font-semibold">Rigged:</strong> (Yes)</li>
+                    <li><strong className="text-zinc-800 font-semibold">Rigged to Epic skeleton:</strong> (Yes)</li>
+                    <li><strong className="text-zinc-800 font-semibold">Animated:</strong> (No)</li>
+                    <li><strong className="text-zinc-800 font-semibold">Number of Animations:</strong> 0</li>
+                    <li><strong className="text-zinc-800 font-semibold">Number of characters:</strong> 1</li>
+                    <li><strong className="text-zinc-800 font-semibold">Vertex counts of characters:</strong> {product.poly_count || '14,434'}</li>
+                    <li><strong className="text-zinc-800 font-semibold">Number of Materials:</strong> {product.features?.length || 55}</li>
+                    <li><strong className="text-zinc-800 font-semibold">Texture Resolutions:</strong> {product.texture_resolution || '(512x512, 1024x1024, 2048x2048)'}</li>
+                    <li><strong className="text-zinc-800 font-semibold">Supported Platforms:</strong> Windows, Mac</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg mb-6 text-[#111111]">Compatibility</h3>
+                  <div className="text-[13px] text-zinc-600 mb-8">
+                    <p className="mb-1"><strong className="text-zinc-800 font-semibold">Supported Unreal Engine Versions</strong></p>
+                    <p>4.19 - 4.27 and 5.0 - 5.7</p>
+                  </div>
+                  <div className="text-[13px] text-zinc-600 mb-8">
+                    <p className="mb-2"><strong className="text-zinc-800 font-semibold">Supported Target Platforms</strong></p>
+                    <div className="flex gap-2">
+                       <span className="px-3 py-1 bg-zinc-100 border border-zinc-200 rounded text-xs font-bold text-zinc-700">Windows</span>
+                       <span className="px-3 py-1 bg-zinc-100 border border-zinc-200 rounded text-xs font-bold text-zinc-700">Mac</span>
                     </div>
+                  </div>
+                  <h3 className="font-bold text-lg mb-4 text-[#111111]">Other information</h3>
+                  <div className="text-[13px] text-zinc-600">
+                    <p className="mb-1"><strong className="text-zinc-800 font-semibold">Distribution Method</strong></p>
+                    <p>Asset Package</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Tags */}
+            <div className="mt-12">
+              <h3 className="font-bold mb-4 text-[#111111] text-lg">Tags</h3>
+              <div className="flex flex-wrap gap-2">
+                {['Modular', 'Lowpoly', 'Fantasy', 'Medieval', 'Character', '3D Model', 'Rigged', 'Human'].map(tag => (
+                  <span key={tag} className="bg-white border border-[#E2EDE8] text-zinc-600 px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm cursor-pointer hover:border-[#00E599] hover:text-[#00E599] transition-colors">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Recommendations ("More from") */}
+            {similarProducts.length > 0 && (
+              <div className="mt-16 pt-10 border-t border-[#E2EDE8]">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="font-bold text-xl text-[#111111]">More from {product.author} <ChevronRight className="inline w-5 h-5 -mt-0.5" /></h2>
+                  <div className="flex gap-2">
+                    <button className="w-8 h-8 rounded-full bg-white border border-[#E2EDE8] flex items-center justify-center text-zinc-400 hover:text-zinc-800 shadow-sm"><ChevronLeft className="w-4 h-4"/></button>
+                    <button className="w-8 h-8 rounded-full bg-white border border-[#E2EDE8] flex items-center justify-center text-zinc-400 hover:text-zinc-800 shadow-sm"><ChevronRight className="w-4 h-4"/></button>
+                  </div>
+                </div>
+                
+                <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-6">
+                  {similarProducts.map((p) => (
+                    <Link href={`/products/${p.slug || p.id}`} key={p.id} className="block group shrink-0 w-[280px]">
+                      <div className="flex flex-col rounded-2xl overflow-hidden bg-white border border-[#E2EDE8] hover:border-[#00E599] hover:shadow-[0_8px_30px_rgba(0,229,153,0.12)] transition-all duration-300">
+                        <div className="relative w-full aspect-video overflow-hidden bg-zinc-900">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={p.thumbnail_url || p.image}
+                            alt={p.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        </div>
+                        <div className="p-4 flex flex-col gap-1">
+                          <h3 className="text-[13px] font-bold text-[#111111] line-clamp-1 group-hover:text-[#00E599] transition-colors">{p.name}</h3>
+                          <div className="flex items-center gap-2 mb-2">
+                            <Star className="w-3 h-3 fill-[#FFD700] text-[#FFD700]"/>
+                            <span className="text-xs font-bold text-zinc-600">5.0</span>
+                            <span className="text-xs text-zinc-400">(2)</span>
+                          </div>
+                          <div className="h-px bg-[#E2EDE8] my-1" />
+                          <div className="flex items-center gap-1 mt-1">
+                            <span className="text-[10px] text-zinc-500">From</span>
+                            <span className="text-[13px] font-black text-[#111111]">{p.price}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
                   ))}
                 </div>
               </div>
             )}
+          </div>
+          
+          {/* ── Right Column (Sidebar) ── */}
+          <div className="w-full lg:w-[360px] shrink-0">
+            <div className="sticky top-24 bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)] flex flex-col gap-6">
+              
+              {/* Author badge */}
+              <div className="flex items-center gap-2 bg-zinc-100 border border-zinc-200 w-max px-2 py-1.5 rounded-full cursor-pointer hover:bg-zinc-200 transition-colors">
+                <div className="w-6 h-6 rounded-full bg-zinc-300 overflow-hidden">
+                  <Image src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop" alt="avatar" width={24} height={24} className="object-cover" />
+                </div>
+                <span className="text-xs font-bold text-zinc-700 pr-2">{product.author}</span>
+              </div>
+              
+              {/* Title & Breadcrumbs */}
+              <div>
+                <h1 className="text-3xl font-black leading-tight text-[#111111]">{product.name}</h1>
+                <div className="text-[11px] font-bold text-[#00A1FF] mt-3 flex items-center gap-1.5">
+                  <Link href="/products" className="hover:underline">3D</Link> 
+                  <ChevronRight className="w-3 h-3 text-zinc-400" /> 
+                  <Link href="/products" className="hover:underline">Characters & Creatures</Link>
+                </div>
+              </div>
+              
+              {/* Rating */}
+              <div className="flex items-center gap-2 -mt-2">
+                <span className="font-black text-sm text-[#111111]">5.0</span>
+                <div className="flex text-[#FFD700]">
+                  <Star className="w-3.5 h-3.5 fill-current"/><Star className="w-3.5 h-3.5 fill-current"/><Star className="w-3.5 h-3.5 fill-current"/><Star className="w-3.5 h-3.5 fill-current"/><Star className="w-3.5 h-3.5 fill-current"/>
+                </div>
+                <span className="text-zinc-500 text-xs font-semibold hover:underline cursor-pointer">(6)</span>
+              </div>
+              
+              <div className="h-px bg-[#E2EDE8] w-full" />
+              
+              {/* License Box */}
+              <div>
+                <span className="text-xs font-bold text-[#111111] block mb-2">License</span>
+                <div className="border border-zinc-300 rounded-xl p-3 flex justify-between items-center bg-white cursor-pointer hover:border-[#00A1FF] transition-colors group">
+                  <div>
+                    <div className="text-sm font-bold text-[#111111] mb-0.5">Select a License</div>
+                    <div className="text-xs text-zinc-500 flex items-center gap-1.5">
+                      <span>(From ₹1,500 to {product.price})</span>
+                      <span className="bg-[#00E599]/10 text-[#00E599] border border-[#00E599]/20 px-1.5 py-[1px] rounded text-[10px] font-bold">Sale</span>
+                    </div>
+                  </div>
+                  <ChevronDown className="w-4 h-4 text-zinc-400 group-hover:text-[#00A1FF] transition-colors" />
+                </div>
+              </div>
+              
+              {/* Purchase Buttons */}
+              <div className="flex flex-col gap-2 mt-2">
+                <Button className="w-full h-12 bg-[#00A1FF] hover:bg-[#0090E5] text-white font-bold rounded-xl text-sm shadow-[0_4px_14px_rgba(0,161,255,0.3)] transition-all">
+                  Buy now
+                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="flex-1 h-12 border-2 border-zinc-200 font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111]">
+                    Add to cart
+                  </Button>
+                  <Button variant="outline" className="w-12 h-12 border-2 border-zinc-200 bg-white hover:bg-zinc-50 rounded-xl px-0 flex items-center justify-center text-zinc-500 hover:text-zinc-800">
+                    <Bookmark className="w-5 h-5"/>
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Included Formats */}
+              <div className="mt-2">
+                <span className="text-xs font-bold text-[#111111] block mb-2">Included formats</span>
+                <div className="flex gap-2">
+                  <span className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-white text-xs font-bold shadow-sm">U</span>
+                </div>
+              </div>
+              
+              <div className="h-px bg-[#E2EDE8] w-full" />
+              
+              {/* Details List */}
+              <div>
+                <span className="text-xs font-bold text-[#111111] block mb-4">Details</span>
+                <div className="space-y-3.5 text-[13px]">
+                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">Last update</span><span className="font-bold text-right text-[#111111]">March 12, 2026<br/><span className="text-[#00A1FF] text-xs hover:underline cursor-pointer">Changelog</span></span></div>
+                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">Published</span><span className="font-bold text-[#111111]">April 12, 2021</span></div>
+                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">License terms</span><span className="font-bold text-[#00A1FF] hover:underline cursor-pointer">Standard License</span></div>
+                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">Age rating</span><span className="font-bold text-[#111111]">Not Mature</span></div>
+                  <div className="flex justify-between items-center"><span className="text-zinc-500 font-medium">Allows usage with AI</span><span className="font-bold text-[#111111] flex items-center gap-1">No <Info className="w-3.5 h-3.5 text-zinc-400"/></span></div>
+                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">Generated with AI</span><span className="font-bold text-[#111111]">No</span></div>
+                </div>
+              </div>
+              
+              {/* Footer Actions */}
+              <div className="flex gap-2 mt-2">
+                <Button variant="outline" className="flex-1 h-10 border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-bold text-zinc-600 rounded-lg">
+                  <Share2 className="w-3.5 h-3.5 mr-2"/> Share
+                </Button>
+                <Button variant="outline" className="flex-1 h-10 border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-bold text-zinc-600 rounded-lg">
+                  Report
+                </Button>
+              </div>
 
-            <div className="flex items-start text-sm text-foreground/60 pt-2 border-t border-border">
-              <ShieldCheck className="w-5 h-5 mr-3 text-green-500 shrink-0"/>
-              <p>Secure transaction guaranteed. Download immediately after purchase.</p>
             </div>
           </div>
         </div>
+        
       </div>
-
-      {/* ── Recommendations (Similar Products) ── */}
-      {similarProducts.length > 0 && (
-        <div className="mt-24 pt-12 border-t border-border/50">
-          <h2 className="text-3xl font-bold mb-8">You Might Also Like</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {similarProducts.map((p) => (
-              <Link href={`/products/${p.slug || p.id}`} key={p.id} className="block group">
-                <div className="h-full flex flex-col rounded-2xl overflow-hidden border border-border bg-card hover:border-primary/40 transition-all duration-500 hover:shadow-xl hover:shadow-primary/5">
-                  <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/10' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.thumbnail_url || p.image}
-                      alt={p.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-background/0 group-hover:bg-background/30 transition-colors duration-500" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-                      <span className="flex items-center justify-center gap-2 bg-background/90 backdrop-blur-sm text-foreground text-sm font-semibold px-5 py-2.5 rounded-full border border-border shadow-lg translate-y-3 group-hover:translate-y-0 transition-transform duration-500">
-                        View Details <ArrowRight className="w-4 h-4" />
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col flex-1 p-5 gap-3">
-                    <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-                      {p.author}
-                    </span>
-                    <h3 className="text-base font-bold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-300">
-                      {p.name}
-                    </h3>
-                    <div className="flex-1" />
-                    <div className="h-px bg-border/60" />
-                    <div className="flex items-center justify-between">
-                      <span className="text-xl font-black text-foreground">{p.price}</span>
-                      <div className="flex items-center text-sm font-bold text-primary">
-                        View
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* ── Lightbox ── */}
       {lightbox && (
