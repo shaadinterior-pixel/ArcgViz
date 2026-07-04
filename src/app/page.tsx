@@ -30,6 +30,9 @@ async function fetchCached() {
   if (_productsCache && Date.now() - _cacheTime < 60_000) return _productsCache;
   const data = await fetchProducts();
   _productsCache = data; _cacheTime = Date.now();
+  return data;
+}
+
 // ── Small icon-only decorative cards ─────────────────────────────────────────
 const ICON_CARDS = [
   { id: 'ic1', emoji: '🖼️', floatClass: 'animate-float-2', style: { top: '35%', left: '8%' } },
@@ -140,7 +143,7 @@ export default function Home() {
         ]);
         if (!mounted) return;
         setHeroContent({ ...DEFAULT_HERO_CONTENT, ...heroData });
-        const sorted = data
+        const sorted = (data || [])
           .sort((a: any, b: any) => (b.sales || 0) - (a.sales || 0))
           .slice(0, 3)
           .map((p: any) => ({ id: p.id, title: p.name, author: p.author, price: p.price, rating: parseFloat(p.rating) || 0, image: p.image }));
