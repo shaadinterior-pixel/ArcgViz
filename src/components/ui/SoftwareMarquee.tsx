@@ -10,11 +10,15 @@ const softwareLogos = [
   { name: 'Cinema 4D', icon: 'https://cdn.simpleicons.org/cinema4d/00A8FF' },
   { name: 'Houdini', icon: 'https://cdn.simpleicons.org/houdini/FF7A00' },
   { name: 'SketchUp', icon: 'https://cdn.simpleicons.org/sketchup/00A8FF' },
-  { name: 'Figma', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg' }
+  { name: 'Figma', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg' },
+  { name: 'Photoshop', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-original.svg' },
+  { name: 'Illustrator', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/illustrator/illustrator-plain.svg' },
+  { name: 'Premiere Pro', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/premierepro/premierepro-original.svg' },
+  { name: 'After Effects', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/aftereffects/aftereffects-original.svg' },
 ];
 
-// Duplicate 2x is enough for seamless loop (was 3x — saves DOM nodes)
-const marqueeItems = [...softwareLogos, ...softwareLogos];
+// Duplicate 4x is enough for seamless loop on ultra-wide screens
+const marqueeItems = [...softwareLogos, ...softwareLogos, ...softwareLogos, ...softwareLogos];
 
 export function SoftwareMarquee() {
   return (
