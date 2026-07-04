@@ -174,7 +174,7 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
           onChange={handleChange}
           onKeyDown={handleKey}
           onFocus={() => results.length > 0 && setOpen(true)}
-          className="w-full h-[58px] pl-14 pr-16 rounded-2xl border border-white/80 bg-white/80 shadow-[0_8px_40px_rgba(36,184,108,0.10)] backdrop-blur-xl text-base text-[#0D1A12] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#24B86C]/60 focus:shadow-[0_8px_40px_rgba(36,184,108,0.18)] transition-all"
+          className="w-full h-[64px] pl-14 pr-16 rounded-full border border-white/60 bg-white/70 shadow-[0_20px_60px_rgba(0,0,0,0.06)] backdrop-blur-2xl text-[17px] text-[#111111] placeholder:text-zinc-400 focus:outline-none focus:border-[#00E599]/40 focus:bg-white/90 focus:shadow-[0_20px_80px_rgba(0,229,153,0.12)] transition-all duration-500"
           placeholder={placeholder}
           autoComplete="off"
           role="combobox"
@@ -193,10 +193,10 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
           </button>
         )}
 
-        {/* Submit button — rounded-xl green square as per reference */}
+        {/* Submit button — premium circular glowing button */}
         <button
           type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-xl bg-gradient-to-br from-[#24B86C] to-[#11998E] flex items-center justify-center shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 z-10"
+          className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#00E599] hover:bg-[#00D08A] flex items-center justify-center shadow-[0_8px_20px_rgba(0,229,153,0.3)] hover:shadow-[0_12px_28px_rgba(0,229,153,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 z-10"
           aria-label="Search"
         >
           <Search className="h-5 w-5 text-white" />
