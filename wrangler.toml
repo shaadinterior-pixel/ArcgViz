@@ -1,7 +1,11 @@
 name = "shaad3d"
 compatibility_date = "2024-03-20"
 compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".open-next/cloudflare-pages"
+main = ".open-next/worker.js"
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
 
 # Do not commit secrets to this file!
 # Use wrangler secret put <NAME> or set them in the Cloudflare dashboard.
