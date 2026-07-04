@@ -150,9 +150,13 @@ export default function Home() {
       {/* ─── HERO SECTION ─── */}
       <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden bg-background pt-24 pb-16">
         
-        {/* DW Watermark Background - Optimized for light theme */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-[80vw] max-h-[80vh] opacity-[0.05] dark:opacity-[0.08] pointer-events-none flex items-center justify-center -z-10 mix-blend-multiply dark:mix-blend-lighten">
-           <Image src="/DESIGN WALLA LOGO .jpg" alt="DW Watermark" fill className="object-contain scale-110" priority quality={100} />
+        {/* Glowing Gradient Orbs */}
+        <div className="absolute -bottom-32 -left-32 w-[600px] h-[600px] bg-gradient-to-tr from-[#24B86C]/30 to-transparent rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] opacity-80 pointer-events-none" />
+        <div className="absolute top-1/4 -right-32 w-[500px] h-[500px] bg-gradient-to-bl from-[#11998E]/30 to-transparent rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-80 pointer-events-none" />
+
+        {/* DW Watermark Text Background */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none flex items-center justify-center -z-10 overflow-hidden opacity-5">
+           <span className="text-[45vw] font-black leading-none text-transparent bg-gradient-to-br from-[#24B86C] to-[#11998E] bg-clip-text select-none">DW</span>
         </div>
 
         {/* Main grid */}
@@ -189,13 +193,13 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-wrap gap-4 mt-4"
             >
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-lg px-6 text-sm font-bold shadow-md shadow-primary/20">
+              <Button size="lg" className="bg-[#24B86C] hover:bg-[#24B86C]/90 text-white rounded-lg px-6 text-sm font-bold shadow-md shadow-[#24B86C]/20 border border-[#24B86C]">
                 [Explore Marketplace]
               </Button>
-              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-border/80 hover:bg-secondary/10 bg-white/80 dark:bg-black/50 backdrop-blur-sm">
+              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-[#24B86C] text-[#24B86C] hover:bg-[#24B86C]/10 bg-transparent">
                 [Hire Our Team]
               </Button>
-              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-border/80 hover:bg-secondary/10 bg-white/80 dark:bg-black/50 backdrop-blur-sm">
+              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-[#24B86C] text-[#24B86C] hover:bg-[#24B86C]/10 bg-transparent">
                 [Download Free Assets]
               </Button>
             </motion.div>
