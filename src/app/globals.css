@@ -20,7 +20,14 @@
 
 @layer utilities {
   .glass {
-    @apply bg-background/50 backdrop-blur-md border border-border;
+    @apply bg-white/60 backdrop-blur-md border border-white/50;
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
   }
   .hide-scrollbar {
     -ms-overflow-style: none;
@@ -37,32 +44,59 @@
     perspective: 1000px;
     -webkit-font-smoothing: subpixel-antialiased;
   }
+  /* Float animation utilities */
+  .animate-float-1 {
+    animation: float 5s ease-in-out infinite;
+  }
+  .animate-float-2 {
+    animation: float 6.5s ease-in-out infinite 0.8s;
+  }
+  .animate-float-3 {
+    animation: float 4.8s ease-in-out infinite 1.6s;
+  }
+  .animate-float-4 {
+    animation: float 7s ease-in-out infinite 0.4s;
+  }
+  .animate-float-5 {
+    animation: float 5.5s ease-in-out infinite 2s;
+  }
+  .animate-float-6 {
+    animation: float 6s ease-in-out infinite 1.2s;
+  }
+  .animate-float-7 {
+    animation: float 5.8s ease-in-out infinite 2.4s;
+  }
+  /* Glow pulse */
+  .animate-glow {
+    animation: glow-pulse 3s ease-in-out infinite;
+  }
 }
 
 :root {
-  --background: #FFFFFF;
-  --foreground: #000000;
+  --background: #F8FAF9;
+  --foreground: #0D1A12;
   --primary: #24B86C;
   --primary-foreground: #FFFFFF;
   --secondary: #11998E;
   --secondary-foreground: #FFFFFF;
-  --accent: #F1F5F9;
-  --accent-foreground: #000000;
+  --accent: #EDF7F2;
+  --accent-foreground: #0D1A12;
   --card: #FFFFFF;
-  --border: #E2E8F0;
+  --border: #E2EDE8;
+  --muted: #6B7280;
 }
 
 .dark {
-  --background: #050505;
-  --foreground: #F9FAFB;
+  --background: #060A08;
+  --foreground: #F0F7F3;
   --primary: #24B86C;
   --primary-foreground: #000000;
   --secondary: #11998E;
   --secondary-foreground: #FFFFFF;
-  --accent: #000000;
+  --accent: #0D1A12;
   --accent-foreground: #FFFFFF;
-  --card: #0A0A0A;
-  --border: rgba(255, 255, 255, 0.1);
+  --card: #0C110E;
+  --border: rgba(36, 184, 108, 0.12);
 }
 
 /* ─── Base body ─── */
@@ -72,11 +106,10 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Prevent layout thrashing on scrollbar appearance */
   overflow-y: scroll;
 }
 
-/* ─── Smooth scrolling (only when not doing route transitions) ─── */
+/* ─── Smooth scrolling ─── */
 html[data-scroll-behavior="smooth"] {
   scroll-behavior: smooth;
 }
@@ -102,9 +135,41 @@ html[data-scroll-behavior="smooth"] {
   100% { transform: translateX(0%); }
 }
 
+/* Float animation for hero cards */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(0.5deg); }
+  66% { transform: translateY(-6px) rotate(-0.3deg); }
+}
+
+/* Gradient shift animation */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Glow pulse */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(36, 184, 108, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(36, 184, 108, 0.5), 0 0 60px rgba(17, 153, 142, 0.3); }
+}
+
+/* Orb drift */
+@keyframes orb-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 10px) scale(0.97); }
+}
+
+.animate-orb-drift {
+  animation: orb-drift 12s ease-in-out infinite;
+}
+.animate-orb-drift-reverse {
+  animation: orb-drift 15s ease-in-out infinite reverse;
+}
+
 .animate-marquee {
   animation: marquee 28s linear infinite;
-  /* GPU composite the marquee — it's always animating */
   will-change: transform;
   transform: translateZ(0);
 }
@@ -131,9 +196,6 @@ html[data-scroll-behavior="smooth"] {
 }
 
 /* ─── Performance: content-visibility ─── */
-/* Skip rendering off-screen sections until near the viewport.
-   This is a *huge* win on long pages — saves layout, paint and compositing
-   for sections that are thousands of pixels away. */
 section:not(:first-child),
 footer {
   content-visibility: auto;
@@ -148,15 +210,11 @@ footer {
 
 /* ─── Performance: image rendering ─── */
 img {
-  /* Prevent images from being rendered at higher-than-necessary quality */
   image-rendering: auto;
-  /* Content-fit avoids upscaling small images */
   content-visibility: auto;
 }
 
 /* ─── Performance: backdrop-filter containment ─── */
-/* Backdrop filters are expensive on low-end GPUs.
-   Containment tells the browser to limit the filter area. */
 .backdrop-blur-md,
 .backdrop-blur-sm,
 .backdrop-blur-lg,
@@ -182,16 +240,24 @@ img {
 
 /* ─── Responsive: reduce visual weight on very small screens ─── */
 @media (max-width: 480px) {
-  /* Smaller text sizes to prevent overflow */
   h1 { font-size: clamp(1.75rem, 8vw, 3rem) !important; }
   h2 { font-size: clamp(1.5rem, 6vw, 2.5rem) !important; }
 
-  /* Remove backdrop-blur entirely on very low-end (saves GPU) */
   .backdrop-blur-md,
   .backdrop-blur-lg,
   .backdrop-blur-xl {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+  }
+
+  .animate-float-1,
+  .animate-float-2,
+  .animate-float-3,
+  .animate-float-4,
+  .animate-float-5,
+  .animate-float-6,
+  .animate-float-7 {
+    animation: none !important;
   }
 }
 
