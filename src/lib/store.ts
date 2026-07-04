@@ -61,6 +61,27 @@ export type StoreSettings = {
   heroImageUrl: string;
 };
 
+export type HeroContent = {
+  headline_line1: string;
+  headline_line2: string;
+  subheadline: string;
+  cta1_text: string;
+  cta1_link: string;
+  cta2_text: string;
+  cta2_link: string;
+  cta3_text: string;
+  cta3_link: string;
+  stat1_value: string;
+  stat1_label: string;
+  stat2_value: string;
+  stat2_label: string;
+  stat3_value: string;
+  stat3_label: string;
+  stat4_value: string;
+  stat4_label: string;
+  search_placeholder: string;
+};
+
 export type CardEntry = { name: string; count: string; image: string };
 export type Category = { id: string; title: string; description: string; cards: CardEntry[] };
 
@@ -215,6 +236,44 @@ export async function deleteOrder(id: string): Promise<void> {
 
 export async function updateOrderStatus(id: string, status: Order['status']): Promise<void> {
   const { error } = await supabase.from('orders').update({ status }).eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Hero Content ─────────────────────────────────────────────────────────────
+
+export const DEFAULT_HERO_CONTENT: HeroContent = {
+  headline_line1: 'One Platform. Infinite',
+  headline_line2: 'Creative Possibilities.',
+  subheadline: 'All-Business Digital Ecosystem, Website Templates, Motion Design, Brand Kits, Digital Products, 3D Models, and more.',
+  cta1_text: 'Explore Marketplace',
+  cta1_link: '/products',
+  cta2_text: 'Hire Our Team',
+  cta2_link: '/services',
+  cta3_text: 'Download Free Assets',
+  cta3_link: '/products?filter=free',
+  stat1_value: '12K+',
+  stat1_label: 'Premium Assets',
+  stat2_value: '4.9★',
+  stat2_label: 'Avg Rating',
+  stat3_value: '850+',
+  stat3_label: 'Artists',
+  stat4_value: '50K+',
+  stat4_label: 'Downloads',
+  search_placeholder: 'What are you looking for today?',
+};
+
+export async function fetchHeroContent(): Promise<HeroContent> {
+  const { data, error } = await supabase
+    .from('hero_content')
+    .select('*')
+    .eq('id', 1)
+    .single();
+  if (error && error.code !== 'PGRST116') return DEFAULT_HERO_CONTENT;
+  return data ? { ...DEFAULT_HERO_CONTENT, ...data } : DEFAULT_HERO_CONTENT;
+}
+
+export async function saveHeroContent(content: HeroContent): Promise<void> {
+  const { error } = await supabase.from('hero_content').upsert({ id: 1, ...content });
   if (error) throw error;
 }
 
