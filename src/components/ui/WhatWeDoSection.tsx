@@ -119,7 +119,7 @@ export function WhatWeDoSection() {
   const serviceIndex = services.findIndex(s => s.id === activeTab) + 1;
 
   return (
-    <section className="w-full bg-white/70 backdrop-blur-3xl py-24 relative overflow-hidden border-y border-[#E2EDE8]">
+    <section id="services" className="w-full bg-white/70 backdrop-blur-3xl py-24 relative overflow-hidden border-y border-[#E2EDE8]">
       {/* Decorative Gradients for Translucent effect */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(0,229,153,0.08)_0,transparent_60%)] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(0,161,255,0.06)_0,transparent_60%)] pointer-events-none" />
