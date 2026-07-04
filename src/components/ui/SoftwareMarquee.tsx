@@ -4,8 +4,7 @@ import React from 'react';
 
 const softwareLogos = [
   { name: 'Blender', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg' },
-  { name: 'Unreal Engine', icon: 'https://cdn.simpleicons.org/unrealengine/FFFFFF' },
-  { name: 'Unity', icon: 'https://cdn.simpleicons.org/unity/FFFFFF' },
+
   { name: 'Maya', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/maya/maya-original.svg' },
   { name: 'Cinema 4D', icon: 'https://cdn.simpleicons.org/cinema4d/00A8FF' },
   { name: 'Houdini', icon: 'https://cdn.simpleicons.org/houdini/FF7A00' },
@@ -23,8 +22,7 @@ const marqueeItems = [...softwareLogos, ...softwareLogos, ...softwareLogos, ...s
 export function SoftwareMarquee() {
   return (
     <div className="w-full py-12 overflow-hidden border-y border-border/10 bg-secondary/10 relative">
-      <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background z-10 pointer-events-none" />
-      
+
       <div className="container mx-auto px-4 mb-6 text-center">
         <p className="text-sm font-medium text-foreground/50 uppercase tracking-widest">Compatible with industry standards</p>
       </div>
