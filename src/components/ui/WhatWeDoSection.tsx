@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle2, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchServices } from '@/lib/store';
 
@@ -118,7 +119,7 @@ export function WhatWeDoSection() {
   const serviceIndex = services.findIndex(s => s.id === activeTab) + 1;
 
   return (
-    <section className="w-full bg-white dark:bg-[#0A0A0A] py-24 relative overflow-hidden">
+    <section className="w-full bg-[#060A08]/95 backdrop-blur-3xl py-24 relative overflow-hidden border-y border-white/5">
       {/* Decorative Gradients for Translucent effect */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.06)_0,transparent_60%)] pointer-events-none opacity-70" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.06)_0,transparent_60%)] pointer-events-none opacity-70" />
@@ -128,15 +129,15 @@ export function WhatWeDoSection() {
         {/* Header Row */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12">
           <div>
-            <div className="inline-block px-4 py-1.5 rounded-full bg-[#24B86C]/10 mb-4">
+            <div className="inline-block px-4 py-1.5 rounded-full bg-[#24B86C]/10 border border-[#24B86C]/20 mb-4">
                <span className="text-[#24B86C] font-semibold text-xs tracking-[0.2em] uppercase">WHAT WE DO</span>
             </div>
             <h2 className="text-6xl md:text-7xl font-black tracking-tight leading-[0.9]">
-              <span className="text-foreground">Ten crafts.</span><br />
-              <span className="text-zinc-400 dark:text-zinc-600">One studio.</span>
+              <span className="text-white drop-shadow-sm">Ten crafts.</span><br />
+              <span className="text-zinc-500">One studio.</span>
             </h2>
           </div>
-          <p className="max-w-sm text-zinc-500 dark:text-zinc-400 text-sm md:text-base leading-relaxed">
+          <p className="max-w-sm text-zinc-400 text-sm md:text-base leading-relaxed">
             Tap any service below to reveal its full details — projects, deliverables and how we work.
           </p>
         </div>
@@ -158,7 +159,7 @@ export function WhatWeDoSection() {
                 className={`whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border ${
                   isActive 
                     ? 'bg-gradient-to-r from-[#24B86C] to-[#11998E] border-transparent text-white shadow-lg shadow-[#24B86C]/20' 
-                    : 'bg-white/60 dark:bg-black/40 backdrop-blur-md border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:border-[#24B86C] hover:text-[#24B86C] dark:hover:text-[#24B86C]'
+                    : 'bg-white/5 backdrop-blur-md border-white/10 text-zinc-400 hover:border-[#24B86C] hover:text-[#24B86C]'
                 }`}
               >
                 {service.category}
@@ -207,7 +208,7 @@ export function WhatWeDoSection() {
           </div>
 
           {/* Right: Details Card */}
-          <div className="bg-white/80 dark:bg-black/40 backdrop-blur-2xl border border-white/50 dark:border-white/10 rounded-3xl p-8 flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]">
+          <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.2)]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeService.id}
@@ -217,11 +218,11 @@ export function WhatWeDoSection() {
                 transition={{ duration: 0.3 }}
                 className="flex flex-col h-full"
               >
-                <p className="text-zinc-700 dark:text-zinc-300 text-lg leading-relaxed mb-10">
+                <p className="text-zinc-300 text-lg leading-relaxed mb-10">
                   {activeService.description}
                 </p>
 
-                <h5 className="text-zinc-500 dark:text-zinc-400 font-bold text-xs tracking-[0.2em] uppercase mb-6">
+                <h5 className="text-zinc-400 font-bold text-xs tracking-[0.2em] uppercase mb-6">
                   WHAT'S INCLUDED
                 </h5>
                 
@@ -229,16 +230,18 @@ export function WhatWeDoSection() {
                   {activeService.includes.map((item, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <CheckCircle2 className="w-5 h-5 text-[#24B86C] shrink-0 mt-0.5" />
-                      <span className="text-zinc-600 dark:text-zinc-300 text-sm">{item}</span>
+                      <span className="text-zinc-300 text-sm">{item}</span>
                     </li>
                   ))}
                 </ul>
 
-                <button className="relative overflow-hidden w-full bg-gradient-to-r from-[#24B86C] to-[#11998E] text-white font-bold py-4 rounded-xl flex items-center justify-between px-6 transition-all duration-300 shadow-lg shadow-[#24B86C]/20 group hover:shadow-xl hover:shadow-[#24B86C]/40 border-0">
-                  <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover:animate-shine" />
-                  <span className="relative z-10">Start a {activeService.category} project</span>
-                  <ArrowUpRight className="relative z-10 w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
-                </button>
+                <Link href={`/products?category=${encodeURIComponent(activeService.category)}`} className="w-full block">
+                  <button className="relative overflow-hidden w-full bg-gradient-to-r from-[#24B86C] to-[#11998E] text-white font-bold py-4 rounded-xl flex items-center justify-between px-6 transition-all duration-300 shadow-lg shadow-[#24B86C]/20 group hover:shadow-xl hover:shadow-[#24B86C]/40 border-0">
+                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover:animate-shine" />
+                    <span className="relative z-10">Start a {activeService.category} project</span>
+                    <ArrowUpRight className="relative z-10 w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
+                  </button>
+                </Link>
               </motion.div>
             </AnimatePresence>
           </div>
