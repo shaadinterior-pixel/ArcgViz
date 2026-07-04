@@ -44,7 +44,7 @@ export function Footer() {
       {/* Top accent line */}
       <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#24B86C]/40 to-transparent" />
       {/* Subtle bg orb */}
-      <div className="absolute bottom-0 right-0 w-[500px] h-[300px] bg-gradient-to-tl from-[#24B86C]/5 to-transparent rounded-full filter blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[300px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.04)_0,transparent_60%)] pointer-events-none" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
