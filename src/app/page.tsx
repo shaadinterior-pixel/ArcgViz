@@ -175,18 +175,16 @@ export default function Home() {
         <div className="animate-orb-drift-reverse absolute bottom-[-20%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,161,255,0.08)_0,transparent_70%)] blur-3xl pointer-events-none" />
 
         {/* Refined DW Background Watermark */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0 select-none opacity-[0.03]">
-          <span
-            className="font-black leading-none text-zinc-900"
-            style={{
-              fontSize: 'clamp(300px, 60vw, 900px)',
-              letterSpacing: '-0.08em',
-              fontFamily: 'system-ui, -apple-system, sans-serif',
-              transform: 'translateY(-5%)'
-            }}
-          >
-            DW
-          </span>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0 select-none opacity-[0.04]">
+          <Image 
+            src="/DESIGN WALLA LOGO .jpg" 
+            alt="Design Walla Logo Watermark" 
+            width={800} 
+            height={800} 
+            className="object-contain rounded-[4rem] grayscale mix-blend-multiply"
+            style={{ transform: 'translateY(-5%) scale(1.2)' }}
+            priority
+          />
         </div>
 
         {/* Main grid */}
