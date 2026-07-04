@@ -118,19 +118,25 @@ export function WhatWeDoSection() {
   const serviceIndex = services.findIndex(s => s.id === activeTab) + 1;
 
   return (
-    <section className="w-full bg-[#050505] text-white py-24 relative overflow-hidden">
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="w-full bg-[#FAFAFA] dark:bg-[#0A0A0A] py-24 relative overflow-hidden">
+      {/* Decorative Gradients for Translucent effect */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-[#24B86C]/10 via-[#11998E]/5 to-transparent rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] pointer-events-none opacity-70" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-[#11998E]/10 via-[#24B86C]/5 to-transparent rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] pointer-events-none opacity-70" />
+
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header Row */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12">
           <div>
-            <h4 className="text-[#24B86C] font-bold text-sm tracking-[0.2em] uppercase mb-4">WHAT WE DO</h4>
+            <div className="inline-block px-4 py-1.5 rounded-full bg-[#24B86C]/10 mb-4">
+               <span className="text-[#24B86C] font-semibold text-xs tracking-[0.2em] uppercase">WHAT WE DO</span>
+            </div>
             <h2 className="text-6xl md:text-7xl font-black tracking-tight leading-[0.9]">
-              <span className="text-white">Ten crafts.</span><br />
-              <span className="text-zinc-600">One studio.</span>
+              <span className="text-foreground">Ten crafts.</span><br />
+              <span className="text-zinc-400 dark:text-zinc-600">One studio.</span>
             </h2>
           </div>
-          <p className="max-w-sm text-zinc-400 text-sm md:text-base leading-relaxed">
+          <p className="max-w-sm text-zinc-500 dark:text-zinc-400 text-sm md:text-base leading-relaxed">
             Tap any service below to reveal its full details — projects, deliverables and how we work.
           </p>
         </div>
@@ -146,7 +152,7 @@ export function WhatWeDoSection() {
                 className={`whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border ${
                   isActive 
                     ? 'bg-gradient-to-r from-[#24B86C] to-[#11998E] border-transparent text-white shadow-lg shadow-[#24B86C]/20' 
-                    : 'bg-transparent border-zinc-800 text-zinc-300 hover:border-zinc-500'
+                    : 'bg-white/60 dark:bg-black/40 backdrop-blur-md border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:border-[#24B86C] hover:text-[#24B86C] dark:hover:text-[#24B86C]'
                 }`}
               >
                 {service.category}
@@ -183,10 +189,10 @@ export function WhatWeDoSection() {
                   <p className="bg-gradient-to-r from-[#24B86C] to-[#11998E] bg-clip-text text-transparent font-bold tracking-widest text-xs uppercase mb-2">
                     SERVICE {String(serviceIndex).padStart(2, '0')}
                   </p>
-                  <h3 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2">
+                  <h3 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2 drop-shadow-md">
                     {activeService.title}
                   </h3>
-                  <p className="text-zinc-300 text-sm md:text-base italic font-medium">
+                  <p className="text-zinc-200 text-sm md:text-base italic font-medium drop-shadow-md">
                     "{activeService.tagline}"
                   </p>
                 </div>
@@ -195,7 +201,7 @@ export function WhatWeDoSection() {
           </div>
 
           {/* Right: Details Card */}
-          <div className="bg-[#111111] border border-[#222222] rounded-3xl p-8 flex flex-col justify-between">
+          <div className="bg-white/80 dark:bg-black/40 backdrop-blur-2xl border border-white/50 dark:border-white/10 rounded-3xl p-8 flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeService.id}
@@ -205,11 +211,11 @@ export function WhatWeDoSection() {
                 transition={{ duration: 0.3 }}
                 className="flex flex-col h-full"
               >
-                <p className="text-zinc-300 text-lg leading-relaxed mb-10">
+                <p className="text-zinc-700 dark:text-zinc-300 text-lg leading-relaxed mb-10">
                   {activeService.description}
                 </p>
 
-                <h5 className="text-zinc-500 font-bold text-xs tracking-[0.2em] uppercase mb-6">
+                <h5 className="text-zinc-500 dark:text-zinc-400 font-bold text-xs tracking-[0.2em] uppercase mb-6">
                   WHAT'S INCLUDED
                 </h5>
                 
@@ -217,7 +223,7 @@ export function WhatWeDoSection() {
                   {activeService.includes.map((item, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <CheckCircle2 className="w-5 h-5 text-[#24B86C] shrink-0 mt-0.5" />
-                      <span className="text-zinc-300 text-sm">{item}</span>
+                      <span className="text-zinc-600 dark:text-zinc-300 text-sm">{item}</span>
                     </li>
                   ))}
                 </ul>
