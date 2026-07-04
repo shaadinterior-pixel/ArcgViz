@@ -242,13 +242,11 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 <div>
                   <h3 className="font-bold text-lg mb-6 text-[#111111]">Technical details</h3>
                   <ul className="text-[13px] text-zinc-600 space-y-2.5">
-                    <li><strong className="text-zinc-800 font-semibold">Rigged:</strong> (Yes)</li>
-                    <li><strong className="text-zinc-800 font-semibold">Rigged to Epic skeleton:</strong> (Yes)</li>
-                    <li><strong className="text-zinc-800 font-semibold">Animated:</strong> (No)</li>
-                    <li><strong className="text-zinc-800 font-semibold">Number of Animations:</strong> 0</li>
-                    <li><strong className="text-zinc-800 font-semibold">Number of characters:</strong> 1</li>
-                    <li><strong className="text-zinc-800 font-semibold">Vertex counts of characters:</strong> {product.poly_count || '14,434'}</li>
-                    <li><strong className="text-zinc-800 font-semibold">Number of Materials:</strong> {product.features?.length || 55}</li>
+                    <li><strong className="text-zinc-800 font-semibold">Rigged:</strong> {product.features?.includes('Rigged') ? 'Yes' : 'No'}</li>
+                    <li><strong className="text-zinc-800 font-semibold">Animated:</strong> {product.features?.includes('Animated') ? 'Yes' : 'No'}</li>
+                    <li><strong className="text-zinc-800 font-semibold">Game-Ready:</strong> {product.features?.includes('Game-Ready') ? 'Yes' : 'No'}</li>
+                    <li><strong className="text-zinc-800 font-semibold">3D Printable:</strong> {product.features?.includes('3D Printable') ? 'Yes' : 'No'}</li>
+                    <li><strong className="text-zinc-800 font-semibold">Vertex / Poly count:</strong> {product.poly_count || '14,434'}</li>
                     <li><strong className="text-zinc-800 font-semibold">Texture Resolutions:</strong> {product.texture_resolution || '(512x512, 1024x1024, 2048x2048)'}</li>
                     <li><strong className="text-zinc-800 font-semibold">Supported Platforms:</strong> Windows, Mac</li>
                   </ul>
