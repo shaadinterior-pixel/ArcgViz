@@ -257,7 +257,7 @@ export default function Home() {
           <motion.form
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            onSubmit={(e) => {
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
               const q = (new FormData(e.currentTarget)).get('search');
               if (q) window.location.href = `/products?search=${encodeURIComponent(q as string)}`;
