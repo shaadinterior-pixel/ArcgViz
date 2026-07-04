@@ -9,6 +9,7 @@ import { ArrowRight, Star, Download, Play, Search } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { SoftwareMarquee } from '@/components/ui/SoftwareMarquee';
 import { CategoryMarquee } from '@/components/ui/CategoryMarquee';
+import { WhatWeDoSection } from '@/components/ui/WhatWeDoSection';
 
 // ── Lazy-load the heaviest component (CategoryShowcase) ──────────────────────
 // It contains 5 stacked scroll-driven sections with spring physics.
@@ -312,6 +313,9 @@ export default function Home() {
 
       {/* Category Marquee */}
       <CategoryMarquee />
+
+      {/* What We Do Section */}
+      <WhatWeDoSection />
 
       {/* Category Showcase — lazy loaded, only rendered when scrolled near */}
       <CategoryShowcase />
