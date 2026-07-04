@@ -6,19 +6,21 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Package, Users, ShoppingCart,
   Settings, LogOut, Menu, X, Box, Layers, ChevronRight,
-  ExternalLink,
+  ExternalLink, Image as ImageIcon, Briefcase,
 } from 'lucide-react';
 import { ToastProvider } from '@/components/ui/Toast';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { supabase } from '@/lib/supabase';
 
 const ADMIN_NAV = [
-  { name: 'Overview',    href: '/admin',                    icon: LayoutDashboard },
-  { name: 'Products',   href: '/admin/products',            icon: Package },
-  { name: 'Orders',     href: '/admin/orders',              icon: ShoppingCart },
-  { name: 'Customers',  href: '/admin/customers',           icon: Users },
-  { name: 'Categories', href: '/admin/showcase-categories', icon: Layers },
-  { name: 'Settings',   href: '/admin/settings',            icon: Settings },
+  { name: 'Overview',      href: '/admin',                    icon: LayoutDashboard },
+  { name: 'Products',      href: '/admin/products',            icon: Package },
+  { name: 'Orders',        href: '/admin/orders',              icon: ShoppingCart },
+  { name: 'Customers',     href: '/admin/customers',           icon: Users },
+  { name: 'Categories',    href: '/admin/showcase-categories', icon: Layers },
+  { name: 'Services',      href: '/admin/services',            icon: Briefcase },
+  { name: 'Hero Content',  href: '/admin/hero',                icon: ImageIcon },
+  { name: 'Settings',      href: '/admin/settings',            icon: Settings },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
