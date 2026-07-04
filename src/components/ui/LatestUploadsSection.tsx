@@ -51,7 +51,7 @@ export function LatestUploadsSection() {
   return (
     <section className="py-24 bg-[#F8FAF9] relative overflow-hidden">
       {/* Gradient orbs */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-gradient-to-b from-[#24B86C]/8 to-transparent rounded-full filter blur-[80px] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.06)_0,transparent_60%)] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
