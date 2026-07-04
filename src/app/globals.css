@@ -97,6 +97,11 @@ html[data-scroll-behavior="smooth"] {
   100% { transform: translateX(-50%); }
 }
 
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
 .animate-marquee {
   animation: marquee 28s linear infinite;
   /* GPU composite the marquee — it's always animating */
@@ -104,6 +109,15 @@ html[data-scroll-behavior="smooth"] {
   transform: translateZ(0);
 }
 .animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse 35s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+.animate-marquee-reverse:hover {
   animation-play-state: paused;
 }
 
