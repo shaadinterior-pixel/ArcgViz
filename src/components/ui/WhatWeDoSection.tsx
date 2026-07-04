@@ -119,25 +119,25 @@ export function WhatWeDoSection() {
   const serviceIndex = services.findIndex(s => s.id === activeTab) + 1;
 
   return (
-    <section className="w-full bg-[#060A08]/95 backdrop-blur-3xl py-24 relative overflow-hidden border-y border-white/5">
+    <section className="w-full bg-white/70 backdrop-blur-3xl py-24 relative overflow-hidden border-y border-[#E2EDE8]">
       {/* Decorative Gradients for Translucent effect */}
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.06)_0,transparent_60%)] pointer-events-none opacity-70" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.06)_0,transparent_60%)] pointer-events-none opacity-70" />
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(0,229,153,0.08)_0,transparent_60%)] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(0,161,255,0.06)_0,transparent_60%)] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header Row */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12">
           <div>
-            <div className="inline-block px-4 py-1.5 rounded-full bg-[#24B86C]/10 border border-[#24B86C]/20 mb-4">
+            <div className="inline-block px-4 py-1.5 rounded-full bg-white border border-[#E2EDE8] shadow-sm mb-4">
                <span className="text-[#24B86C] font-semibold text-xs tracking-[0.2em] uppercase">WHAT WE DO</span>
             </div>
-            <h2 className="text-6xl md:text-7xl font-black tracking-tight leading-[0.9]">
-              <span className="text-white drop-shadow-sm">Ten crafts.</span><br />
-              <span className="text-zinc-500">One studio.</span>
+            <h2 className="text-6xl md:text-7xl font-black tracking-tighter leading-[0.9]">
+              <span className="text-[#111111]">Ten crafts.</span><br />
+              <span className="text-zinc-400">One studio.</span>
             </h2>
           </div>
-          <p className="max-w-sm text-zinc-400 text-sm md:text-base leading-relaxed">
+          <p className="max-w-sm text-zinc-600 text-sm md:text-base leading-relaxed">
             Tap any service below to reveal its full details — projects, deliverables and how we work.
           </p>
         </div>
@@ -158,8 +158,8 @@ export function WhatWeDoSection() {
                 onClick={() => setActiveTab(service.id)}
                 className={`whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border ${
                   isActive 
-                    ? 'bg-gradient-to-r from-[#24B86C] to-[#11998E] border-transparent text-white shadow-lg shadow-[#24B86C]/20' 
-                    : 'bg-white/5 backdrop-blur-md border-white/10 text-zinc-400 hover:border-[#24B86C] hover:text-[#24B86C]'
+                    ? 'bg-[#24B86C] border-transparent text-white shadow-[0_8px_20px_rgba(36,184,108,0.25)]' 
+                    : 'bg-white backdrop-blur-md border-[#E2EDE8] text-zinc-500 hover:border-[#24B86C]/40 hover:text-[#24B86C]'
                 }`}
               >
                 {service.category}
@@ -172,7 +172,7 @@ export function WhatWeDoSection() {
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8">
           
           {/* Left: Image Card */}
-          <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden group">
+          <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.06)]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeService.id}
@@ -193,7 +193,7 @@ export function WhatWeDoSection() {
                 
                 {/* Image Overlay Text */}
                 <div className="absolute bottom-0 left-0 p-8 w-full">
-                  <p className="bg-gradient-to-r from-[#24B86C] to-[#11998E] bg-clip-text text-transparent font-bold tracking-widest text-xs uppercase mb-2">
+                  <p className="bg-gradient-to-r from-[#00E599] to-[#00A1FF] bg-clip-text text-transparent font-bold tracking-widest text-xs uppercase mb-2">
                     SERVICE {String(serviceIndex).padStart(2, '0')}
                   </p>
                   <h3 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2 drop-shadow-md">
@@ -208,7 +208,7 @@ export function WhatWeDoSection() {
           </div>
 
           {/* Right: Details Card */}
-          <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.2)]">
+          <div className="bg-white/80 backdrop-blur-2xl border border-[#E2EDE8] rounded-3xl p-8 flex flex-col justify-between shadow-[0_20px_60px_rgba(0,0,0,0.04)]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeService.id}
@@ -218,11 +218,11 @@ export function WhatWeDoSection() {
                 transition={{ duration: 0.3 }}
                 className="flex flex-col h-full"
               >
-                <p className="text-zinc-300 text-lg leading-relaxed mb-10">
+                <p className="text-zinc-700 text-lg leading-relaxed mb-10">
                   {activeService.description}
                 </p>
 
-                <h5 className="text-zinc-400 font-bold text-xs tracking-[0.2em] uppercase mb-6">
+                <h5 className="text-zinc-500 font-bold text-xs tracking-[0.2em] uppercase mb-6">
                   WHAT'S INCLUDED
                 </h5>
                 
@@ -230,14 +230,14 @@ export function WhatWeDoSection() {
                   {activeService.includes.map((item, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <CheckCircle2 className="w-5 h-5 text-[#24B86C] shrink-0 mt-0.5" />
-                      <span className="text-zinc-300 text-sm">{item}</span>
+                      <span className="text-zinc-800 font-medium text-sm">{item}</span>
                     </li>
                   ))}
                 </ul>
 
                 <Link href={`/products?category=${encodeURIComponent(activeService.category)}`} className="w-full block">
-                  <button className="relative overflow-hidden w-full bg-gradient-to-r from-[#24B86C] to-[#11998E] text-white font-bold py-4 rounded-xl flex items-center justify-between px-6 transition-all duration-300 shadow-lg shadow-[#24B86C]/20 group hover:shadow-xl hover:shadow-[#24B86C]/40 border-0">
-                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover:animate-shine" />
+                  <button className="relative overflow-hidden w-full bg-[#111111] text-white font-bold py-4 rounded-xl flex items-center justify-between px-6 transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] group hover:bg-[#24B86C] border-0">
+                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-shine" />
                     <span className="relative z-10">Start a {activeService.category} project</span>
                     <ArrowUpRight className="relative z-10 w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
                   </button>
