@@ -5,13 +5,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { ArrowRight, Star, Download, Search, CheckCircle2, Play } from 'lucide-react';
+import { ArrowRight, Star, Download, CheckCircle2, Play } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { CategoryMarquee } from '@/components/ui/CategoryMarquee';
 import { WhatWeDoSection } from '@/components/ui/WhatWeDoSection';
 import { HowWeWorkSection } from '@/components/ui/HowWeWorkSection';
 import { SoftwareMarquee } from '@/components/ui/SoftwareMarquee';
 import { LatestUploadsSection } from '@/components/ui/LatestUploadsSection';
+import { LiveSearch } from '@/components/ui/LiveSearch';
+import { ContactSection } from '@/components/ui/ContactSection';
 import {
   fetchProducts, fetchSettings, fetchHeroContent,
   onStoreUpdate, DEFAULT_HERO_CONTENT, type HeroContent,
@@ -284,34 +286,8 @@ export default function Home() {
         </div>
 
         {/* ── Search bar ── */}
-        <div className="relative z-20 w-full max-w-2xl mx-auto mt-14 px-4">
-          <motion.form
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.65 }}
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              const q = (new FormData(e.currentTarget)).get('search');
-              if (q) window.location.href = `/products?search=${encodeURIComponent(q as string)}`;
-            }}
-            className="relative flex items-center w-full"
-          >
-            <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none z-10">
-              <Search className="h-5 w-5 text-[#9CA3AF]" />
-            </div>
-            <input
-              type="text" name="search"
-              className="w-full h-[58px] pl-14 pr-16 rounded-2xl border border-white/80 bg-white/75 shadow-[0_8px_40px_rgba(36,184,108,0.10)] backdrop-blur-xl text-base text-[#0D1A12] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#24B86C]/60 focus:shadow-[0_8px_40px_rgba(36,184,108,0.18)] transition-all"
-              placeholder={heroContent.search_placeholder}
-              autoComplete="off"
-            />
-            {/* Search button — rounded square, green, matches reference */}
-            <button
-              type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-xl bg-gradient-to-br from-[#24B86C] to-[#11998E] flex items-center justify-center shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
-            >
-              <Search className="h-5 w-5 text-white" />
-            </button>
-          </motion.form>
+        <div className="relative z-30 w-full max-w-2xl mx-auto mt-14 px-4">
+          <LiveSearch placeholder={heroContent.search_placeholder} />
         </div>
       </section>
 
@@ -398,6 +374,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Contact Section ── */}
+      <ContactSection />
     </div>
   );
 }
