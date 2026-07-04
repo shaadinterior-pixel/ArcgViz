@@ -105,9 +105,6 @@ function HeroCard({ card, delay }: { card: typeof HERO_CARDS[0]; delay: number }
               </div>
             </div>
           )}
-          <div className="absolute top-2.5 right-2.5 w-6 h-6 bg-[#00E599] rounded-full flex items-center justify-center shadow-md border-2 border-white">
-            <CheckCircle2 className="w-4 h-4 text-white" />
-          </div>
         </div>
         <div className="px-3 pt-3 pb-2 text-center">
           <span className={`font-black text-transparent bg-clip-text bg-gradient-to-br from-zinc-800 to-zinc-500 tracking-tight ${card.featured ? 'text-[15px]' : 'text-[13px]'}`}>{card.label}</span>
@@ -211,7 +208,7 @@ export default function Home() {
               className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05]"
             >
               One Platform. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E599] to-[#00A1FF]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E]">
                 Infinite Creative
               </span><br/>
               Possibilities.
@@ -234,17 +231,17 @@ export default function Home() {
             >
               <Link href="/products">
                 <Button className="h-12 px-6 rounded-lg bg-[#24B86C] hover:bg-[#1fa35f] text-white font-bold text-[15px] shadow-[0_8px_20px_rgba(36,184,108,0.25)] transition-all">
-                  Explore Marketplace
+                  [Explore Marketplace]
                 </Button>
               </Link>
               <Link href="/contact">
                 <Button variant="outline" className="h-12 px-6 rounded-lg border-2 border-[#E2EDE8] hover:border-[#24B86C]/40 text-zinc-700 font-bold text-[15px] hover:bg-[#24B86C]/5 transition-all bg-transparent backdrop-blur-sm">
-                  Hire Our Team
+                  [Hire Our Team]
                 </Button>
               </Link>
               <Link href="/resources">
                 <Button variant="outline" className="h-12 px-6 rounded-lg border-2 border-[#E2EDE8] hover:border-[#24B86C]/40 text-zinc-700 font-bold text-[15px] hover:bg-[#24B86C]/5 transition-all bg-transparent backdrop-blur-sm">
-                  Download Free Assets
+                  [Download Free Assets]
                 </Button>
               </Link>
             </motion.div>
@@ -253,7 +250,6 @@ export default function Home() {
           {/* RIGHT — Properly Organized Premium Scatter */}
           <div className="relative h-[540px] w-full hidden lg:block">
             {HERO_CARDS.map((card, i) => <HeroCard key={card.id} card={card} delay={0.2 + i * 0.08} />)}
-            {ICON_CARDS.map((card, i) => <IconCard key={card.id} card={card} delay={0.5 + i * 0.07} />)}
           </div>
 
           {/* RIGHT — Mobile scrollable strip */}
