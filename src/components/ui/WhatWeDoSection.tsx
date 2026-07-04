@@ -118,7 +118,7 @@ export function WhatWeDoSection() {
   const serviceIndex = services.findIndex(s => s.id === activeTab) + 1;
 
   return (
-    <section className="w-full bg-[#FAFAFA] dark:bg-[#0A0A0A] py-24 relative overflow-hidden">
+    <section className="w-full bg-white dark:bg-[#0A0A0A] py-24 relative overflow-hidden">
       {/* Decorative Gradients for Translucent effect */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-[#24B86C]/10 via-[#11998E]/5 to-transparent rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] pointer-events-none opacity-70" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-[#11998E]/10 via-[#24B86C]/5 to-transparent rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] pointer-events-none opacity-70" />
@@ -142,7 +142,13 @@ export function WhatWeDoSection() {
         </div>
 
         {/* Pills Navigation */}
-        <div className="flex overflow-x-auto hide-scrollbar gap-3 pb-4 mb-10 w-full">
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          className="flex overflow-x-auto hide-scrollbar gap-3 pb-4 mb-10 w-full"
+        >
           {services.map((service) => {
             const isActive = activeTab === service.id;
             return (
@@ -159,7 +165,7 @@ export function WhatWeDoSection() {
               </button>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Content Area */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8">
