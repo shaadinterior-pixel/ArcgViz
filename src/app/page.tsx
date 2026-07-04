@@ -146,209 +146,140 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* ─── HERO SECTION ─── */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ contain: 'paint layout' }}>
+      {/* ─── HERO SECTION ─── */}
+      <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden bg-background pt-24 pb-16">
+        
+        {/* DW Watermark Background */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-7xl max-h-[80vh] opacity-[0.04] dark:opacity-[0.08] pointer-events-none flex items-center justify-center -z-10 mix-blend-multiply dark:mix-blend-lighten">
+           <Image src="/DESIGN WALLA LOGO .jpg" alt="DW Watermark" fill className="object-contain scale-[1.3] opacity-60" priority />
+        </div>
 
-        {/* Parallax background — GPU composited, direct scroll mapping with breathing animation */}
-        <motion.div className="absolute inset-0 z-0 gpu-layer pointer-events-none" style={{ y: bgY }}>
-          <motion.div 
-            className="relative w-full h-[115%] origin-center"
-            animate={{ scale: [1, 1.04, 1] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <Image
-              src={heroImageUrl}
-              alt="Hero background"
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-center"
-              quality={80}
-            />
-          </motion.div>
-        </motion.div>
-
-        {/* Gradient overlays - optimized for compositing */}
-        <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-t from-background via-background/70 to-transparent" />
-        <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-r from-background/80 via-transparent to-background/80" />
-
-        {/* Orbs — skip on low-end (pure decoration, GPU-heavy) */}
-        {!isLowEnd && (
-          <>
-            <motion.div
-              className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full pointer-events-none gpu-layer"
-              style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 60%)', scale: orbScale }}
-              animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none gpu-layer"
-              style={{ background: 'radial-gradient(circle, rgba(139,115,85,0.1) 0%, transparent 60%)' }}
-              animate={{ scale: [1.2, 1, 1.2], x: [0, -20, 0], y: [0, 30, 0] }}
-              transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </>
-        )}
-
-        {/* Floating particles — reduced count, skipped on low-end */}
-        <FloatingParticles skip={isLowEnd} />
-
-        {/* Main content */}
-        <motion.div
-          className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center"
-          style={{ y: contentY, opacity }}
-        >
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 14, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="flex items-center gap-2 py-1.5 px-4 rounded-full mb-8 border border-primary/30 bg-primary/10 backdrop-blur-sm gpu-layer"
-          >
-            <motion.span
-              className="w-2 h-2 rounded-full bg-primary"
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            />
-            <span className="text-sm font-medium text-primary">World&apos;s #1 ArchViz Marketplace</span>
-          </motion.div>
-
-          {/* Headline */}
-          <div className="overflow-hidden mb-4">
-            <motion.h1
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl gpu-layer"
-            >
-              Elevate Your
-            </motion.h1>
-          </div>
-          <div className="overflow-hidden mb-2">
-            <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl flex items-center gap-4 justify-center gpu-layer"
-            >
-              <motion.span 
-                className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-200 to-primary bg-[length:200%_auto] inline-block"
-                animate={{ backgroundPosition: ['0% center', '200% center'] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-              >
-                3D
-              </motion.span>
-              <span className="relative overflow-hidden inline-flex h-[1.1em] items-center">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={wordIndex}
-                    initial={{ y: 40, opacity: 0, rotateX: -80 }}
-                    animate={{ y: 0, opacity: 1, rotateX: 0 }}
-                    exit={{ y: -40, opacity: 0, rotateX: 80 }}
-                    transition={{ duration: 0.4, type: "spring", stiffness: 300, damping: 25 }}
-                    style={{ transformOrigin: "center center", perspective: 1000 }}
-                    className="block text-foreground gpu-layer"
-                  >
-                    {FLOATING_WORDS[wordIndex]}
-                  </motion.span>
-                </AnimatePresence>
-              </span>
-            </motion.div>
+        {/* Main grid */}
+        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          {/* Left Column: Text & CTAs */}
+          <div className="flex flex-col gap-6">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-foreground leading-[1.1]">
+              One Platform. Infinite <br/> Creative Possibilities.
+            </h1>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-xl font-medium leading-relaxed">
+              All-Business Digital Ecosystem, Website Templates, Motion Design,
+              Imeononjessititos, Gommonnce, Motion Graphics, Digital sirectors,
+              Tennniises, Brand Kits, Digital Products, and Exonowore
+            </p>
+            <div className="flex flex-wrap gap-4 mt-4">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-lg px-6 text-sm font-bold shadow-md shadow-primary/20">
+                [Explore Marketplace]
+              </Button>
+              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-border hover:bg-secondary/10 bg-background/50 backdrop-blur-sm">
+                [Hire Our Team]
+              </Button>
+              <Button size="lg" variant="outline" className="rounded-lg px-6 text-sm font-bold border-border hover:bg-secondary/10 bg-background/50 backdrop-blur-sm">
+                [Download Free Assets]
+              </Button>
+            </div>
           </div>
 
-          {/* Sub-headline */}
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.15 }}
-            className="text-base sm:text-lg md:text-xl text-muted-foreground mt-8 mb-10 max-w-2xl leading-relaxed gpu-layer"
-          >
-            Discover world-class 3D models, PBR materials, and complete interior scenes crafted by elite industry professionals.
-          </motion.p>
-
-          {/* Hero Search */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="w-full max-w-2xl mb-16 gpu-layer relative"
-          >
-            <form 
-              onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.currentTarget);
-                const query = formData.get('search');
-                if (query) {
-                  window.location.href = `/products?search=${encodeURIComponent(query as string)}`;
-                }
-              }}
-              className="relative flex items-center w-full group"
-            >
-              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                <Search className="h-6 w-6 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          {/* Right Column: Static Floating Cards */}
+          <div className="relative h-[500px] w-full hidden lg:block">
+            {/* Food Cart Design */}
+            <div className="absolute top-[5%] right-[5%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-40 z-20">
+              <div className="w-full aspect-video bg-[#FCD34D] rounded-xl relative overflow-hidden flex items-center justify-center">
+                <span className="text-3xl">🌭</span>
+                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
               </div>
-              <input
-                type="text"
-                name="search"
-                className="w-full h-16 pl-14 pr-32 rounded-full border border-border bg-background/80 backdrop-blur-md text-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent shadow-lg transition-all"
-                placeholder="Search models, textures, designs..."
-                autoComplete="off"
-              />
-              <div className="absolute inset-y-0 right-2 flex items-center">
-                <Button type="submit" className="h-12 px-8 rounded-full text-base font-bold shadow-md hover:shadow-lg">
-                  Search
-                </Button>
+              <span className="text-xs font-bold text-foreground/90">Food Cart Design</span>
+            </div>
+            
+            {/* Interior Design */}
+            <div className="absolute top-[25%] left-[5%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-44 z-20">
+              <div className="w-full aspect-video bg-[#E7E5E4] rounded-xl relative overflow-hidden flex items-center justify-center">
+                <span className="text-3xl">🛋️</span>
+                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
               </div>
-            </form>
-          </motion.div>
+              <span className="text-xs font-bold text-foreground/90">Interior Design</span>
+            </div>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.25 }}
-            className="flex flex-wrap gap-8 sm:gap-12 justify-center items-center gpu-layer"
+            {/* Website Templates */}
+            <div className="absolute top-[40%] right-[25%] bg-white/70 dark:bg-black/70 backdrop-blur-md border border-white/60 dark:border-border/60 p-4 rounded-3xl shadow-2xl flex flex-col items-center gap-3 w-56 z-30 transform scale-110 ring-1 ring-primary/10">
+              <div className="w-full aspect-[16/10] bg-white dark:bg-zinc-900 rounded-xl relative overflow-hidden flex flex-col items-center justify-center border border-border/20 shadow-inner p-2">
+                 <div className="w-full h-3 bg-zinc-100 dark:bg-zinc-800 rounded-md mb-2 flex items-center px-2 space-x-1">
+                   <div className="w-1.5 h-1.5 rounded-full bg-red-400"></div><div className="w-1.5 h-1.5 rounded-full bg-yellow-400"></div><div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
+                 </div>
+                 <div className="flex-1 w-full bg-zinc-50 dark:bg-zinc-950 rounded-md"></div>
+                <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center text-[10px] text-white font-bold shadow-sm">✓</div>
+              </div>
+              <span className="text-sm font-bold text-foreground">Website Templates</span>
+            </div>
+            
+            {/* Brand Kits */}
+            <div className="absolute top-[55%] left-[-5%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-36 z-10">
+              <div className="w-full aspect-video bg-[#F1F5F9] rounded-xl relative overflow-hidden flex items-center justify-center">
+                <span className="text-3xl">🎨</span>
+                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
+              </div>
+              <span className="text-xs font-bold text-foreground/90">Brand Kits</span>
+            </div>
+            
+            {/* Motion Graphics */}
+            <div className="absolute top-[60%] right-[-5%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-40 z-10">
+              <div className="w-full aspect-video bg-indigo-950 rounded-xl relative overflow-hidden flex items-center justify-center border border-indigo-900">
+                <Play className="w-8 h-8 text-indigo-400 fill-indigo-400" />
+                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
+              </div>
+              <span className="text-xs font-bold text-foreground/90">Motion Graphics</span>
+            </div>
+            
+            {/* 3D Models */}
+            <div className="absolute bottom-[-10%] left-[20%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-40 z-20">
+              <div className="w-full aspect-video bg-[#E5E5E5] rounded-xl relative overflow-hidden flex items-center justify-center">
+                <span className="text-3xl">🧊</span>
+                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
+              </div>
+              <span className="text-xs font-bold text-foreground/90">3D Models</span>
+            </div>
+            
+            {/* Digital Products */}
+            <div className="absolute bottom-[0%] right-[20%] bg-white/60 dark:bg-black/60 backdrop-blur-md border border-white/50 dark:border-border/50 p-3 rounded-2xl shadow-xl flex flex-col items-center gap-3 w-44 z-20">
+              <div className="w-full aspect-video bg-blue-50 rounded-xl relative overflow-hidden flex items-center justify-center">
+                <span className="text-3xl">📱</span>
+                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
+              </div>
+              <span className="text-xs font-bold text-foreground/90">Digital Products</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Hero Search (Bottom Center) */}
+        <div className="relative z-20 w-full max-w-2xl mx-auto mt-20 px-4">
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              const query = formData.get('search');
+              if (query) {
+                window.location.href = `/products?search=${encodeURIComponent(query as string)}`;
+              }
+            }}
+            className="relative flex items-center w-full group"
           >
-            {STATS.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 + i * 0.04, type: "spring", stiffness: 300, damping: 20 }}
-              >
-                <motion.div
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 4 + i * 0.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }}
-                  className="flex flex-col items-center gap-1 group"
-                >
-                  <span className="text-2xl sm:text-3xl font-black text-foreground group-hover:text-primary transition-colors duration-300">
-                    {stat.icon ? (
-                      <span className="flex items-center gap-1">
-                        {stat.value}
-                        <stat.icon className="w-5 h-5 text-primary fill-primary" />
-                      </span>
-                    ) : stat.value}
-                  </span>
-                  <span className="text-xs text-muted-foreground uppercase tracking-widest">{stat.label}</span>
-                </motion.div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
-
-        {/* Scroll hint */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-        >
-          <span className="text-xs text-muted-foreground uppercase tracking-widest">Scroll to explore</span>
-          <motion.div
-            className="w-px h-10 bg-gradient-to-b from-primary to-transparent"
-            animate={{ scaleY: [0, 1, 0], originY: 0 }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
+            <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+              <Search className="h-6 w-6 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+            </div>
+            <input
+              type="text"
+              name="search"
+              className="w-full h-16 pl-14 pr-20 rounded-full border border-border/40 bg-white/90 shadow-[0_8px_30px_rgb(0,0,0,0.08)] backdrop-blur-md dark:bg-zinc-900/90 text-base font-medium focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-foreground"
+              placeholder="What are you looking for today?"
+              autoComplete="off"
+            />
+            <div className="absolute inset-y-0 right-2 flex items-center">
+              <Button type="submit" size="icon" className="h-12 w-12 rounded-full bg-primary hover:bg-primary/90 flex items-center justify-center shadow-md text-white">
+                <Search className="h-5 w-5" />
+              </Button>
+            </div>
+          </form>
+        </div>
       </section>
 
       {/* Software Marquee */}
