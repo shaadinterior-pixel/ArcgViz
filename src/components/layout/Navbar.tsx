@@ -8,6 +8,7 @@ import { Search, ShoppingCart, User, Menu, X, ChevronDown, Upload, Bookmark } fr
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { ThemeToggle } from '../theme/ThemeToggle';
+import { LiveSearch } from '../ui/LiveSearch';
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -113,31 +114,17 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* ── Mobile Search Bar (slide-down) ─────────────────────────────────── */}
+      {/* ── Mobile Search Bar (slide-down) ────────────────────────────────────────── */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out absolute top-20 left-4 right-4 rounded-3xl z-40 ${
-          isMobileSearchOpen ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'
+          isMobileSearchOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
         }`}
       >
-        <div className="border border-border/40 bg-background/95 backdrop-blur px-4 py-3 shadow-lg rounded-3xl">
-          <form onSubmit={handleSearch} className="relative flex items-center">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            <Input
-              ref={mobileSearchRef}
-              type="search"
-              placeholder="Search 3D assets, models, textures..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Escape' && closeMobileSearch()}
-              className="w-full bg-secondary/50 border-border/50 pl-10 pr-20 focus-visible:ring-1 focus-visible:ring-primary rounded-full h-11 transition-colors focus:bg-background text-sm"
-            />
-            <button
-              type="submit"
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-9 px-4 text-xs font-bold bg-primary text-primary-foreground rounded-full hover:bg-primary/90 active:scale-95 transition-all"
-            >
-              Search
-            </button>
-          </form>
+        <div className="border border-[#E2EDE8] bg-white/95 backdrop-blur px-4 py-3 shadow-lg rounded-3xl">
+          <LiveSearch
+            autoFocus={isMobileSearchOpen}
+            onClose={() => setIsMobileSearchOpen(false)}
+          />
         </div>
       </div>
 
