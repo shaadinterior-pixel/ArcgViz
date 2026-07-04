@@ -22,6 +22,7 @@ export type Product = {
   google_drive_share_link: string;
   google_drive_file_id: string;
   download_url: string;
+  model_url?: string;
   software_support: string[];
   file_formats: string[];
   poly_count: string;
@@ -172,6 +173,7 @@ function normalizeProduct(row: Record<string, unknown>): Product {
     google_drive_share_link: String(row.google_drive_share_link ?? ''),
     google_drive_file_id:    String(row.google_drive_file_id ?? ''),
     download_url:            String(row.download_url ?? ''),
+    model_url:               row.model_url ? String(row.model_url) : undefined,
     software_support:        Array.isArray(row.software_support) ? row.software_support as string[] : [],
     file_formats:            Array.isArray(row.file_formats) ? row.file_formats as string[] : [],
     poly_count:              String(row.poly_count ?? ''),
