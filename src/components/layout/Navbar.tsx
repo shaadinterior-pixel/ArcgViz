@@ -2,8 +2,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Search, ShoppingCart, User, Menu, X, Box } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { ThemeToggle } from '../theme/ThemeToggle';
@@ -38,12 +39,12 @@ export function Navbar() {
   };
 
   return (
-    <header suppressHydrationWarning className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <header suppressHydrationWarning className="sticky top-4 z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="h-16 flex items-center justify-between bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 border border-border/40 rounded-full px-6 shadow-sm">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2 shrink-0">
-          <Box className="w-8 h-8 text-primary" />
-          <span className="font-bold text-xl tracking-tight">ArchViz Market</span>
+        <Link href="/" className="flex items-center space-x-3 shrink-0">
+          <Image src="/DESIGN WALLA LOGO .jpg" alt="Design Walla Logo" width={36} height={36} className="rounded-full object-cover shadow-sm" />
+          <span className="font-bold text-xl tracking-tight hidden sm:inline-block">DESIGN WALLA</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -125,11 +126,11 @@ export function Navbar() {
 
       {/* ── Mobile Search Bar (slide-down) ─────────────────────────────────── */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out absolute top-20 left-4 right-4 rounded-3xl z-40 ${
           isMobileSearchOpen ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="border-t border-border/40 bg-background/95 backdrop-blur px-4 py-3">
+        <div className="border border-border/40 bg-background/95 backdrop-blur px-4 py-3 shadow-lg rounded-3xl">
           <form onSubmit={handleSearch} className="relative flex items-center">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <Input
@@ -153,11 +154,11 @@ export function Navbar() {
 
       {/* ── Mobile Menu ─────────────────────────────────────────────────────── */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out absolute top-20 left-4 right-4 rounded-3xl z-40 ${
           isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="border-t border-border/40 bg-background/95 backdrop-blur px-4 py-6 space-y-4">
+        <div className="border border-border/40 bg-background/95 backdrop-blur px-4 py-6 space-y-4 shadow-lg rounded-3xl">
           <div className="flex justify-between items-center px-1">
             <span className="text-sm font-medium">Theme</span>
             <ThemeToggle />
