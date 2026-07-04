@@ -230,18 +230,18 @@ export default function Home() {
               className="flex flex-wrap gap-4 mt-4"
             >
               <Link href="/products">
-                <Button className="h-12 px-6 rounded-lg bg-[#24B86C] hover:bg-[#1fa35f] text-white font-bold text-[15px] shadow-[0_8px_20px_rgba(36,184,108,0.25)] transition-all">
-                  [Explore Marketplace]
+                <Button className="h-12 px-8 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-[15px] shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(17,153,142,0.4)] border border-white/20">
+                  Explore Marketplace
                 </Button>
               </Link>
-              <Link href="/contact">
-                <Button variant="outline" className="h-12 px-6 rounded-lg border-2 border-[#E2EDE8] hover:border-[#24B86C]/40 text-zinc-700 font-bold text-[15px] hover:bg-[#24B86C]/5 transition-all bg-transparent backdrop-blur-sm">
-                  [Hire Our Team]
+              <Link href="/#services">
+                <Button variant="outline" className="h-12 px-8 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[15px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5">
+                  Hire Our Team
                 </Button>
               </Link>
               <Link href="/resources">
-                <Button variant="outline" className="h-12 px-6 rounded-lg border-2 border-[#E2EDE8] hover:border-[#24B86C]/40 text-zinc-700 font-bold text-[15px] hover:bg-[#24B86C]/5 transition-all bg-transparent backdrop-blur-sm">
-                  [Download Free Assets]
+                <Button variant="outline" className="h-12 px-8 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[15px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5">
+                  Download Free Assets
                 </Button>
               </Link>
             </motion.div>
