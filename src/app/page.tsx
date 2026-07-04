@@ -14,6 +14,7 @@ import { SoftwareMarquee } from '@/components/ui/SoftwareMarquee';
 import { LatestUploadsSection } from '@/components/ui/LatestUploadsSection';
 import { LiveSearch } from '@/components/ui/LiveSearch';
 import { ContactSection } from '@/components/ui/ContactSection';
+import { TestimonialSection } from '@/components/ui/TestimonialSection';
 import {
   fetchProducts, fetchSettings, fetchHeroContent,
   onStoreUpdate, DEFAULT_HERO_CONTENT, type HeroContent,
@@ -352,6 +353,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Testimonial Section ── */}
+      <TestimonialSection />
 
       {/* ── Contact Section ── */}
       <ContactSection />
