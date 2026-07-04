@@ -5,11 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { motion, useScroll, useTransform, AnimatePresence, useSpring } from 'framer-motion';
-import { ArrowRight, Star, Download, Play, Search } from 'lucide-react';
+import { ArrowRight, Star, Download, Play, Search, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { SoftwareMarquee } from '@/components/ui/SoftwareMarquee';
 import { CategoryMarquee } from '@/components/ui/CategoryMarquee';
 import { WhatWeDoSection } from '@/components/ui/WhatWeDoSection';
+import { HowWeWorkSection } from '@/components/ui/HowWeWorkSection';
 
 // ── Lazy-load the heaviest component (CategoryShowcase) ──────────────────────
 // It contains 5 stacked scroll-driven sections with spring physics.
@@ -155,9 +155,9 @@ export default function Home() {
         <div className="absolute -bottom-32 -left-32 w-[600px] h-[600px] bg-gradient-to-tr from-[#24B86C]/30 to-transparent rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] opacity-80 pointer-events-none" />
         <div className="absolute top-1/4 -right-32 w-[500px] h-[500px] bg-gradient-to-bl from-[#11998E]/30 to-transparent rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-80 pointer-events-none" />
 
-        {/* DW Watermark Text Background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none flex items-center justify-center -z-10 overflow-hidden opacity-5">
-           <span className="text-[45vw] font-black leading-none text-transparent bg-gradient-to-br from-[#24B86C] to-[#11998E] bg-clip-text select-none">DW</span>
+        {/* DW Watermark Text Background (Glowing Green) */}
+        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none flex items-center justify-center z-0 overflow-hidden opacity-20 dark:opacity-30 mix-blend-screen">
+           <span className="text-[45vw] font-black leading-none text-transparent bg-gradient-to-br from-[#24B86C] via-[#11998E] to-transparent bg-clip-text select-none drop-shadow-[0_0_100px_rgba(36,184,108,0.8)] filter blur-[2px]">DW</span>
         </div>
 
         {/* Main grid */}
@@ -207,72 +207,97 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          {/* Right Column: Static Floating Cards - Crisp Light Theme */}
-          <div className="relative h-[500px] w-full hidden lg:block">
-            {/* Food Cart Design */}
-            <div className="absolute top-[5%] right-[5%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-40 z-20">
-              <div className="w-full aspect-video bg-[#FCD34D] rounded-xl relative overflow-hidden flex items-center justify-center">
-                <span className="text-3xl">🌭</span>
-                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
+          {/* Right Column: Dynamic Floating Glass Cards - Exact Replica */}
+          <div className="relative h-[500px] w-full hidden lg:block z-20">
+            {/* Center Main Card - Website Templates */}
+            <div className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white/20 dark:bg-white/10 backdrop-blur-xl border border-white/40 dark:border-white/20 p-2 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col items-center w-64 z-30 transform scale-110">
+              <div className="w-full aspect-[16/10] rounded-xl relative overflow-hidden flex flex-col bg-zinc-900">
+                <Image src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=400" alt="Website" fill className="object-cover opacity-90" />
+                <div className="absolute top-2 right-2 w-6 h-6 bg-[#24B86C] rounded-full flex items-center justify-center text-white shadow-sm">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                </div>
               </div>
-              <span className="text-xs font-bold text-foreground/90">Food Cart Design</span>
-            </div>
-            
-            {/* Interior Design */}
-            <div className="absolute top-[25%] left-[5%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-44 z-20">
-              <div className="w-full aspect-video bg-[#E7E5E4] rounded-xl relative overflow-hidden flex items-center justify-center">
-                <span className="text-3xl">🛋️</span>
-                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
+              <div className="w-full py-2 px-1 text-center bg-white/90 dark:bg-zinc-900/90 rounded-b-xl mt-1 backdrop-blur-sm">
+                 <span className="text-sm font-bold text-foreground">Website Templates</span>
               </div>
-              <span className="text-xs font-bold text-foreground/90">Interior Design</span>
             </div>
 
-            {/* Website Templates */}
-            <div className="absolute top-[40%] right-[25%] bg-white/95 dark:bg-black/90 backdrop-blur-xl border border-black/5 dark:border-border/60 p-4 rounded-3xl shadow-[0_20px_50px_rgb(0,0,0,0.12)] flex flex-col items-center gap-3 w-56 z-30 transform scale-110 ring-1 ring-black/5 dark:ring-primary/10">
-              <div className="w-full aspect-[16/10] bg-white dark:bg-zinc-900 rounded-xl relative overflow-hidden flex flex-col items-center justify-center border border-border/20 shadow-inner p-2">
-                 <div className="w-full h-3 bg-zinc-100 dark:bg-zinc-800 rounded-md mb-2 flex items-center px-2 space-x-1">
-                   <div className="w-1.5 h-1.5 rounded-full bg-red-400"></div><div className="w-1.5 h-1.5 rounded-full bg-yellow-400"></div><div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
-                 </div>
-                 <div className="flex-1 w-full bg-zinc-50 dark:bg-zinc-950 rounded-md"></div>
-                <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center text-[10px] text-white font-bold shadow-sm">✓</div>
+            {/* Top Right - Food Cart Design */}
+            <div className="absolute top-[10%] right-[5%] bg-white/20 dark:bg-white/10 backdrop-blur-xl border border-white/40 dark:border-white/20 p-1.5 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.1)] flex flex-col items-center w-48 z-20 hover:-translate-y-2 transition-transform duration-500">
+              <div className="w-full aspect-video rounded-xl relative overflow-hidden bg-[#FCD34D]">
+                <Image src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=300" alt="Food Cart" fill className="object-cover" />
+                <div className="absolute top-1.5 right-1.5 w-5 h-5 bg-[#24B86C] rounded-full flex items-center justify-center text-white shadow-sm">
+                  <CheckCircle2 className="w-3 h-3" />
+                </div>
               </div>
-              <span className="text-sm font-bold text-foreground">Website Templates</span>
+              <div className="w-full py-1.5 px-1 text-center bg-white/90 dark:bg-zinc-900/90 rounded-b-xl mt-1 backdrop-blur-sm">
+                 <span className="text-xs font-bold text-foreground">Food Cart Design</span>
+              </div>
             </div>
             
-            {/* Brand Kits */}
-            <div className="absolute top-[55%] left-[-5%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-36 z-10">
-              <div className="w-full aspect-video bg-[#F1F5F9] rounded-xl relative overflow-hidden flex items-center justify-center">
-                <span className="text-3xl">🎨</span>
-                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
+            {/* Top Left - Interior Design */}
+            <div className="absolute top-[20%] left-[0%] bg-white/20 dark:bg-white/10 backdrop-blur-xl border border-white/40 dark:border-white/20 p-1.5 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.1)] flex flex-col items-center w-44 z-20 hover:-translate-y-2 transition-transform duration-500">
+              <div className="w-full aspect-video rounded-xl relative overflow-hidden bg-[#E7E5E4]">
+                <Image src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=300" alt="Interior" fill className="object-cover" />
+                <div className="absolute top-1.5 right-1.5 w-5 h-5 bg-[#24B86C] rounded-full flex items-center justify-center text-white shadow-sm">
+                  <CheckCircle2 className="w-3 h-3" />
+                </div>
               </div>
-              <span className="text-xs font-bold text-foreground/90">Brand Kits</span>
+              <div className="w-full py-1.5 px-1 text-center bg-white/90 dark:bg-zinc-900/90 rounded-b-xl mt-1 backdrop-blur-sm">
+                 <span className="text-xs font-bold text-foreground">Interior Design</span>
+              </div>
+            </div>
+
+            {/* Bottom Right - Motion Graphics */}
+            <div className="absolute top-[65%] right-[0%] bg-white/20 dark:bg-white/10 backdrop-blur-xl border border-white/40 dark:border-white/20 p-1.5 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.1)] flex flex-col items-center w-52 z-40 hover:-translate-y-2 transition-transform duration-500">
+              <div className="w-full aspect-video rounded-xl relative overflow-hidden bg-indigo-950">
+                <Image src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=300" alt="Motion" fill className="object-cover opacity-80 mix-blend-luminosity" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                   <div className="w-10 h-10 rounded-xl bg-purple-600/80 backdrop-blur-sm flex items-center justify-center">
+                     <Play className="w-5 h-5 text-white fill-white" />
+                   </div>
+                </div>
+                <div className="absolute top-1.5 right-1.5 w-5 h-5 bg-[#24B86C] rounded-full flex items-center justify-center text-white shadow-sm">
+                  <CheckCircle2 className="w-3 h-3" />
+                </div>
+              </div>
+              <div className="w-full py-1.5 px-1 text-center bg-white/90 dark:bg-zinc-900/90 rounded-b-xl mt-1 backdrop-blur-sm">
+                 <span className="text-xs font-bold text-foreground">Motion Graphics</span>
+              </div>
             </div>
             
-            {/* Motion Graphics */}
-            <div className="absolute top-[60%] right-[-5%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-40 z-10">
-              <div className="w-full aspect-video bg-indigo-950 rounded-xl relative overflow-hidden flex items-center justify-center border border-indigo-900">
-                <Play className="w-8 h-8 text-indigo-400 fill-indigo-400" />
-                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
+            {/* Bottom Left - Brand Kits */}
+            <div className="absolute bottom-[0%] left-[10%] bg-white/20 dark:bg-white/10 backdrop-blur-xl border border-white/40 dark:border-white/20 p-1.5 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.1)] flex flex-col items-center w-40 z-20 hover:-translate-y-2 transition-transform duration-500">
+              <div className="w-full aspect-video rounded-xl relative overflow-hidden bg-white">
+                <Image src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=300" alt="Brand Kit" fill className="object-contain p-2" />
+                <div className="absolute top-1.5 right-1.5 w-5 h-5 bg-[#24B86C] rounded-full flex items-center justify-center text-white shadow-sm">
+                  <CheckCircle2 className="w-3 h-3" />
+                </div>
               </div>
-              <span className="text-xs font-bold text-foreground/90">Motion Graphics</span>
+              <div className="w-full py-1.5 px-1 text-center bg-white/90 dark:bg-zinc-900/90 rounded-b-xl mt-1 backdrop-blur-sm">
+                 <span className="text-xs font-bold text-foreground">Brand Kits</span>
+              </div>
             </div>
-            
-            {/* 3D Models */}
-            <div className="absolute bottom-[-10%] left-[20%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-40 z-20">
-              <div className="w-full aspect-video bg-[#E5E5E5] rounded-xl relative overflow-hidden flex items-center justify-center">
-                <span className="text-3xl">🧊</span>
-                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
+
+            {/* Bottom Center - 3D Models */}
+            <div className="absolute bottom-[-15%] left-[45%] -translate-x-1/2 bg-white/20 dark:bg-white/10 backdrop-blur-xl border border-white/40 dark:border-white/20 p-1.5 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.1)] flex flex-col items-center w-48 z-40 hover:-translate-y-2 transition-transform duration-500">
+              <div className="w-full aspect-[4/3] rounded-xl relative overflow-hidden bg-[#E5E5E5]">
+                <Image src="https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=300" alt="3D Model" fill className="object-cover" />
+                <div className="absolute top-1.5 right-1.5 w-5 h-5 bg-[#24B86C] rounded-full flex items-center justify-center text-white shadow-sm">
+                  <CheckCircle2 className="w-3 h-3" />
+                </div>
               </div>
-              <span className="text-xs font-bold text-foreground/90">3D Models</span>
+              <div className="w-full py-1.5 px-1 text-center bg-white/90 dark:bg-zinc-900/90 rounded-b-xl mt-1 backdrop-blur-sm">
+                 <span className="text-xs font-bold text-foreground">3D Models</span>
+              </div>
             </div>
-            
-            {/* Digital Products */}
-            <div className="absolute bottom-[0%] right-[20%] bg-white/95 dark:bg-black/80 backdrop-blur-lg border border-black/5 dark:border-border/50 p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex flex-col items-center gap-3 w-44 z-20">
-              <div className="w-full aspect-video bg-blue-50 rounded-xl relative overflow-hidden flex items-center justify-center">
-                <span className="text-3xl">📱</span>
-                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[8px] text-white font-bold">✓</div>
-              </div>
-              <span className="text-xs font-bold text-foreground/90">Digital Products</span>
+
+            {/* Small Floating decorative icons */}
+            <div className="absolute top-[35%] left-[25%] w-10 h-10 bg-white/30 dark:bg-white/10 backdrop-blur-md rounded-xl border border-white/40 flex items-center justify-center shadow-lg animate-pulse">
+               <span className="text-[#24B86C] font-black text-xl">W</span>
+            </div>
+            <div className="absolute bottom-[20%] right-[25%] w-12 h-12 bg-white/30 dark:bg-white/10 backdrop-blur-md rounded-xl border border-white/40 flex items-center justify-center shadow-lg">
+               <span className="text-[#11998E] font-black text-2xl">D</span>
             </div>
           </div>
         </div>
@@ -290,18 +315,18 @@ export default function Home() {
             }}
             className="relative flex items-center w-full group"
           >
-            <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-              <Search className="h-6 w-6 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+            <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none z-10">
+              <Search className="h-6 w-6 text-muted-foreground/50 group-focus-within:text-[#24B86C] transition-colors" />
             </div>
             <input
               type="text"
               name="search"
-              className="w-full h-16 pl-14 pr-20 rounded-full border border-border/40 bg-white/90 shadow-[0_8px_30px_rgb(0,0,0,0.08)] backdrop-blur-md dark:bg-zinc-900/90 text-base font-medium focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-foreground"
+              className="w-full h-16 pl-14 pr-20 rounded-full border-2 border-transparent bg-white/50 dark:bg-zinc-900/50 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl text-base font-medium focus:outline-none focus:border-[#24B86C] transition-all text-foreground ring-0"
               placeholder="What are you looking for today?"
               autoComplete="off"
             />
-            <div className="absolute inset-y-0 right-2 flex items-center">
-              <Button type="submit" size="icon" className="h-12 w-12 rounded-full bg-primary hover:bg-primary/90 flex items-center justify-center shadow-md text-white">
+            <div className="absolute inset-y-0 right-2 flex items-center z-10">
+              <Button type="submit" size="icon" className="h-12 w-12 rounded-full bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:opacity-90 flex items-center justify-center shadow-lg text-white border-0 transition-opacity">
                 <Search className="h-5 w-5" />
               </Button>
             </div>
@@ -318,8 +343,11 @@ export default function Home() {
       {/* What We Do Section */}
       <WhatWeDoSection />
 
-      {/* Category Showcase — lazy loaded, only rendered when scrolled near */}
+      {/* Category Showcase — lazy loaded */}
       <CategoryShowcase />
+
+      {/* How We Work Section */}
+      <HowWeWorkSection />
 
       {/* Trending Products */}
       <section className="py-24 border-t border-border/40 bg-background">
