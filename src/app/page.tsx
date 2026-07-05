@@ -21,59 +21,70 @@ import {
 } from '@/lib/store';
 
 // ── Main hero elegant constellation cards ─────────────────────────────────────────
-const HERO_CARDS = [
+export const HERO_CARDS = [
   {
-    id: 'interior', label: 'Interior Design', floatClass: 'animate-float-1',
+    id: 'interior', label: 'Interior Design',
     img: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=300',
-    style: { top: '-5%', left: '0%' }, w: 180, aspect: 'aspect-[4/3]'
+    aspect: 'aspect-[4/3]'
   },
   {
-    id: 'food', label: 'Food Cart Design', floatClass: 'animate-float-2',
+    id: 'food', label: 'Food Cart Design',
     img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=300',
-    style: { top: '-2%', right: '2%' }, w: 190, aspect: 'aspect-video'
+    aspect: 'aspect-video'
   },
   {
-    id: 'web', label: 'Website Templates', floatClass: 'animate-float-3',
+    id: 'web', label: 'Website Templates', featured: true,
     img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=400',
-    style: { top: '30%', left: '18%', zIndex: 30 }, w: 260, featured: true, aspect: 'aspect-[16/10]'
+    aspect: 'aspect-[16/10]'
   },
   {
-    id: 'motion', label: 'Motion Graphics', floatClass: 'animate-float-4',
+    id: 'motion', label: 'Motion Graphics', dark: true,
     img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=300',
-    style: { top: '28%', right: '-4%' }, w: 200, dark: true, aspect: 'aspect-video'
+    aspect: 'aspect-video'
   },
   {
-    id: 'brand', label: 'Brand Kits', floatClass: 'animate-float-5',
+    id: 'brand', label: 'Brand Kits',
     img: 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=300',
-    style: { bottom: '-2%', left: '-2%' }, w: 170, aspect: 'aspect-video'
+    aspect: 'aspect-video'
   },
   {
-    id: '3d', label: '3D Models', floatClass: 'animate-float-6',
+    id: '3d', label: '3D Models',
     img: 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=300',
-    style: { bottom: '-6%', left: '38%' }, w: 180, aspect: 'aspect-square'
+    aspect: 'aspect-square'
   },
   {
-    id: 'digital', label: 'Digital Products', floatClass: 'animate-float-7',
+    id: 'digital', label: 'Digital Products',
     img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=300',
-    style: { bottom: '2%', right: '4%' }, w: 190, aspect: 'aspect-video'
+    aspect: 'aspect-video'
   },
 ];
 
-function HeroCard({ card, delay }: { card: typeof HERO_CARDS[0]; delay: number }) {
+const CARD_SLOTS = [
+  { floatClass: 'animate-float-1', style: { top: '0%', left: '5%' }, w: 180 },
+  { floatClass: 'animate-float-2', style: { top: '2%', right: '5%' }, w: 190 },
+  { floatClass: 'animate-float-3', style: { top: '38%', left: '12%', zIndex: 30 }, w: 260 },
+  { floatClass: 'animate-float-4', style: { top: '32%', right: '-2%' }, w: 200 },
+  { floatClass: 'animate-float-5', style: { bottom: '5%', left: '0%' }, w: 170 },
+  { floatClass: 'animate-float-6', style: { bottom: '-2%', left: '42%' }, w: 180 },
+  { floatClass: 'animate-float-7', style: { bottom: '8%', right: '12%' }, w: 190 },
+];
+
+function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]; delay: number }) {
+  if (!slot) return null;
   return (
     <motion.div
       initial={{ opacity: 0, y: 40, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`absolute ${card.floatClass} cursor-pointer group`}
-      style={{ ...card.style, width: card.w, zIndex: (card.style as any).zIndex || 20 }}
+      className={`absolute ${slot.floatClass} cursor-pointer group`}
+      style={{ ...slot.style, width: slot.w, zIndex: (slot.style as any).zIndex || 20 }}
     >
       <motion.div
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 4 + Math.random() * 2, repeat: Infinity, ease: "easeInOut" }}
         className="bg-white/60 backdrop-blur-2xl rounded-3xl p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] border border-white hover:bg-white/80 hover:shadow-[0_20px_80px_rgba(0,229,153,0.15)] transition-all duration-500"
       >
-        <div className={`relative w-full ${card.aspect} rounded-2xl overflow-hidden shadow-inner`}>
+        <div className={`relative w-full ${card.aspect || 'aspect-video'} rounded-2xl overflow-hidden shadow-inner`}>
           <Image src={card.img} alt={card.label} fill className="object-cover" quality={75} sizes="300px" />
           {card.dark && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/20">
@@ -193,26 +204,46 @@ export default function Home() {
 
           {/* RIGHT — Desktop floating card scatter */}
           <div className="relative h-[540px] w-full hidden lg:block">
-            {HERO_CARDS.map((card, i) => <HeroCard key={card.id} card={card} delay={0.2 + i * 0.08} />)}
+            {(() => {
+              let cards = HERO_CARDS;
+              try {
+                if ((heroContent as any).hero_cards) {
+                  const p = JSON.parse((heroContent as any).hero_cards);
+                  if (p && p.length > 0) cards = p;
+                }
+              } catch {}
+              return cards.slice(0, 7).map((card: any, i: number) => (
+                <HeroCard key={card.id || i} card={card} slot={CARD_SLOTS[i]} delay={0.2 + i * 0.08} />
+              ));
+            })()}
           </div>
 
           {/* RIGHT — Mobile scrollable strip */}
           <div className="lg:hidden flex gap-3 overflow-x-auto hide-scrollbar pb-2 -mx-4 px-4">
-            {HERO_CARDS.slice(0, 4).map((card, i) => (
-              <motion.div
-                key={card.id}
-                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + i * 0.1 }}
-                className="glass-card rounded-xl overflow-hidden shrink-0 w-36"
-              >
-                <div className="relative w-full aspect-video">
-                  <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="144px" />
-                </div>
-                <div className="px-2 py-1.5 bg-white/80">
-                  <span className="text-xs font-bold text-[#0D1A12]">{card.label}</span>
-                </div>
-              </motion.div>
-            ))}
+            {(() => {
+              let cards = HERO_CARDS;
+              try {
+                if ((heroContent as any).hero_cards) {
+                  const p = JSON.parse((heroContent as any).hero_cards);
+                  if (p && p.length > 0) cards = p;
+                }
+              } catch {}
+              return cards.slice(0, 4).map((card: any, i: number) => (
+                <motion.div
+                  key={card.id || i}
+                  initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + i * 0.1 }}
+                  className="glass-card rounded-xl overflow-hidden shrink-0 w-36"
+                >
+                  <div className={`relative w-full ${card.aspect || 'aspect-video'}`}>
+                    <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="144px" />
+                  </div>
+                  <div className="px-2 py-1.5 bg-white/80">
+                    <span className="text-xs font-bold text-[#0D1A12]">{card.label}</span>
+                  </div>
+                </motion.div>
+              ));
+            })()}
           </div>
         </div>
 
