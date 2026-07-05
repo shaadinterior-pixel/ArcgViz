@@ -141,24 +141,24 @@ export default function AdminProductsPage() {
         </Button>
       </div>
 
-      <Card className="bg-card border-border">
+      <Card className="glass-card overflow-hidden">
         <CardContent className="p-0">
-          <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-3">
+          <div className="p-4 border-b border-white/10 flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40"/>
-              <Input placeholder="Search products…" className="pl-9 bg-secondary/50 border-border" value={search} onChange={e=>setSearch(e.target.value)}/>
+              <Input placeholder="Search products…" className="pl-9 bg-black/20 border-white/10" value={search} onChange={e=>setSearch(e.target.value)}/>
             </div>
             <div className="relative">
-              <select className="appearance-none bg-secondary/50 border border-border rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary" value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}>
+              <select className="appearance-none bg-black/20 border border-white/10 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}>
                 <option>All</option><option>Active</option><option>Draft</option>
               </select>
               <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/40 pointer-events-none"/>
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto hide-scrollbar">
             <table className="w-full text-sm">
-              <thead className="text-xs text-foreground/40 uppercase tracking-wider border-b border-border">
+              <thead className="text-xs text-foreground/40 uppercase tracking-widest border-b border-white/10 bg-white/5">
                 <tr>
                   <th className="text-left px-5 py-3 font-medium">Product</th>
                   <th className="text-left px-5 py-3 font-medium hidden sm:table-cell">Category</th>
@@ -168,27 +168,27 @@ export default function AdminProductsPage() {
                   <th className="text-right px-5 py-3 font-medium">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-y divide-white/5">
                 {filtered.length>0 ? filtered.map(p=>(
-                  <tr key={p.id} className="hover:bg-secondary/20 transition-colors">
+                  <tr key={p.id} className="hover:bg-white/5 transition-colors group">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         {(p.thumbnail_url||p.image) ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={p.thumbnail_url||p.image} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0 border border-border" loading="lazy"/>
+                          <img src={p.thumbnail_url||p.image} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0 shadow-sm group-hover:shadow-md transition-shadow" loading="lazy"/>
                         ) : (
-                          <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                          <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
                             <ImageIcon className="w-4 h-4 text-foreground/30"/>
                           </div>
                         )}
                         <div>
-                          <p className="font-medium line-clamp-1">{p.name}</p>
-                          <p className="text-xs text-foreground/40">{p.slug || p.id}</p>
+                          <p className="font-bold line-clamp-1">{p.name}</p>
+                          <p className="text-xs font-medium text-foreground/50">{p.slug || p.id}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-foreground/50 hidden sm:table-cell">{p.category}</td>
-                    <td className="px-5 py-4 font-semibold">{p.price}</td>
+                    <td className="px-5 py-4 text-foreground/50 font-medium hidden sm:table-cell">{p.category}</td>
+                    <td className="px-5 py-4 font-bold text-primary">{p.price}</td>
                     <td className="px-5 py-4 hidden md:table-cell">
                       {p.google_drive_file_id ? (
                         <span className="flex items-center gap-1 text-green-400 text-xs"><CheckCircle2 className="w-3.5 h-3.5"/>Linked</span>
@@ -203,8 +203,8 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={()=>openEdit(p)} className="p-1.5 rounded-lg text-foreground/40 hover:text-primary hover:bg-primary/10 transition-colors" title="Edit"><Edit className="w-4 h-4"/></button>
-                        <button onClick={()=>handleDelete(p.id)} className="p-1.5 rounded-lg text-foreground/40 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Delete"><Trash2 className="w-4 h-4"/></button>
+                        <button onClick={()=>openEdit(p)} className="p-2 rounded-lg text-foreground/40 hover:text-primary hover:bg-primary/10 transition-colors" title="Edit"><Edit className="w-4 h-4"/></button>
+                        <button onClick={()=>handleDelete(p.id)} className="p-2 rounded-lg text-foreground/40 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Delete"><Trash2 className="w-4 h-4"/></button>
                       </div>
                     </td>
                   </tr>
@@ -214,15 +214,15 @@ export default function AdminProductsPage() {
               </tbody>
             </table>
           </div>
-          <div className="px-5 py-3 border-t border-border text-xs text-foreground/40">Showing {filtered.length} of {products.length}</div>
+          <div className="px-5 py-3 border-t border-white/10 text-xs font-medium text-foreground/40 bg-white/5">Showing {filtered.length} of {products.length}</div>
         </CardContent>
       </Card>
 
       {/* ── Modal ── */}
       {isOpen && editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-card w-full max-w-3xl rounded-2xl border border-border shadow-2xl flex flex-col max-h-[92vh]">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+          <div className="glass-card w-full max-w-3xl rounded-2xl flex flex-col max-h-[92vh] overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5 shrink-0">
               <h2 className="text-lg font-bold">{editing.id.startsWith('tmp-')?'Add New Product':'Edit Product'}</h2>
               <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg text-foreground/40 hover:text-foreground hover:bg-secondary transition-colors"><X className="w-5 h-5"/></button>
             </div>
@@ -234,42 +234,42 @@ export default function AdminProductsPage() {
                 <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/40">Basic Information</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Product Name *</label>
-                    <Input placeholder="Modern Minimalist Living Room" className="bg-secondary/40 border-border" value={editing.name}
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Product Name *</label>
+                    <Input placeholder="Modern Minimalist Living Room" className="bg-black/20 border-white/10 focus-visible:ring-primary" value={editing.name}
                       onChange={e=>{setField('name',e.target.value); if(!editing.id.startsWith('tmp-')) return; setField('slug',generateSlug(e.target.value));}}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Slug</label>
-                    <Input placeholder="modern-living-room" className="bg-secondary/40 border-border font-mono text-sm" value={editing.slug}
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Slug</label>
+                    <Input placeholder="modern-living-room" className="bg-black/20 border-white/10 font-mono text-sm focus-visible:ring-primary" value={editing.slug}
                       onChange={e=>setField('slug',e.target.value.toLowerCase().replace(/[^a-z0-9-]/g,'-'))}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Price *</label>
-                    <Input placeholder="₹1,999" className="bg-secondary/40 border-border" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Price *</label>
+                    <Input placeholder="₹1,999" className="bg-black/20 border-white/10 focus-visible:ring-primary" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Category</label>
-                    <select className="w-full bg-secondary/40 border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" value={editing.category} onChange={e=>setField('category',e.target.value)}>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Category</label>
+                    <select className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.category} onChange={e=>setField('category',e.target.value)}>
                       {CATEGORIES.map(c=><option key={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Author</label>
-                    <Input placeholder="Design Walla Studio" className="bg-secondary/40 border-border" value={editing.author} onChange={e=>setField('author',e.target.value)}/>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Author</label>
+                    <Input placeholder="Design Walla Studio" className="bg-black/20 border-white/10 focus-visible:ring-primary" value={editing.author} onChange={e=>setField('author',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Rating</label>
-                    <Input placeholder="4.9" className="bg-secondary/40 border-border" value={editing.rating} onChange={e=>setField('rating',e.target.value)}/>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Rating</label>
+                    <Input placeholder="4.9" className="bg-black/20 border-white/10 focus-visible:ring-primary" value={editing.rating} onChange={e=>setField('rating',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Status</label>
-                    <select className="w-full bg-secondary/40 border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" value={editing.status} onChange={e=>setField('status',e.target.value as Product['status'])}>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Status</label>
+                    <select className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.status} onChange={e=>setField('status',e.target.value as Product['status'])}>
                       <option>Active</option><option>Draft</option>
                     </select>
                   </div>
                   <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Description</label>
-                    <textarea rows={3} placeholder="High-quality 3D asset…" className="w-full bg-secondary/40 border border-border rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary" value={editing.description??''} onChange={e=>setField('description',e.target.value)}/>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Description</label>
+                    <textarea rows={3} placeholder="High-quality 3D asset…" className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.description??''} onChange={e=>setField('description',e.target.value)}/>
                   </div>
                 </div>
               </section>
@@ -286,8 +286,8 @@ export default function AdminProductsPage() {
                     {label:'File Size',key:'file_size',placeholder:'1.4 GB'},
                   ].map(f=>(
                     <div key={f.key} className="space-y-1.5">
-                      <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">{f.label} <span className="normal-case font-normal opacity-60">{f.help}</span></label>
-                      <Input placeholder={f.placeholder} className="bg-secondary/40 border-border"
+                      <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">{f.label} <span className="normal-case font-normal opacity-60">{f.help}</span></label>
+                      <Input placeholder={f.placeholder} className="bg-black/20 border-white/10 focus-visible:ring-primary"
                         value={Array.isArray((editing as Record<string,unknown>)[f.key]) ? ((editing as Record<string,unknown>)[f.key] as string[]).join(', ') : String((editing as Record<string,unknown>)[f.key]??'')}
                         onChange={e=>{
                           const val = e.target.value;
@@ -297,7 +297,7 @@ export default function AdminProductsPage() {
                     </div>
                   ))}
                   <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Technical Properties</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Technical Properties</label>
                     <div className="flex flex-wrap gap-4 mt-1">
                       {['Rigged', 'Animated', 'Game-Ready', '3D Printable'].map(feat => (
                         <label key={feat} className="flex items-center gap-2 text-sm cursor-pointer">
@@ -315,8 +315,8 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                   <div className="sm:col-span-2 space-y-1.5 mt-2">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Other Features <span className="normal-case font-normal opacity-60">one per line</span></label>
-                    <textarea rows={3} placeholder={"Fully textured\nIncludes lighting"} className="w-full bg-secondary/40 border border-border rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Other Features <span className="normal-case font-normal opacity-60">one per line</span></label>
+                    <textarea rows={3} placeholder={"Fully textured\nIncludes lighting"} className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
                       value={(editing.features??[]).filter(f => !['Rigged', 'Animated', 'Game-Ready', '3D Printable'].includes(f)).join('\n')}
                       onChange={e=>{
                         const standard = ['Rigged', 'Animated', 'Game-Ready', '3D Printable'].filter(f => (editing.features??[]).includes(f));
@@ -332,18 +332,18 @@ export default function AdminProductsPage() {
                 <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/40">Media & 3D Viewer</h3>
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">3D Model URL (.glb / .gltf)</label>
-                    <Input placeholder="https://example.com/model.glb" className="bg-secondary/40 border-border flex-1" value={editing.model_url ?? ''} onChange={e=>setField('model_url',e.target.value)}/>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">3D Model URL (.glb / .gltf)</label>
+                    <Input placeholder="https://example.com/model.glb" className="bg-black/20 border-white/10 flex-1 focus-visible:ring-primary" value={editing.model_url ?? ''} onChange={e=>setField('model_url',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Main Thumbnail</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Main Thumbnail</label>
                     <div className="flex items-center gap-3">
-                      <label className={`cursor-pointer flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg border border-border transition-colors ${uploadingIdx===-1?'opacity-50':'bg-secondary hover:bg-secondary/80'}`}>
+                      <label className={`cursor-pointer flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg border border-white/10 transition-colors ${uploadingIdx===-1?'opacity-50':'bg-white/5 hover:bg-white/10'}`}>
                         {uploadingIdx===-1?<Loader2 className="w-4 h-4 animate-spin"/>:<ImageIcon className="w-4 h-4"/>}
                         {uploadingIdx===-1?'Uploading…':'Upload Thumbnail'}
                         <input type="file" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={uploadingIdx!=null}/>
                       </label>
-                      <Input placeholder="Or paste URL…" className="bg-secondary/40 border-border flex-1" value={editing.thumbnail_url} onChange={e=>{setField('thumbnail_url',e.target.value); setField('image',e.target.value);}}/>
+                      <Input placeholder="Or paste URL…" className="bg-black/20 border-white/10 flex-1 focus-visible:ring-primary" value={editing.thumbnail_url} onChange={e=>{setField('thumbnail_url',e.target.value); setField('image',e.target.value);}}/>
                     </div>
                     {editing.thumbnail_url && (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -352,8 +352,8 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Gallery Images</label>
-                    <label className={`cursor-pointer flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg border border-border transition-colors w-fit ${uploadingIdx===-2?'opacity-50':'bg-secondary hover:bg-secondary/80'}`}>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Gallery Images</label>
+                    <label className={`cursor-pointer flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg border border-white/10 transition-colors w-fit ${uploadingIdx===-2?'opacity-50':'bg-white/5 hover:bg-white/10'}`}>
                       {uploadingIdx===-2?<Loader2 className="w-4 h-4 animate-spin"/>:<Plus className="w-4 h-4"/>}
                       {uploadingIdx===-2?'Uploading…':'Add Gallery Images'}
                       <input type="file" accept="image/*" multiple className="hidden" onChange={handleGalleryUpload} disabled={uploadingIdx!=null}/>
@@ -361,7 +361,7 @@ export default function AdminProductsPage() {
                     {(editing.gallery_images??[]).length>0 && (
                       <div className="grid grid-cols-4 gap-2 mt-2">
                         {editing.gallery_images.map((url,i)=>(
-                          <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-border">
+                          <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-white/10 shadow-sm">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={url} alt="" className="w-full h-full object-cover" loading="lazy"/>
                             <button onClick={()=>removeGalleryImg(i)} className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs">×</button>
@@ -378,11 +378,11 @@ export default function AdminProductsPage() {
                 <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/40">Google Drive Download</h3>
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Share Link</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Share Link</label>
                     <div className="flex gap-2">
                       <Input
                         placeholder="https://drive.google.com/file/d/.../view?usp=sharing"
-                        className="bg-secondary/40 border-border flex-1"
+                        className="bg-black/20 border-white/10 flex-1 focus-visible:ring-primary"
                         value={editing.google_drive_share_link}
                         onChange={e=>{setField('google_drive_share_link',e.target.value); setDriveStatus('idle');}}
                       />
@@ -410,12 +410,12 @@ export default function AdminProductsPage() {
                   {editing.google_drive_file_id && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">File ID</label>
-                        <Input className="bg-secondary/40 border-border font-mono text-xs" value={editing.google_drive_file_id} readOnly/>
+                        <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">File ID</label>
+                        <Input className="bg-black/20 border-white/10 font-mono text-xs focus-visible:ring-primary" value={editing.google_drive_file_id} readOnly/>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Download URL</label>
-                        <Input className="bg-secondary/40 border-border font-mono text-xs" value={editing.download_url} readOnly/>
+                        <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Download URL</label>
+                        <Input className="bg-black/20 border-white/10 font-mono text-xs focus-visible:ring-primary" value={editing.download_url} readOnly/>
                       </div>
                     </div>
                   )}
@@ -423,9 +423,9 @@ export default function AdminProductsPage() {
               </section>
             </div>
 
-            <div className="px-6 py-4 border-t border-border flex justify-end gap-3 shrink-0">
-              <Button variant="outline" onClick={()=>setIsOpen(false)}>Cancel</Button>
-              <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px]">
+            <div className="px-6 py-4 border-t border-white/10 flex justify-end gap-3 shrink-0 bg-white/5">
+              <Button variant="outline" className="border-white/10 hover:bg-white/10" onClick={()=>setIsOpen(false)}>Cancel</Button>
+              <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px] font-semibold">
                 {saving?<><Loader2 className="w-4 h-4 mr-2 animate-spin"/>Saving…</>:'Save Product'}
               </Button>
             </div>
