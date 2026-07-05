@@ -13,14 +13,20 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { supabase } from '@/lib/supabase';
 
 const ADMIN_NAV = [
-  { name: 'Overview',      href: '/admin',                    icon: LayoutDashboard },
-  { name: 'Products',      href: '/admin/products',            icon: Package },
-  { name: 'Orders',        href: '/admin/orders',              icon: ShoppingCart },
-  { name: 'Customers',     href: '/admin/customers',           icon: Users },
-  { name: 'Categories',    href: '/admin/showcase-categories', icon: Layers },
-  { name: 'Services',      href: '/admin/services',            icon: Briefcase },
-  { name: 'Hero Content',  href: '/admin/hero',                icon: ImageIcon },
-  { name: 'Settings',      href: '/admin/settings',            icon: Settings },
+  { group: 'Store',    items: [
+    { name: 'Dashboard',    href: '/admin',                    icon: LayoutDashboard },
+    { name: 'Products',     href: '/admin/products',            icon: Package },
+    { name: 'Orders',       href: '/admin/orders',              icon: ShoppingCart },
+    { name: 'Customers',    href: '/admin/customers',           icon: Users },
+  ]},
+  { group: 'Homepage', items: [
+    { name: 'Hero Section', href: '/admin/hero',                icon: ImageIcon },
+    { name: 'Services',     href: '/admin/services',            icon: Briefcase },
+    { name: 'Categories',   href: '/admin/showcase-categories', icon: Layers },
+  ]},
+  { group: 'System',   items: [
+    { name: 'Settings',     href: '/admin/settings',            icon: Settings },
+  ]},
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -107,33 +113,39 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           {/* Nav */}
-          <nav className="flex-1 px-4 py-6 overflow-y-auto space-y-1 hide-scrollbar">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/40 px-3 py-2 mb-2">
-              Management
-            </p>
-            {ADMIN_NAV.map(item => {
-              const isActive = item.href === '/admin'
-                ? pathname === '/admin'
-                : pathname?.startsWith(item.href);
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setSidebarOpen(false)}
-                  className={`
-                    flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-                    ${isActive
-                      ? 'bg-gradient-to-r from-primary/15 to-transparent text-primary shadow-[inset_2px_0_0_0_rgba(36,184,108,1)]'
-                      : 'text-foreground/70 hover:text-foreground hover:bg-secondary/10'
-                    }
-                  `}
-                >
-                  <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-primary' : 'text-foreground/50'}`} />
-                  <span>{item.name}</span>
-                  {isActive && <ChevronRight className="w-3.5 h-3.5 ml-auto opacity-60" />}
-                </Link>
-              );
-            })}
+          <nav className="flex-1 px-4 py-6 overflow-y-auto space-y-6 hide-scrollbar">
+            {ADMIN_NAV.map(group => (
+              <div key={group.group}>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/40 px-3 py-2 mb-1">
+                  {group.group}
+                </p>
+                <div className="space-y-0.5">
+                  {group.items.map(item => {
+                    const isActive = item.href === '/admin'
+                      ? pathname === '/admin'
+                      : pathname?.startsWith(item.href);
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setSidebarOpen(false)}
+                        className={`
+                          flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          ${isActive
+                            ? 'bg-gradient-to-r from-primary/15 to-transparent text-primary shadow-[inset_2px_0_0_0_rgba(36,184,108,1)]'
+                            : 'text-foreground/70 hover:text-foreground hover:bg-secondary/10'
+                          }
+                        `}
+                      >
+                        <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-primary' : 'text-foreground/50'}`} />
+                        <span>{item.name}</span>
+                        {isActive && <ChevronRight className="w-3.5 h-3.5 ml-auto opacity-60" />}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </nav>
 
           {/* Bottom actions */}
