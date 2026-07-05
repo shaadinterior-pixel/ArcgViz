@@ -69,12 +69,12 @@ export default function ResourcesPage() {
           transition={{ duration: 0.8 }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#E2EDE8] shadow-sm mb-6">
-            <span className="w-2 h-2 rounded-full bg-[#00E599] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#24B86C] animate-pulse" />
             <span className="text-zinc-600 font-bold text-xs tracking-widest uppercase">Open Source</span>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-black text-[#111111] tracking-tighter mb-6">
-            Free <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E599] to-[#00A1FF]">resources</span> <br/>
+            Free <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E]">resources</span> <br/>
             for creators.
           </h1>
           

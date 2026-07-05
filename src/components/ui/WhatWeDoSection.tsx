@@ -121,8 +121,8 @@ export function WhatWeDoSection() {
   return (
     <section id="services" className="w-full bg-white/70 backdrop-blur-3xl py-24 relative overflow-hidden border-y border-[#E2EDE8]">
       {/* Decorative Gradients for Translucent effect */}
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(0,229,153,0.08)_0,transparent_60%)] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(0,161,255,0.06)_0,transparent_60%)] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.08)_0,transparent_60%)] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.06)_0,transparent_60%)] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -193,7 +193,7 @@ export function WhatWeDoSection() {
                 
                 {/* Image Overlay Text */}
                 <div className="absolute bottom-0 left-0 p-8 w-full">
-                  <p className="bg-gradient-to-r from-[#00E599] to-[#00A1FF] bg-clip-text text-transparent font-bold tracking-widest text-xs uppercase mb-2">
+                  <p className="bg-gradient-to-r from-[#24B86C] to-[#11998E] bg-clip-text text-transparent font-bold tracking-widest text-xs uppercase mb-2">
                     SERVICE {String(serviceIndex).padStart(2, '0')}
                   </p>
                   <h3 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2 drop-shadow-md">

@@ -197,7 +197,7 @@ export default function ProductsPage() {
                             
                             {product.rating && (
                               <div className="absolute top-3 right-3 bg-[#1A1A1A]/80 backdrop-blur-md px-2.5 py-1.5 rounded-[8px] flex items-center justify-center text-[11px] font-bold text-white shadow-sm">
-                                <Star className="w-3.5 h-3.5 text-[#00E599] mr-1.5 fill-[#00E599]" />
+                                <Star className="w-3.5 h-3.5 text-[#24B86C] mr-1.5 fill-[#24B86C]" />
                                 {product.rating}
                               </div>
                             )}

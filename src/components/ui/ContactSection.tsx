@@ -55,7 +55,7 @@ export function ContactSection() {
               <h2 className="text-[3.5rem] md:text-[4.5rem] lg:text-[5rem] font-bold text-[#111111] tracking-tight leading-[1] mb-6">
                 Let's build<br />
                 something<br />
-                <span className="text-[#00E599]">amazing together.</span>
+                <span className="text-[#24B86C]">amazing together.</span>
               </h2>
               <p className="text-[17px] text-zinc-500 leading-relaxed max-w-[420px]">
                 Tell us what you need — interior, branding, a website, a printing run, or a full launch. We'll come back with a tailored plan.
@@ -64,28 +64,28 @@ export function ContactSection() {
 
             <div className="flex flex-col gap-3 pt-4 max-w-md">
               <div className="flex items-center gap-4 p-4 rounded-3xl bg-white border border-zinc-100 shadow-sm transition-all hover:shadow-md">
-                <div className="w-10 h-10 rounded-full bg-[#00E599]/10 flex items-center justify-center shrink-0">
-                  <Phone className="w-4 h-4 text-[#00E599]" />
+                <div className="w-10 h-10 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0">
+                  <Phone className="w-4 h-4 text-[#24B86C]" />
                 </div>
                 <span className="font-bold text-[15px] text-zinc-800">+91 7970738609</span>
               </div>
               <div className="flex items-center gap-4 p-4 rounded-3xl bg-white border border-zinc-100 shadow-sm transition-all hover:shadow-md">
-                <div className="w-10 h-10 rounded-full bg-[#00E599]/10 flex items-center justify-center shrink-0">
-                  <Mail className="w-4 h-4 text-[#00E599]" />
+                <div className="w-10 h-10 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0">
+                  <Mail className="w-4 h-4 text-[#24B86C]" />
                 </div>
                 <span className="font-bold text-[15px] text-zinc-800">designwalla.co@gmail.com</span>
               </div>
               <div className="flex items-center gap-4 p-4 rounded-3xl bg-white border border-zinc-100 shadow-sm transition-all hover:shadow-md">
-                <div className="w-10 h-10 rounded-full bg-[#00E599]/10 flex items-center justify-center shrink-0">
-                  <div className="w-4 h-4 text-[#00E599]">
+                <div className="w-10 h-10 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0">
+                  <div className="w-4 h-4 text-[#24B86C]">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
                   </div>
                 </div>
                 <span className="font-bold text-[15px] text-zinc-800">www.designwalla.com</span>
               </div>
               <div className="flex items-center gap-4 p-4 rounded-3xl bg-white border border-zinc-100 shadow-sm transition-all hover:shadow-md">
-                <div className="w-10 h-10 rounded-full bg-[#00E599]/10 flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4 text-[#00E599]" />
+                <div className="w-10 h-10 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0">
+                  <MapPin className="w-4 h-4 text-[#24B86C]" />
                 </div>
                 <span className="font-bold text-[15px] text-zinc-800">Mahendru Post Office, Patna — 6</span>
               </div>
@@ -109,7 +109,7 @@ export function ContactSection() {
                   <input 
                     type="text" name="name" 
                     value={formData.name} onChange={handleChange}
-                    className="w-full h-12 px-5 rounded-full border border-zinc-200 focus:outline-none focus:border-[#00E599] transition-all text-sm"
+                    className="w-full h-12 px-5 rounded-full border border-zinc-200 focus:outline-none focus:border-[#24B86C] transition-all text-sm"
                     placeholder="Ada Lovelace"
                   />
                 </div>
@@ -119,7 +119,7 @@ export function ContactSection() {
                     <label className="text-[11px] font-bold uppercase tracking-wider text-zinc-500">EMAIL</label>
                     <input 
                       type="email" name="email" 
-                      className="w-full h-12 px-5 rounded-full border border-zinc-200 focus:outline-none focus:border-[#00E599] transition-all text-sm"
+                      className="w-full h-12 px-5 rounded-full border border-zinc-200 focus:outline-none focus:border-[#24B86C] transition-all text-sm"
                       placeholder="you@brand.com"
                     />
                   </div>
@@ -128,7 +128,7 @@ export function ContactSection() {
                     <input 
                       type="tel" name="phone" 
                       value={formData.phone} onChange={handleChange}
-                      className="w-full h-12 px-5 rounded-full border border-zinc-200 focus:outline-none focus:border-[#00E599] transition-all text-sm"
+                      className="w-full h-12 px-5 rounded-full border border-zinc-200 focus:outline-none focus:border-[#24B86C] transition-all text-sm"
                       placeholder="+91 ..."
                     />
                   </div>
@@ -139,7 +139,7 @@ export function ContactSection() {
                   <select 
                     name="service" 
                     value={formData.service} onChange={handleChange}
-                    className="w-full h-12 px-5 rounded-full border border-zinc-200 focus:outline-none focus:border-[#00E599] transition-all appearance-none text-sm bg-white"
+                    className="w-full h-12 px-5 rounded-full border border-zinc-200 focus:outline-none focus:border-[#24B86C] transition-all appearance-none text-sm bg-white"
                   >
                     <option>Interior Design</option>
                     <option>Food Cart Design</option>
@@ -158,14 +158,14 @@ export function ContactSection() {
                     name="message" 
                     rows={4}
                     value={formData.message} onChange={handleChange}
-                    className="w-full p-5 rounded-[1.5rem] border border-zinc-200 focus:outline-none focus:border-[#00E599] transition-all resize-none text-sm"
+                    className="w-full p-5 rounded-[1.5rem] border border-zinc-200 focus:outline-none focus:border-[#24B86C] transition-all resize-none text-sm"
                     placeholder="Timeline, budget, references..."
                   />
                 </div>
 
                 <div className="pt-2">
                   <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="w-full block">
-                    <Button className="w-full h-12 rounded-full bg-[#00E599] hover:bg-[#00D08A] text-white font-bold transition-all active:scale-[0.98] border-0 text-sm">
+                    <Button className="w-full h-12 rounded-full bg-[#24B86C] hover:bg-[#1fa35f] text-white font-bold transition-all active:scale-[0.98] border-0 text-sm">
                       Request a quote
                     </Button>
                   </a>

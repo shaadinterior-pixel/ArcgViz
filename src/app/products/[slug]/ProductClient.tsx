@@ -155,7 +155,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     <button onClick={() => setViewMode('2d')} className="px-4 py-2 bg-black/60 backdrop-blur-md text-white text-xs font-bold rounded-lg border border-white/20 hover:bg-black/80 transition-colors">
                       View 2D Gallery
                     </button>
-                    <button className="px-4 py-2 bg-[#00E599]/20 text-[#00E599] text-xs font-bold rounded-lg border border-[#00E599]/50 backdrop-blur-md cursor-help" title="Wireframe mode coming soon">
+                    <button className="px-4 py-2 bg-[#24B86C]/20 text-[#24B86C] text-xs font-bold rounded-lg border border-[#24B86C]/50 backdrop-blur-md cursor-help" title="Wireframe mode coming soon">
                       Wireframe
                     </button>
                   </div>
@@ -184,7 +184,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   
                   {product.model_url && (
                     <div className="absolute top-4 left-4 z-10">
-                      <button onClick={(e) => { e.stopPropagation(); setViewMode('3d'); }} className="px-4 py-2 bg-[#00A1FF]/20 text-[#00A1FF] text-xs font-bold rounded-lg border border-[#00A1FF]/50 backdrop-blur-md hover:bg-[#00A1FF]/40 transition-colors">
+                      <button onClick={(e) => { e.stopPropagation(); setViewMode('3d'); }} className="px-4 py-2 bg-[#11998E]/20 text-[#11998E] text-xs font-bold rounded-lg border border-[#11998E]/50 backdrop-blur-md hover:bg-[#11998E]/40 transition-colors">
                         Interactive 3D View
                       </button>
                     </div>
@@ -219,7 +219,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     key={i}
                     onClick={() => setActiveIdx(i)}
                     className={`relative w-28 h-20 shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
-                      activeIdx === i ? 'border-[#00E599]' : 'border-transparent hover:border-[#E2EDE8] opacity-70 hover:opacity-100'
+                      activeIdx === i ? 'border-[#24B86C]' : 'border-transparent hover:border-[#E2EDE8] opacity-70 hover:opacity-100'
                     }`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -292,7 +292,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
               <h3 className="font-bold mb-4 text-[#111111] text-lg">Tags</h3>
               <div className="flex flex-wrap gap-2">
                 {['Modular', 'Lowpoly', 'Fantasy', 'Medieval', 'Character', '3D Model', 'Rigged', 'Human'].map(tag => (
-                  <span key={tag} className="bg-white border border-[#E2EDE8] text-zinc-600 px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm cursor-pointer hover:border-[#00E599] hover:text-[#00E599] transition-colors">
+                  <span key={tag} className="bg-white border border-[#E2EDE8] text-zinc-600 px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm cursor-pointer hover:border-[#24B86C] hover:text-[#24B86C] transition-colors">
                     {tag}
                   </span>
                 ))}
@@ -313,7 +313,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-6">
                   {similarProducts.map((p) => (
                     <Link href={`/products/${p.slug || p.id}`} key={p.id} className="block group shrink-0 w-[280px]">
-                      <div className="flex flex-col rounded-2xl overflow-hidden bg-white border border-[#E2EDE8] hover:border-[#00E599] hover:shadow-[0_8px_30px_rgba(0,229,153,0.12)] transition-all duration-300">
+                      <div className="flex flex-col rounded-2xl overflow-hidden bg-white border border-[#E2EDE8] hover:border-[#24B86C] hover:shadow-[0_8px_30px_rgba(36,184,108,0.12)] transition-all duration-300">
                         <div className="relative w-full aspect-video overflow-hidden bg-zinc-900">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
@@ -324,7 +324,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                           />
                         </div>
                         <div className="p-4 flex flex-col gap-1">
-                          <h3 className="text-[13px] font-bold text-[#111111] line-clamp-1 group-hover:text-[#00E599] transition-colors">{p.name}</h3>
+                          <h3 className="text-[13px] font-bold text-[#111111] line-clamp-1 group-hover:text-[#24B86C] transition-colors">{p.name}</h3>
                           <div className="flex items-center gap-2 mb-2">
                             <Star className="w-3 h-3 fill-[#FFD700] text-[#FFD700]"/>
                             <span className="text-xs font-bold text-zinc-600">5.0</span>
@@ -359,7 +359,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
               {/* Title & Breadcrumbs */}
               <div>
                 <h1 className="text-3xl font-black leading-tight text-[#111111]">{product.name}</h1>
-                <div className="text-[11px] font-bold text-[#00A1FF] mt-3 flex items-center gap-1.5">
+                <div className="text-[11px] font-bold text-[#11998E] mt-3 flex items-center gap-1.5">
                   <Link href="/products" className="hover:underline">3D</Link> 
                   <ChevronRight className="w-3 h-3 text-zinc-400" /> 
                   <Link href="/products" className="hover:underline">Characters & Creatures</Link>
@@ -437,9 +437,9 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
               <div>
                 <span className="text-xs font-bold text-[#111111] block mb-4">Details</span>
                 <div className="space-y-3.5 text-[13px]">
-                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">Last update</span><span className="font-bold text-right text-[#111111]">March 12, 2026<br/><span className="text-[#00A1FF] text-xs hover:underline cursor-pointer">Changelog</span></span></div>
+                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">Last update</span><span className="font-bold text-right text-[#111111]">March 12, 2026<br/><span className="text-[#11998E] text-xs hover:underline cursor-pointer">Changelog</span></span></div>
                   <div className="flex justify-between"><span className="text-zinc-500 font-medium">Published</span><span className="font-bold text-[#111111]">April 12, 2021</span></div>
-                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">License terms</span><span className="font-bold text-[#00A1FF] hover:underline cursor-pointer">Standard License</span></div>
+                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">License terms</span><span className="font-bold text-[#11998E] hover:underline cursor-pointer">Standard License</span></div>
                   <div className="flex justify-between"><span className="text-zinc-500 font-medium">Age rating</span><span className="font-bold text-[#111111]">Not Mature</span></div>
                   <div className="flex justify-between items-center"><span className="text-zinc-500 font-medium">Allows usage with AI</span><span className="font-bold text-[#111111] flex items-center gap-1">No <Info className="w-3.5 h-3.5 text-zinc-400"/></span></div>
                   <div className="flex justify-between"><span className="text-zinc-500 font-medium">Generated with AI</span><span className="font-bold text-[#111111]">No</span></div>

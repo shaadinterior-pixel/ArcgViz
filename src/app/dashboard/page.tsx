@@ -63,7 +63,7 @@ export default function DashboardPage() {
         <aside className="w-full md:w-72 shrink-0 space-y-8">
           {/* User Profile Card */}
           <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-[#E2EDE8] flex flex-col items-center text-center">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#00E599] to-[#00A1FF] p-1 mb-4">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#24B86C] to-[#11998E] p-1 mb-4">
               <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-2xl font-black text-[#111111]">
                 {user.name.charAt(0)}
               </div>
@@ -124,7 +124,7 @@ export default function DashboardPage() {
                     <h3 className="text-xl font-black text-[#111111] mb-2">No purchases yet</h3>
                     <p className="mb-8 text-zinc-500 font-medium">You haven't bought any digital assets yet.</p>
                     <Link href="/products">
-                      <Button className="h-12 px-6 rounded-full bg-[#111111] hover:bg-[#00E599] text-white font-bold text-sm shadow-md transition-all group">
+                      <Button className="h-12 px-6 rounded-full bg-[#111111] hover:bg-[#24B86C] text-white font-bold text-sm shadow-md transition-all group">
                         Explore Marketplace
                         <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </Button>
@@ -167,7 +167,7 @@ export default function DashboardPage() {
                       <h4 className="font-bold text-[#111111] line-clamp-1 mb-4 flex-1">{item.item}</h4>
                       <div className="flex items-center justify-between mt-auto">
                         <span className="font-black text-[#24B86C]">{item.price}</span>
-                        <Button className="h-9 px-4 rounded-lg bg-[#111111] hover:bg-[#00E599] text-white text-xs font-bold transition-all">
+                        <Button className="h-9 px-4 rounded-lg bg-[#111111] hover:bg-[#24B86C] text-white text-xs font-bold transition-all">
                           Add to Cart
                         </Button>
                       </div>

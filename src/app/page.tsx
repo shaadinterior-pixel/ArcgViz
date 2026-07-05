@@ -82,7 +82,7 @@ function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]
       <motion.div
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 4 + Math.random() * 2, repeat: Infinity, ease: "easeInOut" }}
-        className="bg-white/60 backdrop-blur-2xl rounded-3xl p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] border border-white hover:bg-white/80 hover:shadow-[0_20px_80px_rgba(0,229,153,0.15)] transition-all duration-500"
+        className="bg-white/60 backdrop-blur-2xl rounded-3xl p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] border border-white hover:bg-white/80 hover:shadow-[0_20px_80px_rgba(36,184,108,0.15)] transition-all duration-500"
       >
         <div className={`relative w-full ${card.aspect || 'aspect-video'} rounded-2xl overflow-hidden shadow-inner`}>
           <Image src={card.img} alt={card.label} fill className="object-cover" quality={75} sizes="300px" />
@@ -127,8 +127,8 @@ export default function Home() {
 
         {/* Ethereal Mesh Gradients */}
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />
-        <div className="animate-orb-drift absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,229,153,0.12)_0,transparent_70%)] blur-3xl pointer-events-none" />
-        <div className="animate-orb-drift-reverse absolute bottom-[-20%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,161,255,0.08)_0,transparent_70%)] blur-3xl pointer-events-none" />
+        <div className="animate-orb-drift absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.12)_0,transparent_70%)] blur-3xl pointer-events-none" />
+        <div className="animate-orb-drift-reverse absolute bottom-[-20%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.08)_0,transparent_70%)] blur-3xl pointer-events-none" />
 
         {/* Refined DW Background Watermark */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0 select-none opacity-[0.04]">
@@ -152,7 +152,7 @@ export default function Home() {
             {/* Platform badge */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#E2EDE8] text-zinc-600 text-xs font-bold tracking-widest uppercase shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-[#00E599] animate-pulse" /> All-in-One Creative Platform
+                <span className="w-2 h-2 rounded-full bg-[#24B86C] animate-pulse" /> All-in-One Creative Platform
               </span>
             </motion.div>
 
