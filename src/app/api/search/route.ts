@@ -83,7 +83,7 @@ export async function GET(request: Request) {
     const [productsRes, servicesRes] = await Promise.all([
       supabase
         .from('products')
-        .select('id, name, category, price, image, slug, thumbnail_url')
+        .select('id, name, category, price, plan, image, slug, thumbnail_url')
         .or(`name.ilike.${term},category.ilike.${term},description.ilike.${term}`)
         .eq('status', 'Active')
         .limit(30), // Increased limit for broader pool
@@ -116,6 +116,7 @@ export async function GET(request: Request) {
           name: pMatch.name,
           category: pMatch.category,
           price: pMatch.price,
+          plan: pMatch.plan || 'Free',
           image: pMatch.thumbnail_url || pMatch.image || '',
           slug: pMatch.slug || pMatch.id,
           type: 'product',
@@ -130,6 +131,7 @@ export async function GET(request: Request) {
           name: sMatch.title,
           category: sMatch.category,
           price: 'Service',
+          plan: 'Service',
           image: sMatch.image || '',
           slug: '',
           type: 'service',
@@ -141,9 +143,9 @@ export async function GET(request: Request) {
     if (finalResults.length === 0) {
       const fallback = allCandidates.slice(0, 8).map(c => {
         if ('title' in c) {
-          return { id: c.id, name: c.title, category: c.category, price: 'Service', image: c.image || '', slug: '', type: 'service' };
+          return { id: c.id, name: c.title, category: c.category, price: 'Service', plan: 'Service', image: c.image || '', slug: '', type: 'service' };
         }
-        return { id: c.id, name: c.name, category: c.category, price: c.price, image: c.thumbnail_url || c.image || '', slug: c.slug || c.id, type: 'product' };
+        return { id: c.id, name: c.name, category: c.category, price: c.price, plan: c.plan || 'Free', image: c.thumbnail_url || c.image || '', slug: c.slug || c.id, type: 'product' };
       });
       return NextResponse.json(fallback);
     }
