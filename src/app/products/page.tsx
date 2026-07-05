@@ -104,7 +104,7 @@ export default function ProductsPage() {
           </div>
         </motion.div>
 
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
         {/* Sidebar */}
         <aside className={`${isFilterOpen ? 'block' : 'hidden'} lg:block w-full lg:w-[280px] space-y-8 flex-shrink-0`}>
           <motion.div 
@@ -249,6 +249,7 @@ export default function ProductsPage() {
               </Button>
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>
