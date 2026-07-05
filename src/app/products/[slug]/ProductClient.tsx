@@ -232,7 +232,6 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
             {/* Tabs */}
             <div className="flex gap-4 mt-8 pb-4 border-b border-[#E2EDE8]">
               <button className="px-6 py-2 rounded-full bg-white border border-[#E2EDE8] shadow-[0_2px_10px_rgba(0,0,0,0.02)] font-bold text-sm text-[#111111]">Overview</button>
-              <button className="px-6 py-2 rounded-full bg-transparent text-zinc-500 font-bold text-sm hover:text-zinc-800 transition-colors">Reviews</button>
             </div>
 
             {/* Description */}
@@ -348,14 +347,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
           <div className="w-full lg:w-[360px] shrink-0">
             <div className="sticky top-24 bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)] flex flex-col gap-6">
               
-              {/* Author badge */}
-              <div className="flex items-center gap-2 bg-zinc-100 border border-zinc-200 w-max px-2 py-1.5 rounded-full cursor-pointer hover:bg-zinc-200 transition-colors">
-                <div className="w-6 h-6 rounded-full bg-zinc-300 overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop" alt="avatar" width={24} height={24} className="object-cover" />
-                </div>
-                <span className="text-xs font-bold text-zinc-700 pr-2">{product.author}</span>
-              </div>
-              
+              {/* Author badge removed */}
               {/* Title & Breadcrumbs */}
               <div>
                 <h1 className="text-3xl font-black leading-tight text-[#111111]">{product.name}</h1>
@@ -383,13 +375,11 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 <div className="border border-zinc-300 rounded-xl p-3 flex justify-between items-center bg-white cursor-pointer hover:border-[#24B86C] transition-colors group">
                   <div>
                     <div className="text-sm font-bold text-[#111111] mb-0.5">{productPlan} Tier Product</div>
-                    <div className="text-xs text-zinc-500 flex items-center gap-1.5">
-                      {user ? (
+                    {user && (
+                      <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-0.5">
                         <span>Your Plan: <span className="font-bold text-[#111111]">{userPlan}</span></span>
-                      ) : (
-                        <span>Sign in to download</span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -448,11 +438,8 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
               
               {/* Footer Actions */}
               <div className="flex gap-2 mt-2">
-                <Button variant="outline" className="flex-1 h-10 border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-bold text-zinc-600 rounded-lg">
+                <Button variant="outline" className="w-full h-10 border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-bold text-zinc-600 rounded-lg">
                   <Share2 className="w-3.5 h-3.5 mr-2"/> Share
-                </Button>
-                <Button variant="outline" className="flex-1 h-10 border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-bold text-zinc-600 rounded-lg">
-                  Report
                 </Button>
               </div>
 
