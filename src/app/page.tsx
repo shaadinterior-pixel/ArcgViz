@@ -127,7 +127,6 @@ export default function Home() {
 
         {/* Ethereal Mesh Gradients & Backgrounds (Clipped) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />
           <div className="animate-orb-drift absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.12)_0,transparent_70%)] blur-3xl" />
           <div className="animate-orb-drift-reverse absolute bottom-[-20%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.08)_0,transparent_70%)] blur-3xl" />
 
