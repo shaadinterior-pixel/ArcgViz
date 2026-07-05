@@ -23,8 +23,6 @@ function matchCat(product: any, cat: string) {
   return (CAT_MAP[cat] || []).some(kw => haystack.includes(kw));
 }
 
-// Heights for masonry-like feel — cycles through 4 sizes
-const HEIGHTS = ['aspect-[3/4]', 'aspect-[4/3]', 'aspect-square', 'aspect-[2/3]', 'aspect-[4/3]', 'aspect-[3/4]', 'aspect-square', 'aspect-[5/4]'];
 
 export function LatestUploadsSection() {
   const [products, setProducts] = useState<any[]>([]);
@@ -105,8 +103,6 @@ export function LatestUploadsSection() {
             {filtered.slice(0, 30).map((product, index) => {
               const isPremium = product.price && product.price !== '₹0' && product.price !== '$0' && product.price !== 'Free' && !String(product.price).toLowerCase().includes('free');
               const hasVideo = String(product.category || '').toLowerCase().includes('motion') || String(product.category || '').toLowerCase().includes('animation');
-              const heightClass = HEIGHTS[index % HEIGHTS.length];
-
               return (
                 <motion.div
                   key={product.id}
@@ -117,16 +113,15 @@ export function LatestUploadsSection() {
                   className="break-inside-avoid mb-4"
                 >
                   <Link href={`/products/${product.id}`} className="block group">
-                    <div className="relative rounded-2xl overflow-hidden bg-white border border-[#E2EDE8] hover:shadow-xl hover:shadow-[#24B86C]/10 hover:-translate-y-1 transition-all duration-300">
+                    <div className="relative rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
                       {/* Image */}
-                      <div className={`relative w-full ${heightClass}`}>
-                        <Image
+                      <div className="relative w-full overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
                           src={product.image || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=600'}
                           alt={product.name}
-                          fill
-                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                          quality={70}
+                          loading="lazy"
+                          className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                         {/* Gradient overlay on hover */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
