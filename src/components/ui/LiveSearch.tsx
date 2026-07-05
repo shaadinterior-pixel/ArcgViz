@@ -156,7 +156,7 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full" style={{ isolation: 'auto' }}>
       <form onSubmit={handleSubmit} className="relative flex items-center w-full">
         {/* Search icon */}
         <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none z-10">
@@ -207,7 +207,7 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
       {open && results.length > 0 && (
         <div
           ref={dropdownRef}
-          className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 bg-white/95 backdrop-blur-2xl border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] overflow-hidden"
+          className="absolute left-0 right-0 top-[calc(100%+8px)] z-[200] bg-white/95 backdrop-blur-2xl border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] overflow-hidden"
           role="listbox"
         >
           {/* Products */}
@@ -309,7 +309,7 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
       {open && query.length >= 2 && results.length === 0 && !loading && (
         <div
           ref={dropdownRef}
-          className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 bg-white/95 backdrop-blur-2xl border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] px-4 py-6 text-center"
+          className="absolute left-0 right-0 top-[calc(100%+8px)] z-[200] bg-white/95 backdrop-blur-2xl border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] px-4 py-6 text-center"
         >
           <p className="text-sm font-semibold text-[#0D1A12]">No results for &quot;{query}&quot;</p>
           <p className="text-xs text-[#9CA3AF] mt-1">Try a different keyword</p>
