@@ -5,46 +5,36 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Heart, Download, Play, ArrowRight } from 'lucide-react';
-import { fetchProducts } from '@/lib/store';
-
-const CATEGORIES = ['All', 'Interior', '3D Models', 'Branding', 'Graphics', 'Web & Apps'];
-
-const CAT_MAP: Record<string, string[]> = {
-  'Interior':   ['interior', 'exterior', 'architecture', 'room', 'home'],
-  '3D Models':  ['3d', 'model', 'render', 'blender'],
-  'Branding':   ['brand', 'logo', 'identity'],
-  'Graphics':   ['graphic', 'poster', 'print', 'motion', 'animation'],
-  'Web & Apps': ['web', 'app', 'ui', 'ux', 'template', 'website'],
-};
-
-function matchCat(product: any, cat: string) {
-  if (cat === 'All') return true;
-  const haystack = `${product.name} ${product.category} ${product.description || ''}`.toLowerCase();
-  return (CAT_MAP[cat] || []).some(kw => haystack.includes(kw));
-}
-
+import { fetchProducts, fetchCategories, type Category } from '@/lib/store';
 
 export function LatestUploadsSection() {
   const [products, setProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [activeFilter, setActiveFilter] = useState('All');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchProducts()
-      .then(data => {
-        const sorted = [...data].sort((a, b) =>
+    Promise.all([
+      fetchProducts(),
+      fetchCategories()
+    ])
+      .then(([productsData, categoriesData]) => {
+        const sorted = [...productsData].sort((a, b) =>
           new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
         ).slice(0, 30);
         setProducts(sorted);
+        setCategories(categoriesData || []);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered = useMemo(() =>
-    products.filter(p => matchCat(p, activeFilter)),
-    [products, activeFilter]
-  );
+  const dynamicTabs = ['All', ...categories.map(c => c.title)];
+
+  const filtered = useMemo(() => {
+    if (activeFilter === 'All') return products;
+    return products.filter(p => p.category?.toLowerCase() === activeFilter.toLowerCase());
+  }, [products, activeFilter]);
 
   return (
     <section className="py-24 bg-[#F8FAF9] relative overflow-hidden">
@@ -70,7 +60,7 @@ export function LatestUploadsSection() {
         {/* Filter tabs + View All */}
         <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
           <div className="flex gap-2 flex-wrap">
-            {CATEGORIES.map((cat, i) => (
+            {dynamicTabs.map((cat, i) => (
               <motion.button
                 key={cat}
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
