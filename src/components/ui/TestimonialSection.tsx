@@ -68,7 +68,7 @@ export function TestimonialSection() {
         <div className="absolute inset-y-0 right-0 w-12 md:w-32 bg-gradient-to-l from-[#F8FAF9] to-transparent z-20" />
 
         {/* Scrolling Container */}
-        <div className="flex animate-marquee hover:[animation-play-state:paused]">
+        <div className="flex animate-marquee md:hover:[animation-play-state:paused]">
           {[...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS].map((testimonial, idx) => (
             <div 
               key={idx} 
