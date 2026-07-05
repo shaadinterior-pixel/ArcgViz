@@ -82,7 +82,7 @@ function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]
       <motion.div
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 4 + Math.random() * 2, repeat: Infinity, ease: "easeInOut" }}
-        className="bg-white/60 backdrop-blur-2xl rounded-3xl p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] border border-white hover:bg-white/80 hover:shadow-[0_20px_80px_rgba(36,184,108,0.15)] transition-all duration-500"
+        className="bg-white/20 backdrop-blur-3xl rounded-3xl p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-white/40 hover:bg-white/40 hover:shadow-[0_20px_80px_rgba(36,184,108,0.2)] transition-all duration-500"
       >
         <div className={`relative w-full ${card.aspect || 'aspect-video'} rounded-2xl overflow-hidden shadow-inner`}>
           <Image src={card.img} alt={card.label} fill className="object-cover" quality={75} sizes="300px" />
@@ -240,8 +240,8 @@ export default function Home() {
                   <div className={`relative w-full ${card.aspect || 'aspect-video'}`}>
                     <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="144px" />
                   </div>
-                  <div className="px-2 py-1.5 bg-white/80">
-                    <span className="text-xs font-bold text-[#0D1A12]">{card.label}</span>
+                  <div className="absolute inset-x-0 bottom-0 px-2 py-1.5 bg-white/30 backdrop-blur-md border-t border-white/20">
+                    <span className="text-xs font-bold text-[#0D1A12] drop-shadow-sm">{card.label}</span>
                   </div>
                 </motion.div>
               ));
