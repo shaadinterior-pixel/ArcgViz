@@ -21,10 +21,6 @@ import {
   onStoreUpdate, DEFAULT_HERO_CONTENT, type HeroContent,
 } from '@/lib/store';
 
-const CategoryShowcase = dynamic(
-  () => import('@/components/ui/CategoryShowcase').then(m => ({ default: m.CategoryShowcase })),
-  { ssr: false }
-);
 
 let _productsCache: any[] | null = null;
 let _cacheTime = 0;
@@ -286,8 +282,6 @@ export default function Home() {
       {/* What We Do */}
       <WhatWeDoSection />
 
-      {/* Category Showcase */}
-      <CategoryShowcase />
 
       {/* ── LATEST UPLOADS ─────────────────────────────────────────────────────── */}
       <LatestUploadsSection />
