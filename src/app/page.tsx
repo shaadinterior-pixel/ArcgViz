@@ -131,15 +131,29 @@ export default function Home() {
           <div className="animate-orb-drift absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.12)_0,transparent_70%)] blur-3xl" />
           <div className="animate-orb-drift-reverse absolute bottom-[-20%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.08)_0,transparent_70%)] blur-3xl" />
 
-          {/* Refined DW Background Watermark */}
-          <div className="absolute inset-0 flex items-center justify-center select-none opacity-[0.04]">
+          {/* Diagonal Logo Watermarks */}
+          <div 
+            className="absolute top-[-25%] right-[-15%] w-[800px] h-[800px] select-none pointer-events-none z-0 opacity-[0.05]"
+            style={{ WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)', maskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)' }}
+          >
             <Image
               src="/DESIGN WALLA LOGO .jpg"
               alt="Design Walla Logo Watermark"
-              width={800}
-              height={800}
-              className="object-contain rounded-[4rem] grayscale mix-blend-multiply"
-              style={{ transform: 'translateY(-5%) scale(1.2)' }}
+              fill
+              className="object-contain grayscale mix-blend-multiply"
+              priority
+            />
+          </div>
+          
+          <div 
+            className="absolute bottom-[-25%] left-[-15%] w-[900px] h-[900px] select-none pointer-events-none z-0 opacity-[0.04]"
+            style={{ WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)', maskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)' }}
+          >
+            <Image
+              src="/DESIGN WALLA LOGO .jpg"
+              alt="Design Walla Logo Watermark"
+              fill
+              className="object-contain grayscale mix-blend-multiply"
               priority
             />
           </div>
