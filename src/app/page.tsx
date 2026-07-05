@@ -184,20 +184,20 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-wrap gap-4 mt-4"
+              className="flex flex-col sm:flex-row flex-wrap xl:flex-nowrap items-start sm:items-center gap-3 mt-4"
             >
               <Link href="/products">
-                <Button className="h-12 px-8 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-[15px] shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(17,153,142,0.4)] border border-white/20">
+                <Button className="h-12 px-6 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-[14px] shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(17,153,142,0.4)] border border-white/20 whitespace-nowrap">
                   Explore Marketplace
                 </Button>
               </Link>
               <Link href="/#services">
-                <Button variant="outline" className="h-12 px-8 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[15px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5">
+                <Button variant="outline" className="h-12 px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
                   Hire Our Team
                 </Button>
               </Link>
               <Link href="/resources">
-                <Button variant="outline" className="h-12 px-8 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[15px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5">
+                <Button variant="outline" className="h-12 px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
                   Download Free Assets
                 </Button>
               </Link>
