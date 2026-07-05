@@ -11,6 +11,7 @@ type Result = {
   name: string;
   category: string;
   price: string;
+  plan?: string;
   image: string;
   slug: string;
   type: 'product' | 'service';
@@ -218,8 +219,20 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
                       </p>
                       <p className="text-xs text-[#9CA3AF] capitalize">{result.category}</p>
                     </div>
-                    {/* Price */}
-                    <span className="text-sm font-black text-[#24B86C] shrink-0">{result.price}</span>
+                    {/* Plan Badge */}
+                    <div className="shrink-0 flex items-center justify-center">
+                      <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-1 rounded-md border ${
+                        result.plan === 'Pro' 
+                          ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
+                        : result.plan === 'Plus'
+                          ? 'bg-gradient-to-r from-[#24B86C] to-[#11998E] text-white border-transparent shadow-sm'
+                        : result.plan === 'Service'
+                          ? 'bg-zinc-100 text-zinc-500 border-zinc-200'
+                        : 'bg-white text-zinc-600 border-zinc-200 shadow-sm'
+                      }`}>
+                        {result.plan || 'Free'}
+                      </span>
+                    </div>
                   </button>
                 );
               })}
