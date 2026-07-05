@@ -56,9 +56,9 @@ export default function AdminHeroPage() {
     label, value, onChange, placeholder, mono = false,
   }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; mono?: boolean }) => (
     <div className="space-y-1.5">
-      <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">{label}</label>
+      <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">{label}</label>
       <Input
-        className={`bg-secondary/40 border-border ${mono ? 'font-mono text-xs' : ''}`}
+        className={`bg-black/20 border-white/10 focus-visible:ring-primary ${mono ? 'font-mono text-xs' : ''}`}
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
@@ -97,7 +97,7 @@ export default function AdminHeroPage() {
       </div>
 
       {/* Headline */}
-      <Card className="bg-card border-border">
+      <Card className="glass-card">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <Type className="w-4 h-4 text-primary" /> Headline & Subtitle
@@ -123,8 +123,8 @@ export default function AdminHeroPage() {
             placeholder="All-Business Digital Ecosystem..."
           />
           {/* Live preview */}
-          <div className="mt-4 p-5 rounded-xl bg-[#F8FAF9] border border-border">
-            <p className="text-xs text-foreground/40 mb-2 font-semibold uppercase tracking-wide">Preview</p>
+          <div className="mt-4 p-5 rounded-xl bg-white/5 border border-white/10">
+            <p className="text-xs text-foreground/40 mb-2 font-bold uppercase tracking-widest">Preview</p>
             <h2 className="text-3xl font-black text-foreground leading-tight">
               {hero.headline_line1}<br />{hero.headline_line2}
             </h2>
@@ -134,7 +134,7 @@ export default function AdminHeroPage() {
       </Card>
 
       {/* CTAs */}
-      <Card className="bg-card border-border">
+      <Card className="glass-card">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <LinkIcon className="w-4 h-4 text-primary" /> Call-to-Action Buttons
@@ -166,7 +166,7 @@ export default function AdminHeroPage() {
       </Card>
 
       {/* Stats */}
-      <Card className="bg-card border-border">
+      <Card className="glass-card">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <BarChart2 className="w-4 h-4 text-primary" /> Stat Badges
@@ -183,8 +183,8 @@ export default function AdminHeroPage() {
               { num: 3, valKey: 'stat3_value', lblKey: 'stat3_label' },
               { num: 4, valKey: 'stat4_value', lblKey: 'stat4_label' },
             ] as const).map(({ num, valKey, lblKey }) => (
-              <div key={num} className="p-4 rounded-xl bg-secondary/30 border border-border space-y-3">
-                <p className="text-xs font-bold text-foreground/50 uppercase tracking-wider">Badge {num}</p>
+              <div key={num} className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-3">
+                <p className="text-xs font-bold text-foreground/50 uppercase tracking-widest">Badge {num}</p>
                 <div className="grid grid-cols-2 gap-2">
                   <Field
                     label="Value"
@@ -200,7 +200,7 @@ export default function AdminHeroPage() {
                   />
                 </div>
                 {/* Mini preview */}
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-border w-fit">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/20 border border-white/10 w-fit">
                   <span className="text-sm font-black text-primary">{hero[valKey]}</span>
                   <span className="text-xs text-foreground/60">{hero[lblKey]}</span>
                 </div>
@@ -211,7 +211,7 @@ export default function AdminHeroPage() {
       </Card>
 
       {/* Search */}
-      <Card className="bg-card border-border">
+      <Card className="glass-card">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <Search className="w-4 h-4 text-primary" /> Search Bar
@@ -225,7 +225,7 @@ export default function AdminHeroPage() {
             placeholder="What are you looking for today?"
           />
           {/* Preview */}
-          <div className="flex items-center gap-3 h-14 px-5 rounded-full bg-white border-2 border-border shadow-sm">
+          <div className="flex items-center gap-3 h-14 px-5 rounded-full bg-black/20 border border-white/10 shadow-sm">
             <Search className="w-5 h-5 text-foreground/30" />
             <span className="text-foreground/40 text-sm">{hero.search_placeholder}</span>
           </div>
