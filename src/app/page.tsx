@@ -217,7 +217,7 @@ export default function Home() {
         </div>
 
         {/* ── Search bar ── */}
-        <div className="relative z-30 w-full max-w-2xl mx-auto mt-14 px-4">
+        <div className="relative z-[100] w-full max-w-2xl mx-auto mt-14 px-4">
           <LiveSearch placeholder={heroContent.search_placeholder} />
         </div>
       </section>
