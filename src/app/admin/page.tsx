@@ -1,29 +1,61 @@
-"use client";
-
-import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import {
-  IndianRupee, Users, ShoppingBag, TrendingUp, ArrowUpRight,
-  Package, Star, Activity, ChevronRight,
+  IndianRupee, Users, ShoppingBag, ArrowUpRight,
+  Package, Star, ChevronRight,
 } from 'lucide-react';
-import { fetchProducts, fetchCustomers, type Product, type Customer } from '@/lib/store';
+import { getAdminClient } from '@/lib/supabase-admin';
+import type { Product, Customer } from '@/lib/store';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 // Mock monthly revenue distribution
 const REVENUE_BARS = [38, 52, 44, 71, 58, 83, 69, 77, 61, 90, 74, 95];
 
-export default function AdminOverview() {
-  const [products,  setProducts]  = useState<Product[]>([]);
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [loading,   setLoading]   = useState(true);
+export default async function AdminOverview() {
+  const admin = getAdminClient();
 
-  useEffect(() => {
-    Promise.all([fetchProducts(), fetchCustomers()])
-      .then(([p, c]) => { setProducts(p); setCustomers(c); })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+  const [{ data: productsRaw }, { data: customersRaw }] = await Promise.all([
+    admin.from('products').select('*').order('date', { ascending: false }),
+    admin.from('customers').select('*').order('"joinDate"', { ascending: false }),
+  ]);
+
+  const products: Product[] = (productsRaw || []).map((row: Record<string, unknown>) => ({
+    id: String(row.id ?? ''),
+    name: String(row.name ?? ''),
+    slug: String(row.slug ?? row.id ?? ''),
+    price: String(row.price ?? ''),
+    category: String(row.category ?? ''),
+    status: (row.status as 'Active' | 'Draft') ?? 'Draft',
+    sales: Number(row.sales ?? 0),
+    date: String(row.date ?? ''),
+    image: String(row.image ?? ''),
+    author: String(row.author ?? ''),
+    rating: String(row.rating ?? '5.0'),
+    description: String(row.description ?? ''),
+    thumbnail_url: String(row.thumbnail_url ?? row.image ?? ''),
+    gallery_images: Array.isArray(row.gallery_images) ? row.gallery_images as string[] : [],
+    google_drive_share_link: String(row.google_drive_share_link ?? ''),
+    google_drive_file_id: String(row.google_drive_file_id ?? ''),
+    download_url: String(row.download_url ?? ''),
+    model_url: row.model_url ? String(row.model_url) : undefined,
+    software_support: Array.isArray(row.software_support) ? row.software_support as string[] : [],
+    file_formats: Array.isArray(row.file_formats) ? row.file_formats as string[] : [],
+    poly_count: String(row.poly_count ?? ''),
+    texture_resolution: String(row.texture_resolution ?? ''),
+    file_size: String(row.file_size ?? ''),
+    features: Array.isArray(row.features) ? row.features as string[] : [],
+    updated_at: row.updated_at ? String(row.updated_at) : undefined,
+  }));
+
+  const customers: Customer[] = (customersRaw || []).map((row: Record<string, unknown>) => ({
+    id: String(row.id ?? ''),
+    name: String(row.name ?? ''),
+    email: String(row.email ?? ''),
+    spent: Number(row.spent ?? 0),
+    orders: Number(row.orders ?? 0),
+    status: (row.status as 'Active' | 'Inactive') ?? 'Active',
+    joinDate: String(row.joinDate ?? row['joinDate'] ?? ''),
+  }));
 
   const totalRevenue  = customers.reduce((s, c) => s + (c.spent || 0), 0);
   const totalSales    = customers.reduce((s, c) => s + (c.orders || 0), 0);
