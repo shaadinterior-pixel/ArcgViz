@@ -57,7 +57,7 @@ export function Navbar() {
               <span className="text-black font-black">DESIGN</span>
               <span className="bg-gradient-to-r from-[#24B86C] to-[#11998E] bg-clip-text text-transparent font-black">WALLA</span>
             </span>
-            <span className="text-[10px] text-muted-foreground font-medium mt-0.5">Smart Logon Ka Smart Solution</span>
+            <span className="text-[10px] text-muted-foreground font-medium -mt-0.5">Smart Logon Ka Smart Solution</span>
           </div>
         </Link>
 
