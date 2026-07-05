@@ -61,22 +61,26 @@ export function LatestUploadsSection() {
         <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
           <div className="flex gap-2 flex-wrap">
             {dynamicTabs.map((cat, i) => (
-              <motion.button
-                key={cat}
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                onClick={() => setActiveFilter(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border ${
-                  activeFilter === cat
-                    ? 'bg-[#0D1A12] text-white border-[#0D1A12] shadow-md'
-                    : 'bg-white text-[#4B5563] border-[#E2EDE8] hover:border-[#24B86C] hover:text-[#24B86C]'
-                }`}
+              <Link 
+                key={cat} 
+                href={cat === 'All' ? '/products' : `/products?category=${encodeURIComponent(cat)}`}
+                className="block"
               >
-                {cat}
-              </motion.button>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border ${
+                    activeFilter === cat
+                      ? 'bg-[#0D1A12] text-white border-[#0D1A12] shadow-md'
+                      : 'bg-white text-[#4B5563] border-[#E2EDE8] hover:border-[#24B86C] hover:text-[#24B86C]'
+                  }`}
+                >
+                  {cat}
+                </motion.div>
+              </Link>
             ))}
           </div>
-          <Link href="/products" className="flex items-center gap-1.5 text-sm font-semibold text-[#0D1A12] hover:text-[#24B86C] transition-colors group shrink-0">
+          <Link href={activeFilter === 'All' ? '/products' : `/products?category=${encodeURIComponent(activeFilter)}`} className="flex items-center gap-1.5 text-sm font-semibold text-[#0D1A12] hover:text-[#24B86C] transition-colors group shrink-0">
             View all <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
@@ -170,10 +174,10 @@ export function LatestUploadsSection() {
           className="text-center mt-12"
         >
           <Link
-            href="/products"
+            href={activeFilter === 'All' ? '/products' : `/products?category=${encodeURIComponent(activeFilter)}`}
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#0D1A12] text-white font-bold text-sm hover:bg-[#24B86C] transition-all duration-300 shadow-lg group"
           >
-            Browse All Products
+            {activeFilter === 'All' ? 'Browse All Products' : `Browse All ${activeFilter}`}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
