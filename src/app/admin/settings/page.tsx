@@ -76,7 +76,7 @@ export default function AdminSettingsPage() {
       </div>
 
       {/* Store info */}
-      <Card className="bg-card border-border">
+      <Card className="glass-card">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <Store className="w-4 h-4 text-primary" /> Store Information
@@ -84,26 +84,26 @@ export default function AdminSettingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Store Name</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Store Name</label>
             <Input
-              className="bg-secondary/40 border-border"
+              className="bg-black/20 border-white/10 focus-visible:ring-primary"
               value={settings.storeName}
               onChange={e => setSettings(s => ({ ...s, storeName: e.target.value }))}
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Support Email</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Support Email</label>
             <Input
               type="email"
-              className="bg-secondary/40 border-border"
+              className="bg-black/20 border-white/10 focus-visible:ring-primary"
               value={settings.supportEmail}
               onChange={e => setSettings(s => ({ ...s, supportEmail: e.target.value }))}
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Currency</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Currency</label>
             <select
-              className="w-full bg-secondary/40 border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
               value={settings.currency}
               onChange={e => setSettings(s => ({ ...s, currency: e.target.value }))}
             >
@@ -117,7 +117,7 @@ export default function AdminSettingsPage() {
       </Card>
 
       {/* Hero Image */}
-      <Card className="bg-card border-border">
+      <Card className="glass-card">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <ImageIcon className="w-4 h-4 text-primary" /> Hero Image
@@ -146,11 +146,11 @@ export default function AdminSettingsPage() {
 
           {/* URL input */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50 flex items-center gap-1.5">
+            <label className="text-xs font-bold uppercase tracking-widest text-foreground/50 flex items-center gap-1.5">
               <LinkIcon className="w-3 h-3" /> Image URL
             </label>
             <Input
-              className="bg-secondary/40 border-border font-mono text-xs"
+              className="bg-black/20 border-white/10 font-mono text-xs focus-visible:ring-primary"
               placeholder="https://images.unsplash.com/..."
               value={settings.heroImageUrl || ''}
               onChange={e => setSettings(s => ({ ...s, heroImageUrl: e.target.value }))}
@@ -160,7 +160,7 @@ export default function AdminSettingsPage() {
 
           {/* Quick presets */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Quick Presets</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Quick Presets</label>
             <div className="grid grid-cols-3 gap-2">
               {[
                 { label: 'Interior 1', url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920' },
@@ -184,7 +184,7 @@ export default function AdminSettingsPage() {
           </div>
         </CardContent>
       </Card>
-      <Card className="bg-card border-border">
+      <Card className="glass-card">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <CreditCard className="w-4 h-4 text-primary" /> Payment Gateways
@@ -195,14 +195,14 @@ export default function AdminSettingsPage() {
             { key: 'razorpayEnabled', label: 'Razorpay', desc: 'Accept UPI, cards, netbanking via Razorpay' },
             { key: 'stripeEnabled',   label: 'Stripe',   desc: 'Accept international cards via Stripe' },
           ] as { key: keyof StoreSettings; label: string; desc: string }[]).map(({ key, label, desc }) => (
-            <div key={key} className="flex items-center justify-between py-3 border-b border-border last:border-0">
+            <div key={key} className="flex items-center justify-between py-3 border-b border-white/10 last:border-0">
               <div>
                 <p className="text-sm font-semibold">{label}</p>
                 <p className="text-xs text-foreground/40">{desc}</p>
               </div>
               <button
                 onClick={() => toggle(key)}
-                className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${settings[key] ? 'bg-primary' : 'bg-secondary'}`}
+                className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${settings[key] ? 'bg-primary' : 'bg-white/10 border border-white/10'}`}
               >
                 <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform duration-200 ${settings[key] ? 'translate-x-5' : 'translate-x-0'}`} />
               </button>
@@ -212,7 +212,7 @@ export default function AdminSettingsPage() {
       </Card>
 
       {/* Maintenance mode */}
-      <Card className={`border ${settings.maintenanceMode ? 'border-red-500/30 bg-red-500/5' : 'bg-card border-border'}`}>
+      <Card className={`glass-card ${settings.maintenanceMode ? 'border-red-500/30 bg-red-500/5' : ''}`}>
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -226,7 +226,7 @@ export default function AdminSettingsPage() {
             </div>
             <button
               onClick={() => toggle('maintenanceMode')}
-              className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${settings.maintenanceMode ? 'bg-red-500' : 'bg-secondary'}`}
+              className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${settings.maintenanceMode ? 'bg-red-500' : 'bg-white/10 border border-white/10'}`}
             >
               <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform duration-200 ${settings.maintenanceMode ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
@@ -239,33 +239,7 @@ export default function AdminSettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Danger zone */}
-      <Card className="bg-card border-border">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold flex items-center gap-2 text-red-400">
-            <AlertTriangle className="w-4 h-4" /> Danger Zone
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-center justify-between py-3 border border-border rounded-xl px-4">
-            <div>
-              <p className="text-sm font-semibold">Reset to Default Data</p>
-              <p className="text-xs text-foreground/40">Clear localStorage cache and reload from JSON files</p>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500"
-              onClick={() => {
-                ['designwalla_products','designwalla_customers','designwalla_settings'].forEach(k => localStorage.removeItem(k));
-                toast('Cache cleared — reload to reset', 'info');
-              }}
-            >
-              <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Reset Cache
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+
     </div>
   );
 }
