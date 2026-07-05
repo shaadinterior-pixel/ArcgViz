@@ -47,7 +47,7 @@ export function Navbar() {
   };
 
   return (
-    <header suppressHydrationWarning className="sticky top-4 z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header suppressHydrationWarning className="fixed top-4 left-0 right-0 z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="h-16 flex items-center justify-between bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 border border-[#E2EDE8] rounded-full px-6 shadow-[0_4px_24px_rgba(36,184,108,0.08)]">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3 shrink-0">
