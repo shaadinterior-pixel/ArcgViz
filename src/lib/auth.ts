@@ -18,6 +18,21 @@ export async function signUp(email: string, password: string, fullName?: string)
     },
   });
   if (error) throw error;
+  
+  if (data?.user) {
+    // Automatically create a customer record with 'Free' plan
+    await supabase.from('customers').insert({
+      id: data.user.id,
+      name: fullName || email.split('@')[0],
+      email: email,
+      spent: 0,
+      orders: 0,
+      status: 'Active',
+      joinDate: new Date().toISOString(),
+      plan: 'Free'
+    });
+  }
+  
   return data;
 }
 

@@ -122,7 +122,7 @@ export default function Home() {
     <div className="flex flex-col">
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[80vh] flex flex-col justify-center overflow-hidden bg-[#FAFCFB] pt-24 pb-24">
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-32 pb-20 overflow-hidden bg-white">
 
         {/* Ethereal Mesh Gradients */}
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />

@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
 import { getCurrentUser, hasPurchased } from '@/lib/auth';
+import { supabase } from '@/lib/supabase';
 
 type Props = { 
   product: Product;
@@ -36,7 +37,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   const [viewMode, setViewMode] = useState<'2d' | '3d'>(product.model_url ? '3d' : '2d');
 
   // ── Auth & purchase state ─────────────────────────────────────────────────
-  const [user, setUser] = useState<{ id: string } | null>(null);
+  const [user, setUser] = useState<{ id: string, plan?: string } | null>(null);
   const [purchased, setPurchased] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
@@ -44,14 +45,27 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   useEffect(() => {
     (async () => {
       const u = await getCurrentUser();
-      setUser(u ? { id: u.id } : null);
       if (u) {
+        const { data: customer } = await supabase.from('customers').select('plan').eq('id', u.id).single();
+        setUser({ id: u.id, plan: customer?.plan || 'Free' });
         const has = await hasPurchased(product.id);
         setPurchased(has);
+      } else {
+        setUser(null);
       }
       setAuthLoading(false);
     })();
   }, [product.id]);
+
+  const productPlan = product.plan_tier || 'Free';
+  const userPlan = user?.plan || 'Free';
+  
+  const canDownload = !!user && (
+    productPlan === 'Free' || 
+    userPlan === 'Pro' || 
+    (userPlan === 'Plus' && productPlan === 'Plus') || 
+    purchased
+  );
 
   // ── Keyboard navigation for lightbox ─────────────────────────────────────
   const handleKey = useCallback((e: KeyboardEvent) => {
@@ -365,30 +379,46 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
               
               {/* License Box */}
               <div>
-                <span className="text-xs font-bold text-[#111111] block mb-2">License</span>
-                <div className="border border-zinc-300 rounded-xl p-3 flex justify-between items-center bg-white cursor-pointer hover:border-[#00A1FF] transition-colors group">
+                <span className="text-xs font-bold text-[#111111] block mb-2">Access Level</span>
+                <div className="border border-zinc-300 rounded-xl p-3 flex justify-between items-center bg-white cursor-pointer hover:border-[#24B86C] transition-colors group">
                   <div>
-                    <div className="text-sm font-bold text-[#111111] mb-0.5">Select a License</div>
+                    <div className="text-sm font-bold text-[#111111] mb-0.5">{productPlan} Tier Product</div>
                     <div className="text-xs text-zinc-500 flex items-center gap-1.5">
-                      <span>(From ₹1,500 to {product.price})</span>
-                      <span className="bg-[#00E599]/10 text-[#00E599] border border-[#00E599]/20 px-1.5 py-[1px] rounded text-[10px] font-bold">Sale</span>
+                      {user ? (
+                        <span>Your Plan: <span className="font-bold text-[#111111]">{userPlan}</span></span>
+                      ) : (
+                        <span>Sign in to download</span>
+                      )}
                     </div>
                   </div>
-                  <ChevronDown className="w-4 h-4 text-zinc-400 group-hover:text-[#00A1FF] transition-colors" />
                 </div>
               </div>
               
-              {/* Purchase Buttons */}
+              {/* Purchase/Download Buttons */}
               <div className="flex flex-col gap-2 mt-2">
-                <Button className="w-full h-12 bg-[#00A1FF] hover:bg-[#0090E5] text-white font-bold rounded-xl text-sm shadow-[0_4px_14px_rgba(0,161,255,0.3)] transition-all">
-                  Buy now
-                </Button>
-                <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1 h-12 border-2 border-zinc-200 font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111]">
-                    Add to cart
+                {authLoading ? (
+                  <Button disabled className="w-full h-12 bg-zinc-100 rounded-xl">
+                    <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
                   </Button>
-                  <Button variant="outline" className="w-12 h-12 border-2 border-zinc-200 bg-white hover:bg-zinc-50 rounded-xl px-0 flex items-center justify-center text-zinc-500 hover:text-zinc-800">
-                    <Bookmark className="w-5 h-5"/>
+                ) : !user ? (
+                  <Link href="/auth">
+                    <Button className="w-full h-12 bg-[#0D1A12] hover:bg-[#24B86C] text-white font-bold rounded-xl text-sm transition-all">
+                      Log in to Download
+                    </Button>
+                  </Link>
+                ) : canDownload ? (
+                  <Button onClick={handleDownload} disabled={downloading} className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white font-bold rounded-xl text-sm shadow-[0_4px_14px_rgba(36,184,108,0.3)] transition-all">
+                    {downloading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/> Downloading...</> : <><Download className="w-4 h-4 mr-2"/> Download Now</>}
+                  </Button>
+                ) : (
+                  <Button disabled className="w-full h-12 bg-zinc-200 text-zinc-500 font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2">
+                    Locked (Requires {productPlan} Plan)
+                  </Button>
+                )}
+                
+                <div className="flex gap-2">
+                  <Button variant="outline" className="w-full h-12 border-2 border-zinc-200 font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111]">
+                    <Bookmark className="w-4 h-4 mr-2"/> Save for later
                   </Button>
                 </div>
               </div>

@@ -17,6 +17,7 @@ const EMPTY: Omit<Product,'id'> = {
   date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
   google_drive_share_link:'', google_drive_file_id:'', download_url:'', model_url:'',
   software_support:[], file_formats:[], poly_count:'', texture_resolution:'', file_size:'', features:[],
+  plan_tier: 'Free',
 };
 
 type DriveStatus = 'idle'|'valid'|'invalid'|'checking';
@@ -164,6 +165,7 @@ export default function AdminProductsPage() {
                   <th className="text-left px-5 py-3 font-medium hidden sm:table-cell">Category</th>
                   <th className="text-left px-5 py-3 font-medium">Price</th>
                   <th className="text-left px-5 py-3 font-medium hidden md:table-cell">Drive</th>
+                  <th className="text-left px-5 py-3 font-medium">Plan</th>
                   <th className="text-left px-5 py-3 font-medium">Status</th>
                   <th className="text-right px-5 py-3 font-medium">Actions</th>
                 </tr>
@@ -195,6 +197,15 @@ export default function AdminProductsPage() {
                       ) : (
                         <span className="text-foreground/30 text-xs">No file</span>
                       )}
+                    </td>
+                    <td className="px-5 py-4">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border ${
+                        p.plan_tier === 'Free' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                        p.plan_tier === 'Plus' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
+                        'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                      }`}>
+                        {p.plan_tier || 'Free'}
+                      </span>
                     </td>
                     <td className="px-5 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border ${p.status==='Active'?'bg-green-500/10 text-green-400 border-green-500/20':'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'}`}>
@@ -246,6 +257,18 @@ export default function AdminProductsPage() {
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Price *</label>
                     <Input placeholder="₹1,999" className="bg-black/20 border-white/10 focus-visible:ring-primary" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Plan Tier *</label>
+                    <div className="relative">
+                      <select className="appearance-none w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                        value={editing.plan_tier || 'Free'} onChange={e=>setField('plan_tier', e.target.value as 'Free' | 'Plus' | 'Pro')}>
+                        <option value="Free">Free</option>
+                        <option value="Plus">Plus</option>
+                        <option value="Pro">Pro</option>
+                      </select>
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 pointer-events-none"/>
+                    </div>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Category</label>

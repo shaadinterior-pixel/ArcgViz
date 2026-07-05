@@ -11,12 +11,10 @@ export type Product = {
   status: 'Active' | 'Draft';
   sales: number;
   date: string;
-  // Legacy single image (kept for backward compat)
   image: string;
   author: string;
   rating: string;
   description?: string;
-  // Extended fields
   thumbnail_url: string;
   gallery_images: string[];
   google_drive_share_link: string;
@@ -30,6 +28,7 @@ export type Product = {
   file_size: string;
   features: string[];
   updated_at?: string;
+  plan_tier: 'Free' | 'Plus' | 'Pro';
 };
 
 export type Customer = {
@@ -40,6 +39,7 @@ export type Customer = {
   orders: number;
   status: 'Active' | 'Inactive';
   joinDate: string;
+  plan: 'Free' | 'Plus' | 'Pro';
 };
 
 export type Order = {
@@ -181,6 +181,7 @@ function normalizeProduct(row: Record<string, unknown>): Product {
     file_size:               String(row.file_size ?? ''),
     features:                Array.isArray(row.features) ? row.features as string[] : [],
     updated_at:              row.updated_at ? String(row.updated_at) : undefined,
+    plan_tier:               (row.plan_tier as 'Free' | 'Plus' | 'Pro') ?? 'Free',
   };
 }
 

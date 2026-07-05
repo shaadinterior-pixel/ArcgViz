@@ -11,6 +11,7 @@ import { fetchCustomers, saveCustomers, deleteCustomer, onStoreUpdate, type Cust
 const EMPTY: Omit<Customer, 'id'> = {
   name: '', email: '', spent: 0, orders: 0,
   status: 'Active', joinDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+  plan: 'Free'
 };
 
 export default function AdminCustomersPage() {
@@ -124,6 +125,7 @@ export default function AdminCustomersPage() {
                   <th className="text-left px-5 py-3 font-medium hidden sm:table-cell">Joined</th>
                   <th className="text-left px-5 py-3 font-medium">Spent</th>
                   <th className="text-left px-5 py-3 font-medium hidden md:table-cell">Orders</th>
+                  <th className="text-left px-5 py-3 font-medium">Plan</th>
                   <th className="text-left px-5 py-3 font-medium">Status</th>
                   <th className="text-right px-5 py-3 font-medium">Actions</th>
                 </tr>
@@ -145,6 +147,15 @@ export default function AdminCustomersPage() {
                     <td className="px-5 py-4 text-foreground/50 font-medium hidden sm:table-cell">{c.joinDate}</td>
                     <td className="px-5 py-4 font-bold text-primary">₹{c.spent.toLocaleString('en-IN')}</td>
                     <td className="px-5 py-4 hidden md:table-cell">{c.orders}</td>
+                    <td className="px-5 py-4">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border ${
+                        c.plan === 'Free' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                        c.plan === 'Plus' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
+                        'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                      }`}>
+                        {c.plan || 'Free'}
+                      </span>
+                    </td>
                     <td className="px-5 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider
                         ${c.status === 'Active' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-zinc-500/10 text-zinc-400 border border-zinc-500/20'}`}>
@@ -197,15 +208,29 @@ export default function AdminCustomersPage() {
                   />
                 </div>
               ))}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Status</label>
-                <select
-                  className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
-                  value={editing.status}
-                  onChange={e => setEditing({ ...editing, status: e.target.value as Customer['status'] })}
-                >
-                  <option>Active</option><option>Inactive</option>
-                </select>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Plan Tier</label>
+                  <select
+                    className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                    value={editing.plan || 'Free'}
+                    onChange={e => setEditing({ ...editing, plan: e.target.value as Customer['plan'] })}
+                  >
+                    <option value="Free">Free</option>
+                    <option value="Plus">Plus</option>
+                    <option value="Pro">Pro</option>
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Status</label>
+                  <select
+                    className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                    value={editing.status}
+                    onChange={e => setEditing({ ...editing, status: e.target.value as Customer['status'] })}
+                  >
+                    <option>Active</option><option>Inactive</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div className="px-6 py-4 border-t border-white/10 flex justify-end gap-3 bg-white/5">

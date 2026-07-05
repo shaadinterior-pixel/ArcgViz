@@ -187,8 +187,12 @@ export default function ProductsPage() {
                             />
                             
                             {/* Badges */}
-                            <div className="absolute top-3 left-3 bg-[#1A1A1A]/80 backdrop-blur-md px-3 py-1.5 rounded-[8px] text-[11px] font-semibold text-white tracking-wide shadow-sm flex items-center justify-center">
-                              {product.category || 'Asset'}
+                            <div className={`absolute top-3 left-3 px-2.5 py-1.5 rounded-[8px] text-[11px] font-black uppercase tracking-wider text-white shadow-sm flex items-center justify-center ${
+                              (product.plan_tier || 'Free') === 'Free' ? 'bg-[#24B86C]' :
+                              (product.plan_tier || 'Free') === 'Plus' ? 'bg-[#9333EA]' :
+                              'bg-[#F59E0B]'
+                            }`}>
+                              {product.plan_tier || 'Free'}
                             </div>
                             
                             {product.rating && (
