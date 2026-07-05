@@ -158,12 +158,22 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
   return (
     <div className="relative w-full" style={{ isolation: 'auto' }}>
       <form onSubmit={handleSubmit} className="relative flex items-center w-full">
-        {/* Search icon */}
-        <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none z-10">
-          {loading
-            ? <Loader2 className="h-5 w-5 text-[#24B86C] animate-spin" />
-            : <Search className="h-5 w-5 text-[#9CA3AF]" />
-          }
+        {/* Left Icon: Search, Loader, or Clear */}
+        <div className="absolute left-5 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center">
+          {loading ? (
+            <Loader2 className="h-5 w-5 text-[#24B86C] animate-spin pointer-events-none" />
+          ) : query ? (
+            <button
+              type="button"
+              onClick={clear}
+              className="w-8 h-8 -ml-1.5 rounded-full hover:bg-zinc-100 flex items-center justify-center transition-colors"
+              aria-label="Clear search"
+            >
+              <X className="h-5 w-5 text-[#6B7280]" />
+            </button>
+          ) : (
+            <Search className="h-5 w-5 text-[#9CA3AF] pointer-events-none" />
+          )}
         </div>
 
         {/* Input */}
@@ -182,16 +192,7 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
           aria-haspopup="listbox"
         />
 
-        {/* Clear button */}
-        {query && (
-          <button
-            type="button"
-            onClick={clear}
-            className="absolute right-14 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-[#E2EDE8] flex items-center justify-center hover:bg-[#24B86C]/20 transition-colors z-10"
-          >
-            <X className="w-3.5 h-3.5 text-[#6B7280]" />
-          </button>
-        )}
+
 
         {/* Submit button — premium circular glowing button */}
         <button
