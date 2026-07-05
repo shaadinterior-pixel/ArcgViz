@@ -61,26 +61,31 @@ export function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-          <Link href="/products" className="transition-colors hover:text-primary flex items-center gap-1">Marketplace <ChevronDown className="w-3 h-3" /></Link>
-          <Link href="/#services" className="transition-colors hover:text-primary flex items-center gap-1 text-foreground/80">Services <ChevronDown className="w-3 h-3" /></Link>
-          <Link href="/resources" className="transition-colors hover:text-primary flex items-center gap-1 text-foreground/80">Resources <ChevronDown className="w-3 h-3" /></Link>
-          <Link href="/pricing" className="transition-colors hover:text-primary text-foreground/80">Pricing</Link>
-        </nav>
+        {/* Desktop Right Side (Nav + Actions) */}
+        <div className="hidden md:flex items-center gap-6">
+          <nav className="flex items-center space-x-6 text-sm font-medium">
+            <Link href="/products" className="transition-colors hover:text-primary flex items-center gap-1">Marketplace <ChevronDown className="w-3 h-3" /></Link>
+            <Link href="/#services" className="transition-colors hover:text-primary flex items-center gap-1 text-foreground/80">Services <ChevronDown className="w-3 h-3" /></Link>
+            <Link href="/resources" className="transition-colors hover:text-primary flex items-center gap-1 text-foreground/80">Resources <ChevronDown className="w-3 h-3" /></Link>
+            <Link href="/pricing" className="transition-colors hover:text-primary text-foreground/80">Pricing</Link>
+          </nav>
 
-        {/* Desktop Actions */}
-        <div className="hidden md:flex items-center space-x-4">
-          {user ? (
-            <Link href="/profile" className="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 transition-colors border border-zinc-200" title="View Profile">
-              <User className="w-5 h-5 text-zinc-600" />
-            </Link>
-          ) : (
-            <Link href="/login" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors text-foreground/90">
-              <User className="w-4 h-4" />
-              Login
-            </Link>
-          )}
+          {/* Divider */}
+          <div className="w-px h-5 bg-zinc-200" />
+
+          {/* Desktop Actions */}
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <Link href="/profile" className="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 transition-colors border border-zinc-200" title="View Profile">
+                <User className="w-5 h-5 text-zinc-600" />
+              </Link>
+            ) : (
+              <Link href="/login" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors text-foreground/90">
+                <User className="w-4 h-4" />
+                Login
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* Mobile Action Row */}
