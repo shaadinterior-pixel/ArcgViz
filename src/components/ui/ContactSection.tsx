@@ -75,14 +75,7 @@ export function ContactSection() {
                 </div>
                 <span className="font-bold text-[15px] text-zinc-800">designwalla.co@gmail.com</span>
               </div>
-              <div className="flex items-center gap-4 p-4 rounded-3xl bg-white border border-zinc-100 shadow-sm transition-all hover:shadow-md">
-                <div className="w-10 h-10 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0">
-                  <div className="w-4 h-4 text-[#24B86C]">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
-                  </div>
-                </div>
-                <span className="font-bold text-[15px] text-zinc-800">www.designwalla.com</span>
-              </div>
+
               <div className="flex items-center gap-4 p-4 rounded-3xl bg-white border border-zinc-100 shadow-sm transition-all hover:shadow-md">
                 <div className="w-10 h-10 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0">
                   <MapPin className="w-4 h-4 text-[#24B86C]" />
