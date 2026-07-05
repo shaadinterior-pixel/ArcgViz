@@ -61,41 +61,12 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
     }
     setLoading(true);
     try {
-      const term = `%${q.trim()}%`;
-      const { data: products } = await supabase
-        .from('products')
-        .select('id, name, category, price, image, slug, thumbnail_url')
-        .or(`name.ilike.${term},category.ilike.${term},description.ilike.${term}`)
-        .eq('status', 'Active')
-        .limit(8);
-
-      const { data: services } = await supabase
-        .from('services')
-        .select('id, title, category, image')
-        .or(`title.ilike.${term},category.ilike.${term},description.ilike.${term}`)
-        .limit(3);
-
-      const productResults: Result[] = (products || []).map(p => ({
-        id: p.id,
-        name: p.name,
-        category: p.category,
-        price: p.price,
-        image: p.thumbnail_url || p.image || '',
-        slug: p.slug || p.id,
-        type: 'product',
-      }));
-
-      const serviceResults: Result[] = (services || []).map(s => ({
-        id: s.id,
-        name: s.title,
-        category: s.category,
-        price: 'Service',
-        image: s.image || '',
-        slug: '',
-        type: 'service',
-      }));
-
-      setResults([...productResults, ...serviceResults]);
+      const res = await fetch(`/api/search?q=${encodeURIComponent(q.trim())}`);
+      if (!res.ok) throw new Error('Search failed');
+      
+      const searchResults = await res.json();
+      
+      setResults(searchResults);
       setOpen(true);
       setSelected(-1);
     } catch (err) {
