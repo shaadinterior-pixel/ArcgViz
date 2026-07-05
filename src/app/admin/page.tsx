@@ -65,19 +65,19 @@ export default function AdminOverview() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.title} className="bg-card border-border">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-xs font-medium text-foreground/50 uppercase tracking-wider">{stat.title}</p>
-                <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center`}>
-                  <stat.icon className={`w-4 h-4 ${stat.color}`} />
+          <Card key={stat.title} className="glass-card">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <p className="text-xs font-bold text-foreground/60 uppercase tracking-widest">{stat.title}</p>
+                <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center`}>
+                  <stat.icon className={`w-5 h-5 ${stat.color}`} />
                 </div>
               </div>
-              <p className="text-2xl font-bold tracking-tight">{stat.value}</p>
-              <p className="text-xs text-green-400 flex items-center gap-1 mt-1">
-                <ArrowUpRight className="w-3 h-3" /> {stat.trend}
+              <p className="text-3xl font-black tracking-tight">{stat.value}</p>
+              <p className="text-sm text-primary font-medium flex items-center gap-1 mt-2 bg-primary/10 w-max px-2 py-1 rounded-md">
+                <ArrowUpRight className="w-4 h-4" /> {stat.trend}
               </p>
             </CardContent>
           </Card>
@@ -87,24 +87,24 @@ export default function AdminOverview() {
       {/* Revenue chart + Recent Customers */}
       <div className="grid gap-6 lg:grid-cols-7">
         {/* Bar chart */}
-        <Card className="lg:col-span-4 bg-card border-border">
-          <CardHeader className="pb-0">
-            <CardTitle className="text-base font-semibold">Revenue Overview</CardTitle>
-            <p className="text-xs text-foreground/40">Monthly revenue (INR) — current year</p>
+        <Card className="lg:col-span-4 glass-card">
+          <CardHeader className="pb-0 pt-6 px-6">
+            <CardTitle className="text-lg font-bold">Revenue Overview</CardTitle>
+            <p className="text-xs font-medium text-foreground/50 uppercase tracking-widest mt-1">Monthly revenue (INR)</p>
           </CardHeader>
-          <CardContent className="pt-6">
-            <div className="relative h-48 flex items-end gap-1.5">
+          <CardContent className="p-6">
+            <div className="relative h-56 flex items-end gap-2 overflow-x-auto hide-scrollbar pb-2">
               {REVENUE_BARS.map((h, i) => (
-                <div key={i} className="flex-1 flex flex-col items-center gap-1 group">
+                <div key={i} className="flex-1 min-w-[32px] flex flex-col items-center gap-2 group">
                   <div
-                    className="w-full rounded-t-sm bg-primary/20 hover:bg-primary/50 transition-colors relative cursor-pointer"
+                    className="w-full rounded-t-lg bg-gradient-to-t from-primary/20 to-primary/60 hover:from-primary/40 hover:to-primary transition-all relative cursor-pointer shadow-sm"
                     style={{ height: `${h}%` }}
                   >
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-card border border-border text-foreground text-[10px] py-1 px-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 glass text-foreground text-xs font-bold py-1.5 px-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl pointer-events-none z-10">
                       ₹{(h * 1234).toLocaleString('en-IN')}
                     </div>
                   </div>
-                  <span className="text-[9px] text-foreground/30">{MONTHS[i]}</span>
+                  <span className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider">{MONTHS[i]}</span>
                 </div>
               ))}
             </div>
@@ -112,21 +112,21 @@ export default function AdminOverview() {
         </Card>
 
         {/* Recent customers */}
-        <Card className="lg:col-span-3 bg-card border-border flex flex-col">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-semibold">Recent Customers</CardTitle>
+        <Card className="lg:col-span-3 glass-card flex flex-col">
+          <CardHeader className="pb-4 pt-6 px-6">
+            <CardTitle className="text-lg font-bold">Recent Customers</CardTitle>
           </CardHeader>
-          <CardContent className="flex-1 pt-0 space-y-4">
+          <CardContent className="flex-1 pt-0 px-6 pb-6 space-y-4">
             {customers.slice(0, 5).map((c) => (
-              <div key={c.id} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/15 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+              <div key={c.id} className="flex items-center gap-4 bg-white/5 p-3 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center text-sm font-bold shrink-0 shadow-md">
                   {c.name.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{c.name}</p>
-                  <p className="text-xs text-foreground/40 truncate">{c.email}</p>
+                  <p className="text-sm font-bold truncate">{c.name}</p>
+                  <p className="text-xs font-medium text-foreground/50 truncate">{c.email}</p>
                 </div>
-                <span className="text-xs font-semibold text-primary whitespace-nowrap">
+                <span className="text-sm font-black text-primary whitespace-nowrap">
                   ₹{c.spent.toLocaleString('en-IN')}
                 </span>
               </div>
@@ -139,42 +139,42 @@ export default function AdminOverview() {
       </div>
 
       {/* Top Products Table */}
-      <Card className="bg-card border-border">
-        <CardHeader>
+      <Card className="glass-card overflow-hidden">
+        <CardHeader className="p-6">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-semibold">Top Selling Products</CardTitle>
-            <Link href="/admin/products" className="text-xs text-primary hover:underline">View all</Link>
+            <CardTitle className="text-lg font-bold">Top Selling Products</CardTitle>
+            <Link href="/admin/products" className="text-xs font-bold text-primary hover:underline uppercase tracking-widest">View all</Link>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 overflow-x-auto hide-scrollbar">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-t border-border text-xs text-foreground/40 uppercase tracking-wider">
-                <th className="text-left px-6 py-3 font-medium">Product</th>
-                <th className="text-left px-6 py-3 font-medium hidden sm:table-cell">Category</th>
-                <th className="text-left px-6 py-3 font-medium">Price</th>
-                <th className="text-left px-6 py-3 font-medium">Sales</th>
-                <th className="text-left px-6 py-3 font-medium hidden md:table-cell">Rating</th>
+              <tr className="border-t border-white/10 text-xs font-bold text-foreground/40 uppercase tracking-widest bg-white/5">
+                <th className="text-left px-6 py-4">Product</th>
+                <th className="text-left px-6 py-4 hidden sm:table-cell">Category</th>
+                <th className="text-left px-6 py-4">Price</th>
+                <th className="text-left px-6 py-4">Sales</th>
+                <th className="text-left px-6 py-4 hidden md:table-cell">Rating</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-y divide-white/5">
               {topProducts.map(p => (
-                <tr key={p.id} className="hover:bg-secondary/20 transition-colors">
+                <tr key={p.id} className="hover:bg-white/5 transition-colors group">
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       {p.image && (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={p.image} alt={p.name} className="w-9 h-9 rounded-lg object-cover shrink-0" loading="lazy" />
+                        <img src={p.image} alt={p.name} className="w-10 h-10 rounded-xl object-cover shrink-0 shadow-sm group-hover:shadow-md transition-shadow" loading="lazy" />
                       )}
-                      <span className="font-medium line-clamp-1">{p.name}</span>
+                      <span className="font-bold line-clamp-1">{p.name}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-foreground/50 hidden sm:table-cell">{p.category}</td>
-                  <td className="px-6 py-4 font-semibold">{p.price}</td>
-                  <td className="px-6 py-4">{p.sales}</td>
+                  <td className="px-6 py-4 text-foreground/50 font-medium hidden sm:table-cell">{p.category}</td>
+                  <td className="px-6 py-4 font-bold text-primary">{p.price}</td>
+                  <td className="px-6 py-4 font-semibold">{p.sales}</td>
                   <td className="px-6 py-4 hidden md:table-cell">
-                    <span className="flex items-center gap-1 text-primary">
-                      <Star className="w-3.5 h-3.5 fill-primary" /> {p.rating}
+                    <span className="flex items-center gap-1.5 text-foreground/70 font-semibold bg-white/5 w-max px-2.5 py-1 rounded-md">
+                      <Star className="w-3.5 h-3.5 fill-primary text-primary" /> {p.rating}
                     </span>
                   </td>
                 </tr>
