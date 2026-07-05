@@ -127,19 +127,19 @@ export function WhatWeDoSection() {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header Row */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12">
+        <div className="flex flex-col gap-6 mb-12">
           <div>
             <div className="inline-block px-4 py-1.5 rounded-full bg-white border border-[#E2EDE8] shadow-sm mb-4">
                <span className="text-[#24B86C] font-semibold text-xs tracking-[0.2em] uppercase">WHAT WE DO</span>
             </div>
-            <h2 className="text-6xl md:text-7xl font-black tracking-tighter leading-[0.9]">
+            <h2 className="text-6xl md:text-7xl font-black tracking-tighter leading-[0.9] mb-4">
               <span className="text-[#111111]">Ten crafts.</span><br />
               <span className="text-zinc-400">One studio.</span>
             </h2>
+            <p className="max-w-md text-zinc-500 text-sm font-medium leading-relaxed">
+              Tap any service below to reveal its full details — projects, deliverables and how we work.
+            </p>
           </div>
-          <p className="max-w-sm text-zinc-600 text-sm md:text-base leading-relaxed">
-            Tap any service below to reveal its full details — projects, deliverables and how we work.
-          </p>
         </div>
 
         {/* Pills Navigation */}
