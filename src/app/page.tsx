@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { CategoryMarquee } from '@/components/ui/CategoryMarquee';
 import { WhatWeDoSection } from '@/components/ui/WhatWeDoSection';
 import { HowWeWorkSection } from '@/components/ui/HowWeWorkSection';
 import { SoftwareMarquee } from '@/components/ui/SoftwareMarquee';
@@ -254,6 +255,9 @@ export default function Home() {
 
       {/* Software Marquee */}
       <SoftwareMarquee />
+
+      {/* Category Marquee */}
+      <CategoryMarquee />
 
       {/* What We Do */}
       <WhatWeDoSection />
