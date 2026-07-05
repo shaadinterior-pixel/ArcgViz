@@ -14,14 +14,14 @@ const steps = [
 
 export function HowWeWorkSection() {
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
+    <section className="py-24 bg-[#F8FAF9] relative overflow-hidden">
       {/* Decorative orbs */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.06)_0,transparent_60%)] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.06)_0,transparent_60%)] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-        {/* Header */}
+        <div className="glass-card rounded-[3rem] p-8 md:p-16 border border-[#E2EDE8]/50 shadow-[0_8px_40px_rgba(36,184,108,0.04)]">
+          {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.5 }}
@@ -65,6 +65,7 @@ export function HowWeWorkSection() {
             })}
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
