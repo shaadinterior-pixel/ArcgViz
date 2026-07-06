@@ -14,18 +14,18 @@ import { supabase } from '@/lib/supabase';
 
 const ADMIN_NAV = [
   { group: 'Store',    items: [
-    { name: 'Dashboard',    href: '/admin',                    icon: LayoutDashboard },
-    { name: 'Products',     href: '/admin/products',            icon: Package },
-    { name: 'Orders',       href: '/admin/orders',              icon: ShoppingCart },
-    { name: 'Customers',    href: '/admin/customers',           icon: Users },
+    { name: 'Dashboard',          href: '/admin',                    icon: LayoutDashboard },
+    { name: 'Products',           href: '/admin/products',            icon: Package },
+    { name: 'Product Categories', href: '/admin/showcase-categories', icon: Layers },
+    { name: 'Orders',             href: '/admin/orders',              icon: ShoppingCart },
+    { name: 'Customers',          href: '/admin/customers',           icon: Users },
   ]},
   { group: 'Homepage', items: [
-    { name: 'Hero Section', href: '/admin/hero',                icon: ImageIcon },
-    { name: 'Services',     href: '/admin/services',            icon: Briefcase },
-    { name: 'Categories',   href: '/admin/showcase-categories', icon: Layers },
+    { name: 'Hero Section', href: '/admin/hero',     icon: ImageIcon },
+    { name: 'Services',     href: '/admin/services', icon: Briefcase },
   ]},
   { group: 'System',   items: [
-    { name: 'Settings',     href: '/admin/settings',            icon: Settings },
+    { name: 'Settings',     href: '/admin/settings', icon: Settings },
   ]},
 ];
 

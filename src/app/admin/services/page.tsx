@@ -5,7 +5,20 @@ import { fetchServices, saveService, deleteService, type ServiceDetail } from '@
 import { defaultServices } from '@/components/ui/WhatWeDoSection';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { CheckCircle2, Trash, Plus, Save } from 'lucide-react';
+import { CheckCircle2, Trash, Plus, Save, ChevronDown } from 'lucide-react';
+
+const SERVICE_CATEGORIES = [
+  'Interior / Exterior Design and Work',
+  '3D Model & Product Design',
+  'Digital Marketing',
+  'Advertisement',
+  'Company Branding',
+  'Website / Apps / Software',
+  'Animation',
+  'Graphic Design',
+  'Video Editing',
+  'Printing Work',
+];
 
 export default function AdminServicesPage() {
   const [services, setServices] = useState<ServiceDetail[]>([]);
@@ -18,7 +31,6 @@ export default function AdminServicesPage() {
   const loadData = async () => {
     try {
       const data = await fetchServices();
-      // If table is empty or missing, fallback to defaults for the UI
       if (data && data.length > 0) {
         setServices(data);
       } else {
@@ -65,7 +77,15 @@ export default function AdminServicesPage() {
           <h1 className="text-3xl font-bold">Manage Services</h1>
           <p className="text-muted-foreground mt-1">Update the 'What We Do' section on the homepage.</p>
         </div>
-        <Button onClick={() => setServices([{ id: `s${Date.now()}`, category: "New Service", title: "", tagline: "", image: "", description: "", includes: [""] }, ...services])}>
+        <Button onClick={() => setServices([{
+          id: `s${Date.now()}`,
+          category: SERVICE_CATEGORIES[0],
+          title: "",
+          tagline: "",
+          image: "",
+          description: "",
+          includes: [""]
+        }, ...services])}>
           <Plus className="w-4 h-4 mr-2" />
           Add New Service
         </Button>
@@ -80,9 +100,9 @@ export default function AdminServicesPage() {
                 <Button variant="outline" size="sm" onClick={() => handleSave(service)}>
                   <Save className="w-4 h-4 mr-2" /> Save
                 </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="border-red-500 text-red-500 hover:bg-red-500/10"
                   onClick={() => handleDelete(service.id)}
                 >
@@ -93,10 +113,26 @@ export default function AdminServicesPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
+
+                {/* Category dropdown */}
                 <div>
-                  <label className="text-xs font-bold text-muted-foreground uppercase mb-1 block">Tab/Pill Name</label>
-                  <Input value={service.category} onChange={e => handleUpdateField(service.id, 'category', e.target.value)} />
+                  <label className="text-xs font-bold text-muted-foreground uppercase mb-1 block">
+                    Service Category
+                  </label>
+                  <div className="relative">
+                    <select
+                      className="w-full appearance-none rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring pr-8"
+                      value={service.category}
+                      onChange={e => handleUpdateField(service.id, 'category', e.target.value)}
+                    >
+                      {SERVICE_CATEGORIES.map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                  </div>
                 </div>
+
                 <div>
                   <label className="text-xs font-bold text-muted-foreground uppercase mb-1 block">Title</label>
                   <Input value={service.title} onChange={e => handleUpdateField(service.id, 'title', e.target.value)} />
@@ -111,34 +147,39 @@ export default function AdminServicesPage() {
                 </div>
                 <div>
                   <label className="text-xs font-bold text-muted-foreground uppercase mb-1 block">Description</label>
-                  <textarea 
+                  <textarea
                     className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 min-h-[100px]"
-                    value={service.description} 
-                    onChange={e => handleUpdateField(service.id, 'description', e.target.value)} 
+                    value={service.description}
+                    onChange={e => handleUpdateField(service.id, 'description', e.target.value)}
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 <label className="text-xs font-bold text-muted-foreground uppercase mb-1 block">What's Included (Checklist)</label>
                 {service.includes.map((item, i) => (
                   <div key={i} className="flex gap-2 items-center">
                     <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
-                    <Input 
-                      value={item} 
+                    <Input
+                      value={item}
                       onChange={e => {
                         const newIncludes = [...service.includes];
                         newIncludes[i] = e.target.value;
                         handleUpdateField(service.id, 'includes', newIncludes);
-                      }} 
+                      }}
                     />
                     <Button variant="ghost" size="sm" onClick={() => {
-                        const newIncludes = service.includes.filter((_, index) => index !== i);
-                        handleUpdateField(service.id, 'includes', newIncludes);
+                      const newIncludes = service.includes.filter((_, index) => index !== i);
+                      handleUpdateField(service.id, 'includes', newIncludes);
                     }}>X</Button>
                   </div>
                 ))}
-                <Button variant="outline" size="sm" className="w-full" onClick={() => handleUpdateField(service.id, 'includes', [...service.includes, "New Item"])}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => handleUpdateField(service.id, 'includes', [...service.includes, "New Item"])}
+                >
                   + Add Checklist Item
                 </Button>
               </div>

@@ -121,12 +121,15 @@ export function LatestUploadsSection() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                         {/* Badge */}
-                        <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-white shadow-sm ${
-                          plan === 'Free' ? 'bg-[#24B86C]' :
-                          plan === 'Plus' ? 'bg-[#9333EA]' :
-                          'bg-[#F59E0B]'
-                        }`}>
-                          {plan}
+                        <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md border border-white/50 shadow-[0_2px_10px_rgba(0,0,0,0.06)]">
+                          <span className={`w-1.5 h-1.5 rounded-full ${
+                            plan === 'Free' ? 'bg-[#24B86C]' :
+                            plan === 'Plus' ? 'bg-[#9333EA]' :
+                            'bg-[#F59E0B]'
+                          }`} />
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-800">
+                            {plan}
+                          </span>
                         </div>
 
                         {/* Hover action icons */}

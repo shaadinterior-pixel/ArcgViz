@@ -1,23 +1,39 @@
--- ==============================================================================
--- MIGRATION V4: SUBSCRIPTION MODEL (FREE, PLUS, PRO)
--- ==============================================================================
+-- =============================================================
+-- Design Walla — Migration V4: Product Categories + Hero Cards Fix
+-- Run this in Supabase SQL Editor
+-- =============================================================
 
--- ─── 1. PRODUCTS TABLE ────────────────────────────────────────────────────────
--- Add the plan_tier column to specify if a product is Free, Plus, or Pro
-ALTER TABLE public.products
-ADD COLUMN IF NOT EXISTS plan_tier TEXT DEFAULT 'Free';
+-- ─── 1. ENSURE hero_content HAS hero_cards AS JSONB ─────────────────────────
+-- This fixes the save issue — hero_cards must be jsonb, not text
+ALTER TABLE public.hero_content
+  ADD COLUMN IF NOT EXISTS hero_cards JSONB DEFAULT '[]'::jsonb;
 
--- Validate the column only has valid tiers
-ALTER TABLE public.products
-ADD CONSTRAINT check_plan_tier
-CHECK (plan_tier IN ('Free', 'Plus', 'Pro'));
+-- If column existed as TEXT, cast it to jsonb (run only if you get a type error):
+-- ALTER TABLE public.hero_content ALTER COLUMN hero_cards TYPE JSONB USING hero_cards::jsonb;
 
--- ─── 2. CUSTOMERS TABLE ───────────────────────────────────────────────────────
--- Add the plan column to specify the user's subscription tier
-ALTER TABLE public.customers
-ADD COLUMN IF NOT EXISTS plan TEXT DEFAULT 'Free';
 
--- Validate the column only has valid tiers
-ALTER TABLE public.customers
-ADD CONSTRAINT check_customer_plan
-CHECK (plan IN ('Free', 'Plus', 'Pro'));
+-- ─── 2. PRODUCT CATEGORIES TABLE ────────────────────────────────────────────
+-- Simpler structure: id + title only (no showcase cards)
+CREATE TABLE IF NOT EXISTS public.categories (
+  id          TEXT PRIMARY KEY,
+  title       TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  cards       JSONB DEFAULT '[]'::jsonb
+);
+
+ALTER TABLE public.categories DISABLE ROW LEVEL SECURITY;
+
+-- ─── 3. SEED DEFAULT PRODUCT CATEGORIES ─────────────────────────────────────
+-- These replace the old hardcoded list in the codebase
+INSERT INTO public.categories (id, title) VALUES
+  ('3d-models',        '3D Models'),
+  ('interior-scenes',  'Interior Scenes'),
+  ('pbr-materials',    'PBR Materials'),
+  ('furniture',        'Furniture'),
+  ('lighting',         'Lighting'),
+  ('architecture',     'Architecture'),
+  ('characters',       'Characters'),
+  ('hdri',             'HDRI & Environment'),
+  ('textures',         'Textures'),
+  ('vfx-assets',       'VFX Assets')
+ON CONFLICT (id) DO NOTHING;

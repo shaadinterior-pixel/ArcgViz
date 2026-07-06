@@ -93,9 +93,12 @@ export default function AdminHeroPage() {
       .then(data => {
         const merged = { ...DEFAULT_HERO_CONTENT, ...data };
         setHero(merged);
-        // Load saved cards if they exist (stored as JSON string in hero_content)
+        // Load saved cards if they exist (stored as jsonb in hero_content)
         if ((merged as any).hero_cards) {
-          try { setCards(JSON.parse((merged as any).hero_cards)); } catch {}
+          try {
+            const raw = (merged as any).hero_cards;
+            setCards(Array.isArray(raw) ? raw : JSON.parse(raw));
+          } catch {}
         }
       })
       .catch(() => toast('Using default hero content', 'info'))
@@ -108,7 +111,7 @@ export default function AdminHeroPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const payload = { ...hero, hero_cards: JSON.stringify(cards) } as any;
+      const payload = { ...hero, hero_cards: cards } as any;
       await saveHeroContent(payload);
       toast('Hero content saved ✓');
     } catch {

@@ -222,17 +222,17 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
                     </div>
                     {/* Plan Badge */}
                     <div className="shrink-0 flex items-center justify-center">
-                      <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-1 rounded-md border ${
-                        result.plan === 'Pro' 
-                          ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
-                        : result.plan === 'Plus'
-                          ? 'bg-gradient-to-r from-[#24B86C] to-[#11998E] text-white border-transparent shadow-sm'
-                        : result.plan === 'Service'
-                          ? 'bg-zinc-100 text-zinc-500 border-zinc-200'
-                        : 'bg-white text-zinc-600 border-zinc-200 shadow-sm'
-                      }`}>
-                        {result.plan || 'Free'}
-                      </span>
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-50 border border-zinc-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+                        <span className={`w-1.5 h-1.5 rounded-full ${
+                          result.plan === 'Pro' ? 'bg-[#F59E0B]' :
+                          result.plan === 'Plus' ? 'bg-[#9333EA]' :
+                          result.plan === 'Service' ? 'bg-zinc-400' :
+                          'bg-[#24B86C]'
+                        }`} />
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-700">
+                          {result.plan || 'Free'}
+                        </span>
+                      </div>
                     </div>
                   </button>
                 );

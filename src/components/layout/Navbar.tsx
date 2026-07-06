@@ -51,13 +51,6 @@ export function Navbar() {
 
           {/* Desktop Actions */}
           <div className="flex items-center space-x-3">
-            <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-zinc-100">
-                <ShoppingCart className="h-5 w-5 text-zinc-700" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
-              </Button>
-            </Link>
-
             {user ? (
               <Link href="/profile" className="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 transition-colors border border-zinc-200" title="View Profile">
                 <User className="w-5 h-5 text-zinc-600" />
@@ -86,13 +79,6 @@ export function Navbar() {
           >
             {isMobileSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
           </Button>
-
-          <Link href="/cart">
-            <Button variant="ghost" size="icon" className="relative rounded-full">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
-            </Button>
-          </Link>
 
           <Button
             variant="ghost"

@@ -10,18 +10,22 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 
 // ── Static fallback (bundled at build — always available) ───────────────────
-import { fetchProducts, onStoreUpdate, type Product } from '@/lib/store';
+import { fetchProducts, fetchCategories, onStoreUpdate, type Product } from '@/lib/store';
 
-const CATEGORIES = ['All', '3D Models', 'PBR Materials', 'Interior Scenes', 'Furniture', 'Lighting'];
+const FALLBACK_CATEGORIES = ['All', '3D Models', 'PBR Materials', 'Interior Scenes', 'Furniture', 'Lighting'];
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [allCategories, setAllCategories] = useState<string[]>(FALLBACK_CATEGORIES);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const data = await fetchProducts();
+        const [data, cats] = await Promise.all([fetchProducts(), fetchCategories()]);
         setProducts(data);
+        if (cats && cats.length > 0) {
+          setAllCategories(['All', ...cats.map(c => c.title)]);
+        }
       } catch (e) {
         console.error('Failed to load products', e);
       }
@@ -113,7 +117,7 @@ export default function ProductsPage() {
           >
             <h3 className="font-bold text-[#0D1A12] text-xl mb-5">Categories</h3>
             <div className="space-y-4">
-              {CATEGORIES.map((cat) => (
+              {allCategories.map((cat) => (
                 <label key={cat} className="flex items-center space-x-3.5 cursor-pointer group">
                   <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeCategory === cat ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
                     {activeCategory === cat && <div className="w-2 h-2 bg-white rounded-[2px]" />}
@@ -187,12 +191,15 @@ export default function ProductsPage() {
                             />
                             
                             {/* Badges */}
-                            <div className={`absolute top-3 left-3 px-2.5 py-1.5 rounded-[8px] text-[11px] font-black uppercase tracking-wider text-white shadow-sm flex items-center justify-center ${
-                              (product.plan_tier || 'Free') === 'Free' ? 'bg-[#24B86C]' :
-                              (product.plan_tier || 'Free') === 'Plus' ? 'bg-[#9333EA]' :
-                              'bg-[#F59E0B]'
-                            }`}>
-                              {product.plan_tier || 'Free'}
+                            <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md border border-white/50 shadow-[0_2px_10px_rgba(0,0,0,0.06)]">
+                              <span className={`w-1.5 h-1.5 rounded-full ${
+                                (product.plan_tier || 'Free') === 'Free' ? 'bg-[#24B86C]' :
+                                (product.plan_tier || 'Free') === 'Plus' ? 'bg-[#9333EA]' :
+                                'bg-[#F59E0B]'
+                              }`} />
+                              <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-800">
+                                {product.plan_tier || 'Free'}
+                              </span>
                             </div>
                             
                             {product.rating && (

@@ -5,26 +5,27 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
-import { fetchProducts, saveProducts, deleteProduct, onStoreUpdate, generateSlug, type Product } from '@/lib/store';
+import { fetchProducts, saveProducts, deleteProduct, fetchCategories, onStoreUpdate, generateSlug, type Product } from '@/lib/store';
 import { googleDriveProvider } from '@/lib/storage/google-drive';
 
-const CATEGORIES = ['3D Models','PBR Materials','Interior Scenes','Furniture','Lighting','Architecture','Characters'];
+const FALLBACK_CATEGORIES = ['3D Models', 'PBR Materials', 'Interior Scenes', 'Furniture', 'Lighting', 'Architecture', 'Characters'];
 
-const EMPTY: Omit<Product,'id'> = {
-  name:'', slug:'', price:'₹', category:'3D Models', description:'',
+const makeEmpty = (firstCategory: string): Omit<Product,'id'> => ({
+  name:'', slug:'', price:'₹', category: firstCategory || 'General', description:'',
   image:'', thumbnail_url:'', gallery_images:[], status:'Active',
   sales:0, rating:'5.0', author:'Design Walla Studio',
   date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
   google_drive_share_link:'', google_drive_file_id:'', download_url:'', model_url:'',
   software_support:[], file_formats:[], poly_count:'', texture_resolution:'', file_size:'', features:[],
   plan_tier: 'Free',
-};
+});
 
 type DriveStatus = 'idle'|'valid'|'invalid'|'checking';
 
 export default function AdminProductsPage() {
   const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
+  const [dbCategories, setDbCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -35,8 +36,12 @@ export default function AdminProductsPage() {
   const [driveStatus, setDriveStatus] = useState<DriveStatus>('idle');
 
   const load = useCallback(async () => {
-    try { setProducts(await fetchProducts()); }
-    catch { toast('Failed to load products','error'); }
+    try {
+      const [prods, cats] = await Promise.all([fetchProducts(), fetchCategories()]);
+      setProducts(prods);
+      const titles = cats.map(c => c.title);
+      setDbCategories(titles.length > 0 ? titles : FALLBACK_CATEGORIES);
+    } catch { toast('Failed to load products','error'); }
     finally { setLoading(false); }
   }, [toast]);
 
@@ -48,7 +53,7 @@ export default function AdminProductsPage() {
       (statusFilter==='All' || p.status===statusFilter);
   });
 
-  const openNew = () => { setEditing({id:`tmp-${Date.now()}`,...EMPTY}); setDriveStatus('idle'); setIsOpen(true); };
+  const openNew = () => { setEditing({id:`tmp-${Date.now()}`,...makeEmpty(dbCategories[0])}); setDriveStatus('idle'); setIsOpen(true); };
   const openEdit = (p: Product) => { setEditing({...p}); setDriveStatus(p.google_drive_file_id?'valid':'idle'); setIsOpen(true); };
 
   const handleDelete = async (id:string) => {
@@ -273,7 +278,7 @@ export default function AdminProductsPage() {
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Category</label>
                     <select className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.category} onChange={e=>setField('category',e.target.value)}>
-                      {CATEGORIES.map(c=><option key={c}>{c}</option>)}
+                      {dbCategories.map(c=><option key={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="space-y-1.5">
