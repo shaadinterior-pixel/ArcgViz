@@ -5,7 +5,7 @@ import Image from 'next/image';
 import {
   Save, Type, Link as LinkIcon, Search, RefreshCw,
   Plus, Trash2, GripVertical, Image as ImageIcon,
-  Layout, Layers, Eye, ChevronDown, ChevronUp,
+  Layout, Layers, Eye, ChevronDown, ChevronUp, Loader2, Upload
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -78,6 +78,15 @@ export default function AdminHeroPage() {
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'headline' | 'cards' | 'search'>('headline');
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
+
+  const uploadImage = async (file: File): Promise<string> => {
+    const fd = new FormData(); fd.append('file', file);
+    const res = await fetch('/api/upload', { method: 'POST', body: fd });
+    if (!res.ok) throw new Error('Upload failed');
+    const data = await res.json();
+    return data.secure_url as string;
+  };
 
   useEffect(() => {
     fetchHeroContent()
@@ -330,12 +339,34 @@ export default function AdminHeroPage() {
 
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Image URL</label>
-                      <Input
-                        className="bg-black/20 border-white/10 focus-visible:ring-primary font-mono text-xs"
-                        value={card.img}
-                        onChange={e => updateCard(card.id, { img: e.target.value })}
-                        placeholder="https://images.unsplash.com/..."
-                      />
+                      <div className="flex items-center gap-3">
+                        <label className={`cursor-pointer flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg border border-white/10 transition-colors shrink-0 ${uploadingId === card.id ? 'opacity-50' : 'bg-white/5 hover:bg-white/10'}`}>
+                          {uploadingId === card.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                          {uploadingId === card.id ? 'Uploading…' : 'Upload Image'}
+                          <input type="file" accept="image/*" className="hidden" 
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0]; if (!file) return;
+                              setUploadingId(card.id);
+                              try {
+                                const url = await uploadImage(file);
+                                updateCard(card.id, { img: url });
+                                toast('Image uploaded ✓');
+                              } catch {
+                                toast('Upload failed', 'error');
+                              } finally {
+                                setUploadingId(null);
+                              }
+                            }}
+                            disabled={uploadingId != null}
+                          />
+                        </label>
+                        <Input
+                          className="bg-black/20 border-white/10 focus-visible:ring-primary font-mono text-xs flex-1"
+                          value={card.img}
+                          onChange={e => updateCard(card.id, { img: e.target.value })}
+                          placeholder="https://images.unsplash.com/..."
+                        />
+                      </div>
                     </div>
 
                     {/* Image preview */}
