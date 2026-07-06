@@ -1,6 +1,6 @@
 -- =============================================================
--- Design Walla — Migration V3: Homepage Content Tables
--- Run this in Supabase SQL Editor
+-- Design Walla — Migration V4: Fix RLS + Ensure Tables Exist
+-- Run this in Supabase SQL Editor to fix save errors
 -- =============================================================
 
 -- ─── 1. HERO CONTENT ───────────────────────────────────────────
@@ -27,9 +27,10 @@ CREATE TABLE IF NOT EXISTS public.hero_content (
   hero_cards          JSONB DEFAULT '[]'::jsonb
 );
 
+-- Disable RLS completely for admin tables (no public auth needed)
 ALTER TABLE public.hero_content DISABLE ROW LEVEL SECURITY;
 
--- Insert default row
+-- Insert default row if missing
 INSERT INTO public.hero_content (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
 
 
@@ -44,11 +45,47 @@ CREATE TABLE IF NOT EXISTS public.services (
   includes    JSONB DEFAULT '[]'::jsonb
 );
 
+-- Disable RLS for services
 ALTER TABLE public.services DISABLE ROW LEVEL SECURITY;
 
--- Insert default sample services
+-- Drop any existing restrictive policies that may block writes
+DROP POLICY IF EXISTS "Enable all for anon" ON public.services;
+DROP POLICY IF EXISTS "Enable read access for all users" ON public.services;
+DROP POLICY IF EXISTS "Allow anon insert" ON public.services;
+
+-- Insert default services if table is empty
 INSERT INTO public.services (id, category, title, tagline, image, description, includes) VALUES 
-('s1', 'Custom Websites', 'High-Performance Web Platforms', 'Turn visitors into clients.', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80', 'We build lightning-fast, SEO-optimized web applications tailored for modern businesses.', '["Custom UI/UX Design", "Next.js / React Development", "SEO & Performance Optimization", "CMS Integration"]'),
-('s2', '3D & ArchViz', 'Immersive 3D Visualizations', 'Bring your ideas to life.', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80', 'Stunning 3D renders, architectural visualizations, and product models.', '["Photorealistic Rendering", "Product 3D Modeling", "Architectural Visualization", "3D Animation"]'),
-('s3', 'Brand Identity', 'Premium Brand Kits', 'Stand out from the crowd.', 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80', 'Comprehensive branding packages that capture your unique market identity.', '["Logo Design & Typography", "Color Palette & Guidelines", "Social Media Kits", "Business Cards & Stationery"]')
+('s1', 'Interior / Exterior Design and Work', 'Interior / Exterior Design', 'Spaces that speak. Structures that stay.', 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80', 'End-to-end interior and exterior design & execution for homes, offices, retail, and hospitality.', '["Residential & Commercial Interiors", "Exterior Facade & Landscape", "3D Walkthroughs & Renders", "Turnkey Execution & Site Handover", "Modular Furniture & Fit-outs", "Vastu / Feng-shui Aligned Planning"]'),
+('s2', '3D Model & Product Design', '3D Modeling & Product Design', 'Render reality before it exists.', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80', 'Photorealistic 3D models and product visualizations for architecture, retail, and manufacturing.', '["Photorealistic Product Rendering", "Low-poly & High-poly Modeling", "Architectural Visualization", "3D Animation & Walkthrough", "AR/VR Ready Assets", "File Formats: BLEND, FBX, OBJ"]'),
+('s3', 'Company Branding', 'Brand Identity & Strategy', 'Your brand, unforgettable.', 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80', 'Complete brand identity systems that make you stand out in a crowded market.', '["Logo Design & Typography", "Color Palette & Brand Guide", "Social Media Kit", "Business Cards & Stationery", "Brand Strategy & Positioning", "Packaging Design"]')
 ON CONFLICT (id) DO NOTHING;
+
+
+-- ─── 3. SETTINGS ───────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.settings (
+  id                INTEGER PRIMARY KEY DEFAULT 1,
+  store_name        TEXT DEFAULT 'Design Walla',
+  support_email     TEXT DEFAULT 'support@designwalla.com',
+  currency          TEXT DEFAULT 'INR',
+  razorpay_enabled  BOOLEAN DEFAULT true,
+  stripe_enabled    BOOLEAN DEFAULT false,
+  maintenance_mode  BOOLEAN DEFAULT false,
+  hero_image_url    TEXT
+);
+
+ALTER TABLE public.settings DISABLE ROW LEVEL SECURITY;
+INSERT INTO public.settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
+
+-- ─── 4. PRODUCTS — Ensure RLS is off ────────────────────────────
+-- (This table should already exist from earlier migrations)
+ALTER TABLE IF EXISTS public.products DISABLE ROW LEVEL SECURITY;
+
+
+-- ─── 5. CATEGORIES ──────────────────────────────────────────────
+ALTER TABLE IF EXISTS public.categories DISABLE ROW LEVEL SECURITY;
+
+
+-- ─── Done ───────────────────────────────────────────────────────
+-- After running this, verify by checking:
+-- Authentication > Policies — all admin tables should show "RLS disabled"
