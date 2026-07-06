@@ -22,6 +22,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   return (
     <>
       <Navbar />
+      <div className="h-24 shrink-0" /> {/* Global spacer to offset fixed Navbar */}
       <main className="flex-1">
         {children}
       </main>
