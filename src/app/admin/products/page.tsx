@@ -398,6 +398,21 @@ export default function AdminProductsPage() {
                       </div>
                     )}
                   </div>
+                  
+                  <div className="pt-2">
+                    <label className="flex items-center gap-2 text-sm cursor-pointer">
+                      <input type="checkbox" className="rounded border-border text-primary focus:ring-primary" 
+                        checked={(editing.features??[]).includes('Disable Hover Zoom')}
+                        onChange={(e) => {
+                          const current = editing.features || [];
+                          if (e.target.checked) setField('features', [...current, 'Disable Hover Zoom']);
+                          else setField('features', current.filter(f => f !== 'Disable Hover Zoom'));
+                        }}
+                      />
+                      <span className="font-semibold text-foreground/80">Disable Hover Zoom for this product</span>
+                    </label>
+                    <p className="text-xs text-zinc-500 mt-1 pl-6">Check this if the images are low resolution to prevent pixelated zooming.</p>
+                  </div>
                 </div>
               </section>
 
