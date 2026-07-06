@@ -136,31 +136,35 @@ export default function Home() {
           <div className="animate-orb-drift absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.12)_0,transparent_70%)] blur-3xl" />
           <div className="animate-orb-drift-reverse absolute bottom-[-20%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.08)_0,transparent_70%)] blur-3xl" />
 
-          {/* Diagonal Logo Watermarks */}
+          {/* Diagonal Logo Watermarks with Gradient Mask */}
           <div 
-            className="absolute top-[-25%] right-[-15%] w-[800px] h-[800px] select-none pointer-events-none z-0 opacity-[0.05]"
+            className="absolute top-[-25%] right-[-15%] w-[800px] h-[800px] select-none pointer-events-none z-0 opacity-50 mix-blend-multiply"
             style={{ WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)', maskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)' }}
           >
             <Image
               src="/DESIGN WALLA LOGO .jpg"
               alt="Design Walla Logo Watermark"
               fill
-              className="object-contain grayscale mix-blend-multiply"
+              className="object-contain"
               priority
             />
+            {/* The diagonal gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#24B86C] via-[#11998E] to-[#000000] mix-blend-lighten" />
           </div>
           
           <div 
-            className="absolute bottom-[-25%] left-[-15%] w-[900px] h-[900px] select-none pointer-events-none z-0 opacity-[0.04]"
+            className="absolute bottom-[-25%] left-[-15%] w-[900px] h-[900px] select-none pointer-events-none z-0 opacity-40 mix-blend-multiply"
             style={{ WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)', maskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)' }}
           >
             <Image
               src="/DESIGN WALLA LOGO .jpg"
               alt="Design Walla Logo Watermark"
               fill
-              className="object-contain grayscale mix-blend-multiply"
+              className="object-contain"
               priority
             />
+            {/* The diagonal gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#24B86C] via-[#11998E] to-[#000000] mix-blend-lighten" />
           </div>
         </div>
 
