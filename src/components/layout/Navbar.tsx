@@ -46,10 +46,6 @@ export function Navbar() {
             <Link href="/pricing" className="transition-colors hover:text-primary text-foreground/80">Pricing</Link>
           </nav>
 
-          <div className="w-[240px] lg:w-[300px]">
-            <LiveSearch compact placeholder="Search..." />
-          </div>
-
           {/* Divider */}
           <div className="w-px h-5 bg-zinc-200" />
 
