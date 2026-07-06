@@ -3,10 +3,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+
 import { Search, ShoppingCart, User, Menu, X, ChevronDown, Upload, Bookmark } from 'lucide-react';
 import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { LiveSearch } from '../ui/LiveSearch';
 import { getCurrentUser, onAuthChange, type AuthUser } from '@/lib/auth';
@@ -14,9 +13,6 @@ import { getCurrentUser, onAuthChange, type AuthUser } from '@/lib/auth';
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const mobileSearchRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
@@ -24,27 +20,7 @@ export function Navbar() {
     return onAuthChange((u) => setUser(u));
   }, []);
 
-  // Auto-focus the search input when the mobile search bar opens
-  useEffect(() => {
-    if (isMobileSearchOpen) {
-      setTimeout(() => mobileSearchRef.current?.focus(), 50);
-    }
-  }, [isMobileSearchOpen]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
-      setIsMobileMenuOpen(false);
-      setIsMobileSearchOpen(false);
-      setSearchQuery('');
-    }
-  };
-
-  const closeMobileSearch = () => {
-    setIsMobileSearchOpen(false);
-    setSearchQuery('');
-  };
 
   return (
     <header suppressHydrationWarning className="fixed top-4 left-0 right-0 z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -70,17 +46,28 @@ export function Navbar() {
             <Link href="/pricing" className="transition-colors hover:text-primary text-foreground/80">Pricing</Link>
           </nav>
 
+          <div className="w-[240px] lg:w-[300px]">
+            <LiveSearch compact placeholder="Search..." />
+          </div>
+
           {/* Divider */}
           <div className="w-px h-5 bg-zinc-200" />
 
           {/* Desktop Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
+            <Link href="/cart">
+              <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-zinc-100">
+                <ShoppingCart className="h-5 w-5 text-zinc-700" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
+              </Button>
+            </Link>
+
             {user ? (
               <Link href="/profile" className="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 transition-colors border border-zinc-200" title="View Profile">
                 <User className="w-5 h-5 text-zinc-600" />
               </Link>
             ) : (
-              <Link href="/login" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors text-foreground/90">
+              <Link href="/login" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors text-foreground/90 pl-2">
                 <User className="w-4 h-4" />
                 Login
               </Link>
