@@ -21,9 +21,10 @@ type Props = {
   placeholder?: string;
   autoFocus?: boolean;
   onClose?: () => void;
+  compact?: boolean;
 };
 
-export function LiveSearch({ placeholder = 'What are you looking for today?', autoFocus, onClose }: Props) {
+export function LiveSearch({ placeholder = 'What are you looking for today?', autoFocus, onClose, compact = false }: Props) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(false);
@@ -131,20 +132,20 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
     <div className="relative w-full" style={{ isolation: 'auto' }}>
       <form onSubmit={handleSubmit} className="relative flex items-center w-full">
         {/* Left Icon: Search, Loader, or Clear */}
-        <div className="absolute left-5 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center">
+        <div className={`absolute left-5 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center ${compact ? '-ml-2' : ''}`}>
           {loading ? (
-            <Loader2 className="h-5 w-5 text-[#24B86C] animate-spin pointer-events-none" />
+            <Loader2 className={`${compact ? 'h-4 w-4' : 'h-5 w-5'} text-[#24B86C] animate-spin pointer-events-none`} />
           ) : query ? (
             <button
               type="button"
               onClick={clear}
-              className="w-8 h-8 -ml-1.5 rounded-full hover:bg-zinc-100 flex items-center justify-center transition-colors"
+              className={`${compact ? 'w-6 h-6 -ml-1' : 'w-8 h-8 -ml-1.5'} rounded-full hover:bg-zinc-100 flex items-center justify-center transition-colors`}
               aria-label="Clear search"
             >
-              <X className="h-5 w-5 text-[#6B7280]" />
+              <X className={`${compact ? 'h-4 w-4' : 'h-5 w-5'} text-[#6B7280]`} />
             </button>
           ) : (
-            <Search className="h-5 w-5 text-[#9CA3AF] pointer-events-none" />
+            <Search className={`${compact ? 'h-4 w-4' : 'h-5 w-5'} text-[#9CA3AF] pointer-events-none`} />
           )}
         </div>
 
@@ -156,7 +157,7 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
           onChange={handleChange}
           onKeyDown={handleKey}
           onFocus={() => results.length > 0 && setOpen(true)}
-          className="w-full h-[64px] pl-14 pr-16 rounded-full border border-[#E2EDE8] bg-white shadow-[0_12px_40px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_50px_rgba(0,0,0,0.16)] text-[17px] text-[#111111] placeholder:text-zinc-400 focus:outline-none focus:border-[#24B86C]/40 focus:shadow-[0_20px_80px_rgba(36,184,108,0.16)] transition-all duration-500"
+          className={`w-full ${compact ? 'h-[44px] pl-10 pr-12 text-[14px]' : 'h-[64px] pl-14 pr-16 text-[17px]'} rounded-full border border-[#E2EDE8] bg-white shadow-[0_12px_40px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_50px_rgba(0,0,0,0.16)] text-[#111111] placeholder:text-zinc-400 focus:outline-none focus:border-[#24B86C]/40 focus:shadow-[0_20px_80px_rgba(36,184,108,0.16)] transition-all duration-500`}
           placeholder={placeholder}
           autoComplete="off"
           role="combobox"
@@ -169,10 +170,10 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
         {/* Submit button — premium circular glowing button */}
         <button
           type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#24B86C] hover:bg-[#1fa35f] flex items-center justify-center shadow-[0_8px_20px_rgba(36,184,108,0.3)] hover:shadow-[0_12px_28px_rgba(36,184,108,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 z-10"
+          className={`absolute right-1.5 top-1/2 -translate-y-1/2 ${compact ? 'w-8 h-8' : 'w-12 h-12 right-2'} rounded-full bg-[#24B86C] hover:bg-[#1fa35f] flex items-center justify-center shadow-[0_8px_20px_rgba(36,184,108,0.3)] hover:shadow-[0_12px_28px_rgba(36,184,108,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 z-10`}
           aria-label="Search"
         >
-          <Search className="h-5 w-5 text-white" />
+          <Search className={`${compact ? 'h-3.5 w-3.5' : 'h-5 w-5'} text-white`} />
         </button>
       </form>
 
