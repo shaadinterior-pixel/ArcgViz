@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import ClientLayoutWrapper from "@/components/layout/ClientLayoutWrapper";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -59,11 +58,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-primary">
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
-          <Navbar />
-          <main className="flex-1">
+          <ClientLayoutWrapper>
             {children}
-          </main>
-          <Footer />
+          </ClientLayoutWrapper>
         </ThemeProvider>
       </body>
     </html>
