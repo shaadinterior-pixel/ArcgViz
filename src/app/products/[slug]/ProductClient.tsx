@@ -162,19 +162,22 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 </>
               ) : (
                 <div
-                  className="w-full h-full relative cursor-zoom-in overflow-hidden"
+                  className={`w-full h-full relative overflow-hidden ${product.features?.includes('Disable Hover Zoom') ? 'cursor-pointer' : 'cursor-zoom-in'}`}
                   onTouchStart={onTouchStart}
                   onTouchEnd={onTouchEnd}
                   onClick={() => openLightbox(activeIdx)}
                   onMouseEnter={() => {
+                    if (product.features?.includes('Disable Hover Zoom')) return;
                     const el = document.getElementById('zoom-layer');
                     if(el) el.style.opacity = '1';
                   }}
                   onMouseLeave={() => {
+                    if (product.features?.includes('Disable Hover Zoom')) return;
                     const el = document.getElementById('zoom-layer');
                     if(el) el.style.opacity = '0';
                   }}
                   onMouseMove={(e) => {
+                    if (product.features?.includes('Disable Hover Zoom')) return;
                     const el = document.getElementById('zoom-layer');
                     if(!el) return;
                     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
@@ -192,25 +195,29 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   />
                   
                   {/* Zoom Hover Layer */}
-                  <div 
-                    id="zoom-layer"
-                    className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-200"
-                    style={{
-                      backgroundImage: `url(${allImages[activeIdx]})`,
-                      backgroundSize: '250%',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: '50% 50%',
-                      backgroundColor: '#111'
-                    }}
-                  />
-                  
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                    <ZoomIn className="w-12 h-12 text-white/30 drop-shadow-lg" />
-                  </div>
-                  
-                  <button className="absolute top-4 right-4 bg-black/50 hover:bg-black/80 backdrop-blur-md rounded-full p-2.5 text-white z-20 transition-colors shadow-lg">
-                    <ZoomIn className="w-5 h-5" />
-                  </button>
+                  {!product.features?.includes('Disable Hover Zoom') && (
+                    <>
+                      <div 
+                        id="zoom-layer"
+                        className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-200"
+                        style={{
+                          backgroundImage: `url(${allImages[activeIdx]})`,
+                          backgroundSize: '250%',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: '50% 50%',
+                          backgroundColor: '#111'
+                        }}
+                      />
+                      
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                        <ZoomIn className="w-12 h-12 text-white/30 drop-shadow-lg" />
+                      </div>
+                      
+                      <button className="absolute top-4 right-4 bg-black/50 hover:bg-black/80 backdrop-blur-md rounded-full p-2.5 text-white z-20 transition-colors shadow-lg">
+                        <ZoomIn className="w-5 h-5" />
+                      </button>
+                    </>
+                  )}
                   
                   {product.model_url && (
                     <div className="absolute top-4 left-4 z-20">
