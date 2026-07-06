@@ -60,13 +60,13 @@ export const HERO_CARDS = [
 ];
 
 const CARD_SLOTS = [
-  { floatClass: 'animate-float-1', style: { top: '0%', left: '5%' }, w: 180 },
-  { floatClass: 'animate-float-2', style: { top: '2%', right: '5%' }, w: 190 },
-  { floatClass: 'animate-float-3', style: { top: '38%', left: '12%', zIndex: 30 }, w: 260 },
-  { floatClass: 'animate-float-4', style: { top: '32%', right: '-2%' }, w: 200 },
-  { floatClass: 'animate-float-5', style: { bottom: '5%', left: '0%' }, w: 170 },
-  { floatClass: 'animate-float-6', style: { bottom: '-2%', left: '42%' }, w: 180 },
-  { floatClass: 'animate-float-7', style: { bottom: '8%', right: '12%' }, w: 190 },
+  { floatClass: 'animate-float-1', style: { top: '0%', left: '0%' }, w: 160 },
+  { floatClass: 'animate-float-2', style: { top: '8%', right: '4%' }, w: 160 },
+  { floatClass: 'animate-float-3', style: { top: '36%', left: '4%', zIndex: 20 }, w: 170 },
+  { floatClass: 'animate-float-4', style: { top: '28%', left: '36%', zIndex: 30 }, w: 220 }, // Center Large (Featured)
+  { floatClass: 'animate-float-5', style: { top: '44%', right: '-2%', zIndex: 20 }, w: 150 },
+  { floatClass: 'animate-float-6', style: { bottom: '2%', left: '16%' }, w: 160 },
+  { floatClass: 'animate-float-7', style: { bottom: '5%', right: '24%' }, w: 170 },
 ];
 
 function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]; delay: number }) {
@@ -82,10 +82,10 @@ function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]
       <motion.div
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 4 + Math.random() * 2, repeat: Infinity, ease: "easeInOut" }}
-        className="bg-white/20 backdrop-blur-3xl rounded-3xl p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-white/40 hover:bg-white/40 hover:shadow-[0_20px_80px_rgba(36,184,108,0.2)] transition-all duration-500"
+        className="bg-[#24B86C]/10 backdrop-blur-xl rounded-2xl p-2.5 border border-[#24B86C]/20 shadow-[0_8px_32px_rgba(36,184,108,0.15)] hover:bg-[#24B86C]/20 hover:border-[#24B86C]/40 transition-all duration-500 relative"
       >
-        <div className={`relative w-full ${card.aspect || 'aspect-video'} rounded-2xl overflow-hidden shadow-inner`}>
-          <Image src={card.img} alt={card.label} fill className="object-cover" quality={75} sizes="300px" />
+        <div className={`relative w-full ${card.aspect || 'aspect-video'} rounded-xl overflow-hidden shadow-inner bg-black/5`}>
+          {card.img && <Image src={card.img} alt={card.label} fill className="object-cover" quality={75} sizes="300px" />}
           {card.dark && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/20">
               <div className="w-12 h-12 rounded-[14px] bg-[#9333EA] flex items-center justify-center shadow-lg">
@@ -93,9 +93,15 @@ function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]
               </div>
             </div>
           )}
+          
+          {/* Top-right green badge/icon */}
+          <div className="absolute top-2 right-2 bg-[#24B86C] text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          </div>
         </div>
-        <div className="px-3 pt-3 pb-2 text-center">
-          <span className={`font-black text-transparent bg-clip-text bg-gradient-to-br from-zinc-800 to-zinc-500 tracking-tight ${card.featured ? 'text-[15px]' : 'text-[13px]'}`}>{card.label}</span>
+        <div className="px-1 pt-3 pb-1 text-left flex items-center gap-2">
+          {/* Optional small icon next to text if wanted, but image 2 just has text */}
+          <span className={`font-bold text-zinc-800 tracking-tight leading-tight ${card.featured ? 'text-[14px]' : 'text-[12px]'}`}>{card.label}</span>
         </div>
       </motion.div>
     </motion.div>
@@ -227,9 +233,13 @@ export default function Home() {
                   if (p && p.length > 0) cards = p;
                 }
               } catch {}
-              return cards.slice(0, 7).map((card: any, i: number) => (
-                <HeroCard key={card.id || i} card={card} slot={CARD_SLOTS[i]} delay={0.2 + i * 0.08} />
-              ));
+              return cards.slice(0, 7).map((card: any, i: number) => {
+                // Ensure featured card (index 2) gets the center slot (index 3) and vice versa
+                let slotIndex = i;
+                if (i === 2) slotIndex = 3;
+                else if (i === 3) slotIndex = 2;
+                return <HeroCard key={card.id || i} card={card} slot={CARD_SLOTS[slotIndex]} delay={0.2 + i * 0.08} />;
+              });
             })()}
           </div>
 
