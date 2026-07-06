@@ -236,11 +236,11 @@ export default function AdminProductsPage() {
 
       {/* ── Modal ── */}
       {isOpen && editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-          <div className="glass-card w-full max-w-3xl rounded-2xl flex flex-col max-h-[92vh] overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5 shrink-0">
-              <h2 className="text-lg font-bold">{editing.id.startsWith('tmp-')?'Add New Product':'Edit Product'}</h2>
-              <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg text-foreground/40 hover:text-foreground hover:bg-secondary transition-colors"><X className="w-5 h-5"/></button>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="w-full max-w-3xl rounded-2xl flex flex-col max-h-[92vh] overflow-hidden bg-white dark:bg-[#0C110E] border border-gray-200 dark:border-white/10 shadow-2xl">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 shrink-0">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-foreground">{editing.id.startsWith('tmp-')?'Add New Product':'Edit Product'}</h2>
+              <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-foreground hover:bg-gray-100 dark:hover:bg-secondary transition-colors"><X className="w-5 h-5"/></button>
             </div>
 
             <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
@@ -251,22 +251,22 @@ export default function AdminProductsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2 space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Product Name *</label>
-                    <Input placeholder="Modern Minimalist Living Room" className="bg-black/20 border-white/10 focus-visible:ring-primary" value={editing.name}
+                    <Input placeholder="Modern Minimalist Living Room" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 focus-visible:ring-primary" value={editing.name}
                       onChange={e=>{setField('name',e.target.value); if(!editing.id.startsWith('tmp-')) return; setField('slug',generateSlug(e.target.value));}}/>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Slug</label>
-                    <Input placeholder="modern-living-room" className="bg-black/20 border-white/10 font-mono text-sm focus-visible:ring-primary" value={editing.slug}
+                    <Input placeholder="modern-living-room" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 font-mono text-sm focus-visible:ring-primary" value={editing.slug}
                       onChange={e=>setField('slug',e.target.value.toLowerCase().replace(/[^a-z0-9-]/g,'-'))}/>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Price *</label>
-                    <Input placeholder="₹1,999" className="bg-black/20 border-white/10 focus-visible:ring-primary" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
+                    <Input placeholder="₹1,999" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 focus-visible:ring-primary" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Plan Tier *</label>
                     <div className="relative">
-                      <select className="appearance-none w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                      <select className="appearance-none w-full bg-gray-50 border border-gray-200 dark:bg-black/20 dark:border-white/10 rounded-lg px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
                         value={editing.plan_tier || 'Free'} onChange={e=>setField('plan_tier', e.target.value as 'Free' | 'Plus' | 'Pro')}>
                         <option value="Free">Free</option>
                         <option value="Plus">Plus</option>
@@ -277,27 +277,27 @@ export default function AdminProductsPage() {
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Category</label>
-                    <select className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.category} onChange={e=>setField('category',e.target.value)}>
+                    <select className="w-full bg-gray-50 border border-gray-200 dark:bg-black/20 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.category} onChange={e=>setField('category',e.target.value)}>
                       {dbCategories.map(c=><option key={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Author</label>
-                    <Input placeholder="Design Walla Studio" className="bg-black/20 border-white/10 focus-visible:ring-primary" value={editing.author} onChange={e=>setField('author',e.target.value)}/>
+                    <Input placeholder="Design Walla Studio" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 focus-visible:ring-primary" value={editing.author} onChange={e=>setField('author',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Rating</label>
-                    <Input placeholder="4.9" className="bg-black/20 border-white/10 focus-visible:ring-primary" value={editing.rating} onChange={e=>setField('rating',e.target.value)}/>
+                    <Input placeholder="4.9" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 focus-visible:ring-primary" value={editing.rating} onChange={e=>setField('rating',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Status</label>
-                    <select className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.status} onChange={e=>setField('status',e.target.value as Product['status'])}>
+                    <select className="w-full bg-gray-50 border border-gray-200 dark:bg-black/20 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.status} onChange={e=>setField('status',e.target.value as Product['status'])}>
                       <option>Active</option><option>Draft</option>
                     </select>
                   </div>
                   <div className="sm:col-span-2 space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Description</label>
-                    <textarea rows={3} placeholder="High-quality 3D asset…" className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.description??''} onChange={e=>setField('description',e.target.value)}/>
+                    <textarea rows={3} placeholder="High-quality 3D asset…" className="w-full bg-gray-50 border border-gray-200 dark:bg-black/20 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.description??''} onChange={e=>setField('description',e.target.value)}/>
                   </div>
                 </div>
               </section>
@@ -315,7 +315,7 @@ export default function AdminProductsPage() {
                   ].map(f=>(
                     <div key={f.key} className="space-y-1.5">
                       <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">{f.label} <span className="normal-case font-normal opacity-60">{f.help}</span></label>
-                      <Input placeholder={f.placeholder} className="bg-black/20 border-white/10 focus-visible:ring-primary"
+                      <Input placeholder={f.placeholder} className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 focus-visible:ring-primary"
                         value={Array.isArray((editing as Record<string,unknown>)[f.key]) ? ((editing as Record<string,unknown>)[f.key] as string[]).join(', ') : String((editing as Record<string,unknown>)[f.key]??'')}
                         onChange={e=>{
                           const val = e.target.value;
@@ -344,7 +344,7 @@ export default function AdminProductsPage() {
                   </div>
                   <div className="sm:col-span-2 space-y-1.5 mt-2">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Other Features <span className="normal-case font-normal opacity-60">one per line</span></label>
-                    <textarea rows={3} placeholder={"Fully textured\nIncludes lighting"} className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                    <textarea rows={3} placeholder={"Fully textured\nIncludes lighting"} className="w-full bg-gray-50 border border-gray-200 dark:bg-black/20 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
                       value={(editing.features??[]).filter(f => !['Rigged', 'Animated', 'Game-Ready', '3D Printable'].includes(f)).join('\n')}
                       onChange={e=>{
                         const standard = ['Rigged', 'Animated', 'Game-Ready', '3D Printable'].filter(f => (editing.features??[]).includes(f));
@@ -361,7 +361,7 @@ export default function AdminProductsPage() {
                 <div className="space-y-3">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">3D Model URL (.glb / .gltf)</label>
-                    <Input placeholder="https://example.com/model.glb" className="bg-black/20 border-white/10 flex-1 focus-visible:ring-primary" value={editing.model_url ?? ''} onChange={e=>setField('model_url',e.target.value)}/>
+                    <Input placeholder="https://example.com/model.glb" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 flex-1 focus-visible:ring-primary" value={editing.model_url ?? ''} onChange={e=>setField('model_url',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Main Thumbnail</label>
@@ -371,7 +371,7 @@ export default function AdminProductsPage() {
                         {uploadingIdx===-1?'Uploading…':'Upload Thumbnail'}
                         <input type="file" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={uploadingIdx!=null}/>
                       </label>
-                      <Input placeholder="Or paste URL…" className="bg-black/20 border-white/10 flex-1 focus-visible:ring-primary" value={editing.thumbnail_url} onChange={e=>{setField('thumbnail_url',e.target.value); setField('image',e.target.value);}}/>
+                      <Input placeholder="Or paste URL…" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 flex-1 focus-visible:ring-primary" value={editing.thumbnail_url} onChange={e=>{setField('thumbnail_url',e.target.value); setField('image',e.target.value);}}/>
                     </div>
                     {editing.thumbnail_url && (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -410,7 +410,7 @@ export default function AdminProductsPage() {
                     <div className="flex gap-2">
                       <Input
                         placeholder="https://drive.google.com/file/d/.../view?usp=sharing"
-                        className="bg-black/20 border-white/10 flex-1 focus-visible:ring-primary"
+                        className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 flex-1 focus-visible:ring-primary"
                         value={editing.google_drive_share_link}
                         onChange={e=>{setField('google_drive_share_link',e.target.value); setDriveStatus('idle');}}
                       />
@@ -439,11 +439,11 @@ export default function AdminProductsPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">File ID</label>
-                        <Input className="bg-black/20 border-white/10 font-mono text-xs focus-visible:ring-primary" value={editing.google_drive_file_id} readOnly/>
+                        <Input className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 font-mono text-xs focus-visible:ring-primary" value={editing.google_drive_file_id} readOnly/>
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Download URL</label>
-                        <Input className="bg-black/20 border-white/10 font-mono text-xs focus-visible:ring-primary" value={editing.download_url} readOnly/>
+                        <Input className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 font-mono text-xs focus-visible:ring-primary" value={editing.download_url} readOnly/>
                       </div>
                     </div>
                   )}
@@ -451,9 +451,9 @@ export default function AdminProductsPage() {
               </section>
             </div>
 
-            <div className="px-6 py-4 border-t border-white/10 flex justify-end gap-3 shrink-0 bg-white/5">
-              <Button variant="outline" className="border-white/10 hover:bg-white/10" onClick={()=>setIsOpen(false)}>Cancel</Button>
-              <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px] font-semibold">
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-white/10 flex justify-end gap-3 shrink-0 bg-gray-50 dark:bg-white/5">
+              <Button variant="outline" className="border-gray-300 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10 text-gray-700 dark:text-foreground" onClick={()=>setIsOpen(false)}>Cancel</Button>
+              <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary/90 text-white min-w-[120px] font-semibold">
                 {saving?<><Loader2 className="w-4 h-4 mr-2 animate-spin"/>Saving…</>:'Save Product'}
               </Button>
             </div>
