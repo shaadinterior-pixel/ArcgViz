@@ -162,11 +162,28 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 </>
               ) : (
                 <div
-                  className="w-full h-full relative cursor-zoom-in"
+                  className="w-full h-full relative cursor-zoom-in overflow-hidden"
                   onTouchStart={onTouchStart}
                   onTouchEnd={onTouchEnd}
                   onClick={() => openLightbox(activeIdx)}
+                  onMouseEnter={() => {
+                    const el = document.getElementById('zoom-layer');
+                    if(el) el.style.opacity = '1';
+                  }}
+                  onMouseLeave={() => {
+                    const el = document.getElementById('zoom-layer');
+                    if(el) el.style.opacity = '0';
+                  }}
+                  onMouseMove={(e) => {
+                    const el = document.getElementById('zoom-layer');
+                    if(!el) return;
+                    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+                    const x = ((e.clientX - left) / width) * 100;
+                    const y = ((e.clientY - top) / height) * 100;
+                    el.style.backgroundPosition = `${x}% ${y}%`;
+                  }}
                 >
+                  {/* Base Image */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={allImages[activeIdx]}
@@ -174,17 +191,30 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     className="w-full h-full object-contain bg-[#111] transition-opacity duration-300"
                   />
                   
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 pointer-events-none">
-                    <ZoomIn className="w-8 h-8 text-white drop-shadow-md" />
+                  {/* Zoom Hover Layer */}
+                  <div 
+                    id="zoom-layer"
+                    className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-200"
+                    style={{
+                      backgroundImage: `url(${allImages[activeIdx]})`,
+                      backgroundSize: '250%',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: '50% 50%',
+                      backgroundColor: '#111'
+                    }}
+                  />
+                  
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                    <ZoomIn className="w-12 h-12 text-white/30 drop-shadow-lg" />
                   </div>
                   
-                  <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md rounded-full p-2 text-white pointer-events-none">
+                  <button className="absolute top-4 right-4 bg-black/50 hover:bg-black/80 backdrop-blur-md rounded-full p-2.5 text-white z-20 transition-colors shadow-lg">
                     <ZoomIn className="w-5 h-5" />
-                  </div>
+                  </button>
                   
                   {product.model_url && (
-                    <div className="absolute top-4 left-4 z-10">
-                      <button onClick={(e) => { e.stopPropagation(); setViewMode('3d'); }} className="px-4 py-2 bg-[#11998E]/20 text-[#11998E] text-xs font-bold rounded-lg border border-[#11998E]/50 backdrop-blur-md hover:bg-[#11998E]/40 transition-colors">
+                    <div className="absolute top-4 left-4 z-20">
+                      <button onClick={(e) => { e.stopPropagation(); setViewMode('3d'); }} className="px-4 py-2 bg-[#11998E]/80 hover:bg-[#11998E] text-white text-xs font-bold rounded-lg backdrop-blur-md transition-colors shadow-lg">
                         Interactive 3D View
                       </button>
                     </div>
@@ -195,13 +225,13 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     <>
                       <button
                         onClick={e => { e.stopPropagation(); setActiveIdx(i => (i - 1 + allImages.length) % allImages.length); }}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-colors border border-white/10"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-colors border border-white/10 z-20"
                       >
                         <ChevronLeft className="w-6 h-6"/>
                       </button>
                       <button
                         onClick={e => { e.stopPropagation(); setActiveIdx(i => (i + 1) % allImages.length); }}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-colors border border-white/10"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-colors border border-white/10 z-20"
                       >
                         <ChevronRight className="w-6 h-6"/>
                       </button>
