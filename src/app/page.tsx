@@ -88,7 +88,7 @@ function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]
       >
         <motion.div
           animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 4 + Math.random() * 2, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 6 + Math.random() * 3, repeat: Infinity, ease: "easeInOut" }}
           className="bg-[#24B86C]/10 backdrop-blur-xl rounded-2xl p-2.5 border border-[#24B86C]/20 shadow-[0_8px_32px_rgba(36,184,108,0.15)] hover:bg-[#24B86C]/20 hover:border-[#24B86C]/40 transition-all duration-500 relative w-full h-full"
         >
           <div className={`relative w-full ${card.aspect || 'aspect-video'} rounded-xl overflow-hidden shadow-inner bg-black/5`}>
