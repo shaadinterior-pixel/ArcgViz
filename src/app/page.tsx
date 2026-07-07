@@ -262,13 +262,14 @@ export default function Home() {
                   key={card.id || i}
                   initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 + i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  className="glass-card rounded-xl overflow-hidden shrink-0 w-36 gpu-layer"
+                  className="glass-card rounded-xl overflow-hidden shrink-0 w-36 gpu-layer flex-shrink-0"
+                  style={{ minWidth: 144 }}
                 >
                   <div className={`relative w-full ${card.aspect || 'aspect-video'}`}>
-                    <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="144px" />
+                    {card.img && <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="144px" />}
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 px-2 py-1.5 bg-white/30 backdrop-blur-md border-t border-white/20">
-                    <span className="text-xs font-bold text-[#0D1A12] drop-shadow-sm">{card.label}</span>
+                  <div className="px-2 py-1.5 bg-white/60 backdrop-blur-md border-t border-white/30">
+                    <span className="text-xs font-bold text-[#0D1A12] line-clamp-1">{card.label}</span>
                   </div>
                 </motion.div>
               ));

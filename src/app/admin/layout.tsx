@@ -35,11 +35,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [connected, setConnected] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Ping Supabase — use a simple RPC that doesn't need RLS clearance
     (async () => {
       try {
         const { error } = await supabase.from('products').select('id', { count: 'exact', head: true });
-        // PGRST116 = no rows, but that still means connected
         setConnected(!error || error.code === 'PGRST116');
       } catch {
         setConnected(false);
@@ -49,19 +47,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-background text-foreground grid grid-cols-1 md:grid-cols-[240px_1fr] relative">
+      <div className="min-h-screen bg-[#F4F6F8] text-[#111827] grid grid-cols-1 md:grid-cols-[240px_1fr] relative">
 
         {/* ── Mobile top bar ── */}
-        <div className="md:hidden flex items-center justify-between px-4 h-16 border-b border-white/10 glass sticky top-0 z-40">
-          <Link href="/admin" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center">
-              <Box className="w-4 h-4 text-primary" />
+        <div className="md:hidden flex items-center justify-between px-4 h-14 border-b border-[#E5E7EB] bg-white sticky top-0 z-40 shadow-sm">
+          <Link href="/admin" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#24B86C] to-[#11998E] flex items-center justify-center shadow">
+              <Box className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-sm tracking-tight text-foreground">Admin Panel</span>
+            <span className="font-bold text-sm text-[#111827]">Design Walla</span>
           </Link>
           <button
             onClick={() => setSidebarOpen(o => !o)}
-            className="p-2 rounded-lg hover:bg-secondary/20 transition-colors text-foreground"
+            className="p-2 rounded-lg hover:bg-[#F4F6F8] transition-colors text-[#6B7280]"
           >
             {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -69,8 +67,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Mobile Backdrop */}
         {sidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+          <div
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -79,33 +77,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <aside
           className={`
             ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
-            fixed md:sticky top-0 left-0 h-screen w-[260px] md:w-full
-            flex flex-col glass border-r border-white/10
+            fixed md:sticky top-0 left-0 h-screen w-[240px] md:w-full
+            flex flex-col bg-white border-r border-[#E5E7EB]
             transition-transform duration-300 ease-in-out z-50
           `}
         >
           {/* Logo */}
-          <div className="flex items-center gap-3 px-6 py-6 border-b border-white/10 shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary shadow-lg flex items-center justify-center">
+          <div className="flex items-center gap-3 px-5 py-5 border-b border-[#E5E7EB] shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#24B86C] to-[#11998E] shadow flex items-center justify-center">
               <Box className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-bold text-sm leading-none text-foreground">Design Walla</p>
-              <p className="text-[10px] text-foreground/50 mt-1 uppercase tracking-widest font-semibold">Admin Panel</p>
+              <p className="font-bold text-sm leading-none text-[#111827]">Design Walla</p>
+              <p className="text-[10px] text-[#9CA3AF] mt-1 uppercase tracking-widest font-semibold">Admin Panel</p>
             </div>
-            {/* Connection indicator */}
             <div
-              className="shrink-0 ml-2"
+              className="shrink-0"
               title={
                 connected === null ? 'Checking connection…'
-                  : connected ? 'Supabase connected'
-                  : 'Supabase disconnected'
+                  : connected ? 'Database connected'
+                  : 'Database disconnected'
               }
             >
               <span
-                className={`inline-block w-2.5 h-2.5 rounded-full ${
+                className={`inline-block w-2 h-2 rounded-full ${
                   connected === null ? 'bg-yellow-400 animate-pulse'
-                    : connected ? 'bg-primary shadow-[0_0_8px_rgba(36,184,108,0.5)]'
+                    : connected ? 'bg-[#24B86C]'
                     : 'bg-red-500'
                 }`}
               />
@@ -113,10 +110,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           {/* Nav */}
-          <nav className="flex-1 px-4 py-6 overflow-y-auto space-y-6 hide-scrollbar">
+          <nav className="flex-1 px-3 py-5 overflow-y-auto space-y-5 hide-scrollbar">
             {ADMIN_NAV.map(group => (
               <div key={group.group}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/40 px-3 py-2 mb-1">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF] px-3 mb-1.5">
                   {group.group}
                 </p>
                 <div className="space-y-0.5">
@@ -130,16 +127,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         href={item.href}
                         onClick={() => setSidebarOpen(false)}
                         className={`
-                          flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150
                           ${isActive
-                            ? 'bg-gradient-to-r from-primary/15 to-transparent text-primary shadow-[inset_2px_0_0_0_rgba(36,184,108,1)]'
-                            : 'text-foreground/70 hover:text-foreground hover:bg-secondary/10'
+                            ? 'bg-[#F0FDF4] text-[#24B86C] font-semibold'
+                            : 'text-[#6B7280] hover:text-[#111827] hover:bg-[#F4F6F8]'
                           }
                         `}
                       >
-                        <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-primary' : 'text-foreground/50'}`} />
-                        <span>{item.name}</span>
-                        {isActive && <ChevronRight className="w-3.5 h-3.5 ml-auto opacity-60" />}
+                        <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#24B86C]' : 'text-[#9CA3AF]'}`} />
+                        <span className="truncate">{item.name}</span>
+                        {isActive && <ChevronRight className="w-3.5 h-3.5 ml-auto text-[#24B86C] opacity-60" />}
                       </Link>
                     );
                   })}
@@ -149,18 +146,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
 
           {/* Bottom actions */}
-          <div className="p-4 border-t border-white/10 space-y-1 shrink-0 glass rounded-t-2xl">
-            {/* DB status row */}
-            <div className="flex items-center gap-2 px-3 py-2.5 text-xs text-foreground/50">
-              <span
-                className={`inline-block w-1.5 h-1.5 rounded-full shrink-0 ${
-                  connected === null ? 'bg-yellow-400 animate-pulse'
-                    : connected ? 'bg-primary'
-                    : 'bg-red-500'
-                }`}
-              />
+          <div className="p-3 border-t border-[#E5E7EB] space-y-0.5 shrink-0">
+            <div className="flex items-center gap-2 px-3 py-2 text-xs text-[#9CA3AF]">
+              <span className={`inline-block w-1.5 h-1.5 rounded-full shrink-0 ${
+                connected === null ? 'bg-yellow-400 animate-pulse'
+                  : connected ? 'bg-[#24B86C]'
+                  : 'bg-red-500'
+              }`} />
               <span className="font-medium truncate">
-                {connected === null ? 'Connecting DB…'
+                {connected === null ? 'Connecting…'
                   : connected ? 'Database Online'
                   : 'Database Offline'}
               </span>
@@ -168,14 +162,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Link
               href="/"
               target="_blank"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-foreground/70 hover:text-primary hover:bg-primary/10 transition-all duration-200"
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium text-[#6B7280] hover:text-[#24B86C] hover:bg-[#F0FDF4] transition-all duration-150"
             >
               <ExternalLink className="w-4 h-4 shrink-0" />
               <span>View Storefront</span>
             </Link>
             <Link
               href="/login"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-foreground/70 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium text-[#6B7280] hover:text-red-500 hover:bg-red-50 transition-all duration-150"
             >
               <LogOut className="w-4 h-4 shrink-0" />
               <span>Sign Out</span>
@@ -184,11 +178,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </aside>
 
         {/* ── Main content ── */}
-        <main className="min-w-0 p-4 md:p-8 overflow-x-hidden overflow-y-auto w-full h-screen relative">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none -z-10" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none -z-10" />
-          
-          <div className="max-w-7xl mx-auto w-full">
+        <main className="min-w-0 p-5 md:p-8 overflow-x-hidden overflow-y-auto w-full min-h-screen">
+          <div className="max-w-6xl mx-auto w-full">
             <ErrorBoundary>
               {children}
             </ErrorBoundary>
