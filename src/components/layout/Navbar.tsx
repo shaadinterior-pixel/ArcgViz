@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { Search, ShoppingCart, User, Menu, X, ChevronDown, Upload, Bookmark } from 'lucide-react';
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Button } from '../ui/Button';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { LiveSearch } from '../ui/LiveSearch';
@@ -14,16 +15,31 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [hidden, setHidden] = useState(false);
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (latest: number) => {
+    const previous = scrollY.getPrevious() || 0;
+    // Hide navbar if scrolled down past 150px
+    if (latest > previous && latest > 150) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+  });
 
   useEffect(() => {
     getCurrentUser().then(setUser);
     return onAuthChange((u) => setUser(u));
   }, []);
 
-
-
   return (
-    <header suppressHydrationWarning className="fixed top-4 left-0 right-0 z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <motion.header 
+      suppressHydrationWarning 
+      variants={{ visible: { y: 0 }, hidden: { y: "-150%" } }}
+      animate={hidden ? "hidden" : "visible"}
+      transition={{ duration: 0.35, ease: "easeInOut" }}
+      className="fixed top-4 left-0 right-0 z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 gpu-layer"
+    >
       <div className="h-16 flex items-center justify-between bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 border border-[#E2EDE8] rounded-full px-6 shadow-[0_4px_24px_rgba(36,184,108,0.08)]">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3 shrink-0">
@@ -128,6 +144,6 @@ export function Navbar() {
           </nav>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

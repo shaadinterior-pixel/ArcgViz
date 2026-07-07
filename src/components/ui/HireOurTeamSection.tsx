@@ -21,7 +21,13 @@ export default function HireOurTeamSection() {
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           
-          <div className="flex-1 space-y-6">
+          <motion.div 
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex-1 space-y-6 gpu-layer"
+          >
             <div className="inline-flex items-center gap-2 bg-[#24B86C]/10 text-[#24B86C] px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-[#24B86C]/20">
               <span className="w-2 h-2 rounded-full bg-[#24B86C] animate-pulse"></span>
               Available for Projects
@@ -41,8 +47,8 @@ export default function HireOurTeamSection() {
                   key={i} 
                   initial={{ opacity: 0, x: -10 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ delay: i * 0.15, duration: 0.5, ease: "easeOut" }}
                   className="flex items-start gap-3 text-zinc-700"
                 >
                   <CheckCircle2 className="w-5 h-5 text-[#24B86C] shrink-0 mt-0.5" />
@@ -64,9 +70,15 @@ export default function HireOurTeamSection() {
                 </Button>
               </Link>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="flex-1 w-full">
+          <motion.div 
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="flex-1 w-full gpu-layer"
+          >
             <div className="relative aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/20">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
@@ -89,7 +101,7 @@ export default function HireOurTeamSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </div>

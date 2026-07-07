@@ -23,9 +23,9 @@ export function HowWeWorkSection() {
         <div className="glass-card rounded-[3rem] p-8 md:p-16 border border-[#E2EDE8]/50 shadow-[0_8px_40px_rgba(36,184,108,0.04)]">
           {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.5 }}
-          className="text-center mb-20"
+          initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center mb-20 gpu-layer"
         >
           <div className="inline-block px-4 py-1.5 rounded-full bg-[#24B86C]/10 mb-6">
             <span className="text-[#24B86C] font-semibold text-sm tracking-wide">Our Process</span>
@@ -46,13 +46,13 @@ export function HowWeWorkSection() {
               return (
                 <motion.div
                   key={step.id}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-60px' }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="flex flex-col items-center text-center group"
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex flex-col items-center text-center group gpu-layer"
                 >
-                  <div className="w-24 h-24 rounded-full bg-white border-[6px] border-[#F8FAF9] shadow-[0_0_30px_rgba(36,184,108,0.15)] flex items-center justify-center mb-6 group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(36,184,108,0.3)] transition-all duration-300">
+                  <div className="w-24 h-24 rounded-full bg-white border-[6px] border-[#F8FAF9] shadow-[0_0_30px_rgba(36,184,108,0.15)] flex items-center justify-center mb-6 group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(36,184,108,0.3)] transition-all duration-500 will-change-transform">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#24B86C] to-[#11998E] flex items-center justify-center shadow-inner">
                       <Icon className="w-7 h-7 text-white" />
                     </div>

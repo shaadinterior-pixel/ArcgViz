@@ -44,9 +44,9 @@ export function LatestUploadsSection() {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }} transition={{ duration: 0.5 }}
-          className="text-center mb-10"
+          initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center mb-10 gpu-layer"
         >
           <span className="inline-block text-[#24B86C] text-xs font-bold tracking-[0.25em] uppercase mb-4">TRENDING</span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#0D1A12] tracking-tight leading-tight">
@@ -100,11 +100,11 @@ export function LatestUploadsSection() {
               return (
                 <motion.div
                   key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
-                  transition={{ delay: (index % 8) * 0.06, duration: 0.4 }}
-                  className="break-inside-avoid mb-4"
+                  transition={{ delay: (index % 8) * 0.08, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  className="break-inside-avoid mb-4 gpu-layer"
                 >
                   <Link href={`/products/${product.id}`} className="block group">
                     <div className="relative rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 shadow-sm border border-[#E2EDE8]/50">
@@ -172,9 +172,9 @@ export function LatestUploadsSection() {
 
         {/* View all CTA */}
         <motion.div
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-          viewport={{ once: true }} transition={{ delay: 0.3 }}
-          className="text-center mt-12"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center mt-12 gpu-layer"
         >
           <Link
             href={activeFilter === 'All' ? '/products' : `/products?category=${encodeURIComponent(activeFilter)}`}

@@ -41,11 +41,11 @@ export function ContactSection() {
           
           {/* Left Column - Info */}
           <motion.div 
-            initial={{ opacity: 0, x: -30 }} 
+            initial={{ opacity: 0, x: -40 }} 
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }} 
-            transition={{ duration: 0.6 }}
-            className="flex flex-col space-y-8"
+            viewport={{ once: true, margin: "-50px" }} 
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col space-y-8 gpu-layer"
           >
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-200 bg-white shadow-sm mb-6">
@@ -87,10 +87,11 @@ export function ContactSection() {
 
           {/* Right Column - Form */}
           <motion.div 
-            initial={{ opacity: 0, y: 30 }} 
+            initial={{ opacity: 0, y: 40 }} 
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} 
-            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true, margin: "-50px" }} 
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="gpu-layer"
           >
             <div className="bg-white rounded-[2.5rem] p-10 shadow-[0_20px_80px_rgba(0,0,0,0.06)] border border-black/[0.02]">
               <h3 className="text-[26px] font-bold text-[#111111] mb-1">Quick quote</h3>

@@ -127,7 +127,13 @@ export function WhatWeDoSection() {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header Row */}
-        <div className="flex flex-col gap-6 mb-12">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col gap-6 mb-12 gpu-layer"
+        >
           <div>
             <div className="inline-block px-4 py-1.5 rounded-full bg-white border border-[#E2EDE8] shadow-sm mb-4">
                <span className="text-[#24B86C] font-semibold text-xs tracking-[0.2em] uppercase">WHAT WE DO</span>
@@ -140,7 +146,7 @@ export function WhatWeDoSection() {
               Tap any service below to reveal its full details — projects, deliverables and how we work.
             </p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Pills Navigation */}
         <motion.div
@@ -169,7 +175,13 @@ export function WhatWeDoSection() {
         </motion.div>
 
         {/* Content Area */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8 gpu-layer"
+        >
           
           {/* Left: Image Card */}
           <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.06)]">
@@ -246,7 +258,7 @@ export function WhatWeDoSection() {
             </AnimatePresence>
           </div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );

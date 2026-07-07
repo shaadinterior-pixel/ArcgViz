@@ -50,7 +50,13 @@ export function TestimonialSection() {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.04)_0,transparent_60%)] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.04)_0,transparent_60%)] pointer-events-none" />
 
-      <div className="container mx-auto px-4 relative z-10 text-center mb-16">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="container mx-auto px-4 relative z-10 text-center mb-16 gpu-layer"
+      >
         <span className="inline-block px-4 py-1.5 rounded-full bg-[#24B86C]/10 text-[#24B86C] text-xs font-bold tracking-widest uppercase mb-4">
           Wall of Love
         </span>
@@ -60,7 +66,7 @@ export function TestimonialSection() {
         <p className="text-zinc-500 text-lg max-w-2xl mx-auto">
           Don't just take our word for it. Here is what our happy consumers have to say about their experience with Design Walla.
         </p>
-      </div>
+      </motion.div>
 
       <div className="relative w-full overflow-hidden pb-12 flex">
         {/* Left/Right Fade masks for the slider */}

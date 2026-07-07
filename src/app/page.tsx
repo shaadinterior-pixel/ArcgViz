@@ -175,7 +175,7 @@ export default function Home() {
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex flex-col gap-6">
 
             {/* Platform badge */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }} className="gpu-layer">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#E2EDE8] text-zinc-600 text-xs font-bold tracking-widest uppercase shadow-sm">
                 <span className="w-2 h-2 rounded-full bg-[#24B86C] animate-pulse" /> All-in-One Creative Platform
               </span>
@@ -183,9 +183,9 @@ export default function Home() {
 
             {/* Headline */}
             <motion.h1
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05]"
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05] gpu-layer"
             >
               One Platform. <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E]">
@@ -196,18 +196,18 @@ export default function Home() {
 
             {/* Sub */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[17px] font-medium text-zinc-600 max-w-[540px] leading-relaxed"
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[17px] font-medium text-zinc-600 max-w-[540px] leading-relaxed gpu-layer"
             >
               The ultimate digital ecosystem. Elevate your brand with premium Website Templates, Motion Design, Interior Renders, and high-end 3D Assets.
             </motion.p>
 
             {/* CTAs */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row flex-wrap xl:flex-nowrap items-start sm:items-center gap-3 mt-4"
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col sm:flex-row flex-wrap xl:flex-nowrap items-start sm:items-center gap-3 mt-4 gpu-layer"
             >
               <Link href="/products">
                 <Button className="h-12 px-6 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-[14px] shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(17,153,142,0.4)] border border-white/20 whitespace-nowrap">
@@ -247,7 +247,7 @@ export default function Home() {
             })()}
           </div>
 
-          {/* RIGHT — Mobile scrollable strip */}
+            {/* RIGHT — Mobile scrollable strip */}
           <div className="lg:hidden flex gap-3 overflow-x-auto hide-scrollbar pb-2 -mx-4 px-4">
             {(() => {
               let cards = HERO_CARDS;
@@ -260,9 +260,9 @@ export default function Home() {
               return cards.slice(0, 4).map((card: any, i: number) => (
                 <motion.div
                   key={card.id || i}
-                  initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  className="glass-card rounded-xl overflow-hidden shrink-0 w-36"
+                  initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  className="glass-card rounded-xl overflow-hidden shrink-0 w-36 gpu-layer"
                 >
                   <div className={`relative w-full ${card.aspect || 'aspect-video'}`}>
                     <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="144px" />
