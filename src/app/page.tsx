@@ -142,7 +142,7 @@ export default function Home() {
             style={{ WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)', maskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)' }}
           >
             <Image
-              src="/DESIGN WALLA LOGO .jpg"
+              src="/DESIGN_WALLA_LOGO_-removebg-preview.png"
               alt="Design Walla Logo Watermark"
               fill
               className="object-contain"
@@ -157,7 +157,7 @@ export default function Home() {
             style={{ WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)', maskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)' }}
           >
             <Image
-              src="/DESIGN WALLA LOGO .jpg"
+              src="/DESIGN_WALLA_LOGO_-removebg-preview.png"
               alt="Design Walla Logo Watermark"
               fill
               className="object-contain"
