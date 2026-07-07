@@ -80,29 +80,37 @@ function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]
       style={{ ...slot.style, width: slot.w, zIndex: (slot.style as any).zIndex || 20 }}
     >
       <motion.div
-        animate={{ y: [0, -8, 0] }}
-        transition={{ duration: 4 + Math.random() * 2, repeat: Infinity, ease: "easeInOut" }}
-        className="bg-[#24B86C]/10 backdrop-blur-xl rounded-2xl p-2.5 border border-[#24B86C]/20 shadow-[0_8px_32px_rgba(36,184,108,0.15)] hover:bg-[#24B86C]/20 hover:border-[#24B86C]/40 transition-all duration-500 relative"
+        drag
+        dragSnapToOrigin={true}
+        dragElastic={0.3}
+        whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
+        className="relative cursor-grab active:cursor-grabbing w-full h-full"
       >
-        <div className={`relative w-full ${card.aspect || 'aspect-video'} rounded-xl overflow-hidden shadow-inner bg-black/5`}>
-          {card.img && <Image src={card.img} alt={card.label} fill className="object-cover" quality={75} sizes="300px" />}
-          {card.dark && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-              <div className="w-12 h-12 rounded-[14px] bg-[#9333EA] flex items-center justify-center shadow-lg">
-                <Play className="w-5 h-5 text-white fill-white ml-1" />
+        <motion.div
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 4 + Math.random() * 2, repeat: Infinity, ease: "easeInOut" }}
+          className="bg-[#24B86C]/10 backdrop-blur-xl rounded-2xl p-2.5 border border-[#24B86C]/20 shadow-[0_8px_32px_rgba(36,184,108,0.15)] hover:bg-[#24B86C]/20 hover:border-[#24B86C]/40 transition-all duration-500 relative w-full h-full"
+        >
+          <div className={`relative w-full ${card.aspect || 'aspect-video'} rounded-xl overflow-hidden shadow-inner bg-black/5`}>
+            {card.img && <Image src={card.img} alt={card.label} fill className="object-cover pointer-events-none" quality={75} sizes="300px" priority />}
+            {card.dark && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
+                <div className="w-12 h-12 rounded-[14px] bg-[#9333EA] flex items-center justify-center shadow-lg">
+                  <Play className="w-5 h-5 text-white fill-white ml-1" />
+                </div>
               </div>
+            )}
+            
+            {/* Top-right green badge/icon */}
+            <div className="absolute top-2 right-2 bg-[#24B86C] text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md pointer-events-none">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
             </div>
-          )}
-          
-          {/* Top-right green badge/icon */}
-          <div className="absolute top-2 right-2 bg-[#24B86C] text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
           </div>
-        </div>
-        <div className="px-1 pt-3 pb-1 text-left flex items-center gap-2">
-          {/* Optional small icon next to text if wanted, but image 2 just has text */}
-          <span className={`font-bold text-zinc-800 tracking-tight leading-tight ${card.featured ? 'text-[14px]' : 'text-[12px]'}`}>{card.label}</span>
-        </div>
+          <div className="px-1 pt-3 pb-1 text-left flex items-center gap-2 pointer-events-none">
+            {/* Optional small icon next to text if wanted, but image 2 just has text */}
+            <span className={`font-bold text-zinc-800 tracking-tight leading-tight ${card.featured ? 'text-[14px]' : 'text-[12px]'}`}>{card.label}</span>
+          </div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
