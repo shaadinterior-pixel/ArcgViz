@@ -4,8 +4,17 @@ import React from 'react';
 import { Sparkles } from 'lucide-react';
 
 const categories = [
-  "Models", "Web & Apps", "Motion", "Printing", "Digital Products",
-  "Marketing", "Animation", "Packaging", "Interior", "Branding", "3D"
+  "Interior / Exterior Design and Work",
+  "3D Model & Product Design",
+  "Digital Marketing",
+  "Advertisement",
+  "Company Branding",
+  "Website / Apps / Software",
+  "Animation",
+  "Motion Graphic",
+  "Graphic Design",
+  "Video Editing",
+  "Printing Work"
 ];
 
 // Duplicate the items enough times to create a seamless infinite loop
