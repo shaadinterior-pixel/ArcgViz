@@ -18,7 +18,7 @@ export function ContactSection() {
   };
 
   const getWhatsAppLink = () => {
-    const waNumber = '919999999999'; 
+    const waNumber = '918969688709'; 
     const text = `Hi Design Walla! 👋\n\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}\n*Service Required:* ${formData.service}\n\n*Message:*\n${formData.message}`;
     return `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
   };
@@ -67,7 +67,7 @@ export function ContactSection() {
                 <div className="w-10 h-10 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0">
                   <Phone className="w-4 h-4 text-[#24B86C]" />
                 </div>
-                <span className="font-bold text-[15px] text-zinc-800">+91 7970738609</span>
+                <span className="font-bold text-[15px] text-zinc-800">+91 8969688709</span>
               </div>
               <div className="flex items-center gap-4 p-4 rounded-3xl bg-white border border-zinc-100 shadow-sm transition-all hover:shadow-md">
                 <div className="w-10 h-10 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0">

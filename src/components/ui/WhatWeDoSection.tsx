@@ -247,13 +247,18 @@ export function WhatWeDoSection() {
                   ))}
                 </ul>
 
-                <Link href={`/products?category=${encodeURIComponent(activeService.category)}`} className="w-full block">
+                <a
+                  href={`https://wa.me/918969688709?text=${encodeURIComponent(`Hi Design Walla! 👋\n\nI am interested in your *${activeService.category}* services.\nSpecifically looking to start a *${activeService.title}* project.\n\nWebsite Link: https://designwalla.com\n\nPlease let me know how we can proceed!`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full block"
+                >
                   <button className="relative overflow-hidden w-full bg-[#111111] text-white font-bold py-4 rounded-xl flex items-center justify-between px-6 transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] group hover:bg-[#24B86C] border-0">
                     <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-shine" />
                     <span className="relative z-10">Start a {activeService.category} project</span>
                     <ArrowUpRight className="relative z-10 w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
                   </button>
-                </Link>
+                </a>
               </motion.div>
             </AnimatePresence>
           </div>
