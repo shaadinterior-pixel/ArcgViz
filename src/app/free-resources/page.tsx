@@ -101,7 +101,6 @@ export default function FreeResourcesPage() {
                           <h3 className="font-bold text-[#0D1A12] text-sm line-clamp-1 mb-1">{product.name}</h3>
                           <div className="flex items-center justify-between text-xs text-[#6B7280]">
                             <span className="capitalize">{product.category}</span>
-                            <span className="flex items-center gap-1"><Star className="w-3 h-3 fill-[#24B86C] text-[#24B86C]" /> {product.rating || '4.9'}</span>
                           </div>
                         </div>
                       </div>

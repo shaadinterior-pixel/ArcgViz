@@ -361,11 +361,6 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                         </div>
                         <div className="p-4 flex flex-col gap-1">
                           <h3 className="text-[13px] font-bold text-[#111111] line-clamp-1 group-hover:text-[#24B86C] transition-colors">{p.name}</h3>
-                          <div className="flex items-center gap-2 mb-2">
-                            <Star className="w-3 h-3 fill-[#FFD700] text-[#FFD700]"/>
-                            <span className="text-xs font-bold text-zinc-600">5.0</span>
-                            <span className="text-xs text-zinc-400">(2)</span>
-                          </div>
                           <div className="h-px bg-[#E2EDE8] my-1" />
                           <div className="flex items-center gap-1 mt-1">
                             <span className="text-[10px] text-zinc-500">From</span>
@@ -395,14 +390,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 </div>
               </div>
               
-              {/* Rating */}
-              <div className="flex items-center gap-2 -mt-2">
-                <span className="font-black text-sm text-[#111111]">5.0</span>
-                <div className="flex text-[#FFD700]">
-                  <Star className="w-3.5 h-3.5 fill-current"/><Star className="w-3.5 h-3.5 fill-current"/><Star className="w-3.5 h-3.5 fill-current"/><Star className="w-3.5 h-3.5 fill-current"/><Star className="w-3.5 h-3.5 fill-current"/>
-                </div>
-                <span className="text-zinc-500 text-xs font-semibold hover:underline cursor-pointer">(6)</span>
-              </div>
+              {/* Rating removed */}
               
               <div className="h-px bg-[#E2EDE8] w-full" />
               

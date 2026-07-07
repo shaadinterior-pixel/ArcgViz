@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { Search, ShoppingCart, User, Menu, X, ChevronDown, Upload, Bookmark } from 'lucide-react';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Button } from '../ui/Button';
-import { ThemeToggle } from '../theme/ThemeToggle';
 import { LiveSearch } from '../ui/LiveSearch';
 import { getCurrentUser, onAuthChange, type AuthUser } from '@/lib/auth';
 
@@ -131,10 +130,6 @@ export function Navbar() {
         }`}
       >
         <div className="border border-border/40 bg-background/95 backdrop-blur px-4 py-6 space-y-4 shadow-lg rounded-3xl">
-          <div className="flex justify-between items-center px-1">
-            <span className="text-sm font-medium">Theme</span>
-            <ThemeToggle />
-          </div>
           <nav className="flex flex-col space-y-3 pt-2">
             <Link href="/" className="text-sm font-medium py-1" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
             <Link href="/products" className="text-sm font-medium py-1" onClick={() => setIsMobileMenuOpen(false)}>Marketplace</Link>

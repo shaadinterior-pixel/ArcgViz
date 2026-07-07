@@ -150,7 +150,6 @@ export default function AdminOverview() {
                 <th className="text-left px-6 py-3 hidden sm:table-cell">Category</th>
                 <th className="text-left px-6 py-3">Price</th>
                 <th className="text-left px-6 py-3">Sales</th>
-                <th className="text-left px-6 py-3 hidden md:table-cell">Rating</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#F3F4F6]">
@@ -168,16 +167,11 @@ export default function AdminOverview() {
                   <td className="px-6 py-4 text-[#9CA3AF] hidden sm:table-cell">{p.category}</td>
                   <td className="px-6 py-4 font-bold text-[#24B86C]">{p.price}</td>
                   <td className="px-6 py-4 font-semibold text-[#111827]">{p.sales}</td>
-                  <td className="px-6 py-4 hidden md:table-cell">
-                    <span className="flex items-center gap-1.5 text-[#6B7280] font-semibold bg-amber-50 text-amber-600 w-max px-2.5 py-1 rounded-md text-xs">
-                      <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" /> {p.rating}
-                    </span>
-                  </td>
                 </tr>
               ))}
               {topProducts.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-[#9CA3AF]">No products yet.</td>
+                  <td colSpan={4} className="px-6 py-12 text-center text-[#9CA3AF]">No products yet.</td>
                 </tr>
               )}
             </tbody>
