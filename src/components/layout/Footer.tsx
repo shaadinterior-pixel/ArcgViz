@@ -55,7 +55,7 @@ export function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-3 mb-6">
               <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm border border-[#E2EDE8]">
-                <Image src="/DESIGN WALLA LOGO .jpg" alt="Design Walla" fill className="object-cover" />
+                <Image src="/DESIGN_WALLA_LOGO_-removebg-preview.png" alt="Design Walla" fill className="object-contain" />
               </div>
               <div>
                 <p className="font-black text-lg leading-none text-[#0D1A12]">
