@@ -109,7 +109,7 @@ export default function AdminHeroPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const payload = { ...hero, hero_cards: cards } as any;
+      const payload = { ...hero, hero_cards: JSON.stringify(cards) } as any;
       await saveHeroContent(payload);
       toast('Hero content saved ✓');
     } catch {

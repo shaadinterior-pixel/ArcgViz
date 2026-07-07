@@ -232,9 +232,10 @@ export default function Home() {
             {(() => {
               let cards = HERO_CARDS;
               try {
-                if ((heroContent as any).hero_cards) {
-                  const p = JSON.parse((heroContent as any).hero_cards);
-                  if (p && p.length > 0) cards = p;
+                const raw = (heroContent as any).hero_cards;
+                if (raw) {
+                  const parsed = Array.isArray(raw) ? raw : JSON.parse(raw);
+                  if (parsed && parsed.length > 0) cards = parsed;
                 }
               } catch {}
               return cards.slice(0, 7).map((card: any, i: number) => {
@@ -252,9 +253,10 @@ export default function Home() {
             {(() => {
               let cards = HERO_CARDS;
               try {
-                if ((heroContent as any).hero_cards) {
-                  const p = JSON.parse((heroContent as any).hero_cards);
-                  if (p && p.length > 0) cards = p;
+                const raw = (heroContent as any).hero_cards;
+                if (raw) {
+                  const parsed = Array.isArray(raw) ? raw : JSON.parse(raw);
+                  if (parsed && parsed.length > 0) cards = parsed;
                 }
               } catch {}
               return cards.slice(0, 4).map((card: any, i: number) => (
