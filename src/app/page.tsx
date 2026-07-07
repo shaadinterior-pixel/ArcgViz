@@ -188,7 +188,7 @@ export default function Home() {
               className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05] gpu-layer"
             >
               One Platform. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E] pr-2">
                 Infinite Creative
               </span><br/>
               Possibilities.
