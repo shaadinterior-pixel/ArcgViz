@@ -191,7 +191,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   <img
                     src={allImages[activeIdx]}
                     alt={product.name}
-                    className="w-full h-full object-contain bg-[#111] transition-opacity duration-300"
+                    className="w-full h-full object-cover bg-zinc-100 transition-opacity duration-300"
                   />
                   
                   {/* Zoom Hover Layer */}
@@ -205,7 +205,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                           backgroundSize: '250%',
                           backgroundRepeat: 'no-repeat',
                           backgroundPosition: '50% 50%',
-                          backgroundColor: '#111'
+                          backgroundColor: '#f4f4f5'
                         }}
                       />
                       
@@ -260,7 +260,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     }`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={img} alt={`Preview ${i + 1}`} loading="lazy" className="w-full h-full object-cover bg-black"/>
+                    <img src={img} alt={`Preview ${i + 1}`} loading="lazy" className="w-full h-full object-cover bg-zinc-100"/>
                   </button>
                 ))}
               </div>
