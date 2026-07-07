@@ -40,10 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# OpenNext
+# OpenNext build artifacts (Cloudflare adapter - no longer used but ignore artifacts)
 .open-next
 
-# wrangler files
-.wrangler
-.dev.vars*
-!.dev.vars.example
+# Wrangler / Cloudflare (no longer used)
+# .wrangler
+# .dev.vars*
