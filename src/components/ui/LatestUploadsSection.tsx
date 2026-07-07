@@ -52,19 +52,19 @@ export function LatestUploadsSection() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#0D1A12] tracking-tight leading-tight">
             Freshly dropped.<br className="hidden sm:block" /> Endlessly scrollable.
           </h2>
-          <p className="text-[#6B7280] mt-4 text-base max-w-md mx-auto">
-            Freepik-style browsing, curated by our design team.
+          <p className="text-zinc-500 font-medium max-w-2xl mx-auto text-lg">
+            Design Walla style browsing, curated by our design team.
           </p>
         </motion.div>
 
         {/* Filter tabs + View All */}
-        <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
-          <div className="flex gap-2 flex-wrap">
+        <div className="flex items-center justify-between mb-8 gap-4">
+          <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-2 w-full pr-4">
             {dynamicTabs.map((cat, i) => (
               <Link 
                 key={cat} 
                 href={cat === 'All' ? '/products' : `/products?category=${encodeURIComponent(cat)}`}
-                className="block"
+                className="block shrink-0"
               >
                 <motion.div
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}

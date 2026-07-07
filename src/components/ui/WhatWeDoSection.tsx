@@ -162,7 +162,7 @@ export function WhatWeDoSection() {
               <button
                 key={service.id}
                 onClick={() => setActiveTab(service.id)}
-                className={`whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border ${
+                className={`shrink-0 whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border ${
                   isActive 
                     ? 'bg-[#24B86C] border-transparent text-white shadow-[0_8px_20px_rgba(36,184,108,0.25)]' 
                     : 'bg-white backdrop-blur-md border-[#E2EDE8] text-zinc-500 hover:border-[#24B86C]/40 hover:text-[#24B86C]'
