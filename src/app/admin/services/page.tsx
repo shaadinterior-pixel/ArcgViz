@@ -5,7 +5,7 @@ import { fetchServices, saveService, deleteService, type ServiceDetail } from '@
 import { defaultServices } from '@/components/ui/WhatWeDoSection';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { CheckCircle2, Trash, Plus, Save, ChevronDown } from 'lucide-react';
+import { CheckCircle2, Trash, Plus, Save, ChevronDown, Upload, Loader2 } from 'lucide-react';
 
 const SERVICE_CATEGORIES = [
   'Interior / Exterior Design and Work',
@@ -23,6 +23,15 @@ const SERVICE_CATEGORIES = [
 export default function AdminServicesPage() {
   const [services, setServices] = useState<ServiceDetail[]>([]);
   const [loading, setLoading] = useState(true);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
+
+  const uploadImage = async (file: File): Promise<string> => {
+    const fd = new FormData(); fd.append('file', file);
+    const res = await fetch('/api/upload', { method: 'POST', body: fd });
+    if (!res.ok) throw new Error('Upload failed');
+    const data = await res.json();
+    return data.secure_url as string;
+  };
 
   useEffect(() => {
     loadData();
@@ -142,8 +151,34 @@ export default function AdminServicesPage() {
                   <Input value={service.tagline} onChange={e => handleUpdateField(service.id, 'tagline', e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-muted-foreground uppercase mb-1 block">Image URL</label>
-                  <Input value={service.image} onChange={e => handleUpdateField(service.id, 'image', e.target.value)} />
+                  <label className="text-xs font-bold text-muted-foreground uppercase mb-1 block">Image</label>
+                  <div className="flex gap-2">
+                    <Input className="flex-1" value={service.image} onChange={e => handleUpdateField(service.id, 'image', e.target.value)} placeholder="URL or upload ->" />
+                    <Button type="button" variant="outline" disabled={uploadingId === service.id} className="relative overflow-hidden w-28 shrink-0">
+                      {uploadingId === service.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Upload className="w-4 h-4 mr-2" /> Upload</>}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        disabled={uploadingId === service.id}
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          try {
+                            setUploadingId(service.id);
+                            const url = await uploadImage(file);
+                            handleUpdateField(service.id, 'image', url);
+                          } catch (error) {
+                            alert("Failed to upload image");
+                          } finally {
+                            setUploadingId(null);
+                            // reset file input
+                            e.target.value = '';
+                          }
+                        }}
+                      />
+                    </Button>
+                  </div>
                 </div>
                 <div>
                   <label className="text-xs font-bold text-muted-foreground uppercase mb-1 block">Description</label>
