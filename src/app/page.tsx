@@ -138,29 +138,33 @@ export default function Home() {
 
           {/* Diagonal Logo Watermarks with Gradient Mask */}
           <div 
-            className="absolute top-[-5%] right-[-30%] w-[120vw] h-[120vw] sm:w-[500px] sm:h-[500px] lg:top-[-25%] lg:right-[-15%] lg:w-[800px] lg:h-[800px] select-none pointer-events-none z-0 opacity-15 lg:opacity-30"
+            className="absolute top-[-5%] right-[-30%] w-[120vw] h-[120vw] sm:w-[500px] sm:h-[500px] lg:top-[-25%] lg:right-[-15%] lg:w-[800px] lg:h-[800px] select-none pointer-events-none z-0 opacity-15 lg:opacity-50 mix-blend-multiply"
             style={{ WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)', maskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)' }}
           >
             <Image
-              src="/DESIGN_WALLA_LOGO_-removebg-preview.png"
+              src="/DESIGN WALLA LOGO .jpg"
               alt="Design Walla Logo Watermark"
               fill
               className="object-contain"
               priority
             />
+            {/* The diagonal gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#24B86C] via-[#11998E] to-[#000000] mix-blend-lighten" />
           </div>
           
           <div 
-            className="hidden sm:block absolute bottom-[-25%] left-[-15%] lg:w-[900px] lg:h-[900px] sm:w-[600px] sm:h-[600px] select-none pointer-events-none z-0 opacity-20"
+            className="hidden sm:block absolute bottom-[-25%] left-[-15%] lg:w-[900px] lg:h-[900px] sm:w-[600px] sm:h-[600px] select-none pointer-events-none z-0 opacity-40 mix-blend-multiply"
             style={{ WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)', maskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)' }}
           >
             <Image
-              src="/DESIGN_WALLA_LOGO_-removebg-preview.png"
+              src="/DESIGN WALLA LOGO .jpg"
               alt="Design Walla Logo Watermark"
               fill
               className="object-contain"
               priority
             />
+            {/* The diagonal gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#24B86C] via-[#11998E] to-[#000000] mix-blend-lighten" />
           </div>
         </div>
 
