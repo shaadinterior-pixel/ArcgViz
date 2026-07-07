@@ -1,88 +1,87 @@
 import React from 'react';
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 export const metadata = {
   title: 'Privacy Policy | Design Walla',
-  description: 'Our privacy policy and data practices.',
+  description: 'Privacy policy for Design Walla.',
 };
 
-export default function PrivacyPolicyPage() {
+export default function PrivacyPage() {
   return (
-    <div className="bg-[#F8FAF9] min-h-screen pt-12 pb-24">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="text-[13px] font-bold text-zinc-500 mb-6 flex items-center gap-2">
-          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-[#111111]">Privacy Policy</span>
-        </div>
+    <div className="min-h-screen bg-[#F8FAF9] pt-32 pb-24 relative overflow-hidden">
+      {/* Decorative Gradients */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.03)_0,transparent_60%)] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.03)_0,transparent_60%)] pointer-events-none" />
+
+      <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <Link href="/">
+          <Button variant="ghost" className="mb-8 hover:bg-white/60">
+            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
+          </Button>
+        </Link>
         
-        <h1 className="text-4xl md:text-5xl font-black text-[#111111] mb-4 tracking-tight">Privacy Policy</h1>
-        <p className="text-zinc-500 mb-12">Last updated: July 5, 2026</p>
+        <div className="bg-white rounded-[2rem] p-8 md:p-14 shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-[#E2EDE8]">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-[#0D1A12] mb-4">Privacy Policy</h1>
+          <p className="text-zinc-500 mb-10 pb-10 border-b border-[#E2EDE8]">Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
 
-        <div className="bg-white rounded-3xl p-8 md:p-12 border border-border/50 shadow-sm space-y-8 text-zinc-700 leading-relaxed">
-          <section>
-            <h2 className="text-2xl font-bold text-[#111111] mb-4">1. Introduction</h2>
-            <p>
-              Welcome to Design Walla ("we," "our," or "us"). We respect your privacy and are committed to protecting your personal data. 
-              This privacy policy will inform you as to how we look after your personal data when you visit our marketplace (regardless of where you visit it from) 
-              and tell you about your privacy rights and how the law protects you.
-            </p>
-          </section>
+          <div className="space-y-8 text-zinc-600 leading-relaxed">
+            <section>
+              <h2 className="text-xl font-bold text-[#0D1A12] mb-4">1. Introduction</h2>
+              <p>At Design Walla, accessible from designwalla.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Design Walla and how we use it.</p>
+              <p className="mt-3">If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.</p>
+            </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-[#111111] mb-4">2. The Data We Collect About You</h2>
-            <p className="mb-4">We may collect, use, store and transfer different kinds of personal data about you which we have grouped together as follows:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Identity Data</strong> includes first name, last name, username or similar identifier.</li>
-              <li><strong>Contact Data</strong> includes billing address, delivery address, email address and telephone numbers.</li>
-              <li><strong>Financial Data</strong> includes bank account and payment card details (processed securely via our payment gateways, Razorpay/Stripe).</li>
-              <li><strong>Transaction Data</strong> includes details about payments to and from you and other details of products or services you have purchased from us.</li>
-              <li><strong>Technical Data</strong> includes internet protocol (IP) address, your login data, browser type and version, time zone setting and location, browser plug-in types and versions, operating system and platform, and other technology on the devices you use to access this website.</li>
-            </ul>
-          </section>
+            <section>
+              <h2 className="text-xl font-bold text-[#0D1A12] mb-4">2. Information We Collect</h2>
+              <p className="mb-3">The personal information that you are asked to provide, and the reasons why you are asked to provide it, will be made clear to you at the point we ask you to provide your personal information.</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Account Information:</strong> When you register for an Account, we may ask for your contact information, including items such as name, company name, address, email address, and telephone number.</li>
+                <li><strong>Payment Information:</strong> We collect necessary payment details to process transactions securely via our payment partners. We do not store full credit card details on our servers.</li>
+                <li><strong>Usage Data:</strong> We automatically collect information on how you interact with our Services, such as IP addresses, browser type, pages visited, and time spent on the site.</li>
+              </ul>
+            </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-[#111111] mb-4">3. How We Use Your Personal Data</h2>
-            <p className="mb-4">We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Where we need to perform the contract we are about to enter into or have entered into with you (e.g., fulfilling an order).</li>
-              <li>Where it is necessary for our legitimate interests (or those of a third party) and your interests and fundamental rights do not override those interests.</li>
-              <li>Where we need to comply with a legal obligation.</li>
-            </ul>
-          </section>
+            <section>
+              <h2 className="text-xl font-bold text-[#0D1A12] mb-4">3. How We Use Your Information</h2>
+              <p className="mb-2">We use the information we collect in various ways, including to:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Provide, operate, and maintain our website</li>
+                <li>Improve, personalize, and expand our website</li>
+                <li>Understand and analyze how you use our website</li>
+                <li>Develop new products, services, features, and functionality</li>
+                <li>Communicate with you, either directly or through one of our partners, for customer service, to provide you with updates, and for marketing purposes</li>
+                <li>Process your transactions and manage your subscriptions</li>
+                <li>Find and prevent fraud</li>
+              </ul>
+            </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-[#111111] mb-4">4. Data Security</h2>
-            <p>
-              We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used or accessed in an unauthorised way, 
-              altered or disclosed. In addition, we limit access to your personal data to those employees, agents, contractors and other third parties who have a business need to know. 
-              They will only process your personal data on our instructions and they are subject to a duty of confidentiality.
-            </p>
-          </section>
+            <section>
+              <h2 className="text-xl font-bold text-[#0D1A12] mb-4">4. Cookies and Web Beacons</h2>
+              <p>Like any other website, Design Walla uses "cookies". These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users' experience by customizing our web page content based on visitors' browser type and/or other information.</p>
+            </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-[#111111] mb-4">5. Your Legal Rights</h2>
-            <p className="mb-4">Under certain circumstances, you have rights under data protection laws in relation to your personal data, including the right to:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Request access to your personal data.</li>
-              <li>Request correction of your personal data.</li>
-              <li>Request erasure of your personal data.</li>
-              <li>Object to processing of your personal data.</li>
-              <li>Request restriction of processing your personal data.</li>
-              <li>Request transfer of your personal data.</li>
-              <li>Right to withdraw consent.</li>
-            </ul>
-          </section>
+            <section>
+              <h2 className="text-xl font-bold text-[#0D1A12] mb-4">5. Third-Party Privacy Policies</h2>
+              <p>Design Walla's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information. It may include their practices and instructions about how to opt-out of certain options.</p>
+            </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-[#111111] mb-4">6. Contact Us</h2>
-            <p>
-              If you have any questions about this privacy policy or our privacy practices, please contact us at:
-              <br/><br/>
-              <strong>Email:</strong> support@designwalla.com<br/>
-            </p>
-          </section>
+            <section>
+              <h2 className="text-xl font-bold text-[#0D1A12] mb-4">6. Data Security</h2>
+              <p>We value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and we cannot guarantee its absolute security.</p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-[#0D1A12] mb-4">7. Contact Us</h2>
+              <p className="mb-2">If you have any questions or suggestions about our Privacy Policy, please contact us:</p>
+              <ul className="space-y-1">
+                <li><strong>Phone:</strong> +91 8969688709</li>
+                <li><strong>Email:</strong> designwalla.co@gmail.com</li>
+                <li><strong>Address:</strong> Mahendru Post Office, Patna — 6, India</li>
+              </ul>
+            </section>
+          </div>
         </div>
       </div>
     </div>

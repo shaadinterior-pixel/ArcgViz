@@ -28,6 +28,7 @@ const FOOTER_LINKS = {
     { label: 'Contact', href: '/contact' },
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms of Service', href: '/terms' },
+    { label: 'Refund Policy', href: '/refund' },
   ],
 };
 
@@ -125,9 +126,9 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between py-6 gap-4 text-xs text-[#9CA3AF]">
           <p>&copy; {new Date().getFullYear()} Design Walla. All rights reserved. Made with ♥ in India.</p>
           <div className="flex gap-5">
-            <Link href="/privacy" className="hover:text-[#24B86C] transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-[#24B86C] transition-colors">Terms</Link>
-            <Link href="/cookies" className="hover:text-[#24B86C] transition-colors">Cookies</Link>
+            <Link href="/privacy" className="hover:text-[#24B86C] transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-[#24B86C] transition-colors">Terms of Service</Link>
+            <Link href="/refund" className="hover:text-[#24B86C] transition-colors">Refund Policy</Link>
           </div>
         </div>
       </div>
