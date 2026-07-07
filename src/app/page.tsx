@@ -195,11 +195,11 @@ export default function Home() {
               transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05] gpu-layer"
             >
-              One Platform. <br />
+              One Platform <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E] pr-2">
                 Infinite Creative
               </span><br/>
-              Possibilities.
+              Possibilities
             </motion.h1>
 
             {/* Sub */}

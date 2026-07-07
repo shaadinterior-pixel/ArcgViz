@@ -139,8 +139,8 @@ export function WhatWeDoSection() {
                <span className="text-[#24B86C] font-semibold text-xs tracking-[0.2em] uppercase">WHAT WE DO</span>
             </div>
             <h2 className="text-6xl md:text-7xl font-black tracking-tighter leading-[0.9] mb-4">
-              <span className="text-[#111111]">Ten crafts.</span><br />
-              <span className="text-zinc-400">One studio.</span>
+              <span className="text-[#111111]">Ten crafts</span><br />
+              <span className="text-zinc-400">One studio</span>
             </h2>
             <p className="max-w-md text-zinc-500 text-sm font-medium leading-relaxed">
               Tap any service below to reveal its full details — projects, deliverables and how we work.

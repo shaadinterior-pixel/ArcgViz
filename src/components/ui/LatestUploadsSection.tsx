@@ -50,7 +50,7 @@ export function LatestUploadsSection() {
         >
           <span className="inline-block text-[#24B86C] text-xs font-bold tracking-[0.25em] uppercase mb-4">TRENDING</span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#0D1A12] tracking-tight leading-tight">
-            Freshly dropped.<br className="hidden sm:block" /> Endlessly scrollable.
+            Freshly dropped<br className="hidden sm:block" /> Endlessly scrollable
           </h2>
           <p className="text-zinc-500 font-medium max-w-2xl mx-auto text-lg">
             Design Walla style browsing, curated by our design team.
