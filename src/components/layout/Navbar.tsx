@@ -42,7 +42,7 @@ export function Navbar() {
       <div className="h-16 flex items-center justify-between bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 border border-[#E2EDE8] rounded-full px-6 shadow-[0_4px_24px_rgba(36,184,108,0.08)]">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3 shrink-0">
-          <Image src="/DESIGN WALLA LOGO .jpg" alt="Design Walla Logo" width={40} height={40} className="object-contain mix-blend-multiply contrast-125 brightness-110" style={{ mixBlendMode: 'multiply' }} />
+          <Image src="/DESIGN_WALLA_LOGO_-removebg-preview.png" alt="Design Walla Logo" width={40} height={40} className="object-contain" />
           <div className="hidden sm:flex flex-col">
             <span className="font-bold text-xl tracking-tight leading-none flex gap-1">
               <span className="text-black font-black">DESIGN</span>
