@@ -15,6 +15,7 @@ const SERVICE_CATEGORIES = [
   'Company Branding',
   'Website / Apps / Software',
   'Animation',
+  'Motion Graphic',
   'Graphic Design',
   'Video Editing',
   'Printing Work',
