@@ -343,8 +343,8 @@ export function WhatWeDoSection() {
                   rel="noopener noreferrer"
                   className="w-full block"
                 >
-                  <button className="relative overflow-hidden w-full bg-[#111111] text-white font-bold py-4 rounded-xl flex items-center justify-between px-6 transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.12)] group hover:bg-[#24B86C] border-0">
-                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-shine" />
+                  <button className="relative overflow-hidden w-full bg-gradient-to-r from-[#24B86C] to-[#11998E] text-white font-bold py-4 rounded-xl flex items-center justify-between px-6 transition-all duration-300 shadow-[0_8px_30px_rgba(36,184,108,0.25)] group hover:opacity-90 border-0">
+                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shine" />
                     <span className="relative z-10">Start a {activeService.category} project</span>
                     <ArrowUpRight className="relative z-10 w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
                   </button>
