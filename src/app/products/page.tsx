@@ -200,89 +200,64 @@ function ProductsContent() {
                 </div>
                 
                 <div className="p-6 md:p-8 space-y-8 flex-1">
+                  {/* Categories */}
                   <div className="bg-[#DDF0E9] p-7 rounded-[1.5rem]">
                     <h3 className="font-bold text-[#0D1A12] text-xl mb-5">Categories</h3>
-            <div className="space-y-4">
-              <label className="flex items-center space-x-3.5 cursor-pointer group">
-                <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeCategories.length === 0 ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
-                  {activeCategories.length === 0 && <div className="w-2 h-2 bg-white rounded-[2px]" />}
-                </div>
-                <input 
-                  type="checkbox" 
-                  className="hidden" 
-                  checked={activeCategories.length === 0}
-                  onChange={() => { setActiveCategories([]); setActiveSubcategories([]); }}
-                />
-                <span className={`text-[15px] transition-colors ${activeCategories.length === 0 ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>
-                  All
-                </span>
-              </label>
-
-              {dbCategories.map((cat) => (
-                <label key={cat.id} className="flex items-center space-x-3.5 cursor-pointer group">
-                  <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeCategories.includes(cat.title) ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
-                    {activeCategories.includes(cat.title) && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                    <div className="space-y-4">
+                      <label className="flex items-center space-x-3.5 cursor-pointer group">
+                        <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeCategories.length === 0 ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
+                          {activeCategories.length === 0 && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                        </div>
+                        <input type="checkbox" className="hidden" checked={activeCategories.length === 0} onChange={() => { setActiveCategories([]); setActiveSubcategories([]); }} />
+                        <span className={`text-[15px] transition-colors ${activeCategories.length === 0 ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>All</span>
+                      </label>
+                      {dbCategories.map((cat) => (
+                        <label key={cat.id} className="flex items-center space-x-3.5 cursor-pointer group">
+                          <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeCategories.includes(cat.title) ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
+                            {activeCategories.includes(cat.title) && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                          </div>
+                          <input type="checkbox" className="hidden" checked={activeCategories.includes(cat.title)} onChange={() => toggleArray(activeCategories, cat.title, setActiveCategories)} />
+                          <span className={`text-[15px] transition-colors ${activeCategories.includes(cat.title) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>{cat.title}</span>
+                        </label>
+                      ))}
+                    </div>
+                    {availableSubcategories.length > 0 && (
+                      <>
+                        <h3 className="font-bold text-[#0D1A12] text-xl mt-8 mb-5">Subcategories</h3>
+                        <div className="space-y-4">
+                          {availableSubcategories.map((sub) => (
+                            <label key={sub} className="flex items-center space-x-3.5 cursor-pointer group">
+                              <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeSubcategories.includes(sub) ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
+                                {activeSubcategories.includes(sub) && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                              </div>
+                              <input type="checkbox" className="hidden" checked={activeSubcategories.includes(sub)} onChange={() => toggleArray(activeSubcategories, sub, setActiveSubcategories)} />
+                              <span className={`text-[15px] transition-colors ${activeSubcategories.includes(sub) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>{sub}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
-                  <input 
-                    type="checkbox" 
-                    className="hidden" 
-                    checked={activeCategories.includes(cat.title)}
-                    onChange={() => toggleArray(activeCategories, cat.title, setActiveCategories)}
-                  />
-                  <span className={`text-[15px] transition-colors ${activeCategories.includes(cat.title) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>
-                    {cat.title}
-                  </span>
-                </label>
-              ))}
-            </div>
-
-            {/* Subcategories (Dynamic) */}
-            {availableSubcategories.length > 0 && (
-              <>
-                <h3 className="font-bold text-[#0D1A12] text-xl mt-8 mb-5">Subcategories</h3>
-                <div className="space-y-4">
-                  {availableSubcategories.map((sub) => (
-                    <label key={sub} className="flex items-center space-x-3.5 cursor-pointer group">
-                      <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeSubcategories.includes(sub) ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
-                        {activeSubcategories.includes(sub) && <div className="w-2 h-2 bg-white rounded-[2px]" />}
-                      </div>
-                      <input 
-                        type="checkbox" 
-                        className="hidden" 
-                        checked={activeSubcategories.includes(sub)}
-                        onChange={() => toggleArray(activeSubcategories, sub, setActiveSubcategories)}
-                      />
-                      <span className={`text-[15px] transition-colors ${activeSubcategories.includes(sub) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>
-                        {sub}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-          
-          <div className="bg-[#DDF0E9] p-7 rounded-[1.5rem]">
-            <h3 className="font-bold text-[#0D1A12] text-xl mb-5">Properties</h3>
-            <div className="space-y-4">
-              {['Rigged', 'Animated', 'Game-Ready', '3D Printable'].map((prop) => (
-                <label key={prop} className="flex items-center space-x-3.5 cursor-pointer group">
-                  <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${selectedProperties.includes(prop) ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
-                    {selectedProperties.includes(prop) && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                  {/* Properties */}
+                  <div className="bg-[#DDF0E9] p-7 rounded-[1.5rem]">
+                    <h3 className="font-bold text-[#0D1A12] text-xl mb-5">Properties</h3>
+                    <div className="space-y-4">
+                      {['Rigged', 'Animated', 'Game-Ready', '3D Printable'].map((prop) => (
+                        <label key={prop} className="flex items-center space-x-3.5 cursor-pointer group">
+                          <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${selectedProperties.includes(prop) ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
+                            {selectedProperties.includes(prop) && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                          </div>
+                          <input type="checkbox" className="hidden" checked={selectedProperties.includes(prop)} onChange={() => toggleArray(selectedProperties, prop, setSelectedProperties)} />
+                          <span className={`text-[15px] transition-colors ${selectedProperties.includes(prop) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>{prop}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                  <input type="checkbox" className="hidden" 
-                    checked={selectedProperties.includes(prop)}
-                    onChange={() => toggleArray(selectedProperties, prop, setSelectedProperties)}
-                  />
-                  <span className={`text-[15px] transition-colors ${selectedProperties.includes(prop) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>{prop}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-      </>
-    )}
-  </AnimatePresence>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
 
         {/* Product Grid */}
         <div className="flex-1">
