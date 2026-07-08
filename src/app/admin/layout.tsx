@@ -23,6 +23,7 @@ const ADMIN_NAV = [
   { group: 'Homepage', items: [
     { name: 'Hero Section', href: '/admin/hero',     icon: ImageIcon },
     { name: 'Services',     href: '/admin/services', icon: Briefcase },
+    { name: 'Reviews',      href: '/admin/testimonials', icon: ImageIcon },
   ]},
   { group: 'System',   items: [
     { name: 'Settings',     href: '/admin/settings', icon: Settings },
