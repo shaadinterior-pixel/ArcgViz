@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { Search, ShoppingCart, User, Menu, X, ChevronDown, Upload, Bookmark } from 'lucide-react';
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Button } from '../ui/Button';
 import { LiveSearch } from '../ui/LiveSearch';
 import { getCurrentUser, onAuthChange, type AuthUser } from '@/lib/auth';
@@ -123,22 +123,57 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* ── Mobile Menu ─────────────────────────────────────────────────────── */}
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out absolute top-20 left-4 right-4 rounded-3xl z-40 ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}
-      >
-        <div className="border border-border/40 bg-background/95 backdrop-blur px-4 py-6 space-y-4 shadow-lg rounded-3xl">
-          <nav className="flex flex-col space-y-3 pt-2">
-            <Link href="/" className="text-sm font-medium py-1" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
-            <Link href="/products" className="text-sm font-medium py-1" onClick={() => setIsMobileMenuOpen(false)}>Marketplace</Link>
-            <Link href="/collections" className="text-sm font-medium text-muted-foreground py-1" onClick={() => setIsMobileMenuOpen(false)}>Collections</Link>
-            <Link href="/about" className="text-sm font-medium text-muted-foreground py-1" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
-            <Link href="/login" className="text-sm font-medium text-primary mt-2 py-1" onClick={() => setIsMobileMenuOpen(false)}>Login / Signup</Link>
-          </nav>
-        </div>
-      </div>
+      {/* ── Mobile Menu (Slide-over Drawer) ─────────────────────────────────── */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-[#0D1A12]/40 backdrop-blur-sm z-[100] md:hidden"
+              style={{ top: '-1rem', left: '-1rem', right: '-1rem', height: '110vh' }} // to cover the whole screen despite navbar margins
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 w-full max-w-[300px] h-screen bg-white z-[110] shadow-2xl overflow-y-auto flex flex-col md:hidden"
+              style={{ top: '-1rem', right: '-1rem', height: '110vh' }}
+            >
+              <div className="p-6 pt-10 flex items-center justify-between border-b border-[#E2EDE8] bg-white">
+                <span className="font-black text-xl text-[#0D1A12]">Menu</span>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center hover:bg-zinc-200 transition-colors text-zinc-600"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <div className="p-6 flex-1 bg-white">
+                <nav className="flex flex-col space-y-4">
+                  <Link href="/" className="text-lg font-bold text-[#0D1A12] py-2 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+                  <Link href="/products" className="text-lg font-bold text-[#0D1A12] py-2 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Marketplace</Link>
+                  <Link href="/#services" className="text-lg font-bold text-zinc-600 py-2 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Services</Link>
+                  <Link href="/resources" className="text-lg font-bold text-zinc-600 py-2 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Resources</Link>
+                  <Link href="/pricing" className="text-lg font-bold text-zinc-600 py-2 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
+                  
+                  {user ? (
+                    <Link href="/profile" className="text-lg font-bold text-[#24B86C] mt-4 py-2" onClick={() => setIsMobileMenuOpen(false)}>My Profile</Link>
+                  ) : (
+                    <Link href="/login" className="text-lg font-bold text-[#24B86C] mt-4 py-2" onClick={() => setIsMobileMenuOpen(false)}>Login / Signup</Link>
+                  )}
+                </nav>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }
