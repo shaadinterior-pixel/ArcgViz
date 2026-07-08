@@ -137,8 +137,8 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
           {/* ── Left Column (Content) ── */}
           <div className="w-full lg:flex-1 min-w-0 flex flex-col">
             
-            {/* Title & Breadcrumbs (Mobile Only - Above Image) */}
-            <div className="block lg:hidden mb-6">
+            {/* Title & Breadcrumbs (Above Image) */}
+            <div className="mb-6">
               <h1 className="text-3xl font-black leading-tight text-[#111111]">{product.name}</h1>
               <div className="text-[11px] font-bold text-[#11998E] mt-3 flex items-center gap-1.5 flex-wrap">
                 <Link href={`/products?search=${encodeURIComponent(product.category || '')}`} className="hover:underline">{product.category || 'General'}</Link> 
@@ -458,20 +458,6 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
             <div className="sticky top-24 bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)] flex flex-col gap-6">
               
               {/* Author badge removed */}
-              {/* Title & Breadcrumbs */}
-              <div>
-                <h1 className="text-3xl font-black leading-tight text-[#111111]">{product.name}</h1>
-                <div className="text-[11px] font-bold text-[#11998E] mt-3 flex items-center gap-1.5 flex-wrap">
-                  <Link href={`/products?search=${encodeURIComponent(product.category || '')}`} className="hover:underline">{product.category || 'General'}</Link> 
-                  {product.subcategory && (
-                    <>
-                      <ChevronRight className="w-3 h-3 text-zinc-400" /> 
-                      <Link href={`/products?search=${encodeURIComponent(product.subcategory)}`} className="hover:underline">{product.subcategory}</Link>
-                    </>
-                  )}
-                </div>
-              </div>
-              
               {/* Rating removed */}
               
               <div className="h-px bg-[#E2EDE8] w-full" />
