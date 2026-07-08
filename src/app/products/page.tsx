@@ -148,11 +148,16 @@ function ProductsContent() {
           <div className="flex items-center space-x-3 w-full md:w-auto mt-4 md:mt-0">
             <Button 
               variant="outline" 
-              className="md:hidden w-full h-14 rounded-2xl border-[#E2EDE8] text-[#0D1A12] font-semibold"
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
+              className="w-full md:w-auto h-14 rounded-2xl border-[#E2EDE8] text-[#0D1A12] font-semibold relative px-6"
+              onClick={() => setIsFilterOpen(true)}
             >
               <Filter className="w-4 h-4 mr-2 text-[#24B86C]" />
               Filters
+              {(activeCategories.length + activeSubcategories.length + selectedProperties.length) > 0 && (
+                <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#24B86C] text-white text-[11px] font-black flex items-center justify-center border-2 border-[#F8FAF9] shadow-sm">
+                  {activeCategories.length + activeSubcategories.length + selectedProperties.length}
+                </span>
+              )}
             </Button>
             <div className="hidden md:flex relative">
               <select className="appearance-none bg-white border border-[#E2EDE8] rounded-2xl px-6 py-4 pr-12 text-sm focus:outline-none focus:border-[#24B86C] focus:ring-4 focus:ring-[#24B86C]/10 w-56 cursor-pointer font-bold text-[#0D1A12] shadow-sm transition-all">
@@ -168,13 +173,35 @@ function ProductsContent() {
         </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        {/* Sidebar */}
-        <aside className={`${isFilterOpen ? 'block' : 'hidden'} lg:block w-full lg:w-[280px] space-y-8 flex-shrink-0`}>
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-[#DDF0E9] p-7 rounded-[1.5rem]"
-          >
-            <h3 className="font-bold text-[#0D1A12] text-xl mb-5">Categories</h3>
+        {/* Filter Drawer */}
+        <AnimatePresence>
+          {isFilterOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
+                className="fixed inset-0 bg-[#0D1A12]/40 backdrop-blur-sm z-[100]"
+                onClick={() => setIsFilterOpen(false)}
+              />
+              
+              {/* Drawer Content */}
+              <motion.div
+                initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="fixed top-0 right-0 w-full sm:w-[400px] h-full bg-white z-[110] shadow-2xl overflow-y-auto flex flex-col"
+              >
+                <div className="p-6 md:p-8 flex items-center justify-between border-b border-[#E2EDE8] sticky top-0 bg-white z-10">
+                  <h2 className="text-2xl font-black text-[#0D1A12]">Filters</h2>
+                  <button 
+                    onClick={() => setIsFilterOpen(false)}
+                    className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center hover:bg-zinc-200 transition-colors text-zinc-600"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                  </button>
+                </div>
+                
+                <div className="p-6 md:p-8 space-y-8 flex-1">
+                  <div className="bg-[#DDF0E9] p-7 rounded-[1.5rem]">
+                    <h3 className="font-bold text-[#0D1A12] text-xl mb-5">Categories</h3>
             <div className="space-y-4">
               <label className="flex items-center space-x-3.5 cursor-pointer group">
                 <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeCategories.length === 0 ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
@@ -233,12 +260,9 @@ function ProductsContent() {
                 </div>
               </>
             )}
-          </motion.div>
+          </div>
           
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-[#DDF0E9] p-7 rounded-[1.5rem]"
-          >
+          <div className="bg-[#DDF0E9] p-7 rounded-[1.5rem]">
             <h3 className="font-bold text-[#0D1A12] text-xl mb-5">Properties</h3>
             <div className="space-y-4">
               {['Rigged', 'Animated', 'Game-Ready', '3D Printable'].map((prop) => (
@@ -254,8 +278,11 @@ function ProductsContent() {
                 </label>
               ))}
             </div>
-          </motion.div>
-        </aside>
+          </div>
+        </motion.div>
+      </>
+    )}
+  </AnimatePresence>
 
         {/* Product Grid */}
         <div className="flex-1">
