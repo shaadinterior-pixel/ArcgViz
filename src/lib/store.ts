@@ -93,6 +93,16 @@ export type Purchase = {
   purchased_at: string;
 };
 
+export type Testimonial = {
+  id: string;
+  name: string;
+  role: string;
+  image: string;
+  text: string;
+  rating: number;
+  created_at?: string;
+};
+
 // ─── Products ─────────────────────────────────────────────────────────────────
 
 export async function fetchProducts(): Promise<Product[]> {
@@ -370,6 +380,27 @@ export async function grantPurchase(userId: string, productId: string): Promise<
   const { error } = await supabase
     .from('purchases')
     .upsert({ user_id: userId, product_id: productId });
+  if (error) throw error;
+}
+
+// ─── Testimonials ───────────────────────────────────────────────────────────────
+
+export async function fetchTestimonials(): Promise<Testimonial[]> {
+  const { data, error } = await supabase
+    .from('testimonials')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) return [];
+  return data || [];
+}
+
+export async function saveTestimonial(testimonial: Testimonial): Promise<void> {
+  const { error } = await supabase.from('testimonials').upsert(testimonial);
+  if (error) throw error;
+}
+
+export async function deleteTestimonial(id: string): Promise<void> {
+  const { error } = await supabase.from('testimonials').delete().eq('id', id);
   if (error) throw error;
 }
 
