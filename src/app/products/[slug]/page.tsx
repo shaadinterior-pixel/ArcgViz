@@ -5,10 +5,8 @@ import { notFound } from 'next/navigation';
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  const slugs = await fetchAllSlugs();
-  return slugs.map(slug => ({ slug }));
-}
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
