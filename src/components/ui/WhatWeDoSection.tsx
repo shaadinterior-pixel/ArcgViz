@@ -20,8 +20,8 @@ export type ServiceDetail = {
 export const defaultServices: ServiceDetail[] = [
   {
     id: "s1",
-    category: "Interior & Exterior",
-    title: "Interior / Exterior Design",
+    category: "Interior / Exterior Design and Work",
+    title: "Interior / Exterior Design and Work",
     tagline: "Spaces that speak. Structures that stay.",
     image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200",
     description: "End-to-end interior and exterior design & execution for homes, offices, retail, and hospitality. From concept mood-boards to on-site turnkey delivery — we craft spaces that carry your brand's soul.",
@@ -36,7 +36,7 @@ export const defaultServices: ServiceDetail[] = [
   },
   {
     id: "s2",
-    category: "3D & Product",
+    category: "3D Model & Product Design",
     title: "3D Modeling & Product Design",
     tagline: "Bringing concepts to life in 3D.",
     image: "https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=1200",
@@ -52,7 +52,7 @@ export const defaultServices: ServiceDetail[] = [
   {
     id: "s3",
     category: "Digital Marketing",
-    title: "Performance & Brand Marketing",
+    title: "Digital Marketing",
     tagline: "Data-driven growth strategies.",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
     description: "Comprehensive digital marketing campaigns designed to scale your business. We combine creative storytelling with rigorous data analysis to maximize your ROI.",
@@ -66,8 +66,23 @@ export const defaultServices: ServiceDetail[] = [
   },
   {
     id: "s4",
-    category: "Branding",
-    title: "Corporate Identity & Branding",
+    category: "Advertisement",
+    title: "Strategic Advertisement",
+    tagline: "Maximize your reach and impact.",
+    image: "https://images.unsplash.com/photo-1542744094-3a31f272c490?auto=format&fit=crop&q=80&w=1200",
+    description: "Targeted advertising campaigns across digital and traditional platforms to maximize your brand's visibility and conversion.",
+    includes: [
+      "Media Planning & Buying",
+      "Print & Outdoor Advertising",
+      "Display & Programmatic Ads",
+      "Campaign Management",
+      "Ad Copy & Creatives"
+    ]
+  },
+  {
+    id: "s5",
+    category: "Company Branding",
+    title: "Company Branding",
     tagline: "Crafting memorable brand stories.",
     image: "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=1200",
     description: "Strategic brand development from the ground up. We create cohesive visual identities, brand guidelines, and positioning strategies that resonate with your target audience.",
@@ -80,9 +95,9 @@ export const defaultServices: ServiceDetail[] = [
     ]
   },
   {
-    id: "s5",
-    category: "Web / App / Software",
-    title: "Digital Product Development",
+    id: "s6",
+    category: "Website / Apps / Software",
+    title: "Website / Apps / Software",
     tagline: "Building scalable digital experiences.",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1200",
     description: "End-to-end development of high-performance websites, web applications, and mobile apps. We focus on intuitive UX, modern tech stacks, and scalable architectures.",
@@ -92,6 +107,81 @@ export const defaultServices: ServiceDetail[] = [
       "iOS & Android Apps",
       "E-commerce Solutions",
       "Custom Software & SaaS"
+    ]
+  },
+  {
+    id: "s7",
+    category: "Animation",
+    title: "2D & 3D Animation",
+    tagline: "Bringing stories to life.",
+    image: "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?auto=format&fit=crop&q=80&w=1200",
+    description: "Captivating animations that explain, entertain, and engage. We produce high-quality 2D and 3D animated content for various industries.",
+    includes: [
+      "Explainer Videos",
+      "Character Animation",
+      "Product Animation",
+      "Whiteboard Animation",
+      "Storyboarding"
+    ]
+  },
+  {
+    id: "s8",
+    category: "Motion Graphic",
+    title: "Motion Graphics",
+    tagline: "Movement that captures attention.",
+    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1200",
+    description: "Sleek and modern motion graphics to enhance your digital presence. Perfect for social media, presentations, and broadcast.",
+    includes: [
+      "Title Sequences",
+      "Logo Animation",
+      "UI/UX Animation",
+      "Promotional Videos",
+      "Lottie Animations"
+    ]
+  },
+  {
+    id: "s9",
+    category: "Graphic Design",
+    title: "Graphic Design",
+    tagline: "Visuals that communicate powerfully.",
+    image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=1200",
+    description: "Custom graphic design solutions that elevate your brand's aesthetics across all touchpoints, from digital to print.",
+    includes: [
+      "Social Media Creatives",
+      "Brochure & Flyer Design",
+      "Infographics",
+      "Poster Design",
+      "Illustration"
+    ]
+  },
+  {
+    id: "s10",
+    category: "Video Editing",
+    title: "Video Editing",
+    tagline: "Crafting cinematic experiences.",
+    image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&q=80&w=1200",
+    description: "High-end post-production services. We seamlessly cut, color, and polish your raw footage into compelling video content.",
+    includes: [
+      "Color Grading",
+      "Audio Mixing & Mastering",
+      "VFX & Compositing",
+      "Corporate Video Editing",
+      "Social Media Reels"
+    ]
+  },
+  {
+    id: "s11",
+    category: "Printing Work",
+    title: "Printing Work",
+    tagline: "Tangible quality you can feel.",
+    image: "https://images.unsplash.com/photo-1563968743333-044cef800120?auto=format&fit=crop&q=80&w=1200",
+    description: "High-quality offset and digital printing services for all your marketing and corporate needs. We ensure vibrant colors and premium finishes.",
+    includes: [
+      "Business Cards & Stationery",
+      "Brochures & Catalogs",
+      "Large Format Printing",
+      "Packaging Printing",
+      "Merchandise Printing"
     ]
   }
 ];
@@ -139,7 +229,7 @@ export function WhatWeDoSection() {
                <span className="text-[#24B86C] font-semibold text-xs tracking-[0.2em] uppercase">WHAT WE DO</span>
             </div>
             <h2 className="text-6xl md:text-7xl font-black tracking-tighter leading-[0.9] mb-4">
-              <span className="text-[#111111]">Ten crafts</span><br />
+              <span className="text-[#111111]">Eleven crafts</span><br />
               <span className="text-zinc-400">One studio</span>
             </h2>
             <p className="max-w-md text-zinc-500 text-sm font-medium leading-relaxed">
