@@ -34,7 +34,7 @@ export default function HireOurTeamSection() {
             </div>
             
             <h2 className="text-4xl md:text-5xl font-black text-[#111111] leading-tight">
-              Bring Your Vision to Life with <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E]">Design Walla Studio</span>.
+              Bring Your Vision to Life with <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E]">Design Walla Studio</span>
             </h2>
             
             <p className="text-lg text-zinc-600 leading-relaxed max-w-lg">

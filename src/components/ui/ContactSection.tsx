@@ -55,7 +55,7 @@ export function ContactSection() {
               <h2 className="text-[3.5rem] md:text-[4.5rem] lg:text-[5rem] font-bold text-[#111111] tracking-tight leading-[1] mb-6">
                 Let's build<br />
                 something<br />
-                <span className="text-[#24B86C]">amazing together.</span>
+                <span className="text-[#24B86C]">amazing together</span>
               </h2>
               <p className="text-[17px] text-zinc-500 leading-relaxed max-w-[420px]">
                 Tell us what you need — interior, branding, a website, a printing run, or a full launch. We'll come back with a tailored plan.
