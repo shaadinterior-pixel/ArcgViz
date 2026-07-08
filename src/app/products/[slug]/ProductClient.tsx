@@ -438,29 +438,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 </div>
               </div>
               
-              {/* Included Formats */}
-              <div className="mt-2">
-                <span className="text-xs font-bold text-[#111111] block mb-2">Included formats</span>
-                <div className="flex gap-2">
-                  <span className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-white text-xs font-bold shadow-sm">U</span>
-                </div>
-              </div>
-              
-              <div className="h-px bg-[#E2EDE8] w-full" />
-              
-              {/* Details List */}
-              <div>
-                <span className="text-xs font-bold text-[#111111] block mb-4">Details</span>
-                <div className="space-y-3.5 text-[13px]">
-                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">Last update</span><span className="font-bold text-right text-[#111111]">March 12, 2026<br/><span className="text-[#11998E] text-xs hover:underline cursor-pointer">Changelog</span></span></div>
-                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">Published</span><span className="font-bold text-[#111111]">April 12, 2021</span></div>
-                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">License terms</span><span className="font-bold text-[#11998E] hover:underline cursor-pointer">Standard License</span></div>
-                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">Age rating</span><span className="font-bold text-[#111111]">Not Mature</span></div>
-                  <div className="flex justify-between items-center"><span className="text-zinc-500 font-medium">Allows usage with AI</span><span className="font-bold text-[#111111] flex items-center gap-1">No <Info className="w-3.5 h-3.5 text-zinc-400"/></span></div>
-                  <div className="flex justify-between"><span className="text-zinc-500 font-medium">Generated with AI</span><span className="font-bold text-[#111111]">No</span></div>
-                </div>
-              </div>
-              
+
               {/* Footer Actions */}
               <div className="flex gap-2 mt-2">
                 <Button variant="outline" className="w-full h-10 border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-bold text-zinc-600 rounded-lg">
