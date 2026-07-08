@@ -1,11 +1,12 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Star, Quote } from 'lucide-react';
+import { Star, Quote, Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import { fetchTestimonials, type Testimonial } from '@/lib/store';
 
-const TESTIMONIALS = [
+const DEFAULT_TESTIMONIALS = [
   {
     name: "Priya Sharma",
     role: "Founder, Bloom Decor",
@@ -44,6 +45,26 @@ const TESTIMONIALS = [
 ];
 
 export function TestimonialSection() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTestimonials()
+      .then(data => setTestimonials(data && data.length > 0 ? data : DEFAULT_TESTIMONIALS))
+      .catch(() => setTestimonials(DEFAULT_TESTIMONIALS))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="py-24 bg-[#F8FAF9] flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 animate-spin text-[#24B86C]" />
+      </section>
+    );
+  }
+
+  const displayTestimonials = [...testimonials, ...testimonials, ...testimonials];
+
   return (
     <section className="py-24 bg-[#F8FAF9] relative overflow-hidden border-t border-[#E2EDE8]">
       {/* Decorative Gradients */}
@@ -75,15 +96,15 @@ export function TestimonialSection() {
 
         {/* Scrolling Container */}
         <div className="flex animate-marquee md:hover:[animation-play-state:paused]">
-          {[...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS].map((testimonial, idx) => (
+          {displayTestimonials.map((testimonial, idx) => (
             <div 
-              key={idx} 
+              key={testimonial.id ? `${testimonial.id}-${idx}` : idx} 
               className="w-[340px] md:w-[400px] flex-shrink-0 mx-4 bg-white rounded-3xl p-8 shadow-[0_10px_40px_rgba(0,0,0,0.04)] border border-zinc-100 relative group transition-all duration-300 hover:shadow-[0_20px_60px_rgba(36,184,108,0.1)] hover:-translate-y-1"
             >
               <Quote className="absolute top-6 right-6 w-8 h-8 text-[#24B86C]/10 group-hover:text-[#24B86C]/20 transition-colors" />
               
               <div className="flex gap-1 mb-6">
-                {[...Array(testimonial.rating)].map((_, i) => (
+                {[...Array(testimonial.rating || 5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-[#FFD700] text-[#FFD700]" />
                 ))}
               </div>
@@ -94,11 +115,11 @@ export function TestimonialSection() {
               
               <div className="flex items-center gap-4 mt-auto">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-zinc-100">
-                  <Image 
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img 
                     src={testimonial.image} 
                     alt={testimonial.name} 
-                    fill 
-                    className="object-cover" 
+                    className="w-full h-full object-cover" 
                   />
                 </div>
                 <div>
