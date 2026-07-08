@@ -6,8 +6,9 @@ import { Star, Quote, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { fetchTestimonials, type Testimonial } from '@/lib/store';
 
-const DEFAULT_TESTIMONIALS = [
+const DEFAULT_TESTIMONIALS: Testimonial[] = [
   {
+    id: 'default-1',
     name: "Priya Sharma",
     role: "Founder, Bloom Decor",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
@@ -15,6 +16,7 @@ const DEFAULT_TESTIMONIALS = [
     rating: 5,
   },
   {
+    id: 'default-2',
     name: "Rahul Verma",
     role: "CEO, TechLaunch",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
@@ -22,6 +24,7 @@ const DEFAULT_TESTIMONIALS = [
     rating: 5,
   },
   {
+    id: 'default-3',
     name: "Anita Desai",
     role: "Marketing Director",
     image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
@@ -29,6 +32,7 @@ const DEFAULT_TESTIMONIALS = [
     rating: 5,
   },
   {
+    id: 'default-4',
     name: "Vikram Singh",
     role: "Restaurateur",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
@@ -36,6 +40,7 @@ const DEFAULT_TESTIMONIALS = [
     rating: 5,
   },
   {
+    id: 'default-5',
     name: "Neha Gupta",
     role: "Creative Head",
     image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop",
