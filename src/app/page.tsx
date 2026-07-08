@@ -196,8 +196,11 @@ export default function Home() {
               className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05] gpu-layer"
             >
               One Platform <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E] pr-2">
-                Infinite Creative
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E] pr-1.5 pb-2">
+                Infinite
+              </span>{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E] pr-2 pb-2">
+                Creative
               </span><br/>
               Possibilities
             </motion.h1>

@@ -1,31 +1,39 @@
 "use client";
 
-import React, { useState, useDeferredValue, useMemo, useEffect } from 'react';
+import React, { useState, useDeferredValue, useMemo, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, ChevronDown, Star, Search, ShoppingCart, Download } from 'lucide-react';
+import { Filter, ChevronDown, Search, Download } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 
 // ── Static fallback (bundled at build — always available) ───────────────────
-import { fetchProducts, fetchCategories, onStoreUpdate, type Product } from '@/lib/store';
+import { fetchProducts, fetchCategories, onStoreUpdate, type Product, type Category } from '@/lib/store';
 
-const FALLBACK_CATEGORIES = ['All', '3D Models', 'PBR Materials', 'Interior Scenes', 'Furniture', 'Lighting'];
+function ProductsContent() {
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams.get('search') || '';
 
-export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [allCategories, setAllCategories] = useState<string[]>(FALLBACK_CATEGORIES);
+  const [dbCategories, setDbCategories] = useState<Category[]>([]);
+
+  // Filter & Search State
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const [activeCategories, setActiveCategories] = useState<string[]>([]);
+  const [activeSubcategories, setActiveSubcategories] = useState<string[]>([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
+  
+  // To avoid circular updates, keep track if auto-apply has run for the current search
+  const [lastAppliedSearch, setLastAppliedSearch] = useState('');
 
   useEffect(() => {
     const load = async () => {
       try {
         const [data, cats] = await Promise.all([fetchProducts(), fetchCategories()]);
         setProducts(data);
-        if (cats && cats.length > 0) {
-          setAllCategories(['All', ...cats.map(c => c.title)]);
-        }
+        setDbCategories(cats || []);
       } catch (e) {
         console.error('Failed to load products', e);
       }
@@ -35,17 +43,38 @@ export default function ProductsPage() {
     return () => unsub();
   }, []);
 
-
-
-  // Filter & Search State
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
-
   // useDeferredValue keeps the UI responsive while typing
   const deferredSearch = useDeferredValue(searchQuery);
-  const deferredCategory = useDeferredValue(activeCategory);
+
+  // ── AUTO APPLY CATEGORY/SUBCATEGORY LOGIC ──
+  useEffect(() => {
+    // Only auto-apply when products are loaded and search query is not empty and we haven't applied for this search yet
+    if (products.length > 0 && deferredSearch.trim() !== '' && deferredSearch !== lastAppliedSearch) {
+      const q = deferredSearch.toLowerCase();
+      
+      // Find matching products by name or author
+      const matchedProducts = products.filter(p => 
+        p.name?.toLowerCase().includes(q) || p.author?.toLowerCase().includes(q) || p.description?.toLowerCase().includes(q)
+      );
+      
+      if (matchedProducts.length > 0) {
+        const catsToApply = new Set<string>();
+        const subsToApply = new Set<string>();
+        
+        matchedProducts.forEach(p => {
+          if (p.category) catsToApply.add(p.category);
+          if (p.subcategory) subsToApply.add(p.subcategory);
+        });
+
+        // Add them to currently selected (or overwrite? user said "should be applied", let's merge or overwrite. Merging is safer so we don't clear their existing selections, but overwriting makes it exactly reflect the search)
+        // Let's overwrite so it acts as a fresh filter state for the new search
+        setActiveCategories(Array.from(catsToApply));
+        setActiveSubcategories(Array.from(subsToApply));
+      }
+      
+      setLastAppliedSearch(deferredSearch);
+    }
+  }, [deferredSearch, products, lastAppliedSearch]);
 
   const filteredProducts = useMemo(() =>
     products
@@ -53,12 +82,42 @@ export default function ProductsPage() {
       .filter(product => {
         const matchesSearch = product.name?.toLowerCase().includes(deferredSearch.toLowerCase()) ||
                               product.author?.toLowerCase().includes(deferredSearch.toLowerCase());
-        const matchesCategory = deferredCategory === 'All' || product.category === deferredCategory;
+        
+        // If activeCategories is empty, it means "All"
+        const matchesCategory = activeCategories.length === 0 || activeCategories.includes(product.category);
+        
+        // If activeSubcategories is empty, don't filter by subcategory
+        const matchesSubcategory = activeSubcategories.length === 0 || (product.subcategory && activeSubcategories.includes(product.subcategory));
+
         const matchesProperties = selectedProperties.every(prop => (product.features || []).includes(prop));
-        return matchesSearch && matchesCategory && matchesProperties;
+        
+        return matchesSearch && matchesCategory && matchesSubcategory && matchesProperties;
       }),
-    [products, deferredSearch, deferredCategory, selectedProperties]
+    [products, deferredSearch, activeCategories, activeSubcategories, selectedProperties]
   );
+
+  // Helper to toggle array elements
+  const toggleArray = (arr: string[], val: string, setter: (val: string[]) => void) => {
+    if (arr.includes(val)) {
+      setter(arr.filter(x => x !== val));
+    } else {
+      setter([...arr, val]);
+    }
+  };
+
+  // Extract available subcategories based on active categories
+  const availableSubcategories = useMemo(() => {
+    const subs = new Set<string>();
+    // If no category selected, show all subcategories
+    const relevantCats = activeCategories.length > 0 
+      ? dbCategories.filter(c => activeCategories.includes(c.title))
+      : dbCategories;
+      
+    relevantCats.forEach(c => {
+      (c.subcategories || []).forEach(s => subs.add(s));
+    });
+    return Array.from(subs);
+  }, [dbCategories, activeCategories]);
 
   return (
     <div className="min-h-screen bg-[#F8FAF9]">
@@ -117,24 +176,63 @@ export default function ProductsPage() {
           >
             <h3 className="font-bold text-[#0D1A12] text-xl mb-5">Categories</h3>
             <div className="space-y-4">
-              {allCategories.map((cat) => (
-                <label key={cat} className="flex items-center space-x-3.5 cursor-pointer group">
-                  <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeCategory === cat ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
-                    {activeCategory === cat && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+              <label className="flex items-center space-x-3.5 cursor-pointer group">
+                <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeCategories.length === 0 ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
+                  {activeCategories.length === 0 && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                </div>
+                <input 
+                  type="checkbox" 
+                  className="hidden" 
+                  checked={activeCategories.length === 0}
+                  onChange={() => { setActiveCategories([]); setActiveSubcategories([]); }}
+                />
+                <span className={`text-[15px] transition-colors ${activeCategories.length === 0 ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>
+                  All
+                </span>
+              </label>
+
+              {dbCategories.map((cat) => (
+                <label key={cat.id} className="flex items-center space-x-3.5 cursor-pointer group">
+                  <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeCategories.includes(cat.title) ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
+                    {activeCategories.includes(cat.title) && <div className="w-2 h-2 bg-white rounded-[2px]" />}
                   </div>
                   <input 
-                    type="radio" 
-                    name="category"
+                    type="checkbox" 
                     className="hidden" 
-                    checked={activeCategory === cat}
-                    onChange={() => setActiveCategory(cat)}
+                    checked={activeCategories.includes(cat.title)}
+                    onChange={() => toggleArray(activeCategories, cat.title, setActiveCategories)}
                   />
-                  <span className={`text-[15px] transition-colors ${activeCategory === cat ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>
-                    {cat}
+                  <span className={`text-[15px] transition-colors ${activeCategories.includes(cat.title) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>
+                    {cat.title}
                   </span>
                 </label>
               ))}
             </div>
+
+            {/* Subcategories (Dynamic) */}
+            {availableSubcategories.length > 0 && (
+              <>
+                <h3 className="font-bold text-[#0D1A12] text-xl mt-8 mb-5">Subcategories</h3>
+                <div className="space-y-4">
+                  {availableSubcategories.map((sub) => (
+                    <label key={sub} className="flex items-center space-x-3.5 cursor-pointer group">
+                      <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeSubcategories.includes(sub) ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
+                        {activeSubcategories.includes(sub) && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                      </div>
+                      <input 
+                        type="checkbox" 
+                        className="hidden" 
+                        checked={activeSubcategories.includes(sub)}
+                        onChange={() => toggleArray(activeSubcategories, sub, setActiveSubcategories)}
+                      />
+                      <span className={`text-[15px] transition-colors ${activeSubcategories.includes(sub) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>
+                        {sub}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </>
+            )}
           </motion.div>
           
           <motion.div 
@@ -150,10 +248,7 @@ export default function ProductsPage() {
                   </div>
                   <input type="checkbox" className="hidden" 
                     checked={selectedProperties.includes(prop)}
-                    onChange={(e) => {
-                      if (e.target.checked) setSelectedProperties([...selectedProperties, prop]);
-                      else setSelectedProperties(selectedProperties.filter(p => p !== prop));
-                    }}
+                    onChange={() => toggleArray(selectedProperties, prop, setSelectedProperties)}
                   />
                   <span className={`text-[15px] transition-colors ${selectedProperties.includes(prop) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>{prop}</span>
                 </label>
@@ -179,9 +274,15 @@ export default function ProductsPage() {
                     <Link href={`/products/${product.slug || product.id}`} className="block h-full outline-none">
                       <div className="group bg-white rounded-3xl overflow-hidden border border-[#E2EDE8] shadow-sm hover:shadow-[0_20px_40px_rgba(36,184,108,0.08)] hover:-translate-y-1 transition-all duration-400 h-full flex flex-col">
                         
+                        {/* Content Header (Title Above Image) */}
+                        <div className="px-5 pt-5 pb-3">
+                          <div className="text-[10px] font-bold text-[#9CA3AF] mb-1.5 tracking-[0.2em] uppercase">{product.author || 'DESIGN WALLA'}</div>
+                          <h3 className="font-bold text-[17px] text-[#0D1A12] leading-[1.3] line-clamp-2 group-hover:text-[#24B86C] transition-colors">{product.name}</h3>
+                        </div>
+
                         {/* Image Container */}
-                        <div className="relative aspect-[4/3] w-full bg-[#F3F6F5] overflow-hidden p-2 pb-0 shrink-0 rounded-t-3xl">
-                          <div className="relative w-full h-full rounded-t-xl overflow-hidden">
+                        <div className="relative aspect-[4/3] w-full bg-[#F3F6F5] overflow-hidden p-2 py-0 shrink-0">
+                          <div className="relative w-full h-full overflow-hidden rounded-md">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img 
                               src={product.image || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800'} 
@@ -195,25 +296,19 @@ export default function ProductsPage() {
                               <span className={`w-1.5 h-1.5 rounded-full ${
                                 (product.plan_tier || 'Free') === 'Free' ? 'bg-[#24B86C]' :
                                 (product.plan_tier || 'Free') === 'Plus' ? 'bg-[#9333EA]' :
+                                (product.plan_tier || 'Free') === 'Paid' ? 'bg-rose-500' :
                                 'bg-[#F59E0B]'
                               }`} />
                               <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-800">
                                 {product.plan_tier || 'Free'}
                               </span>
                             </div>
-                            
-                            {/* Rating removed */}
                           </div>
                         </div>
 
-                        {/* Content */}
-                        <div className="p-6 flex-1 flex flex-col justify-between bg-white">
-                          <div>
-                            <div className="text-[10px] font-bold text-[#9CA3AF] mb-2 tracking-[0.2em] uppercase">{product.author || 'DESIGN WALLA'}</div>
-                            <h3 className="font-bold text-lg text-[#0D1A12] leading-[1.3] mb-4 line-clamp-2 group-hover:text-[#24B86C] transition-colors">{product.name}</h3>
-                          </div>
-                          
-                          <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#E2EDE8]/60">
+                        {/* Content Footer */}
+                        <div className="p-5 flex-1 flex flex-col justify-end bg-white">
+                          <div className="flex items-center justify-between border-t border-[#E2EDE8]/60 pt-4">
                             <span className="text-[22px] font-black text-[#0D1A12] tracking-tight">{product.price}</span>
                             <button className="h-10 rounded-xl bg-[#E6F4F1] text-[#24B86C] hover:bg-[#24B86C] hover:text-white transition-all duration-300 flex items-center gap-2 px-4 shadow-sm">
                               <Download className="w-4 h-4" />
@@ -240,7 +335,7 @@ export default function ProductsPage() {
               <h3 className="text-2xl font-bold text-[#0D1A12] mb-3">No products found</h3>
               <p className="text-[#6B7280] max-w-sm mb-6 text-lg">Try adjusting your search or filters to find what you&apos;re looking for.</p>
               <Button 
-                onClick={() => { setSearchQuery(''); setActiveCategory('All'); }}
+                onClick={() => { setSearchQuery(''); setActiveCategories([]); setActiveSubcategories([]); }}
                 className="bg-[#0D1A12] hover:bg-[#24B86C] text-white rounded-xl h-12 px-8 font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
               >
                 Clear all filters
@@ -259,5 +354,13 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F8FAF9] flex items-center justify-center"><div className="w-8 h-8 border-4 border-[#24B86C] border-t-transparent rounded-full animate-spin" /></div>}>
+      <ProductsContent />
+    </Suspense>
   );
 }

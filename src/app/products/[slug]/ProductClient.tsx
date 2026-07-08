@@ -137,6 +137,20 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
           {/* ── Left Column (Content) ── */}
           <div className="w-full lg:flex-1 min-w-0 flex flex-col">
             
+            {/* Title & Breadcrumbs (Mobile Only - Above Image) */}
+            <div className="block lg:hidden mb-6">
+              <h1 className="text-3xl font-black leading-tight text-[#111111]">{product.name}</h1>
+              <div className="text-[11px] font-bold text-[#11998E] mt-3 flex items-center gap-1.5 flex-wrap">
+                <Link href={`/products?search=${encodeURIComponent(product.category || '')}`} className="hover:underline">{product.category || 'General'}</Link> 
+                {product.subcategory && (
+                  <>
+                    <ChevronRight className="w-3 h-3 text-zinc-400" /> 
+                    <Link href={`/products?search=${encodeURIComponent(product.subcategory)}`} className="hover:underline">{product.subcategory}</Link>
+                  </>
+                )}
+              </div>
+            </div>
+
             {/* Main Image Gallery / 3D Viewer */}
             <div
               className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-[#E2EDE8] border border-[#E2EDE8] shadow-sm group"
@@ -269,8 +283,70 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
             )}
 
             {/* Tabs */}
-            <div className="flex gap-4 mt-8 pb-4 border-b border-[#E2EDE8]">
+            <div className="flex gap-4 mt-8 pb-4 border-b border-[#E2EDE8] lg:mt-8">
               <button className="px-6 py-2 rounded-full bg-white border border-[#E2EDE8] shadow-[0_2px_10px_rgba(0,0,0,0.02)] font-bold text-sm text-[#111111]">Overview</button>
+            </div>
+
+            {/* Mobile Buy Box (Below Image) */}
+            <div className="block lg:hidden mt-6">
+              <div className="bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-sm flex flex-col gap-6">
+                {/* License Box */}
+                <div>
+                  <span className="text-xs font-bold text-[#111111] block mb-2">Access Level</span>
+                  <div className="border border-zinc-300 rounded-xl p-3 flex justify-between items-center bg-white cursor-pointer hover:border-[#24B86C] transition-colors group">
+                    <div>
+                      <div className="text-sm font-bold text-[#111111] mb-0.5">{productPlan} Tier Product</div>
+                      {user && (
+                        <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-0.5">
+                          <span>Your Plan: <span className="font-bold text-[#111111]">{userPlan}</span></span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Purchase/Download Buttons */}
+                <div className="flex flex-col gap-2 mt-2">
+                  {authLoading ? (
+                    <Button disabled className="w-full h-12 bg-zinc-100 rounded-xl">
+                      <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
+                    </Button>
+                  ) : !user ? (
+                    <Link href="/auth">
+                      <Button className="w-full h-12 bg-[#0D1A12] hover:bg-[#24B86C] text-white font-bold rounded-xl text-sm transition-all">
+                        Log in to Download
+                      </Button>
+                    </Link>
+                  ) : canDownload ? (
+                    product.download_url ? (
+                      <a href={product.download_url} target="_blank" rel="noreferrer" className="w-full">
+                        <Button className="w-full h-12 bg-[#24B86C] hover:bg-[#1DA05D] text-white font-bold rounded-xl text-sm shadow-[0_8px_20px_rgba(36,184,108,0.25)] hover:-translate-y-0.5 transition-all">
+                          <Download className="w-4 h-4 mr-2" /> Download Asset
+                        </Button>
+                      </a>
+                    ) : product.google_drive_file_id ? (
+                      <Button onClick={handleDownload} disabled={downloading} className="w-full h-12 bg-[#24B86C] hover:bg-[#1DA05D] text-white font-bold rounded-xl text-sm shadow-[0_8px_20px_rgba(36,184,108,0.25)] hover:-translate-y-0.5 transition-all">
+                        {downloading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+                        {downloading ? 'Preparing...' : 'Download Asset'}
+                      </Button>
+                    ) : (
+                      <Button disabled className="w-full h-12 bg-zinc-100 text-zinc-400 font-bold rounded-xl text-sm">
+                        File unavailable
+                      </Button>
+                    )
+                  ) : (
+                    <Button disabled className="w-full h-12 bg-zinc-100 rounded-xl text-zinc-500 font-bold text-sm">
+                      Upgrade to {productPlan} to Download
+                    </Button>
+                  )}
+                  <Button variant="outline" className="w-full h-12 border-[#E2EDE8] hover:border-[#24B86C] hover:text-[#24B86C] hover:bg-[#24B86C]/5 rounded-xl font-bold transition-colors text-sm">
+                    <Bookmark className="w-4 h-4 mr-2" /> Save for later
+                  </Button>
+                  <Button variant="outline" className="w-full h-12 border-[#E2EDE8] rounded-xl font-bold hover:bg-zinc-50 transition-colors text-sm text-zinc-600">
+                    <Share2 className="w-4 h-4 mr-2" /> Share
+                  </Button>
+                </div>
+              </div>
             </div>
 
             {/* Description */}
@@ -378,17 +454,21 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
           </div>
           
           {/* ── Right Column (Sidebar) ── */}
-          <div className="w-full lg:w-[360px] shrink-0">
+          <div className="hidden lg:block w-[360px] shrink-0">
             <div className="sticky top-24 bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)] flex flex-col gap-6">
               
               {/* Author badge removed */}
               {/* Title & Breadcrumbs */}
               <div>
                 <h1 className="text-3xl font-black leading-tight text-[#111111]">{product.name}</h1>
-                <div className="text-[11px] font-bold text-[#11998E] mt-3 flex items-center gap-1.5">
-                  <Link href="/products" className="hover:underline">3D</Link> 
-                  <ChevronRight className="w-3 h-3 text-zinc-400" /> 
-                  <Link href="/products" className="hover:underline">Characters & Creatures</Link>
+                <div className="text-[11px] font-bold text-[#11998E] mt-3 flex items-center gap-1.5 flex-wrap">
+                  <Link href={`/products?search=${encodeURIComponent(product.category || '')}`} className="hover:underline">{product.category || 'General'}</Link> 
+                  {product.subcategory && (
+                    <>
+                      <ChevronRight className="w-3 h-3 text-zinc-400" /> 
+                      <Link href={`/products?search=${encodeURIComponent(product.subcategory)}`} className="hover:underline">{product.subcategory}</Link>
+                    </>
+                  )}
                 </div>
               </div>
               

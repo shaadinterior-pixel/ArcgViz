@@ -26,6 +26,10 @@ export default function AdminCategoriesPage() {
   const [newTitle, setNewTitle] = useState('');
   const [addingNew, setAddingNew] = useState(false);
 
+  // subcategory management
+  const [addingSubFor, setAddingSubFor] = useState<string | null>(null);
+  const [newSubTitle, setNewSubTitle] = useState('');
+
   const load = useCallback(async () => {
     try { setCategories(await fetchCategories()); }
     catch { toast('Failed to load categories', 'error'); }
@@ -45,7 +49,7 @@ export default function AdminCategoriesPage() {
     if (categories.some(c => c.id === id)) { toast('Category already exists', 'error'); return; }
     setSaving(true);
     try {
-      const cat: Category = { id, title, description: '', cards: [] };
+      const cat: Category = { id, title, description: '', cards: [], subcategories: [] };
       await saveCategories([cat]);
       setCategories(prev => [...prev, cat]);
       setNewTitle('');
@@ -76,6 +80,37 @@ export default function AdminCategoriesPage() {
       setCategories(prev => prev.filter(c => c.id !== id));
       toast('Category deleted');
     } catch { toast('Delete failed', 'error'); }
+  };
+
+  const handleAddSub = async (cat: Category) => {
+    const title = newSubTitle.trim();
+    if (!title) { toast('Enter a subcategory name', 'error'); return; }
+    
+    const subs = cat.subcategories || [];
+    if (subs.includes(title)) { toast('Subcategory already exists', 'error'); return; }
+    
+    setSaving(true);
+    try {
+      const updated = { ...cat, subcategories: [...subs, title] };
+      await saveCategories([updated]);
+      setCategories(prev => prev.map(c => c.id === cat.id ? updated : c));
+      setNewSubTitle('');
+      setAddingSubFor(null);
+      toast('Subcategory added ✓');
+    } catch { toast('Update failed', 'error'); }
+    finally { setSaving(false); }
+  };
+
+  const handleDeleteSub = async (cat: Category, subName: string) => {
+    if (!confirm(`Delete subcategory "${subName}"?`)) return;
+    setSaving(true);
+    try {
+      const updated = { ...cat, subcategories: (cat.subcategories || []).filter(s => s !== subName) };
+      await saveCategories([updated]);
+      setCategories(prev => prev.map(c => c.id === cat.id ? updated : c));
+      toast('Subcategory deleted');
+    } catch { toast('Update failed', 'error'); }
+    finally { setSaving(false); }
   };
 
   const moveUp = async (idx: number) => {
@@ -236,6 +271,43 @@ export default function AdminCategoriesPage() {
                   </button>
                 </div>
               )}
+            </div>
+
+            {/* Subcategories Section */}
+            <div className="border-t border-white/5 bg-black/10 px-12 py-3">
+              <div className="flex flex-wrap items-center gap-2">
+                {(cat.subcategories || []).map(sub => (
+                  <span key={sub} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-foreground/70">
+                    {sub}
+                    <button onClick={() => handleDeleteSub(cat, sub)} className="hover:text-red-400 transition-colors">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+                
+                {addingSubFor === cat.id ? (
+                  <div className="flex items-center gap-1">
+                    <Input
+                      autoFocus
+                      placeholder="New subcategory..."
+                      className="bg-black/20 border-white/10 h-7 text-xs w-36 px-2"
+                      value={newSubTitle}
+                      onChange={e => setNewSubTitle(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') handleAddSub(cat); if (e.key === 'Escape') setAddingSubFor(null); }}
+                    />
+                    <button onClick={() => handleAddSub(cat)} className="p-1 rounded bg-primary text-primary-foreground hover:bg-primary/90">
+                      <Save className="w-3 h-3" />
+                    </button>
+                    <button onClick={() => setAddingSubFor(null)} className="p-1 rounded bg-white/10 text-foreground/70 hover:bg-white/20">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <button onClick={() => { setAddingSubFor(cat.id); setNewSubTitle(''); }} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-dashed border-white/20 text-xs text-foreground/40 hover:text-foreground/70 hover:border-white/40 transition-colors">
+                    <Plus className="w-3 h-3" /> Add Subcategory
+                  </button>
+                )}
+              </div>
             </div>
           </Card>
         ))}

@@ -5,13 +5,13 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
-import { fetchProducts, saveProducts, deleteProduct, fetchCategories, onStoreUpdate, generateSlug, type Product } from '@/lib/store';
+import { fetchProducts, saveProducts, deleteProduct, fetchCategories, onStoreUpdate, generateSlug, type Product, type Category } from '@/lib/store';
 import { googleDriveProvider } from '@/lib/storage/google-drive';
 
 const FALLBACK_CATEGORIES = ['3D Models', 'PBR Materials', 'Interior Scenes', 'Furniture', 'Lighting', 'Architecture', 'Characters'];
 
 const makeEmpty = (firstCategory: string): Omit<Product,'id'> => ({
-  name:'', slug:'', price:'₹', category: firstCategory || 'General', description:'',
+  name:'', slug:'', price:'₹', category: firstCategory || 'General', subcategory: '', description:'',
   image:'', thumbnail_url:'', gallery_images:[], status:'Active',
   sales:0, rating:'5.0', author:'Design Walla Studio',
   date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
@@ -25,6 +25,7 @@ type DriveStatus = 'idle'|'valid'|'invalid'|'checking';
 export default function AdminProductsPage() {
   const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
+  const [allCats, setAllCats] = useState<Category[]>([]);
   const [dbCategories, setDbCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -39,6 +40,7 @@ export default function AdminProductsPage() {
     try {
       const [prods, cats] = await Promise.all([fetchProducts(), fetchCategories()]);
       setProducts(prods);
+      setAllCats(cats);
       const titles = cats.map(c => c.title);
       setDbCategories(titles.length > 0 ? titles : FALLBACK_CATEGORIES);
     } catch { toast('Failed to load products','error'); }
@@ -281,6 +283,13 @@ export default function AdminProductsPage() {
                     <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Category</label>
                     <select className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-900" value={editing.category} onChange={e=>setField('category',e.target.value)}>
                       {dbCategories.map(c=><option key={c}>{c}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Subcategory (Optional)</label>
+                    <select className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-900" value={editing.subcategory || ''} onChange={e=>setField('subcategory',e.target.value)}>
+                      <option value="">None</option>
+                      {(allCats.find(c => c.title === editing.category)?.subcategories || []).map(sub=><option key={sub} value={sub}>{sub}</option>)}
                     </select>
                   </div>
                   <div className="space-y-1.5">

@@ -8,6 +8,7 @@ export type Product = {
   slug: string;
   price: string;
   category: string;
+  subcategory?: string;
   status: 'Active' | 'Draft';
   sales: number;
   date: string;
@@ -84,7 +85,7 @@ export type HeroContent = {
 };
 
 export type CardEntry = { name: string; count: string; image: string };
-export type Category = { id: string; title: string; description: string; cards: CardEntry[] };
+export type Category = { id: string; title: string; description: string; cards: CardEntry[]; subcategories?: string[] };
 
 export type Purchase = {
   id: string;
@@ -152,6 +153,7 @@ export async function saveProducts(products: Product[]): Promise<void> {
       thumbnail_url: p.thumbnail_url || p.image || '',
       image: p.image || p.thumbnail_url || '',
       plan: plan_tier,
+      subcategory: p.subcategory || '',
     };
   });
   const { error } = await supabase.from('products').upsert(rows);
@@ -173,6 +175,7 @@ function normalizeProduct(row: Record<string, unknown>): Product {
     slug:                    String(row.slug ?? row.id ?? ''),
     price:                   String(row.price ?? ''),
     category:                String(row.category ?? ''),
+    subcategory:             String(row.subcategory ?? ''),
     status:                  (row.status as 'Active' | 'Draft') ?? 'Draft',
     sales:                   Number(row.sales ?? 0),
     date:                    String(row.date ?? ''),
