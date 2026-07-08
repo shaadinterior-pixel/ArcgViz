@@ -1,28 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { fetchServices, saveService, deleteService, type ServiceDetail } from '@/lib/store';
+import { fetchServices, saveService, deleteService, fetchCategories, type ServiceDetail } from '@/lib/store';
 import { defaultServices } from '@/components/ui/WhatWeDoSection';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { CheckCircle2, Trash, Plus, Save, ChevronDown, Upload, Loader2 } from 'lucide-react';
 
-const SERVICE_CATEGORIES = [
-  'Interior / Exterior Design and Work',
-  '3D Model & Product Design',
-  'Digital Marketing',
-  'Advertisement',
-  'Company Branding',
-  'Website / Apps / Software',
-  'Animation',
-  'Motion Graphic',
-  'Graphic Design',
-  'Video Editing',
-  'Printing Work',
-];
-
 export default function AdminServicesPage() {
   const [services, setServices] = useState<ServiceDetail[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
 
@@ -40,7 +27,11 @@ export default function AdminServicesPage() {
 
   const loadData = async () => {
     try {
-      const data = await fetchServices();
+      const [data, cats] = await Promise.all([fetchServices(), fetchCategories()]);
+      
+      const catTitles = cats.map(c => c.title);
+      setCategories(catTitles.length > 0 ? catTitles : ['General']);
+
       if (data && data.length > 0) {
         setServices(data);
       } else {
@@ -89,7 +80,7 @@ export default function AdminServicesPage() {
         </div>
         <Button onClick={() => setServices([{
           id: `s${Date.now()}`,
-          category: SERVICE_CATEGORIES[0],
+          category: categories[0] || "General",
           title: "",
           tagline: "",
           image: "",
@@ -135,7 +126,7 @@ export default function AdminServicesPage() {
                       value={service.category}
                       onChange={e => handleUpdateField(service.id, 'category', e.target.value)}
                     >
-                      {SERVICE_CATEGORIES.map(cat => (
+                      {categories.map(cat => (
                         <option key={cat} value={cat}>{cat}</option>
                       ))}
                     </select>

@@ -28,7 +28,7 @@ export type Product = {
   file_size: string;
   features: string[];
   updated_at?: string;
-  plan_tier: 'Free' | 'Plus' | 'Pro';
+  plan_tier: 'Free' | 'Plus' | 'Pro' | 'Paid';
 };
 
 export type Customer = {
@@ -144,14 +144,16 @@ export async function fetchAllSlugs(): Promise<string[]> {
 }
 
 export async function saveProducts(products: Product[]): Promise<void> {
-  const rows = products.map(p => ({
-    ...p,
-    // Ensure slug is set
-    slug: p.slug || generateSlug(p.name),
-    // Sync thumbnail_url with image for backward compat
-    thumbnail_url: p.thumbnail_url || p.image || '',
-    image: p.image || p.thumbnail_url || '',
-  }));
+  const rows = products.map(p => {
+    const { plan_tier, ...rest } = p;
+    return {
+      ...rest,
+      slug: p.slug || generateSlug(p.name),
+      thumbnail_url: p.thumbnail_url || p.image || '',
+      image: p.image || p.thumbnail_url || '',
+      plan: plan_tier,
+    };
+  });
   const { error } = await supabase.from('products').upsert(rows);
   if (error) throw error;
 }
@@ -191,7 +193,7 @@ function normalizeProduct(row: Record<string, unknown>): Product {
     file_size:               String(row.file_size ?? ''),
     features:                Array.isArray(row.features) ? row.features as string[] : [],
     updated_at:              row.updated_at ? String(row.updated_at) : undefined,
-    plan_tier:               (row.plan_tier as 'Free' | 'Plus' | 'Pro') ?? 'Free',
+    plan_tier:               (row.plan as 'Free' | 'Plus' | 'Pro' | 'Paid') ?? 'Free',
   };
 }
 

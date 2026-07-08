@@ -207,7 +207,8 @@ export default function AdminProductsPage() {
                       <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border ${
                         p.plan_tier === 'Free' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
                         p.plan_tier === 'Plus' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
-                        'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                        p.plan_tier === 'Pro' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                        'bg-rose-500/10 text-rose-400 border-rose-500/20'
                       }`}>
                         {p.plan_tier || 'Free'}
                       </span>
@@ -267,10 +268,11 @@ export default function AdminProductsPage() {
                     <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Plan Tier *</label>
                     <div className="relative">
                       <select className="appearance-none w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900"
-                        value={editing.plan_tier || 'Free'} onChange={e=>setField('plan_tier', e.target.value as 'Free' | 'Plus' | 'Pro')}>
+                        value={editing.plan_tier || 'Free'} onChange={e=>setField('plan_tier', e.target.value as 'Free' | 'Plus' | 'Pro' | 'Paid')}>
                         <option value="Free">Free</option>
                         <option value="Plus">Plus</option>
                         <option value="Pro">Pro</option>
+                        <option value="Paid">Paid</option>
                       </select>
                       <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"/>
                     </div>

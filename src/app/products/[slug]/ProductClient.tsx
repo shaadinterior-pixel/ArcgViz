@@ -61,10 +61,12 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   const userPlan = user?.plan || 'Free';
   
   const canDownload = !!user && (
-    productPlan === 'Free' || 
-    userPlan === 'Pro' || 
-    (userPlan === 'Plus' && productPlan === 'Plus') || 
-    purchased
+    purchased || 
+    (productPlan !== 'Paid' && (
+      productPlan === 'Free' || 
+      userPlan === 'Pro' || 
+      (userPlan === 'Plus' && productPlan === 'Plus')
+    ))
   );
 
   // ── Keyboard navigation for lightbox ─────────────────────────────────────
