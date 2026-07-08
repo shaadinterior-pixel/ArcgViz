@@ -35,6 +35,7 @@ export default function AdminProductsPage() {
   const [saving, setSaving] = useState(false);
   const [uploadingIdx, setUploadingIdx] = useState<number|null>(null);
   const [driveStatus, setDriveStatus] = useState<DriveStatus>('idle');
+  const [isAddingSubcat, setIsAddingSubcat] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -55,8 +56,8 @@ export default function AdminProductsPage() {
       (statusFilter==='All' || p.status===statusFilter);
   });
 
-  const openNew = () => { setEditing({id:`tmp-${Date.now()}`,...makeEmpty(dbCategories[0])}); setDriveStatus('idle'); setIsOpen(true); };
-  const openEdit = (p: Product) => { setEditing({...p}); setDriveStatus(p.google_drive_file_id?'valid':'idle'); setIsOpen(true); };
+  const openNew = () => { setEditing({id:`tmp-${Date.now()}`,...makeEmpty(dbCategories[0])}); setDriveStatus('idle'); setIsAddingSubcat(false); setIsOpen(true); };
+  const openEdit = (p: Product) => { setEditing({...p}); setDriveStatus(p.google_drive_file_id?'valid':'idle'); setIsAddingSubcat(false); setIsOpen(true); };
 
   const handleDelete = async (id:string) => {
     if(!confirm('Delete this product?')) return;
@@ -127,6 +128,19 @@ export default function AdminProductsPage() {
     };
     setSaving(true);
     try {
+      // If a new subcategory was typed, add it to the category in DB
+      if (editing.subcategory) {
+        const cat = allCats.find(c => c.title === editing.category);
+        if (cat && !(cat.subcategories || []).includes(editing.subcategory)) {
+          // It's a new subcategory for this category! Update it.
+          const updatedCat = { ...cat, subcategories: [...(cat.subcategories || []), editing.subcategory] };
+          // Note: saveCategories expects Category[] 
+          const { saveCategories } = await import('@/lib/store');
+          await saveCategories([updatedCat]);
+          setAllCats(prev => prev.map(c => c.id === cat.id ? updatedCat : c));
+        }
+      }
+
       await saveProducts([product]);
       setProducts(prev => { const i=prev.findIndex(p=>p.id===product.id); if(i>=0){const a=[...prev];a[i]=product;return a;} return [product,...prev]; });
       toast(isNew?'Product added ✓':'Product updated ✓');
@@ -287,10 +301,34 @@ export default function AdminProductsPage() {
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Subcategory (Optional)</label>
-                    <select className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-900" value={editing.subcategory || ''} onChange={e=>setField('subcategory',e.target.value)}>
-                      <option value="">None</option>
-                      {(allCats.find(c => c.title === editing.category)?.subcategories || []).map(sub=><option key={sub} value={sub}>{sub}</option>)}
-                    </select>
+                    {isAddingSubcat ? (
+                      <div className="flex gap-2">
+                        <Input 
+                          placeholder="Type new subcategory..." 
+                          className="bg-gray-50 border-gray-200 focus-visible:ring-primary flex-1"
+                          value={editing.subcategory || ''} 
+                          onChange={e=>setField('subcategory', e.target.value)}
+                        />
+                        <Button type="button" variant="outline" className="shrink-0" onClick={() => { setIsAddingSubcat(false); setField('subcategory', ''); }}>Cancel</Button>
+                      </div>
+                    ) : (
+                      <select 
+                        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-900" 
+                        value={editing.subcategory || ''} 
+                        onChange={e => {
+                          if (e.target.value === 'ADD_NEW') {
+                            setIsAddingSubcat(true);
+                            setField('subcategory', '');
+                          } else {
+                            setField('subcategory', e.target.value);
+                          }
+                        }}
+                      >
+                        <option value="">None</option>
+                        {(allCats.find(c => c.title === editing.category)?.subcategories || []).map(sub=><option key={sub} value={sub}>{sub}</option>)}
+                        <option value="ADD_NEW" className="font-bold text-primary">+ Add New Subcategory...</option>
+                      </select>
+                    )}
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Author</label>
