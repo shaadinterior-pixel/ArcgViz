@@ -58,8 +58,8 @@ export function LatestUploadsSection() {
         </motion.div>
 
         {/* Filter tabs + View All */}
-        <div className="flex items-center justify-between mb-8 gap-4">
-          <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-2 w-full pr-4">
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-2 w-full">
             {dynamicTabs.map((cat, i) => (
               <Link 
                 key={cat} 
@@ -80,9 +80,11 @@ export function LatestUploadsSection() {
               </Link>
             ))}
           </div>
-          <Link href={activeFilter === 'All' ? '/products' : `/products?category=${encodeURIComponent(activeFilter)}`} className="flex items-center gap-1.5 text-sm font-semibold text-[#0D1A12] hover:text-[#24B86C] transition-colors group shrink-0">
-            View all <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <div className="flex justify-end">
+            <Link href={activeFilter === 'All' ? '/products' : `/products?category=${encodeURIComponent(activeFilter)}`} className="flex items-center gap-1.5 text-sm font-semibold text-[#0D1A12] hover:text-[#24B86C] transition-colors group shrink-0">
+              View all <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
         </div>
 
         {/* Grid */}
