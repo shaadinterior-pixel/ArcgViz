@@ -276,10 +276,13 @@ export default function AdminProductsPage() {
                     <Input placeholder="modern-living-room" className="bg-gray-50 border-gray-200 font-mono text-sm focus-visible:ring-primary" value={editing.slug}
                       onChange={e=>setField('slug',e.target.value.toLowerCase().replace(/[^a-z0-9-]/g,'-'))}/>
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Price *</label>
-                    <Input placeholder="₹1,999" className="bg-gray-50 border-gray-200 focus-visible:ring-primary" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
-                  </div>
+                  {/* Price — only visible for Paid tier */}
+                  {editing.plan_tier === 'Paid' && (
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Price *</label>
+                      <Input placeholder="₹1,999" className="bg-gray-50 border-gray-200 focus-visible:ring-primary" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
+                    </div>
+                  )}
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Plan Tier *</label>
                     <div className="relative">

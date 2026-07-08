@@ -279,7 +279,7 @@ function ProductsContent() {
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       </>
     )}
   </AnimatePresence>
@@ -336,10 +336,20 @@ function ProductsContent() {
                         {/* Content Footer */}
                         <div className="p-5 flex-1 flex flex-col justify-end bg-white">
                           <div className="flex items-center justify-between border-t border-[#E2EDE8]/60 pt-4">
-                            <span className="text-[22px] font-black text-[#0D1A12] tracking-tight">{product.price}</span>
+                            {product.plan_tier === 'Paid' ? (
+                              <span className="text-[22px] font-black text-[#0D1A12] tracking-tight">{product.price || '—'}</span>
+                            ) : (
+                              <span className={`text-[12px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                                product.plan_tier === 'Free' ? 'bg-[#E6F4F1] text-[#24B86C]' :
+                                product.plan_tier === 'Plus' ? 'bg-purple-100 text-purple-700' :
+                                'bg-amber-100 text-amber-700'
+                              }`}>
+                                {product.plan_tier === 'Free' ? 'Free Download' : `${product.plan_tier} Members`}
+                              </span>
+                            )}
                             <button className="h-10 rounded-xl bg-[#E6F4F1] text-[#24B86C] hover:bg-[#24B86C] hover:text-white transition-all duration-300 flex items-center gap-2 px-4 shadow-sm">
                               <Download className="w-4 h-4" />
-                              <span className="font-bold text-[13px]">Buy Now</span>
+                              <span className="font-bold text-[13px]">{product.plan_tier === 'Paid' ? 'Buy Now' : 'Get Asset'}</span>
                             </button>
                           </div>
                         </div>
