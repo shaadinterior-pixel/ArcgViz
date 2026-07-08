@@ -237,74 +237,74 @@ export default function AdminProductsPage() {
       {/* ── Modal ── */}
       {isOpen && editing && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="w-full max-w-3xl rounded-2xl flex flex-col max-h-[92vh] overflow-hidden bg-white dark:bg-[#0C110E] border border-gray-200 dark:border-white/10 shadow-2xl">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 shrink-0">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-foreground">{editing.id.startsWith('tmp-')?'Add New Product':'Edit Product'}</h2>
-              <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-foreground hover:bg-gray-100 dark:hover:bg-secondary transition-colors"><X className="w-5 h-5"/></button>
+          <div className="w-full max-w-3xl rounded-2xl flex flex-col max-h-[92vh] overflow-hidden bg-white border border-gray-200 shadow-2xl">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50 shrink-0">
+              <h2 className="text-lg font-bold text-gray-900">{editing.id.startsWith('tmp-')?'Add New Product':'Edit Product'}</h2>
+              <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700:text-gray-900 hover:bg-gray-100:bg-secondary transition-colors"><X className="w-5 h-5"/></button>
             </div>
 
             <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
 
               {/* Basic Info */}
               <section className="space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/40">Basic Information</h3>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Basic Information</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Product Name *</label>
-                    <Input placeholder="Modern Minimalist Living Room" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 focus-visible:ring-primary" value={editing.name}
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Product Name *</label>
+                    <Input placeholder="Modern Minimalist Living Room" className="bg-gray-50 border-gray-200 focus-visible:ring-primary" value={editing.name}
                       onChange={e=>{setField('name',e.target.value); if(!editing.id.startsWith('tmp-')) return; setField('slug',generateSlug(e.target.value));}}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Slug</label>
-                    <Input placeholder="modern-living-room" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 font-mono text-sm focus-visible:ring-primary" value={editing.slug}
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Slug</label>
+                    <Input placeholder="modern-living-room" className="bg-gray-50 border-gray-200 font-mono text-sm focus-visible:ring-primary" value={editing.slug}
                       onChange={e=>setField('slug',e.target.value.toLowerCase().replace(/[^a-z0-9-]/g,'-'))}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Price *</label>
-                    <Input placeholder="₹1,999" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 focus-visible:ring-primary" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Price *</label>
+                    <Input placeholder="₹1,999" className="bg-gray-50 border-gray-200 focus-visible:ring-primary" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Plan Tier *</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Plan Tier *</label>
                     <div className="relative">
-                      <select className="appearance-none w-full bg-gray-50 border border-gray-200 dark:bg-black/20 dark:border-white/10 rounded-lg px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                      <select className="appearance-none w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900"
                         value={editing.plan_tier || 'Free'} onChange={e=>setField('plan_tier', e.target.value as 'Free' | 'Plus' | 'Pro')}>
                         <option value="Free">Free</option>
                         <option value="Plus">Plus</option>
                         <option value="Pro">Pro</option>
                       </select>
-                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 pointer-events-none"/>
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"/>
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Category</label>
-                    <select className="w-full bg-gray-50 border border-gray-200 dark:bg-black/20 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.category} onChange={e=>setField('category',e.target.value)}>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Category</label>
+                    <select className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-900" value={editing.category} onChange={e=>setField('category',e.target.value)}>
                       {dbCategories.map(c=><option key={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Author</label>
-                    <Input placeholder="Design Walla Studio" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 focus-visible:ring-primary" value={editing.author} onChange={e=>setField('author',e.target.value)}/>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Author</label>
+                    <Input placeholder="Design Walla Studio" className="bg-gray-50 border-gray-200 focus-visible:ring-primary" value={editing.author} onChange={e=>setField('author',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Rating</label>
-                    <Input placeholder="4.9" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 focus-visible:ring-primary" value={editing.rating} onChange={e=>setField('rating',e.target.value)}/>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Rating</label>
+                    <Input placeholder="4.9" className="bg-gray-50 border-gray-200 focus-visible:ring-primary" value={editing.rating} onChange={e=>setField('rating',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Status</label>
-                    <select className="w-full bg-gray-50 border border-gray-200 dark:bg-black/20 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.status} onChange={e=>setField('status',e.target.value as Product['status'])}>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Status</label>
+                    <select className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-900" value={editing.status} onChange={e=>setField('status',e.target.value as Product['status'])}>
                       <option>Active</option><option>Draft</option>
                     </select>
                   </div>
                   <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Description</label>
-                    <textarea rows={3} placeholder="High-quality 3D asset…" className="w-full bg-gray-50 border border-gray-200 dark:bg-black/20 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-foreground" value={editing.description??''} onChange={e=>setField('description',e.target.value)}/>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Description</label>
+                    <textarea rows={3} placeholder="High-quality 3D asset…" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-gray-900" value={editing.description??''} onChange={e=>setField('description',e.target.value)}/>
                   </div>
                 </div>
               </section>
 
               {/* Specifications */}
               <section className="space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/40">Specifications</h3>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Specifications</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
                     {label:'File Formats',key:'file_formats',placeholder:'BLEND, FBX, OBJ',help:'comma-separated'},
@@ -314,8 +314,8 @@ export default function AdminProductsPage() {
                     {label:'File Size',key:'file_size',placeholder:'1.4 GB'},
                   ].map(f=>(
                     <div key={f.key} className="space-y-1.5">
-                      <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">{f.label} <span className="normal-case font-normal opacity-60">{f.help}</span></label>
-                      <Input placeholder={f.placeholder} className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 focus-visible:ring-primary"
+                      <label className="text-xs font-bold uppercase tracking-widest text-gray-600">{f.label} <span className="normal-case font-normal opacity-60">{f.help}</span></label>
+                      <Input placeholder={f.placeholder} className="bg-gray-50 border-gray-200 focus-visible:ring-primary"
                         value={Array.isArray((editing as Record<string,unknown>)[f.key]) ? ((editing as Record<string,unknown>)[f.key] as string[]).join(', ') : String((editing as Record<string,unknown>)[f.key]??'')}
                         onChange={e=>{
                           const val = e.target.value;
@@ -325,7 +325,7 @@ export default function AdminProductsPage() {
                     </div>
                   ))}
                   <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Technical Properties</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Technical Properties</label>
                     <div className="flex flex-wrap gap-4 mt-1">
                       {['Rigged', 'Animated', 'Game-Ready', '3D Printable'].map(feat => (
                         <label key={feat} className="flex items-center gap-2 text-sm cursor-pointer">
@@ -343,8 +343,8 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                   <div className="sm:col-span-2 space-y-1.5 mt-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Other Features <span className="normal-case font-normal opacity-60">one per line</span></label>
-                    <textarea rows={3} placeholder={"Fully textured\nIncludes lighting"} className="w-full bg-gray-50 border border-gray-200 dark:bg-black/20 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Other Features <span className="normal-case font-normal opacity-60">one per line</span></label>
+                    <textarea rows={3} placeholder={"Fully textured\nIncludes lighting"} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-gray-900"
                       value={(editing.features??[]).filter(f => !['Rigged', 'Animated', 'Game-Ready', '3D Printable'].includes(f)).join('\n')}
                       onChange={e=>{
                         const standard = ['Rigged', 'Animated', 'Game-Ready', '3D Printable'].filter(f => (editing.features??[]).includes(f));
@@ -357,21 +357,21 @@ export default function AdminProductsPage() {
 
               {/* Media & 3D Viewer */}
               <section className="space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/40">Media & 3D Viewer</h3>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Media & 3D Viewer</h3>
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">3D Model URL (.glb / .gltf)</label>
-                    <Input placeholder="https://example.com/model.glb" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 flex-1 focus-visible:ring-primary" value={editing.model_url ?? ''} onChange={e=>setField('model_url',e.target.value)}/>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">3D Model URL (.glb / .gltf)</label>
+                    <Input placeholder="https://example.com/model.glb" className="bg-gray-50 border-gray-200 flex-1 focus-visible:ring-primary" value={editing.model_url ?? ''} onChange={e=>setField('model_url',e.target.value)}/>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Main Thumbnail</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Main Thumbnail</label>
                     <div className="flex items-center gap-3">
                       <label className={`cursor-pointer flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg border border-white/10 transition-colors ${uploadingIdx===-1?'opacity-50':'bg-white/5 hover:bg-white/10'}`}>
                         {uploadingIdx===-1?<Loader2 className="w-4 h-4 animate-spin"/>:<ImageIcon className="w-4 h-4"/>}
                         {uploadingIdx===-1?'Uploading…':'Upload Thumbnail'}
                         <input type="file" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={uploadingIdx!=null}/>
                       </label>
-                      <Input placeholder="Or paste URL…" className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 flex-1 focus-visible:ring-primary" value={editing.thumbnail_url} onChange={e=>{setField('thumbnail_url',e.target.value); setField('image',e.target.value);}}/>
+                      <Input placeholder="Or paste URL…" className="bg-gray-50 border-gray-200 flex-1 focus-visible:ring-primary" value={editing.thumbnail_url} onChange={e=>{setField('thumbnail_url',e.target.value); setField('image',e.target.value);}}/>
                     </div>
                     {editing.thumbnail_url && (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -380,7 +380,7 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Gallery Images</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Gallery Images</label>
                     <label className={`cursor-pointer flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg border border-white/10 transition-colors w-fit ${uploadingIdx===-2?'opacity-50':'bg-white/5 hover:bg-white/10'}`}>
                       {uploadingIdx===-2?<Loader2 className="w-4 h-4 animate-spin"/>:<Plus className="w-4 h-4"/>}
                       {uploadingIdx===-2?'Uploading…':'Add Gallery Images'}
@@ -409,7 +409,7 @@ export default function AdminProductsPage() {
                           else setField('features', current.filter(f => f !== 'Disable Hover Zoom'));
                         }}
                       />
-                      <span className="font-semibold text-foreground/80">Disable Hover Zoom for this product</span>
+                      <span className="font-semibold text-gray-800">Disable Hover Zoom for this product</span>
                     </label>
                     <p className="text-xs text-zinc-500 mt-1 pl-6">Check this if the images are low resolution to prevent pixelated zooming.</p>
                   </div>
@@ -418,14 +418,14 @@ export default function AdminProductsPage() {
 
               {/* Google Drive */}
               <section className="space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/40">Google Drive Download</h3>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Google Drive Download</h3>
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Share Link</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Share Link</label>
                     <div className="flex gap-2">
                       <Input
                         placeholder="https://drive.google.com/file/d/.../view?usp=sharing"
-                        className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 flex-1 focus-visible:ring-primary"
+                        className="bg-gray-50 border-gray-200 flex-1 focus-visible:ring-primary"
                         value={editing.google_drive_share_link}
                         onChange={e=>{setField('google_drive_share_link',e.target.value); setDriveStatus('idle');}}
                       />
@@ -438,7 +438,7 @@ export default function AdminProductsPage() {
                   {driveStatus==='valid' && (
                     <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-xl text-sm space-y-1">
                       <div className="flex items-center gap-2 text-green-400 font-semibold"><CheckCircle2 className="w-4 h-4"/>Link valid</div>
-                      <p className="text-foreground/60 text-xs font-mono break-all">File ID: {editing.google_drive_file_id}</p>
+                      <p className="text-gray-500 text-xs font-mono break-all">File ID: {editing.google_drive_file_id}</p>
                       <a href={editing.download_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-primary hover:underline">
                         <ExternalLink className="w-3 h-3"/>Preview download URL
                       </a>
@@ -453,12 +453,12 @@ export default function AdminProductsPage() {
                   {editing.google_drive_file_id && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">File ID</label>
-                        <Input className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 font-mono text-xs focus-visible:ring-primary" value={editing.google_drive_file_id} readOnly/>
+                        <label className="text-xs font-bold uppercase tracking-widest text-gray-600">File ID</label>
+                        <Input className="bg-gray-50 border-gray-200 font-mono text-xs focus-visible:ring-primary" value={editing.google_drive_file_id} readOnly/>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Download URL</label>
-                        <Input className="bg-gray-50 border-gray-200 dark:bg-black/20 dark:border-white/10 font-mono text-xs focus-visible:ring-primary" value={editing.download_url} readOnly/>
+                        <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Download URL</label>
+                        <Input className="bg-gray-50 border-gray-200 font-mono text-xs focus-visible:ring-primary" value={editing.download_url} readOnly/>
                       </div>
                     </div>
                   )}
@@ -466,8 +466,8 @@ export default function AdminProductsPage() {
               </section>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 dark:border-white/10 flex justify-end gap-3 shrink-0 bg-gray-50 dark:bg-white/5">
-              <Button variant="outline" className="border-gray-300 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10 text-gray-700 dark:text-foreground" onClick={()=>setIsOpen(false)}>Cancel</Button>
+            <div className="px-6 py-4 border-t border-gray-200 flex justify-end gap-3 shrink-0 bg-gray-50">
+              <Button variant="outline" className="border-gray-300 hover:bg-gray-100:bg-white/10 text-gray-700" onClick={()=>setIsOpen(false)}>Cancel</Button>
               <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary/90 text-white min-w-[120px] font-semibold">
                 {saving?<><Loader2 className="w-4 h-4 mr-2 animate-spin"/>Saving…</>:'Save Product'}
               </Button>
