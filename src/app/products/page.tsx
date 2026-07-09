@@ -243,7 +243,7 @@ function ProductsContent() {
         <div className="flex-1">
           {filteredProducts.length > 0 ? (
             <motion.div
-              className="columns-1 sm:columns-2 lg:columns-2 xl:columns-3 gap-5 space-y-0"
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 items-start"
             >
               <AnimatePresence mode="popLayout">
                 {filteredProducts.map((product, index) => (
@@ -253,13 +253,13 @@ function ProductsContent() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                    className="break-inside-avoid mb-5 transform-gpu"
+                    className="transform-gpu"
                   >
                     <Link href={`/products/${product.slug || product.id}`} className="block h-full outline-none">
                       <div className="group bg-white rounded-3xl overflow-hidden border border-[#E2EDE8] shadow-sm hover:shadow-[0_20px_40px_rgba(36,184,108,0.08)] hover:-translate-y-1 transition-all duration-400 h-full flex flex-col">
                         
                         {/* Image — natural aspect ratio, no cropping */}
-                        <div className="relative w-full bg-[#F3F6F5] overflow-hidden shrink-0 rounded-t-3xl">
+                        <div className="relative w-full bg-[#F3F6F5] overflow-hidden shrink-0 rounded-3xl">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img 
                             src={product.image || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800'} 
@@ -268,7 +268,7 @@ function ProductsContent() {
                             className="w-full h-auto block group-hover:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] gpu-layer"
                           />
                           {/* Gradient overlay on hover */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-t-3xl" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" />
 
                           {/* Badge */}
                           <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
@@ -297,41 +297,41 @@ function ProductsContent() {
                               </button>
                             )}
                           </div>
-                        </div>
-
-                        {/* Card Footer — name + plan/price */}
-                        <div className="px-4 py-3">
-                          <h3 className="text-sm font-bold text-[#111111] leading-tight line-clamp-2 mb-2">{product.name}</h3>
-                          <div className="flex items-center justify-between gap-2">
-                            {product.plan_tier === 'Paid' ? (
-                              <>
-                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-black uppercase tracking-wide">
-                                  ★ Paid
-                                </span>
-                                <span className="text-base font-black text-[#111111]">
-                                  {product.price || 'Contact'}
-                                </span>
-                              </>
-                            ) : (
-                              <>
-                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wide border ${
-                                  product.plan_tier === 'Pro'
-                                    ? 'bg-purple-50 border-purple-200 text-purple-700'
-                                    : product.plan_tier === 'Plus'
-                                    ? 'bg-green-50 border-green-200 text-green-700'
-                                    : 'bg-zinc-50 border-zinc-200 text-zinc-600'
-                                }`}>
-                                  {product.plan_tier === 'Pro' ? 'Plus + Pro' : (product.plan_tier || 'Free')}
-                                </span>
-                                <span className="text-[11px] font-medium text-zinc-400">Free download</span>
-                              </>
-                            )}
+                          
+                          {/* Hover info overlay (Title & Price) */}
+                          <div className="absolute inset-x-0 bottom-0 p-4 pt-12 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 pointer-events-none rounded-b-3xl">
+                            <h3 className="text-sm font-bold text-white leading-tight line-clamp-2 mb-2 drop-shadow-md">{product.name}</h3>
+                            <div className="flex items-center justify-between gap-2">
+                              {product.plan_tier === 'Paid' ? (
+                                <>
+                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-amber-400/50 text-amber-300 text-[10px] font-black uppercase tracking-wide bg-black/30 backdrop-blur-md">
+                                    ★ Paid
+                                  </span>
+                                  <span className="text-[13px] font-black text-white drop-shadow-md">
+                                    {product.price || 'Contact'}
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wide border backdrop-blur-md bg-black/30 ${
+                                    product.plan_tier === 'Pro'
+                                      ? 'border-purple-400/50 text-purple-300'
+                                      : product.plan_tier === 'Plus'
+                                      ? 'border-green-400/50 text-green-300'
+                                      : 'border-zinc-400/50 text-zinc-300'
+                                  }`}>
+                                    {product.plan_tier === 'Pro' ? 'Plus + Pro' : (product.plan_tier || 'Free')}
+                                  </span>
+                                  <span className="text-[10px] font-medium text-zinc-300 drop-shadow-md">Free download</span>
+                                </>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </Link>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  ))}
               </AnimatePresence>
             </motion.div>
           ) : (
