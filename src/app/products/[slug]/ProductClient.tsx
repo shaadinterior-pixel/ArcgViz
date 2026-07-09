@@ -535,18 +535,18 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
               <div>
                 <span className="text-xs font-bold text-[#111111] block mb-2">Access Level</span>
                 {productPlan === 'Paid' ? (
-                  <div className="border-2 border-amber-200 rounded-xl p-4 bg-amber-50">
+                  <div className="border-2 border-[#E2EDE8] rounded-xl p-4 bg-[#F3F6F5]">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-700 text-[11px] font-black uppercase tracking-wider">
-                        ★ Paid Product
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-[#E2EDE8] text-[#111111] text-[11px] font-black uppercase tracking-wider shadow-sm">
+                        <Star className="w-3 h-3 text-[#24B86C] fill-[#24B86C]" /> Paid Product
                       </span>
                       <span className="text-2xl font-black text-[#111111]">
                         {product.price || 'Contact us'}
                       </span>
                     </div>
-                    <p className="text-xs text-amber-700 font-medium">One-time purchase · Lifetime download access</p>
+                    <p className="text-xs text-zinc-500 font-medium">One-time purchase · Lifetime download access</p>
                     {user && (
-                      <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-2 pt-2 border-t border-amber-200">
+                      <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-2 pt-2 border-t border-[#E2EDE8]">
                         <span>Your Plan: <span className="font-bold text-[#111111]">{userPlan}</span></span>
                       </div>
                     )}
