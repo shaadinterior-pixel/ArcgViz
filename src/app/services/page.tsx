@@ -5,16 +5,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Layers } from 'lucide-react';
-import { fetchCategories, type Category } from '@/lib/store';
+import { fetchServices, type ServiceDetail } from '@/lib/store';
 import { Button } from '@/components/ui/Button';
 
 export default function ServicesPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [services, setServices] = useState<ServiceDetail[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCategories()
-      .then(data => setCategories(data || []))
+    fetchServices()
+      .then(data => setServices(data || []))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -38,22 +38,19 @@ export default function ServicesPage() {
           <div className="flex justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#24B86C]"></div>
           </div>
-        ) : categories.length === 0 ? (
+        ) : services.length === 0 ? (
           <div className="text-center py-20 text-zinc-500">
             <Layers className="w-12 h-12 mx-auto mb-4 opacity-20" />
-            <p>No services/categories available yet.</p>
+            <p>No services available yet.</p>
           </div>
         ) : (
           <div className="flex overflow-x-auto pb-12 pt-4 snap-x snap-mandatory gap-6 hide-scrollbar">
-            {categories.map((category, index) => {
-              const heroCard = (category.cards && category.cards.length > 0) 
-                ? category.cards[0] 
-                : { image: 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600' };
-              const slug = category.id || category.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            {services.map((service, index) => {
+              const slug = service.id || service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
               
               return (
                 <motion.div 
-                  key={category.id || index}
+                  key={service.id || index}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -62,10 +59,10 @@ export default function ServicesPage() {
                   {/* Image */}
                   <div className="relative h-[260px] w-full overflow-hidden">
                     <Image 
-                      src={heroCard.image || 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600'} 
-                      alt={category.title}
+                      src={service.image || 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600'} 
+                      alt={service.category}
                       fill
-                      className="object-cover transition-transform duration-700"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                       sizes="(max-width: 768px) 280px, 320px"
                     />
                     {/* Gradient Overlay */}
@@ -74,9 +71,16 @@ export default function ServicesPage() {
 
                   {/* Content (White Bottom Section) */}
                   <div className="p-6 flex flex-col items-center text-center flex-1 justify-between bg-white z-10 border-t-2 border-[#F3F6F5]">
-                    <h2 className="text-[13px] font-black text-[#111111] uppercase tracking-wide mb-6 leading-snug">
-                      {category.title}
-                    </h2>
+                    <div className="mb-6">
+                      <h2 className="text-[13px] font-black text-[#111111] uppercase tracking-wide mb-1 leading-snug">
+                        {service.category}
+                      </h2>
+                      {service.title && (
+                        <p className="text-xs text-zinc-500 font-medium">
+                          {service.title}
+                        </p>
+                      )}
+                    </div>
                     
                     <Link href={`/services/${slug}`} className="w-full">
                       <Button className="w-full rounded-full bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#1E995A] hover:to-[#0E7F76] text-white font-bold h-12 text-sm shadow-[0_8px_20px_rgba(36,184,108,0.25)] transition-all uppercase tracking-wide">
