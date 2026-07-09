@@ -100,6 +100,8 @@ export default function ProfilePage() {
     ? profile.joinDate.toDate().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
     : 'Member';
 
+  const photoUrl = firebaseUser?.photoURL;
+
   return (
     <div className="min-h-screen bg-[#F8FAF9] pb-24">
 
@@ -118,9 +120,14 @@ export default function ProfilePage() {
 
               {/* Avatar */}
               <div className="relative shrink-0">
-                <div className={`w-28 h-28 rounded-2xl bg-gradient-to-br ${planCfg.gradient} flex items-center justify-center text-white text-4xl font-black shadow-xl border-4 border-white`}>
-                  {initials}
-                </div>
+                {photoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={photoUrl} alt={displayName} className="w-28 h-28 rounded-2xl object-cover shadow-xl border-4 border-white bg-white" />
+                ) : (
+                  <div className={`w-28 h-28 rounded-2xl bg-gradient-to-br ${planCfg.gradient} flex items-center justify-center text-white text-4xl font-black shadow-xl border-4 border-white`}>
+                    {initials}
+                  </div>
+                )}
                 <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-xl flex items-center justify-center shadow-md border-2 border-white" style={{ backgroundColor: planCfg.color }}>
                   <PlanIcon className="w-4 h-4 text-white" />
                 </div>
