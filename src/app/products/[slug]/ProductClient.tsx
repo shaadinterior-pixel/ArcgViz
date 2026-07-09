@@ -288,7 +288,9 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   <span className="text-xs font-bold text-[#111111] block mb-2">Access Level</span>
                   <div className="border border-zinc-300 rounded-xl p-3 flex justify-between items-center bg-white cursor-pointer hover:border-[#24B86C] transition-colors group">
                     <div>
-                      <div className="text-sm font-bold text-[#111111] mb-0.5">{productPlan} Tier Product</div>
+                      <div className="text-sm font-bold text-[#111111] mb-0.5">
+                        {productPlan === 'Paid' ? `Price: ${product.price || 'N/A'}` : `${productPlan} Tier Product`}
+                      </div>
                       {user && (
                         <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-0.5">
                           <span>Your Plan: <span className="font-bold text-[#111111]">{userPlan}</span></span>
@@ -329,7 +331,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     )
                   ) : (
                     <Button disabled className="w-full h-12 bg-zinc-100 rounded-xl text-zinc-500 font-bold text-sm">
-                      Upgrade to {productPlan} to Download
+                      {productPlan === 'Paid' ? 'Purchase Required' : `Upgrade to ${productPlan} to Download`}
                     </Button>
                   )}
                   <a 
@@ -504,7 +506,9 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 <span className="text-xs font-bold text-[#111111] block mb-2">Access Level</span>
                 <div className="border border-zinc-300 rounded-xl p-3 flex justify-between items-center bg-white cursor-pointer hover:border-[#24B86C] transition-colors group">
                   <div>
-                    <div className="text-sm font-bold text-[#111111] mb-0.5">{productPlan} Tier Product</div>
+                    <div className="text-sm font-bold text-[#111111] mb-0.5">
+                      {productPlan === 'Paid' ? `Price: ${product.price || 'N/A'}` : `${productPlan} Tier Product`}
+                    </div>
                     {user && (
                       <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-0.5">
                         <span>Your Plan: <span className="font-bold text-[#111111]">{userPlan}</span></span>
@@ -523,7 +527,9 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 ) : !user ? (
                   <Link href="/auth">
                     <Button className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-sm mb-3">
-                      Upgrade to {productPlan === 'Pro' ? 'Plus + Pro' : productPlan} to Download
+                      {productPlan === 'Paid' 
+                        ? 'Login Required Before Downloading' 
+                        : `Upgrade to ${productPlan === 'Pro' ? 'Plus + Pro' : productPlan} to Download`}
                     </Button>
                   </Link>
                 ) : canDownload ? (
@@ -532,7 +538,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   </Button>
                 ) : (
                   <Button disabled className="w-full h-12 bg-zinc-200 text-zinc-500 font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2">
-                    Locked (Requires {productPlan} Plan)
+                    Locked ({productPlan === 'Paid' ? 'Purchase Required' : `Requires ${productPlan} Plan`})
                   </Button>
                 )}
                 
