@@ -49,9 +49,13 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
     (async () => {
       const u = await getCurrentUser();
       if (u) {
-        const { data: customer } = await supabase.from('customers').select('plan').eq('id', u.id).single();
-        setUser({ id: u.id, plan: customer?.plan || 'Free' });
-        const has = await hasPurchased(product.id);
+        // Get plan from Firestore instead of Supabase customers table
+        const { getUserPlan } = await import('@/lib/firebase-auth');
+        const plan = await getUserPlan(u.uid);
+        setUser({ id: u.uid, plan });
+        // Check purchase in Firestore for Paid products
+        const { hasPurchasedProduct } = await import('@/lib/downloads');
+        const has = await hasPurchasedProduct(u.uid, product.id);
         setPurchased(has);
       } else {
         setUser(null);
@@ -104,10 +108,16 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   const handleDownload = async () => {
     setDownloading(true);
     try {
-      const { data } = await import('@/lib/supabase').then(m => m.supabase.auth.getSession());
-      const token = data.session?.access_token;
+      // Get Firebase ID token for server-side verification
+      const { auth } = await import('@/lib/firebase');
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        alert('Please sign in to download.');
+        return;
+      }
+      const token = await currentUser.getIdToken();
       const res = await fetch(`/api/download/${product.id}`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        headers: { Authorization: `Bearer ${token}` },
         redirect: 'follow',
       });
       if (!res.ok) {
@@ -115,7 +125,6 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
         alert(j.error ?? 'Download failed. Please try again.');
         return;
       }
-      // If redirect followed to Drive URL, open it
       window.open(res.url, '_blank');
     } catch {
       alert('Download failed. Please try again.');

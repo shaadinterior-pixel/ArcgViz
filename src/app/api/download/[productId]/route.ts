@@ -1,11 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 
-// Use service-role client on server — never exposed to browser
+// ── Firebase Admin (server-side) ────────────────────────────────────────────
+// Initialize Firebase Admin only once
+if (getApps().length === 0) {
+  initializeApp({
+    credential: cert({
+      projectId:   process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+      privateKey:  process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
+  });
+}
+const adminAuth = getAuth();
+const adminDb   = getFirestore();
+
+// ── Supabase Admin (server-side for product data) ───────────────────────────
 const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'placeholder',
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.SUPABASE_SERVICE_ROLE_KEY ?? '',
 );
+
+// Monthly key helper
+function monthKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+const PLAN_LIMITS: Record<string, number> = { Free: 10, Plus: 50, Pro: 100 };
 
 export async function GET(
   request: NextRequest,
@@ -13,87 +38,107 @@ export async function GET(
 ) {
   const { productId } = await params;
 
-  // ── 1. Get user session from Authorization header or cookie ────────────────
+  // ── 1. Verify Firebase ID token ───────────────────────────────────────────
   const authHeader = request.headers.get('authorization');
-  const token = authHeader?.replace('Bearer ', '');
+  const idToken = authHeader?.replace('Bearer ', '').trim();
 
-  let userId: string | null = null;
-
-  if (token) {
-    const { data } = await supabaseAdmin.auth.getUser(token);
-    userId = data.user?.id ?? null;
-  } else {
-    // Try cookie-based session (browser navigation)
-    const cookieHeader = request.headers.get('cookie') ?? '';
-    // Supabase stores session in sb-*-auth-token cookies
-    const sessionMatch = cookieHeader.match(/sb-[^=]+-auth-token=([^;]+)/);
-    if (sessionMatch) {
-      try {
-        const sessionData = JSON.parse(decodeURIComponent(sessionMatch[1]));
-        const accessToken = sessionData?.access_token ?? sessionData?.[0]?.access_token;
-        if (accessToken) {
-          const { data } = await supabaseAdmin.auth.getUser(accessToken);
-          userId = data.user?.id ?? null;
-        }
-      } catch {
-        // ignore parse errors
-      }
-    }
-  }
-
-  // ── 2. Require authentication ──────────────────────────────────────────────
-  if (!userId) {
+  if (!idToken) {
     return NextResponse.json(
       { error: 'Authentication required. Please sign in to download.' },
       { status: 401 }
     );
   }
 
-  // ── 3. Verify purchase ─────────────────────────────────────────────────────
-  const { data: purchase, error: purchaseError } = await supabaseAdmin
-    .from('purchases')
-    .select('id')
-    .eq('user_id', userId)
-    .eq('product_id', productId)
-    .maybeSingle();
-
-  if (purchaseError || !purchase) {
+  let userId: string;
+  try {
+    const decoded = await adminAuth.verifyIdToken(idToken);
+    userId = decoded.uid;
+  } catch {
     return NextResponse.json(
-      { error: 'Purchase not found. You must purchase this product before downloading.' },
-      { status: 403 }
+      { error: 'Invalid or expired session. Please sign in again.' },
+      { status: 401 }
     );
   }
 
-  // ── 4. Fetch product download URL ─────────────────────────────────────────
+  // ── 2. Fetch product from Supabase ────────────────────────────────────────
   const { data: product, error: productError } = await supabaseAdmin
     .from('products')
-    .select('download_url, name, status')
+    .select('download_url, name, status, plan')
     .eq('id', productId)
     .single();
 
   if (productError || !product) {
-    return NextResponse.json(
-      { error: 'Product not found.' },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: 'Product not found.' }, { status: 404 });
   }
-
   if (product.status !== 'Active') {
-    return NextResponse.json(
-      { error: 'This product is currently unavailable.' },
-      { status: 410 }
-    );
+    return NextResponse.json({ error: 'This product is currently unavailable.' }, { status: 410 });
   }
-
   if (!product.download_url) {
-    return NextResponse.json(
-      { error: 'Download file not yet attached to this product. Please contact support.' },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: 'Download file not attached. Contact support.' }, { status: 404 });
   }
 
-  // ── 5. Redirect to download URL ────────────────────────────────────────────
-  // The URL is never exposed to the client — we redirect server-side.
-  // Google Drive uc?export=download triggers a file download.
+  const productPlan = String(product.plan || 'Free');
+
+  // ── 3. Check access in Firestore ──────────────────────────────────────────
+  const userRef = adminDb.collection('users').doc(userId);
+  const userSnap = await userRef.get();
+
+  if (!userSnap.exists) {
+    return NextResponse.json({ error: 'User profile not found. Please sign up again.' }, { status: 403 });
+  }
+
+  const userData = userSnap.data()!;
+  const userPlan = String(userData.plan || 'Free');
+  const key = monthKey();
+
+  // PAID product: check individual purchase in Firestore
+  if (/^paid$/i.test(productPlan)) {
+    const purchaseSnap = await adminDb
+      .collection('users').doc(userId)
+      .collection('purchases').doc(productId)
+      .get();
+
+    if (!purchaseSnap.exists) {
+      return NextResponse.json(
+        { error: 'Purchase required. You have not purchased this product.' },
+        { status: 403 }
+      );
+    }
+    // Paid products don't consume monthly quota → go straight to download
+  } else {
+    // PRO/PLUS product: check user plan tier
+    if (/^pro$/i.test(productPlan) && userPlan === 'Free') {
+      return NextResponse.json(
+        { error: 'This asset requires a Plus + Pro plan. Upgrade to download.' },
+        { status: 403 }
+      );
+    }
+
+    // Check monthly download quota
+    const used = (userData.monthlyDownloads?.[key] || 0) as number;
+    const limit = PLAN_LIMITS[userPlan] ?? 10;
+
+    if (used >= limit) {
+      return NextResponse.json(
+        { error: `Monthly download limit reached (${used}/${limit}). Upgrade your plan for more downloads.` },
+        { status: 403 }
+      );
+    }
+
+    // Increment monthly counter
+    await userRef.update({
+      [`monthlyDownloads.${key}`]: FieldValue.increment(1),
+    });
+  }
+
+  // Log download event
+  await adminDb.collection('users').doc(userId).collection('downloadLogs').add({
+    productId,
+    productName: product.name,
+    downloadedAt: FieldValue.serverTimestamp(),
+    month: key,
+  });
+
+  // ── 4. Redirect to download URL ───────────────────────────────────────────
   return NextResponse.redirect(product.download_url, { status: 302 });
 }
