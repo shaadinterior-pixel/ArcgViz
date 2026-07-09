@@ -184,7 +184,54 @@ export function Navbar() {
               </div>
             </NavDropdown>
 
-            <Link href="/resources" className="transition-colors hover:text-[#24B86C] flex items-center gap-1 text-sm font-medium text-foreground/80 px-2">Resources</Link>
+            {/* Print Dropdown */}
+            <NavDropdown label="Print" href="/products?category=Print">
+              <div className="bg-white border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] p-4 w-[240px]">
+                <div className="grid grid-cols-1 gap-0.5">
+                  <Link href="/products?category=Business+Cards" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
+                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">Business Cards</span>
+                  </Link>
+                  <Link href="/products?category=Flyers" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
+                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">Flyers & Posters</span>
+                  </Link>
+                  <Link href="/products?category=Banners" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
+                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">Banners</span>
+                  </Link>
+                </div>
+              </div>
+            </NavDropdown>
+
+            {/* Digital Product Dropdown */}
+            <NavDropdown label="Digital Product" href="/products?category=Digital">
+              <div className="bg-white border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] p-4 w-[240px]">
+                <div className="grid grid-cols-1 gap-0.5">
+                  <Link href="/products?category=Templates" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
+                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">Templates</span>
+                  </Link>
+                  <Link href="/products?category=Icons" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
+                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">Icons & Graphics</span>
+                  </Link>
+                  <Link href="/products?category=3D+Assets" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
+                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">3D Assets</span>
+                  </Link>
+                </div>
+              </div>
+            </NavDropdown>
+
+            {/* DW Tools Dropdown */}
+            <NavDropdown label="DW Tools" href="/tools">
+              <div className="bg-white border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] p-4 w-[240px]">
+                <div className="grid grid-cols-1 gap-0.5">
+                  <Link href="/studio" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
+                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">QR Code Studio</span>
+                  </Link>
+                  <Link href="/tools" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
+                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">More Tools</span>
+                  </Link>
+                </div>
+              </div>
+            </NavDropdown>
+
             <Link href="/pricing" className="transition-colors hover:text-[#24B86C] text-sm font-medium text-foreground/80 px-2">Pricing</Link>
           </nav>
 
@@ -306,7 +353,9 @@ export function Navbar() {
                   ))}
 
                   <Link href="/services" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100 mt-2" onClick={() => setIsMobileMenuOpen(false)}>Services</Link>
-                  <Link href="/resources" className="text-base font-bold text-zinc-600 py-3 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Resources</Link>
+                  <Link href="/products?category=Print" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100 mt-2" onClick={() => setIsMobileMenuOpen(false)}>Print</Link>
+                  <Link href="/products?category=Digital" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100 mt-2" onClick={() => setIsMobileMenuOpen(false)}>Digital Product</Link>
+                  <Link href="/tools" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100 mt-2" onClick={() => setIsMobileMenuOpen(false)}>DW Tools</Link>
                   <Link href="/pricing" className="text-base font-bold text-zinc-600 py-3 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
 
                   {user ? (
