@@ -25,8 +25,6 @@ function ProductsContent() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
   
-  // To avoid circular updates, keep track if auto-apply has run for the current search
-  const [lastAppliedSearch, setLastAppliedSearch] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -46,42 +44,17 @@ function ProductsContent() {
   // useDeferredValue keeps the UI responsive while typing
   const deferredSearch = useDeferredValue(searchQuery);
 
-  // ── AUTO APPLY CATEGORY/SUBCATEGORY LOGIC ──
-  useEffect(() => {
-    // Only auto-apply when products are loaded and search query is not empty and we haven't applied for this search yet
-    if (products.length > 0 && deferredSearch.trim() !== '' && deferredSearch !== lastAppliedSearch) {
-      const q = deferredSearch.toLowerCase();
-      
-      // Find matching products by name or author
-      const matchedProducts = products.filter(p => 
-        p.name?.toLowerCase().includes(q) || p.author?.toLowerCase().includes(q) || p.description?.toLowerCase().includes(q)
-      );
-      
-      if (matchedProducts.length > 0) {
-        const catsToApply = new Set<string>();
-        const subsToApply = new Set<string>();
-        
-        matchedProducts.forEach(p => {
-          if (p.category) catsToApply.add(p.category);
-          if (p.subcategory) subsToApply.add(p.subcategory);
-        });
-
-        // Add them to currently selected (or overwrite? user said "should be applied", let's merge or overwrite. Merging is safer so we don't clear their existing selections, but overwriting makes it exactly reflect the search)
-        // Let's overwrite so it acts as a fresh filter state for the new search
-        setActiveCategories(Array.from(catsToApply));
-        setActiveSubcategories(Array.from(subsToApply));
-      }
-      
-      setLastAppliedSearch(deferredSearch);
-    }
-  }, [deferredSearch, products, lastAppliedSearch]);
 
   const filteredProducts = useMemo(() =>
     products
       .filter(p => p.status !== 'Draft')   // hide drafts from storefront
       .filter(product => {
-        const matchesSearch = product.name?.toLowerCase().includes(deferredSearch.toLowerCase()) ||
-                              product.author?.toLowerCase().includes(deferredSearch.toLowerCase());
+        const q = deferredSearch.toLowerCase();
+        const matchesSearch = product.name?.toLowerCase().includes(q) ||
+                              product.author?.toLowerCase().includes(q) ||
+                              product.description?.toLowerCase().includes(q) ||
+                              product.category?.toLowerCase().includes(q) ||
+                              product.subcategory?.toLowerCase().includes(q);
         
         // If activeCategories is empty, it means "All"
         const matchesCategory = activeCategories.length === 0 || activeCategories.includes(product.category);
