@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
-import { fetchProducts, saveProducts, deleteProduct, fetchCategories, onStoreUpdate, generateSlug, type Product, type Category } from '@/lib/store';
+import { fetchProducts, saveProducts, deleteProduct, fetchCategories, saveCategories, onStoreUpdate, generateSlug, type Product, type Category } from '@/lib/store';
 import { googleDriveProvider } from '@/lib/storage/google-drive';
 
 const FALLBACK_CATEGORIES = ['3D Models', 'PBR Materials', 'Interior Scenes', 'Furniture', 'Lighting', 'Architecture', 'Characters'];
@@ -134,8 +134,6 @@ export default function AdminProductsPage() {
         if (cat && !(cat.subcategories || []).includes(editing.subcategory)) {
           // It's a new subcategory for this category! Update it.
           const updatedCat = { ...cat, subcategories: [...(cat.subcategories || []), editing.subcategory] };
-          // Note: saveCategories expects Category[] 
-          const { saveCategories } = await import('@/lib/store');
           await saveCategories([updatedCat]);
           setAllCats(prev => prev.map(c => c.id === cat.id ? updatedCat : c));
         }
@@ -145,7 +143,10 @@ export default function AdminProductsPage() {
       setProducts(prev => { const i=prev.findIndex(p=>p.id===product.id); if(i>=0){const a=[...prev];a[i]=product;return a;} return [product,...prev]; });
       toast(isNew?'Product added ✓':'Product updated ✓');
       setIsOpen(false);
-    } catch { toast('Save failed','error'); }
+    } catch (err: any) { 
+      console.error(err);
+      toast(`Save failed: ${err.message || 'Unknown error'}`,'error'); 
+    }
     finally { setSaving(false); }
   };
 
@@ -222,11 +223,10 @@ export default function AdminProductsPage() {
                     <td className="px-5 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border ${
                         p.plan_tier === 'Free' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                        p.plan_tier === 'Plus' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
                         p.plan_tier === 'Pro' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                         'bg-rose-500/10 text-rose-400 border-rose-500/20'
                       }`}>
-                        {p.plan_tier || 'Free'}
+                        {p.plan_tier === 'Pro' ? 'Plus + Pro' : (p.plan_tier || 'Free')}
                       </span>
                     </td>
                     <td className="px-5 py-4">
@@ -287,10 +287,9 @@ export default function AdminProductsPage() {
                     <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Plan Tier *</label>
                     <div className="relative">
                       <select className="appearance-none w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900"
-                        value={editing.plan_tier || 'Free'} onChange={e=>setField('plan_tier', e.target.value as 'Free' | 'Plus' | 'Pro' | 'Paid')}>
+                        value={editing.plan_tier || 'Free'} onChange={e=>setField('plan_tier', e.target.value as 'Free' | 'Pro' | 'Paid')}>
                         <option value="Free">Free</option>
-                        <option value="Plus">Plus</option>
-                        <option value="Pro">Pro</option>
+                        <option value="Pro">Plus + Pro</option>
                         <option value="Paid">Paid</option>
                       </select>
                       <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"/>

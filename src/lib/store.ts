@@ -29,7 +29,7 @@ export type Product = {
   file_size: string;
   features: string[];
   updated_at?: string;
-  plan_tier: 'Free' | 'Plus' | 'Pro' | 'Paid';
+  plan_tier: 'Free' | 'Pro' | 'Paid';
 };
 
 export type Customer = {
@@ -40,7 +40,7 @@ export type Customer = {
   orders: number;
   status: 'Active' | 'Inactive';
   joinDate: string;
-  plan: 'Free' | 'Plus' | 'Pro';
+  plan: 'Free' | 'Pro';
 };
 
 export type Order = {
@@ -169,6 +169,12 @@ export async function deleteProduct(id: string): Promise<void> {
 
 /** Normalise a raw Supabase row into a fully-typed Product */
 function normalizeProduct(row: Record<string, unknown>): Product {
+  // Normalize plan string to strict types regardless of DB casing
+  let plan = String(row.plan || 'Free').trim();
+  if (/^pro$/i.test(plan) || /^plus$/i.test(plan)) plan = 'Pro';
+  else if (/^paid$/i.test(plan)) plan = 'Paid';
+  else plan = 'Free';
+
   return {
     id:                      String(row.id ?? ''),
     name:                    String(row.name ?? ''),
@@ -196,7 +202,7 @@ function normalizeProduct(row: Record<string, unknown>): Product {
     file_size:               String(row.file_size ?? ''),
     features:                Array.isArray(row.features) ? row.features as string[] : [],
     updated_at:              row.updated_at ? String(row.updated_at) : undefined,
-    plan_tier:               (row.plan as 'Free' | 'Plus' | 'Pro' | 'Paid') ?? 'Free',
+    plan_tier:               plan as 'Free' | 'Pro' | 'Paid',
   };
 }
 

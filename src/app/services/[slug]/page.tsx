@@ -171,13 +171,13 @@ export default function ServiceDetailPage() {
                     className="object-cover group-hover:scale-105 transition-transform duration-500" 
                   />
                   <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/95 backdrop-blur-md border border-white/50 shadow-[0_2px_10px_rgba(0,0,0,0.06)]">
-                    <span className={`w-1.5 h-1.5 rounded-full ${
+                    <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
                       (product.plan_tier || 'Free') === 'Free' ? 'bg-[#24B86C]' :
-                      (product.plan_tier || 'Free') === 'Plus' ? 'bg-[#9333EA]' :
+                      (product.plan_tier || 'Free') === 'Pro' ? 'bg-[#9333EA]' :
                       'bg-[#F59E0B]'
                     }`} />
                     <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-800">
-                      {product.plan_tier || 'Free'}
+                      {product.plan_tier === 'Pro' ? 'Plus + Pro' : (product.plan_tier || 'Free')}
                     </span>
                   </div>
                 </div>

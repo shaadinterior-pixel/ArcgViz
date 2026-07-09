@@ -126,11 +126,11 @@ export function LatestUploadsSection() {
                         <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
                           <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
                             plan === 'Free' ? 'bg-[#24B86C]' :
-                            plan === 'Plus' ? 'bg-[#9333EA]' :
+                            plan === 'Pro' ? 'bg-[#9333EA]' :
                             'bg-[#F59E0B]'
                           }`} />
                           <span className="text-[10px] font-bold uppercase tracking-widest text-white drop-shadow-md">
-                            {plan}
+                            {plan === 'Pro' ? 'Plus + Pro' : plan}
                           </span>
                         </div>
 

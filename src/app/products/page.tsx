@@ -294,11 +294,11 @@ function ProductsContent() {
                             <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
                               <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
                                 (product.plan_tier || 'Free') === 'Free' ? 'bg-[#24B86C]' :
-                                (product.plan_tier || 'Free') === 'Plus' ? 'bg-[#9333EA]' :
+                                (product.plan_tier || 'Free') === 'Pro' ? 'bg-[#9333EA]' :
                                 'bg-[#F59E0B]'
                               }`} />
                               <span className="text-[10px] font-bold uppercase tracking-widest text-white drop-shadow-md">
-                                {product.plan_tier || 'Free'}
+                                {product.plan_tier === 'Pro' ? 'Plus + Pro' : (product.plan_tier || 'Free')}
                               </span>
                             </div>
 
