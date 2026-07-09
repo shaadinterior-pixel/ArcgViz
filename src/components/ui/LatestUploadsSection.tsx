@@ -58,8 +58,8 @@ export function LatestUploadsSection() {
         </motion.div>
 
         {/* Filter tabs + View All */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div className="flex overflow-x-auto thin-scrollbar gap-2 pb-2 flex-1 w-full max-w-full">
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex overflow-x-auto thin-scrollbar gap-2 pb-2 w-full max-w-full">
             {dynamicTabs.map((cat, i) => (
               <Link 
                 key={cat} 
@@ -80,7 +80,7 @@ export function LatestUploadsSection() {
               </Link>
             ))}
           </div>
-          <div className="flex justify-end shrink-0 md:pb-2">
+          <div className="flex justify-start">
             <Link href={activeFilter === 'All' ? '/products' : `/products?category=${encodeURIComponent(activeFilter)}`} className="flex items-center gap-1.5 text-sm font-semibold text-[#0D1A12] hover:text-[#24B86C] transition-colors group shrink-0">
               View all <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
