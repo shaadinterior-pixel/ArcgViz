@@ -29,6 +29,7 @@ export type Product = {
   file_size: string;
   features: string[];
   updated_at?: string;
+  created_at?: string;
   plan_tier: 'Free' | 'Pro' | 'Paid';
 };
 

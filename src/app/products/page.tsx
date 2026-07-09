@@ -298,6 +298,36 @@ function ProductsContent() {
                             )}
                           </div>
                         </div>
+
+                        {/* Card Footer — name + plan/price */}
+                        <div className="px-4 py-3">
+                          <h3 className="text-sm font-bold text-[#111111] leading-tight line-clamp-2 mb-2">{product.name}</h3>
+                          <div className="flex items-center justify-between gap-2">
+                            {product.plan_tier === 'Paid' ? (
+                              <>
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-black uppercase tracking-wide">
+                                  ★ Paid
+                                </span>
+                                <span className="text-base font-black text-[#111111]">
+                                  {product.price || 'Contact'}
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wide border ${
+                                  product.plan_tier === 'Pro'
+                                    ? 'bg-purple-50 border-purple-200 text-purple-700'
+                                    : product.plan_tier === 'Plus'
+                                    ? 'bg-green-50 border-green-200 text-green-700'
+                                    : 'bg-zinc-50 border-zinc-200 text-zinc-600'
+                                }`}>
+                                  {product.plan_tier === 'Pro' ? 'Plus + Pro' : (product.plan_tier || 'Free')}
+                                </span>
+                                <span className="text-[11px] font-medium text-zinc-400">Free download</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </Link>
                   </motion.div>
@@ -326,10 +356,20 @@ function ProductsContent() {
           )}
           
           {filteredProducts.length > 0 && (
-            <div className="mt-20 flex justify-center">
-              <Button variant="outline" size="lg" className="px-12 h-14 rounded-full text-[15px] font-bold border-[#E2EDE8] text-[#0D1A12] hover:bg-[#0D1A12] hover:text-white hover:border-[#0D1A12] transition-all shadow-sm">
-                Load More Assets
-              </Button>
+            <div className="mt-20 flex flex-col items-center gap-3">
+              <button className="group relative inline-flex items-center gap-3 px-14 py-4 rounded-full text-[15px] font-black text-white overflow-hidden shadow-[0_8px_32px_rgba(36,184,108,0.35)] hover:shadow-[0_12px_40px_rgba(36,184,108,0.5)] transition-all duration-300 hover:-translate-y-0.5">
+                {/* Gradient background */}
+                <span className="absolute inset-0 bg-gradient-to-r from-[#0D1A12] via-[#24B86C] to-[#11998E] transition-all duration-500 group-hover:from-[#24B86C] group-hover:via-[#11998E] group-hover:to-[#0D1A12]" />
+                {/* Shine effect */}
+                <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                <span className="relative flex items-center gap-2">
+                  <svg className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Load More Assets
+                </span>
+              </button>
+              <p className="text-xs text-zinc-400 font-medium">Showing {filteredProducts.length} assets</p>
             </div>
           )}
         </div>
