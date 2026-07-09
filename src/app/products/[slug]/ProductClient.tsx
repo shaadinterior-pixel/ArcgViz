@@ -61,14 +61,14 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   }, [product.id]);
 
   const productPlan = product.plan_tier || 'Free';
+  const productPlanDisplay = productPlan === 'Pro' ? 'Plus + Pro' : productPlan;
   const userPlan = user?.plan || 'Free';
   
   const canDownload = !!user && (
     purchased || 
     (productPlan !== 'Paid' && (
       productPlan === 'Free' || 
-      userPlan === 'Pro' || 
-      (userPlan === 'Plus' && productPlan === 'Plus')
+      userPlan === 'Pro'
     ))
   );
 
@@ -446,11 +446,11 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                             <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
                               <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
                                 plan === 'Free' ? 'bg-[#24B86C]' :
-                                plan === 'Plus' ? 'bg-[#9333EA]' :
+                                plan === 'Pro' ? 'bg-[#9333EA]' :
                                 'bg-[#F59E0B]'
                               }`} />
                               <span className="text-[10px] font-bold uppercase tracking-widest text-white drop-shadow-md">
-                                {plan}
+                                {plan === 'Pro' ? 'Plus + Pro' : plan}
                               </span>
                             </div>
 
@@ -522,8 +522,8 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   </Button>
                 ) : !user ? (
                   <Link href="/auth">
-                    <Button className="w-full h-12 bg-[#0D1A12] hover:bg-[#24B86C] text-white font-bold rounded-xl text-sm transition-all">
-                      Log in to Download
+                    <Button className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-sm mb-3">
+                      Upgrade to {productPlan === 'Pro' ? 'Plus + Pro' : productPlan} to Download
                     </Button>
                   </Link>
                 ) : canDownload ? (

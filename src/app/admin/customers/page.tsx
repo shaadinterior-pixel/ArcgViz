@@ -150,10 +150,10 @@ export default function AdminCustomersPage() {
                     <td className="px-5 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border ${
                         c.plan === 'Free' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                        c.plan === 'Plus' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
-                        'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                        c.plan === 'Pro' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                        'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
                       }`}>
-                        {c.plan || 'Free'}
+                        {c.plan === 'Pro' ? 'Plus + Pro' : (c.plan || 'Free')}
                       </span>
                     </td>
                     <td className="px-5 py-4">
@@ -211,14 +211,10 @@ export default function AdminCustomersPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Plan Tier</label>
-                  <select
-                    className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
-                    value={editing.plan || 'Free'}
-                    onChange={e => setEditing({ ...editing, plan: e.target.value as Customer['plan'] })}
-                  >
-                    <option value="Free">Free</option>
-                    <option value="Plus">Plus</option>
-                    <option value="Pro">Pro</option>
+                  <select className="appearance-none w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                    value={editing.plan} onChange={e=>setEditing({...editing, plan:e.target.value as 'Free'|'Pro'})}>
+                    <option className="bg-black text-white" value="Free">Free</option>
+                    <option className="bg-black text-white" value="Pro">Plus + Pro</option>
                   </select>
                 </div>
                 <div className="space-y-1.5">
