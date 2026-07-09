@@ -194,8 +194,10 @@ export function Navbar() {
           {/* Desktop Actions */}
           <div className="flex items-center space-x-3">
             {user ? (
-              <Link href="/profile" className="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 transition-colors border border-zinc-200" title="View Profile">
-                <User className="w-5 h-5 text-zinc-600" />
+              <Link href="/profile" className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-[#24B86C] to-[#11998E] shadow-md hover:shadow-lg transition-all border-2 border-white" title="View Profile">
+                <span className="text-white font-black text-sm">
+                  {(user as any).displayName?.charAt(0)?.toUpperCase() || (user as any).email?.charAt(0)?.toUpperCase() || 'U'}
+                </span>
               </Link>
             ) : (
               <Link href="/login" className="flex items-center gap-2 text-sm font-medium hover:text-[#24B86C] transition-colors text-foreground/90 pl-2">
