@@ -19,6 +19,14 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [done, setDone] = useState(false);
 
+  React.useEffect(() => {
+    import('@/lib/auth').then(({ getCurrentUser }) => {
+      getCurrentUser().then(u => {
+        if (u) router.push('/dashboard');
+      });
+    });
+  }, [router]);
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');

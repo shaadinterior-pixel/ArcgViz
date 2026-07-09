@@ -83,12 +83,24 @@ export async function GET(
   const userRef = adminDb.collection('users').doc(userId);
   const userSnap = await userRef.get();
 
+  let userData = userSnap.data();
   if (!userSnap.exists) {
-    return NextResponse.json({ error: 'User profile not found. Please sign up again.' }, { status: 403 });
+    try {
+      const authUser = await adminAuth.getUser(userId);
+      userData = {
+        name: authUser.displayName || authUser.email?.split('@')[0] || 'User',
+        email: authUser.email,
+        plan: 'Free',
+        joinDate: FieldValue.serverTimestamp(),
+        monthlyDownloads: {}
+      };
+      await userRef.set(userData);
+    } catch (e) {
+      return NextResponse.json({ error: 'Failed to create missing user profile.' }, { status: 500 });
+    }
   }
 
-  const userData = userSnap.data()!;
-  const userPlan = String(userData.plan || 'Free');
+  const userPlan = String(userData?.plan || 'Free');
   const key = monthKey();
 
   // PAID product: check individual purchase in Firestore

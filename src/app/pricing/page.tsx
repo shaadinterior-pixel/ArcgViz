@@ -173,17 +173,36 @@ export default function PricingPage() {
                 ) : loading ? (
                   <div className="w-full h-12 rounded-xl bg-zinc-100 animate-pulse" />
                 ) : (
-                  <Link href={plan.ctaHref} className="w-full">
-                    <Button
-                      className="w-full h-12 rounded-xl font-bold text-sm transition-all"
-                      style={{
-                        backgroundColor: plan.color,
-                        color: 'white',
-                      }}
+                  userPlan ? (
+                    <a 
+                      href={`https://wa.me/918969688709?text=${encodeURIComponent(`Hi Design Walla! 👋\n\nI want to upgrade my account to the ${plan.name} Plan.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full"
                     >
-                      {plan.cta} <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </Link>
+                      <Button
+                        className="w-full h-12 rounded-xl font-bold text-sm transition-all"
+                        style={{
+                          backgroundColor: plan.color,
+                          color: 'white',
+                        }}
+                      >
+                        Upgrade via WhatsApp <ArrowRight className="ml-2 w-4 h-4" />
+                      </Button>
+                    </a>
+                  ) : (
+                    <Link href={plan.ctaHref} className="w-full">
+                      <Button
+                        className="w-full h-12 rounded-xl font-bold text-sm transition-all"
+                        style={{
+                          backgroundColor: plan.color,
+                          color: 'white',
+                        }}
+                      >
+                        {plan.cta} <ArrowRight className="ml-2 w-4 h-4" />
+                      </Button>
+                    </Link>
+                  )
                 )}
               </div>
             );

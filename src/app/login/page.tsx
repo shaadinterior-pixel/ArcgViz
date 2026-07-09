@@ -20,6 +20,14 @@ function LoginContent() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
 
+  React.useEffect(() => {
+    import('@/lib/auth').then(({ getCurrentUser }) => {
+      getCurrentUser().then(u => {
+        if (u) router.push(redirectTo);
+      });
+    });
+  }, [router, redirectTo]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
