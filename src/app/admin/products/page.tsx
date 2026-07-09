@@ -8,7 +8,19 @@ import { useToast } from '@/components/ui/Toast';
 import { fetchProducts, saveProducts, deleteProduct, fetchCategories, saveCategories, onStoreUpdate, generateSlug, type Product, type Category } from '@/lib/store';
 import { googleDriveProvider } from '@/lib/storage/google-drive';
 
-const FALLBACK_CATEGORIES = ['3D Models', 'PBR Materials', 'Interior Scenes', 'Furniture', 'Lighting', 'Architecture', 'Characters'];
+const FALLBACK_CATEGORIES = [
+  'INTERIOR / EXTERIOR DESIGN AND WORK',
+  '3D MODEL & PRODUCT DESIGN',
+  'DIGITAL MARKETING',
+  'ADVERTISEMENT',
+  'COMPANY BRANDING',
+  'WEBSITE / APPS / SOFTWARE',
+  'ANIMATION',
+  'MOTION GRAPHIC',
+  'GRAPHIC DESIGN',
+  'VIDEO EDITING',
+  'PRINTING WORK'
+];
 
 const makeEmpty = (firstCategory: string): Omit<Product,'id'> => ({
   name:'', slug:'', price:'₹', category: firstCategory || 'General', subcategory: '', description:'',
