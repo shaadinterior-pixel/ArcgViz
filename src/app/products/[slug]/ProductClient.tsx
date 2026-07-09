@@ -8,7 +8,7 @@ import {
   Star, Check, Box, FileText, Download, ShieldCheck,
   Heart, Share2, Image as ImageIcon, X, ChevronLeft,
   ChevronRight, ZoomIn, LogIn, Loader2, Monitor, MessageCircle, ArrowRight,
-  ChevronDown, Bookmark, Info
+  ChevronDown, Bookmark, Info, Wand2
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
@@ -339,12 +339,19 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                       Upgrade to {productPlan} to Download
                     </Button>
                   )}
-                  <Button variant="outline" className="w-full h-12 border-[#E2EDE8] hover:border-[#24B86C] hover:text-[#24B86C] hover:bg-[#24B86C]/5 rounded-xl font-bold transition-colors text-sm">
-                    <Bookmark className="w-4 h-4 mr-2" /> Save for later
-                  </Button>
-                  <Button variant="outline" className="w-full h-12 border-[#E2EDE8] rounded-xl font-bold hover:bg-zinc-50 transition-colors text-sm text-zinc-600">
-                    <Share2 className="w-4 h-4 mr-2" /> Share
-                  </Button>
+                  <Link href={`/contact?service=${encodeURIComponent(product.name)}`} className="w-full block">
+                    <Button variant="outline" className="w-full h-12 border-[#E2EDE8] bg-[#FAFCFB] hover:border-[#11998E] hover:text-[#11998E] rounded-xl font-bold transition-colors text-sm text-zinc-700">
+                      <Wand2 className="w-4 h-4 mr-2" /> Hire team to customize
+                    </Button>
+                  </Link>
+                  <div className="flex gap-2">
+                    <Button variant="outline" className="flex-1 h-12 border-[#E2EDE8] hover:border-[#24B86C] hover:text-[#24B86C] hover:bg-[#24B86C]/5 rounded-xl font-bold transition-colors text-sm">
+                      <Bookmark className="w-4 h-4 mr-2" /> Save
+                    </Button>
+                    <Button variant="outline" className="flex-1 h-12 border-[#E2EDE8] rounded-xl font-bold hover:bg-zinc-50 transition-colors text-sm text-zinc-700">
+                      <Share2 className="w-4 h-4 mr-2" /> Share
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -460,8 +467,6 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
               {/* Author badge removed */}
               {/* Rating removed */}
               
-              <div className="h-px bg-[#E2EDE8] w-full" />
-              
               {/* License Box */}
               <div>
                 <span className="text-xs font-bold text-[#111111] block mb-2">Access Level</span>
@@ -499,19 +504,19 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   </Button>
                 )}
                 
+                <Link href={`/contact?service=${encodeURIComponent(product.name)}`} className="w-full block">
+                  <Button variant="outline" className="w-full h-12 border-2 border-[#E2EDE8] bg-[#FAFCFB] hover:border-[#11998E] hover:text-[#11998E] rounded-xl font-bold transition-colors text-sm text-[#111111]">
+                    <Wand2 className="w-4 h-4 mr-2" /> Hire team to customize
+                  </Button>
+                </Link>
                 <div className="flex gap-2">
-                  <Button variant="outline" className="w-full h-12 border-2 border-zinc-200 font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111]">
-                    <Bookmark className="w-4 h-4 mr-2"/> Save for later
+                  <Button variant="outline" className="flex-1 h-12 border-2 border-[#E2EDE8] font-bold bg-white hover:border-[#24B86C] hover:text-[#24B86C] rounded-xl text-sm text-[#111111] transition-colors">
+                    <Bookmark className="w-4 h-4 mr-2"/> Save
+                  </Button>
+                  <Button variant="outline" className="flex-1 h-12 border-2 border-[#E2EDE8] font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111] transition-colors">
+                    <Share2 className="w-4 h-4 mr-2"/> Share
                   </Button>
                 </div>
-              </div>
-              
-
-              {/* Footer Actions */}
-              <div className="flex gap-2 mt-2">
-                <Button variant="outline" className="w-full h-10 border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-bold text-zinc-600 rounded-lg">
-                  <Share2 className="w-3.5 h-3.5 mr-2"/> Share
-                </Button>
               </div>
 
             </div>

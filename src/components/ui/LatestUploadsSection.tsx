@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Heart, Download, Play, ArrowRight } from 'lucide-react';
+import { Heart, Download, Play, ArrowRight, ShoppingCart } from 'lucide-react';
 import { fetchProducts, fetchCategories, type Category } from '@/lib/store';
 
 export function LatestUploadsSection() {
@@ -58,8 +58,8 @@ export function LatestUploadsSection() {
         </motion.div>
 
         {/* Filter tabs + View All */}
-        <div className="flex flex-col gap-4 mb-8">
-          <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-2 w-full">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div className="flex overflow-x-auto thin-scrollbar gap-2 pb-2 flex-1 w-full max-w-full">
             {dynamicTabs.map((cat, i) => (
               <Link 
                 key={cat} 
@@ -80,7 +80,7 @@ export function LatestUploadsSection() {
               </Link>
             ))}
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end shrink-0 md:pb-2">
             <Link href={activeFilter === 'All' ? '/products' : `/products?category=${encodeURIComponent(activeFilter)}`} className="flex items-center gap-1.5 text-sm font-semibold text-[#0D1A12] hover:text-[#24B86C] transition-colors group shrink-0">
               View all <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -117,34 +117,40 @@ export function LatestUploadsSection() {
                           src={product.image || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=600'}
                           alt={product.name}
                           loading="lazy"
-                          className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 bg-zinc-100"
+                          className="block w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 bg-zinc-100"
                         />
                         {/* Gradient overlay on hover */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                         {/* Badge */}
-                        <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md border border-white/50 shadow-[0_2px_10px_rgba(0,0,0,0.06)]">
-                          <span className={`w-1.5 h-1.5 rounded-full ${
+                        <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
+                          <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
                             plan === 'Free' ? 'bg-[#24B86C]' :
                             plan === 'Plus' ? 'bg-[#9333EA]' :
                             'bg-[#F59E0B]'
                           }`} />
-                          <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-800">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-white drop-shadow-md">
                             {plan}
                           </span>
                         </div>
 
                         {/* Hover action icons */}
                         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
-                          <button className="w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow hover:bg-white hover:scale-110 transition-all">
-                            <Heart className="w-3.5 h-3.5 text-[#0D1A12]" />
+                          <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">
+                            <Heart className="w-3.5 h-3.5 text-white drop-shadow-md" />
                           </button>
-                          <button className="w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow hover:bg-white hover:scale-110 transition-all">
-                            <Download className="w-3.5 h-3.5 text-[#0D1A12]" />
-                          </button>
+                          {plan === 'Free' ? (
+                            <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">
+                              <Download className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                            </button>
+                          ) : (
+                            <button className="w-8 h-8 rounded-full bg-[#24B86C]/80 backdrop-blur-lg border border-[#24B86C]/50 flex items-center justify-center shadow-lg hover:bg-[#24B86C] hover:scale-110 transition-all text-white">
+                              <ShoppingCart className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                            </button>
+                          )}
                           {hasVideo && (
-                            <button className="w-8 h-8 rounded-full bg-[#9333EA] flex items-center justify-center shadow hover:scale-110 transition-all">
-                              <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5" />
+                            <button className="w-8 h-8 rounded-full bg-[#9333EA]/80 backdrop-blur-lg border border-[#9333EA]/50 flex items-center justify-center shadow-lg hover:bg-[#9333EA] hover:scale-110 transition-all text-white">
+                              <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5 drop-shadow-md" />
                             </button>
                           )}
                         </div>
@@ -157,12 +163,6 @@ export function LatestUploadsSection() {
                             <span className="text-white/80 text-[10px]">↓ {product.sales || 0}</span>
                           </div>
                         </div>
-                      </div>
-
-                      {/* Card footer */}
-                      <div className="px-3 py-2.5 bg-white">
-                        <p className="text-xs font-bold text-[#0D1A12] line-clamp-1">{product.name}</p>
-                        <p className="text-[10px] text-[#9CA3AF] mt-0.5 capitalize">{product.category}</p>
                       </div>
                     </div>
                   </Link>

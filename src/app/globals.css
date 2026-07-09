@@ -36,6 +36,23 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+  .thin-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #E2EDE8 transparent;
+  }
+  .thin-scrollbar::-webkit-scrollbar {
+    height: 6px;
+  }
+  .thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .thin-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #E2EDE8;
+    border-radius: 10px;
+  }
+  .thin-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: #24B86C;
+  }
   /* GPU-promoted layer — use sparingly on scroll-animated elements */
   .gpu-layer {
     transform: translate3d(0, 0, 0);

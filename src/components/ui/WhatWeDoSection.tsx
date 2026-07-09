@@ -90,7 +90,7 @@ export function WhatWeDoSection() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
-          className="flex overflow-x-auto hide-scrollbar gap-3 pb-4 mb-10 w-full"
+          className="flex overflow-x-auto thin-scrollbar gap-3 pb-4 mb-10 w-full"
         >
           {services.map((service) => {
             const isActive = activeTab === service.id;

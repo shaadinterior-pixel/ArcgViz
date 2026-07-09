@@ -4,7 +4,7 @@ import React, { useState, useDeferredValue, useMemo, useEffect, Suspense } from 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, ChevronDown, Search, Download } from 'lucide-react';
+import { Filter, ChevronDown, Search, Download, Heart, Play, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
@@ -276,15 +276,9 @@ function ProductsContent() {
                     <Link href={`/products/${product.slug || product.id}`} className="block h-full outline-none">
                       <div className="group bg-white rounded-3xl overflow-hidden border border-[#E2EDE8] shadow-sm hover:shadow-[0_20px_40px_rgba(36,184,108,0.08)] hover:-translate-y-1 transition-all duration-400 h-full flex flex-col">
                         
-                        {/* Content Header (Title Above Image) */}
-                        <div className="px-5 pt-5 pb-3">
-                          <div className="text-[10px] font-bold text-[#9CA3AF] mb-1.5 tracking-[0.2em] uppercase">{product.author || 'DESIGN WALLA'}</div>
-                          <h3 className="font-bold text-[17px] text-[#0D1A12] leading-[1.3] line-clamp-2 group-hover:text-[#24B86C] transition-colors">{product.name}</h3>
-                        </div>
-
-                        {/* Image Container */}
-                        <div className="relative aspect-[4/3] w-full bg-[#F3F6F5] overflow-hidden p-2 py-0 shrink-0">
-                          <div className="relative w-full h-full overflow-hidden rounded-md">
+                        {/* Image Container with Dynamic Glassmorphic Overlay */}
+                        <div className="relative aspect-[4/3] w-full bg-[#F3F6F5] overflow-hidden shrink-0">
+                          <div className="relative w-full h-full overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img 
                               src={product.image || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800'} 
@@ -293,39 +287,47 @@ function ProductsContent() {
                               className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] gpu-layer"
                             />
                             
-                            {/* Badges */}
-                            <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md border border-white/50 shadow-[0_2px_10px_rgba(0,0,0,0.06)]">
-                              <span className={`w-1.5 h-1.5 rounded-full ${
+                            {/* Gradient overlay on hover */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                            {/* Badge */}
+                            <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
+                              <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
                                 (product.plan_tier || 'Free') === 'Free' ? 'bg-[#24B86C]' :
                                 (product.plan_tier || 'Free') === 'Plus' ? 'bg-[#9333EA]' :
-                                (product.plan_tier || 'Free') === 'Paid' ? 'bg-rose-500' :
                                 'bg-[#F59E0B]'
                               }`} />
-                              <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-800">
+                              <span className="text-[10px] font-bold uppercase tracking-widest text-white drop-shadow-md">
                                 {product.plan_tier || 'Free'}
                               </span>
                             </div>
-                          </div>
-                        </div>
 
-                        {/* Content Footer */}
-                        <div className="p-5 flex-1 flex flex-col justify-end bg-white">
-                          <div className="flex items-center justify-between border-t border-[#E2EDE8]/60 pt-4">
-                            {product.plan_tier === 'Paid' ? (
-                              <span className="text-[22px] font-black text-[#0D1A12] tracking-tight">{product.price || '—'}</span>
-                            ) : (
-                              <span className={`text-[12px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
-                                product.plan_tier === 'Free' ? 'bg-[#E6F4F1] text-[#24B86C]' :
-                                product.plan_tier === 'Plus' ? 'bg-purple-100 text-purple-700' :
-                                'bg-amber-100 text-amber-700'
-                              }`}>
-                                {product.plan_tier === 'Free' ? 'Free Download' : `${product.plan_tier} Members`}
-                              </span>
-                            )}
-                            <button className="h-10 rounded-xl bg-[#E6F4F1] text-[#24B86C] hover:bg-[#24B86C] hover:text-white transition-all duration-300 flex items-center gap-2 px-4 shadow-sm">
-                              <Download className="w-4 h-4" />
-                              <span className="font-bold text-[13px]">{product.plan_tier === 'Paid' ? 'Buy Now' : 'Get Asset'}</span>
-                            </button>
+                            {/* Hover action icons */}
+                            <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+                              <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">
+                                <Heart className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                              </button>
+                              {(product.plan_tier || 'Free') === 'Free' ? (
+                                <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">
+                                  <Download className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                                </button>
+                              ) : (
+                                <button className="w-8 h-8 rounded-full bg-[#24B86C]/80 backdrop-blur-lg border border-[#24B86C]/50 flex items-center justify-center shadow-lg hover:bg-[#24B86C] hover:scale-110 transition-all text-white">
+                                  <ShoppingCart className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                                </button>
+                              )}
+                              {(String(product.category || '').toLowerCase().includes('motion') || String(product.category || '').toLowerCase().includes('animation')) && (
+                                <button className="w-8 h-8 rounded-full bg-[#9333EA]/80 backdrop-blur-lg border border-[#9333EA]/50 flex items-center justify-center shadow-lg hover:bg-[#9333EA] hover:scale-110 transition-all text-white">
+                                  <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5 drop-shadow-md" />
+                                </button>
+                              )}
+                            </div>
+
+                            {/* Bottom info on hover */}
+                            <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                              <p className="text-white/80 text-[10px] font-bold tracking-widest uppercase mb-1 drop-shadow-md">{product.category}</p>
+                              <p className="text-white text-sm font-bold line-clamp-1 drop-shadow-lg">{product.name}</p>
+                            </div>
                           </div>
                         </div>
                       </div>
