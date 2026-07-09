@@ -303,11 +303,16 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                       Upgrade to {productPlan} to Download
                     </Button>
                   )}
-                  <Link href={`/contact?service=${encodeURIComponent(product.name)}`} className="w-full block">
+                  <a 
+                    href={`https://wa.me/918969688709?text=${encodeURIComponent(`Hi Design Walla! 👋\n\nI would like to hire your team to customize a product.\n\n*Product Name:* ${product.name}\n*Product Link:* https://designwalla.com/products/${product.slug || product.id}\n\nPlease let me know how we can proceed!`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full block"
+                  >
                     <Button variant="outline" className="w-full h-12 border-[#E2EDE8] bg-[#FAFCFB] hover:border-[#11998E] hover:text-[#11998E] rounded-xl font-bold transition-colors text-sm text-zinc-700">
                       <Wand2 className="w-4 h-4 mr-2" /> Hire team to customize
                     </Button>
-                  </Link>
+                  </a>
                   <div className="flex gap-2">
                     <Button variant="outline" className="flex-1 h-12 border-[#E2EDE8] hover:border-[#24B86C] hover:text-[#24B86C] hover:bg-[#24B86C]/5 rounded-xl font-bold transition-colors text-sm">
                       <Bookmark className="w-4 h-4 mr-2" /> Save
@@ -505,11 +510,16 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   </Button>
                 )}
                 
-                <Link href={`/contact?service=${encodeURIComponent(product.name)}`} className="w-full block">
+                <a 
+                  href={`https://wa.me/918969688709?text=${encodeURIComponent(`Hi Design Walla! 👋\n\nI would like to hire your team to customize a product.\n\n*Product Name:* ${product.name}\n*Product Link:* https://designwalla.com/products/${product.slug || product.id}\n\nPlease let me know how we can proceed!`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full block"
+                >
                   <Button variant="outline" className="w-full h-12 border-2 border-[#E2EDE8] bg-[#FAFCFB] hover:border-[#11998E] hover:text-[#11998E] rounded-xl font-bold transition-colors text-sm text-[#111111]">
                     <Wand2 className="w-4 h-4 mr-2" /> Hire team to customize
                   </Button>
-                </Link>
+                </a>
                 <div className="flex gap-2">
                   <Button variant="outline" className="flex-1 h-12 border-2 border-[#E2EDE8] font-bold bg-white hover:border-[#24B86C] hover:text-[#24B86C] rounded-xl text-sm text-[#111111] transition-colors">
                     <Bookmark className="w-4 h-4 mr-2"/> Save
