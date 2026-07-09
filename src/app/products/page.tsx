@@ -50,7 +50,8 @@ function ProductsContent() {
       .filter(p => p.status !== 'Draft')   // hide drafts from storefront
       .filter(product => {
         const q = deferredSearch.toLowerCase();
-        const matchesSearch = product.name?.toLowerCase().includes(q) ||
+        const matchesSearch = !q ||
+                              product.name?.toLowerCase().includes(q) ||
                               product.author?.toLowerCase().includes(q) ||
                               product.description?.toLowerCase().includes(q) ||
                               product.category?.toLowerCase().includes(q) ||
@@ -65,6 +66,12 @@ function ProductsContent() {
         const matchesProperties = selectedProperties.every(prop => (product.features || []).includes(prop));
         
         return matchesSearch && matchesCategory && matchesSubcategory && matchesProperties;
+      })
+      // Latest uploaded first
+      .sort((a, b) => {
+        const da = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const db2 = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return db2 - da;
       }),
     [products, deferredSearch, activeCategories, activeSubcategories, selectedProperties]
   );
@@ -232,10 +239,12 @@ function ProductsContent() {
           )}
         </AnimatePresence>
 
-        {/* Product Grid */}
+        {/* Product Grid — CSS columns for masonry/natural ratio */}
         <div className="flex-1">
           {filteredProducts.length > 0 ? (
-            <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            <motion.div
+              className="columns-1 sm:columns-2 lg:columns-2 xl:columns-3 gap-5 space-y-0"
+            >
               <AnimatePresence mode="popLayout">
                 {filteredProducts.map((product, index) => (
                   <motion.div
@@ -243,60 +252,50 @@ function ProductsContent() {
                     initial={{ opacity: 0, y: 30, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                    className="gpu-layer h-full"
+                    transition={{ duration: 0.5, delay: index * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                    className="gpu-layer break-inside-avoid mb-5"
                   >
                     <Link href={`/products/${product.slug || product.id}`} className="block h-full outline-none">
                       <div className="group bg-white rounded-3xl overflow-hidden border border-[#E2EDE8] shadow-sm hover:shadow-[0_20px_40px_rgba(36,184,108,0.08)] hover:-translate-y-1 transition-all duration-400 h-full flex flex-col">
                         
-                        {/* Image Container with Dynamic Glassmorphic Overlay */}
-                        <div className="relative aspect-[4/3] w-full bg-[#F3F6F5] overflow-hidden shrink-0">
-                          <div className="relative w-full h-full overflow-hidden">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img 
-                              src={product.image || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800'} 
-                              alt={product.name}
-                              loading="lazy"
-                              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] gpu-layer"
-                            />
-                            
-                            {/* Gradient overlay on hover */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                        {/* Image — natural aspect ratio, no cropping */}
+                        <div className="relative w-full bg-[#F3F6F5] overflow-hidden shrink-0 rounded-t-3xl">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img 
+                            src={product.image || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800'} 
+                            alt={product.name}
+                            loading="lazy"
+                            className="w-full h-auto block group-hover:scale-105 transition-transform duration-700 ease-[0.16,1,0.3,1] gpu-layer"
+                          />
+                          {/* Gradient overlay on hover */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-t-3xl" />
 
-                            {/* Badge */}
-                            <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
-                              <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
-                                (product.plan_tier || 'Free') === 'Free' ? 'bg-[#24B86C]' :
-                                (product.plan_tier || 'Free') === 'Pro' ? 'bg-[#9333EA]' :
-                                'bg-[#F59E0B]'
-                              }`} />
-                              <span className="text-[10px] font-bold uppercase tracking-widest text-white drop-shadow-md">
-                                {product.plan_tier === 'Pro' ? 'Plus + Pro' : (product.plan_tier || 'Free')}
-                              </span>
-                            </div>
+                          {/* Badge */}
+                          <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
+                            <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
+                              (product.plan_tier || 'Free') === 'Free' ? 'bg-[#24B86C]' :
+                              (product.plan_tier || 'Free') === 'Pro' ? 'bg-[#9333EA]' :
+                              'bg-[#F59E0B]'
+                            }`} />
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-white drop-shadow-md">
+                              {product.plan_tier === 'Pro' ? 'Plus + Pro' : (product.plan_tier || 'Free')}
+                            </span>
+                          </div>
 
-                            {/* Hover action icons */}
-                            <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+                          {/* Hover action icons */}
+                          <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+                            <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">
+                              <Heart className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                            </button>
+                            {(product.plan_tier || 'Free') === 'Free' ? (
                               <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">
-                                <Heart className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                                <Download className="w-3.5 h-3.5 text-white drop-shadow-md" />
                               </button>
-                              {(product.plan_tier || 'Free') === 'Free' ? (
-                                <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">
-                                  <Download className="w-3.5 h-3.5 text-white drop-shadow-md" />
-                                </button>
-                              ) : (
-                                <button className="w-8 h-8 rounded-full bg-[#24B86C]/80 backdrop-blur-lg border border-[#24B86C]/50 flex items-center justify-center shadow-lg hover:bg-[#24B86C] hover:scale-110 transition-all text-white">
-                                  <ShoppingCart className="w-3.5 h-3.5 text-white drop-shadow-md" />
-                                </button>
-                              )}
-                              {(String(product.category || '').toLowerCase().includes('motion') || String(product.category || '').toLowerCase().includes('animation')) && (
-                                <button className="w-8 h-8 rounded-full bg-[#9333EA]/80 backdrop-blur-lg border border-[#9333EA]/50 flex items-center justify-center shadow-lg hover:bg-[#9333EA] hover:scale-110 transition-all text-white">
-                                  <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5 drop-shadow-md" />
-                                </button>
-                              )}
-                            </div>
-
-
+                            ) : (
+                              <button className="w-8 h-8 rounded-full bg-[#24B86C]/80 backdrop-blur-lg border border-[#24B86C]/50 flex items-center justify-center shadow-lg hover:bg-[#24B86C] hover:scale-110 transition-all text-white">
+                                <ShoppingCart className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                              </button>
+                            )}
                           </div>
                         </div>
                       </div>
