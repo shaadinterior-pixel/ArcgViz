@@ -8,7 +8,7 @@ import {
   Star, Check, Box, FileText, Download, ShieldCheck,
   Heart, Share2, Image as ImageIcon, X, ChevronLeft,
   ChevronRight, ZoomIn, LogIn, Loader2, Monitor, MessageCircle, ArrowRight,
-  ChevronDown, Bookmark, Info, Wand2
+  ChevronDown, Bookmark, Info, Wand2, ShoppingCart, Play
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
@@ -21,6 +21,8 @@ type Props = {
 };
 
 export default function ProductClient({ product, similarProducts = [] }: Props) {
+  const [visibleSimilar, setVisibleSimilar] = useState(8);
+
   // ── All product images (thumbnail + gallery deduped) ─────────────────────
   const allImages = React.useMemo(() => {
     const thumb = product.thumbnail_url || product.image;
@@ -182,25 +184,6 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   onTouchStart={onTouchStart}
                   onTouchEnd={onTouchEnd}
                   onClick={() => openLightbox(activeIdx)}
-                  onMouseEnter={() => {
-                    if (product.features?.includes('Disable Hover Zoom')) return;
-                    const el = document.getElementById('zoom-layer');
-                    if(el) el.style.opacity = '1';
-                  }}
-                  onMouseLeave={() => {
-                    if (product.features?.includes('Disable Hover Zoom')) return;
-                    const el = document.getElementById('zoom-layer');
-                    if(el) el.style.opacity = '0';
-                  }}
-                  onMouseMove={(e) => {
-                    if (product.features?.includes('Disable Hover Zoom')) return;
-                    const el = document.getElementById('zoom-layer');
-                    if(!el) return;
-                    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-                    const x = ((e.clientX - left) / width) * 100;
-                    const y = ((e.clientY - top) / height) * 100;
-                    el.style.backgroundPosition = `${x}% ${y}%`;
-                  }}
                 >
                   {/* Base Image */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -210,29 +193,15 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     className="w-full h-full object-cover bg-zinc-100 transition-opacity duration-300"
                   />
                   
-                  {/* Zoom Hover Layer */}
+                  {/* Magnifying Button (Opens Lightbox) */}
                   {!product.features?.includes('Disable Hover Zoom') && (
-                    <>
-                      <div 
-                        id="zoom-layer"
-                        className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-200"
-                        style={{
-                          backgroundImage: `url(${allImages[activeIdx]})`,
-                          backgroundSize: '250%',
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: '50% 50%',
-                          backgroundColor: '#f4f4f5'
-                        }}
-                      />
-                      
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                        <ZoomIn className="w-12 h-12 text-white/30 drop-shadow-lg" />
-                      </div>
-                      
-                      <button className="absolute top-4 right-4 bg-black/50 hover:bg-black/80 backdrop-blur-md rounded-full p-2.5 text-white z-20 transition-colors shadow-lg">
-                        <ZoomIn className="w-5 h-5" />
-                      </button>
-                    </>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); openLightbox(activeIdx); }}
+                      className="absolute top-4 right-4 bg-black/50 hover:bg-black/80 backdrop-blur-md rounded-full p-2.5 text-white z-20 transition-colors shadow-lg"
+                      title="View Fullscreen"
+                    >
+                      <ZoomIn className="w-5 h-5" />
+                    </button>
                   )}
                   
                   {product.model_url && (
@@ -281,11 +250,6 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 ))}
               </div>
             )}
-
-            {/* Tabs */}
-            <div className="flex gap-4 mt-8 pb-4 border-b border-[#E2EDE8] lg:mt-8">
-              <button className="px-6 py-2 rounded-full bg-white border border-[#E2EDE8] shadow-[0_2px_10px_rgba(0,0,0,0.02)] font-bold text-sm text-[#111111]">Overview</button>
-            </div>
 
             {/* Mobile Buy Box (Below Image) */}
             <div className="block lg:hidden mt-6">
@@ -424,38 +388,75 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
             {similarProducts.length > 0 && (
               <div className="mt-16 pt-10 border-t border-[#E2EDE8]">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="font-bold text-xl text-[#111111]">More from {product.author} <ChevronRight className="inline w-5 h-5 -mt-0.5" /></h2>
-                  <div className="flex gap-2">
-                    <button className="w-8 h-8 rounded-full bg-white border border-[#E2EDE8] flex items-center justify-center text-zinc-400 hover:text-zinc-800 shadow-sm"><ChevronLeft className="w-4 h-4"/></button>
-                    <button className="w-8 h-8 rounded-full bg-white border border-[#E2EDE8] flex items-center justify-center text-zinc-400 hover:text-zinc-800 shadow-sm"><ChevronRight className="w-4 h-4"/></button>
-                  </div>
+                  <h2 className="font-bold text-xl text-[#111111]">Similar Assets <ChevronRight className="inline w-5 h-5 -mt-0.5" /></h2>
                 </div>
                 
-                <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-6">
-                  {similarProducts.map((p) => (
-                    <Link href={`/products/${p.slug || p.id}`} key={p.id} className="block group shrink-0 w-[280px]">
-                      <div className="flex flex-col rounded-2xl overflow-hidden bg-white border border-[#E2EDE8] hover:border-[#24B86C] hover:shadow-[0_8px_30px_rgba(36,184,108,0.12)] transition-all duration-300">
-                        <div className="relative w-full aspect-video overflow-hidden bg-zinc-900">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={p.thumbnail_url || p.image}
-                            alt={p.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                        </div>
-                        <div className="p-4 flex flex-col gap-1">
-                          <h3 className="text-[13px] font-bold text-[#111111] line-clamp-1 group-hover:text-[#24B86C] transition-colors">{p.name}</h3>
-                          <div className="h-px bg-[#E2EDE8] my-1" />
-                          <div className="flex items-center gap-1 mt-1">
-                            <span className="text-[10px] text-zinc-500">From</span>
-                            <span className="text-[13px] font-black text-[#111111]">{p.price}</span>
+                <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-0 pb-6">
+                  {similarProducts.slice(0, visibleSimilar).map((p) => {
+                    const plan = p.plan_tier || 'Free';
+                    const hasVideo = String(p.category || '').toLowerCase().includes('motion') || String(p.category || '').toLowerCase().includes('animation');
+                    return (
+                      <Link href={`/products/${p.slug || p.id}`} key={p.id} className="block group mb-4 break-inside-avoid">
+                        <div className="relative rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 shadow-sm border border-[#E2EDE8]/50">
+                          <div className="relative w-full overflow-hidden">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={p.image || p.thumbnail_url}
+                              alt={p.name}
+                              loading="lazy"
+                              className="block w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 bg-zinc-100"
+                            />
+                            
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                            <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
+                              <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
+                                plan === 'Free' ? 'bg-[#24B86C]' :
+                                plan === 'Plus' ? 'bg-[#9333EA]' :
+                                'bg-[#F59E0B]'
+                              }`} />
+                              <span className="text-[10px] font-bold uppercase tracking-widest text-white drop-shadow-md">
+                                {plan}
+                              </span>
+                            </div>
+
+                            <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+                              <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">
+                                <Heart className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                              </button>
+                              {plan === 'Free' ? (
+                                <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">
+                                  <Download className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                                </button>
+                              ) : (
+                                <button className="w-8 h-8 rounded-full bg-[#24B86C]/80 backdrop-blur-lg border border-[#24B86C]/50 flex items-center justify-center shadow-lg hover:bg-[#24B86C] hover:scale-110 transition-all text-white">
+                                  <ShoppingCart className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                                </button>
+                              )}
+                              {hasVideo && (
+                                <button className="w-8 h-8 rounded-full bg-[#9333EA]/80 backdrop-blur-lg border border-[#9333EA]/50 flex items-center justify-center shadow-lg hover:bg-[#9333EA] hover:scale-110 transition-all text-white">
+                                  <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5 drop-shadow-md" />
+                                </button>
+                              )}
+                            </div>
+
+                            <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                              <p className="text-white/80 text-[10px] font-bold tracking-widest uppercase mb-1 drop-shadow-md">{p.category}</p>
+                              <p className="text-white text-sm font-bold line-clamp-1 drop-shadow-lg">{p.name}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    );
+                  })}
                 </div>
+                {visibleSimilar < similarProducts.length && (
+                  <div className="flex justify-center mt-6">
+                    <Button onClick={() => setVisibleSimilar(s => s + 8)} variant="outline" className="px-8 h-12 rounded-xl font-bold border-[#E2EDE8] hover:bg-[#F3F6F5] text-zinc-700 transition-colors">
+                      Load More
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
           </div>
