@@ -323,11 +323,7 @@ function ProductsContent() {
                               )}
                             </div>
 
-                            {/* Bottom info on hover */}
-                            <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                              <p className="text-white/80 text-[10px] font-bold tracking-widest uppercase mb-1 drop-shadow-md">{product.category}</p>
-                              <p className="text-white text-sm font-bold line-clamp-1 drop-shadow-lg">{product.name}</p>
-                            </div>
+
                           </div>
                         </div>
                       </div>
