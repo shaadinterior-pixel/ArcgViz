@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin/', '/dashboard/'],
+      disallow: ['/admin/', '/profile/'],
     },
     sitemap: 'https://designwalla.com/sitemap.xml',
   };

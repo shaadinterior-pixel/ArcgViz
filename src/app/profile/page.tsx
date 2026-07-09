@@ -173,11 +173,7 @@ export default function ProfilePage() {
 
               {/* Action buttons */}
               <div className="flex items-center gap-3 shrink-0">
-                <Link href="/dashboard">
-                  <Button variant="outline" className="h-10 px-4 rounded-xl border-[#E2EDE8] text-sm font-bold text-[#111111] hover:border-[#24B86C] hover:text-[#24B86C] transition-all">
-                    <Settings className="w-4 h-4 mr-2" /> Dashboard
-                  </Button>
-                </Link>
+
                 <Button onClick={handleSignOut} variant="outline" className="h-10 px-4 rounded-xl border-red-200 text-sm font-bold text-red-500 hover:bg-red-50 hover:border-red-300 transition-all">
                   <LogOut className="w-4 h-4 mr-2" /> Sign out
                 </Button>

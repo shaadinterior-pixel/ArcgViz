@@ -22,7 +22,7 @@ export default function SignupPage() {
   React.useEffect(() => {
     import('@/lib/auth').then(({ getCurrentUser }) => {
       getCurrentUser().then(u => {
-        if (u) router.push('/dashboard');
+        if (u) router.push('/profile');
       });
     });
   }, [router]);
@@ -35,7 +35,7 @@ export default function SignupPage() {
     try {
       await signUp(email, password, name);
       setDone(true);
-      setTimeout(() => router.push('/dashboard'), 1500);
+      setTimeout(() => router.push('/profile'), 1500);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Sign up failed.';
       setError(msg.replace('Firebase: ', '').replace(' (auth/email-already-in-use).', '.\nThis email is already registered. Try logging in.'));
@@ -49,7 +49,7 @@ export default function SignupPage() {
     setError('');
     try {
       await signInWithGoogle();
-      router.push('/dashboard');
+      router.push('/profile');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Google sign-up failed.';
       if (!msg.includes('popup-closed')) setError(msg.replace('Firebase: ', ''));
