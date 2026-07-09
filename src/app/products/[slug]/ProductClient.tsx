@@ -124,6 +124,27 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
     }
   };
 
+  const handleShare = async () => {
+    const url = window.location.href;
+    const title = product.name;
+    const text = `Check out ${title} on Design Walla!`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+      } catch (e) {
+        console.error('Error sharing:', e);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('Link copied to clipboard!');
+      } catch (e) {
+        console.error('Error copying link:', e);
+      }
+    }
+  };
+
   const specs = [
     { icon: FileText, label: 'Formats',    value: (product.file_formats ?? []).join(', ') || '—' },
     { icon: Box,      label: 'Polygons',   value: product.poly_count || '—' },
@@ -348,7 +369,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     <Button variant="outline" className="flex-1 h-12 border-[#E2EDE8] hover:border-[#24B86C] hover:text-[#24B86C] hover:bg-[#24B86C]/5 rounded-xl font-bold transition-colors text-sm">
                       <Bookmark className="w-4 h-4 mr-2" /> Save
                     </Button>
-                    <Button variant="outline" className="flex-1 h-12 border-[#E2EDE8] rounded-xl font-bold hover:bg-zinc-50 transition-colors text-sm text-zinc-700">
+                    <Button onClick={handleShare} variant="outline" className="flex-1 h-12 border-[#E2EDE8] rounded-xl font-bold hover:bg-zinc-50 transition-colors text-sm text-zinc-700">
                       <Share2 className="w-4 h-4 mr-2" /> Share
                     </Button>
                   </div>
@@ -556,7 +577,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   <Button variant="outline" className="flex-1 h-12 border-2 border-[#E2EDE8] font-bold bg-white hover:border-[#24B86C] hover:text-[#24B86C] rounded-xl text-sm text-[#111111] transition-colors">
                     <Bookmark className="w-4 h-4 mr-2"/> Save
                   </Button>
-                  <Button variant="outline" className="flex-1 h-12 border-2 border-[#E2EDE8] font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111] transition-colors">
+                  <Button onClick={handleShare} variant="outline" className="flex-1 h-12 border-2 border-[#E2EDE8] font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111] transition-colors">
                     <Share2 className="w-4 h-4 mr-2"/> Share
                   </Button>
                 </div>
