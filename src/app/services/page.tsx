@@ -44,7 +44,7 @@ export default function ServicesPage() {
             <p>No services available yet.</p>
           </div>
         ) : (
-          <div className="flex overflow-x-auto pb-12 pt-4 snap-x snap-mandatory gap-6 hide-scrollbar">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center py-8">
             {services.map((service, index) => {
               const slug = service.id || service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
               
@@ -54,7 +54,7 @@ export default function ServicesPage() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="snap-start shrink-0 w-[280px] md:w-[320px] bg-white rounded-[24px] overflow-hidden shadow-sm hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] border border-[#E2EDE8] flex flex-col group transition-all duration-300"
+                  className="w-full max-w-[320px] bg-white rounded-[24px] overflow-hidden shadow-sm hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] border border-[#E2EDE8] flex flex-col group transition-all duration-300"
                 >
                   {/* Image */}
                   <div className="relative h-[260px] w-full overflow-hidden">
@@ -95,16 +95,6 @@ export default function ServicesPage() {
         )}
       </section>
 
-      {/* Global Style to hide scrollbar but allow scrolling */}
-      <style dangerouslySetInnerHTML={{__html: `
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}} />
     </div>
   );
 }
