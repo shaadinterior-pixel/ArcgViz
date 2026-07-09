@@ -30,7 +30,7 @@ export type Product = {
   features: string[];
   updated_at?: string;
   created_at?: string;
-  plan_tier: 'Free' | 'Pro' | 'Paid';
+  plan_tier: 'Free' | 'Plus' | 'Pro' | 'Paid';
 };
 
 export type Customer = {

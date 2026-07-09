@@ -564,6 +564,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     )}
                   </div>
                 </div>
+                )}
               </div>
               
               {/* Purchase/Download Buttons */}
