@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -11,6 +11,8 @@ import { signIn, signInWithGoogle } from '@/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/dashboard';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +25,7 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       await signIn(email, password);
-      router.push('/dashboard');
+      router.push(redirectTo);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Sign in failed.';
       setError(msg.replace('Firebase: ', '').replace(' (auth/invalid-credential).', '.\nDouble-check your email and password.'));
@@ -37,7 +39,7 @@ export default function LoginPage() {
     setError('');
     try {
       await signInWithGoogle();
-      router.push('/dashboard');
+      router.push(redirectTo);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Google sign-in failed.';
       if (!msg.includes('popup-closed')) setError(msg.replace('Firebase: ', ''));

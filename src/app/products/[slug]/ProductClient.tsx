@@ -337,7 +337,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                       <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
                     </Button>
                   ) : !user ? (
-                    <Link href="/auth">
+                    <Link href={`/login?redirect=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : '')}`}>
                       <Button className="w-full h-12 bg-[#0D1A12] hover:bg-[#24B86C] text-white font-bold rounded-xl text-sm transition-all">
                         Log in to Download
                       </Button>
@@ -555,7 +555,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
                   </Button>
                 ) : !user ? (
-                  <Link href="/auth">
+                  <Link href={`/login?redirect=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : '')}`}>
                     <Button className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-sm mb-3">
                       {productPlan === 'Paid' 
                         ? 'Login Required Before Downloading' 
