@@ -127,7 +127,7 @@ export async function GET(
     }
 
     // Check monthly download quota
-    const used = (userData.monthlyDownloads?.[key] || 0) as number;
+    const used = (userData?.monthlyDownloads?.[key] || 0) as number;
     const limit = PLAN_LIMITS[userPlan] ?? 10;
 
     if (used >= limit) {
