@@ -37,6 +37,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   const [lightbox, setLightbox] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState(0);
   const [viewMode, setViewMode] = useState<'2d' | '3d'>(product.model_url ? '3d' : '2d');
+  const [isZoomActive, setIsZoomActive] = useState(false);
 
   // ── Auth & purchase state ─────────────────────────────────────────────────
   const [user, setUser] = useState<{ id: string, plan?: string } | null>(null);
@@ -180,10 +181,19 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 </>
               ) : (
                 <div
-                  className={`w-full h-full relative overflow-hidden ${product.features?.includes('Disable Hover Zoom') ? 'cursor-pointer' : 'cursor-zoom-in'}`}
+                  className={`w-full h-full relative overflow-hidden ${isZoomActive ? 'cursor-zoom-in' : 'cursor-pointer'}`}
                   onTouchStart={onTouchStart}
                   onTouchEnd={onTouchEnd}
                   onClick={() => openLightbox(activeIdx)}
+                  onMouseMove={(e) => {
+                    if (!isZoomActive || product.features?.includes('Disable Hover Zoom')) return;
+                    const el = document.getElementById('zoom-layer');
+                    if(!el) return;
+                    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+                    const x = ((e.clientX - left) / width) * 100;
+                    const y = ((e.clientY - top) / height) * 100;
+                    el.style.backgroundPosition = `${x}% ${y}%`;
+                  }}
                 >
                   {/* Base Image */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -193,15 +203,34 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     className="w-full h-full object-cover bg-zinc-100 transition-opacity duration-300"
                   />
                   
-                  {/* Magnifying Button (Opens Lightbox) */}
+                  {/* Zoom Hover Layer */}
                   {!product.features?.includes('Disable Hover Zoom') && (
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); openLightbox(activeIdx); }}
-                      className="absolute top-4 right-4 bg-black/50 hover:bg-black/80 backdrop-blur-md rounded-full p-2.5 text-white z-20 transition-colors shadow-lg"
-                      title="View Fullscreen"
-                    >
-                      <ZoomIn className="w-5 h-5" />
-                    </button>
+                    <>
+                      {isZoomActive && (
+                        <div 
+                          id="zoom-layer"
+                          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                          style={{
+                            backgroundImage: `url(${allImages[activeIdx]})`,
+                            backgroundSize: '250%',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: '50% 50%',
+                            backgroundColor: '#f4f4f5'
+                          }}
+                        />
+                      )}
+                      
+                      <button 
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          setIsZoomActive(prev => !prev);
+                        }}
+                        className={`absolute top-4 right-4 backdrop-blur-md rounded-full p-2.5 text-white z-20 transition-colors shadow-lg ${isZoomActive ? 'bg-[#24B86C] hover:bg-[#1E995A]' : 'bg-black/50 hover:bg-black/80'}`}
+                        title="Toggle Zoom"
+                      >
+                        <ZoomIn className="w-5 h-5" />
+                      </button>
+                    </>
                   )}
                   
                   {product.model_url && (
