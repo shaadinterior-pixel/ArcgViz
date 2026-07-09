@@ -155,14 +155,7 @@ export function LatestUploadsSection() {
                           )}
                         </div>
 
-                        {/* Bottom info on hover */}
-                        <div className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <p className="text-white text-xs font-bold line-clamp-1 drop-shadow">{product.name}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-white/80 text-[10px]">♡ {product.sales || 0}</span>
-                            <span className="text-white/80 text-[10px]">↓ {product.sales || 0}</span>
-                          </div>
-                        </div>
+
                       </div>
                     </div>
                   </Link>
