@@ -28,11 +28,18 @@ export default function LoginPage() {
       router.push(redirectTo);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Sign in failed.';
-      setError(msg.replace('Firebase: ', '').replace(' (auth/invalid-credential).', '.\nDouble-check your email and password.'));
+      const clean = msg
+        .replace('Firebase: ', '')
+        .replace(' (auth/invalid-credential).', '.\nDouble-check your email and password.')
+        .replace(' (auth/user-not-found).', '.\nNo account found with this email.')
+        .replace(' (auth/wrong-password).', '.\nIncorrect password.')
+        .replace(' (auth/too-many-requests).', '.\nToo many attempts. Try again later.');
+      setError(clean);
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
