@@ -230,7 +230,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   <img
                     src={allImages[activeIdx]}
                     alt={product.name}
-                    className="w-full h-full object-cover bg-zinc-100 transition-opacity duration-300"
+                    className="w-full h-full object-contain p-4 bg-[#F3F6F5] transition-opacity duration-300"
                   />
                   
                   {/* Zoom Hover Layer */}
@@ -360,8 +360,8 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                       </Button>
                     )
                   ) : (
-                    <Button disabled className="w-full h-12 bg-zinc-100 rounded-xl text-zinc-500 font-bold text-sm">
-                      {productPlan === 'Paid' ? 'Purchase Required' : `Upgrade to ${productPlan} to Download`}
+                    <Button disabled className="w-full h-12 bg-[#8bd1b5] text-[#dcaebb] font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 opacity-100">
+                      Locked (Purchase Required)
                     </Button>
                   )}
                   <a 
@@ -586,8 +586,8 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     {downloading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/> Downloading...</> : <><Download className="w-4 h-4 mr-2"/> Download Now</>}
                   </Button>
                 ) : (
-                  <Button disabled className="w-full h-12 bg-zinc-200 text-zinc-500 font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2">
-                    Locked ({productPlan === 'Paid' ? 'Purchase Required' : `Requires ${productPlan} Plan`})
+                  <Button disabled className="w-full h-12 bg-[#8bd1b5] text-[#dcaebb] font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 opacity-100">
+                    Locked (Purchase Required)
                   </Button>
                 )}
                 
@@ -597,15 +597,15 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   rel="noopener noreferrer"
                   className="w-full block"
                 >
-                  <Button variant="outline" className="w-full h-12 border-2 border-[#E2EDE8] bg-[#FAFCFB] hover:border-[#11998E] hover:text-[#11998E] rounded-xl font-bold transition-colors text-sm text-[#111111]">
+                  <Button variant="outline" className="w-full h-12 border border-[#E2EDE8] bg-[#FAFCFB] hover:border-[#11998E] hover:text-[#11998E] rounded-xl font-bold transition-colors text-sm text-[#111111]">
                     <Wand2 className="w-4 h-4 mr-2" /> Hire team to customize
                   </Button>
                 </a>
                 <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1 h-12 border-2 border-[#E2EDE8] font-bold bg-white hover:border-[#24B86C] hover:text-[#24B86C] rounded-xl text-sm text-[#111111] transition-colors">
+                  <Button variant="outline" className="flex-1 h-12 border border-[#E2EDE8] font-bold bg-white hover:border-[#24B86C] hover:text-[#24B86C] rounded-xl text-sm text-[#111111] transition-colors">
                     <Bookmark className="w-4 h-4 mr-2"/> Save
                   </Button>
-                  <Button onClick={handleShare} variant="outline" className="flex-1 h-12 border-2 border-[#E2EDE8] font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111] transition-colors">
+                  <Button onClick={handleShare} variant="outline" className="flex-1 h-12 border border-[#E2EDE8] font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111] transition-colors">
                     <Share2 className="w-4 h-4 mr-2"/> Share
                   </Button>
                 </div>

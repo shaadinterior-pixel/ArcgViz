@@ -4,7 +4,7 @@ import React, { useState, useDeferredValue, useMemo, useEffect, Suspense } from 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, ChevronDown, Search, Download, Heart, Play, ShoppingCart } from 'lucide-react';
+import { Filter, ChevronDown, Search, Download, Heart, Play, ShoppingCart, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
@@ -357,15 +357,11 @@ function ProductsContent() {
           
           {filteredProducts.length > 0 && (
             <div className="mt-20 flex flex-col items-center gap-3">
-              <button className="group relative inline-flex items-center gap-3 px-14 py-4 rounded-full text-[15px] font-black text-white overflow-hidden shadow-[0_8px_32px_rgba(36,184,108,0.35)] hover:shadow-[0_12px_40px_rgba(36,184,108,0.5)] transition-all duration-300 hover:-translate-y-0.5">
-                {/* Gradient background */}
-                <span className="absolute inset-0 bg-gradient-to-r from-[#0D1A12] via-[#24B86C] to-[#11998E] transition-all duration-500 group-hover:from-[#24B86C] group-hover:via-[#11998E] group-hover:to-[#0D1A12]" />
-                {/* Shine effect */}
-                <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                <span className="relative flex items-center gap-2">
-                  <svg className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
+              <button className="group relative inline-flex items-center justify-center px-12 py-3.5 rounded-[2rem] text-[15px] font-black text-white shadow-[0_15px_40px_-10px_rgba(36,184,108,0.7)] hover:shadow-[0_20px_50px_-10px_rgba(36,184,108,0.9)] transition-all duration-300 hover:-translate-y-0.5">
+                {/* Gradient background matching screenshot (very dark left to bright green right) */}
+                <span className="absolute inset-0 bg-gradient-to-r from-[#172e21] via-[#1a7649] to-[#12a77a] rounded-[2rem]" />
+                <span className="relative flex items-center gap-2.5 tracking-wide">
+                  <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700 ease-in-out" strokeWidth={2.5} />
                   Load More Assets
                 </span>
               </button>
