@@ -6,35 +6,36 @@ import Link from 'next/link';
 import { useParams, notFound } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, Download, Heart, Play, ShoppingCart, PackageSearch } from 'lucide-react';
-import { fetchCategories, fetchProducts, type Category, type Product } from '@/lib/store';
+import { fetchServices, fetchProducts, type ServiceDetail, type Product } from '@/lib/store';
 import { Button } from '@/components/ui/Button';
 
 export default function ServiceDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
   
-  const [category, setCategory] = useState<Category | null>(null);
+  const [service, setService] = useState<ServiceDetail | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [allCategories, allProducts] = await Promise.all([
-          fetchCategories(),
+        const [allServices, allProducts] = await Promise.all([
+          fetchServices(),
           fetchProducts()
         ]);
         
-        // Find matching category by id or title slugified
-        const matched = allCategories.find(c => 
-          c.id === slug || 
-          c.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug
+        // Find matching service by id, title, or category slugified
+        const matched = allServices.find(s => 
+          s.id === slug || 
+          s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug ||
+          s.category.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug
         );
         
         if (matched) {
-          setCategory(matched);
+          setService(matched);
           const categoryProducts = allProducts
-            .filter(p => p.status !== 'Draft' && p.category?.toLowerCase() === matched.title.toLowerCase())
+            .filter(p => p.status !== 'Draft' && p.category?.toLowerCase() === matched.category.toLowerCase())
             .sort((a, b) => {
               const da = a.created_at ? new Date(a.created_at).getTime() : 0;
               const db2 = b.created_at ? new Date(b.created_at).getTime() : 0;
@@ -60,22 +61,19 @@ export default function ServiceDetailPage() {
     );
   }
 
-  if (!category) {
+  if (!service) {
     return notFound();
   }
 
-  const heroCard = (category.cards && category.cards.length > 0) 
-    ? category.cards[0] 
-    : { image: 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=1200' };
-
-  // Generate generic "What we do" features based on the category title if none exist
-  const features = [
-    `Comprehensive ${category.title} strategy and planning`,
-    'High-quality, production-ready deliverables',
-    'Custom tailored solutions for your brand',
-    'Expert consultation and ongoing support',
-    'Fast turnaround times with premium quality'
-  ];
+  const features = (service.includes && service.includes.length > 0)
+    ? service.includes
+    : [
+        `Comprehensive ${service.category} strategy and planning`,
+        'High-quality, production-ready deliverables',
+        'Custom tailored solutions for your brand',
+        'Expert consultation and ongoing support',
+        'Fast turnaround times with premium quality'
+      ];
 
   return (
     <div className="min-h-screen bg-[#F3F6F5] pt-24 pb-32">
@@ -97,14 +95,20 @@ export default function ServiceDetailPage() {
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#111111] tracking-tighter mb-6 leading-tight">
-              {category.title}
+              {service.category}
             </h1>
+            {service.title && (
+              <h2 className="text-xl md:text-2xl font-bold text-zinc-800 mb-4">{service.title}</h2>
+            )}
+            {service.tagline && (
+              <h3 className="text-lg font-medium text-[#24B86C] mb-6">{service.tagline}</h3>
+            )}
             
             <p className="text-lg text-zinc-600 leading-relaxed mb-10">
-              {category.description || 'Elevate your projects with our premium services tailored to your specific needs. From initial concept to final delivery, our expert team ensures top-tier quality every step of the way.'}
+              {service.description || 'Elevate your projects with our premium services tailored to your specific needs. From initial concept to final delivery, our expert team ensures top-tier quality every step of the way.'}
             </p>
 
-            <Link href={`/contact?service=${encodeURIComponent(category.title)}`}>
+            <Link href={`/contact?service=${encodeURIComponent(service.category)}`}>
               <Button className="h-14 px-10 rounded-full bg-gradient-to-r from-[#0D1A12] via-[#24B86C] to-[#11998E] hover:from-[#24B86C] hover:to-[#0D1A12] text-white font-bold text-[15px] shadow-[0_8px_32px_rgba(36,184,108,0.35)] transition-all">
                 Hire Our Team
               </Button>
@@ -114,8 +118,8 @@ export default function ServiceDetailPage() {
           {/* Hero Image */}
           <div className="w-full lg:w-1/2 relative min-h-[400px] lg:min-h-full">
             <Image 
-              src={heroCard.image || 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=1200'} 
-              alt={category.title}
+              src={service.image || 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=1200'} 
+              alt={service.category}
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -130,7 +134,7 @@ export default function ServiceDetailPage() {
           <div>
             <h2 className="text-3xl lg:text-4xl font-black text-[#111111] mb-6">What we do inside this service</h2>
             <p className="text-zinc-600 leading-relaxed mb-8 text-lg">
-              When you hire us for {category.title}, you get a complete end-to-end solution. We handle everything from the groundwork to the final polished deliverables, ensuring your vision is realized perfectly.
+              When you hire us for {service.category}, you get a complete end-to-end solution. We handle everything from the groundwork to the final polished deliverables, ensuring your vision is realized perfectly.
             </p>
             <ul className="space-y-4">
               {features.map((feature, i) => (
