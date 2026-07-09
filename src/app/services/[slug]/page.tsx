@@ -171,7 +171,7 @@ export default function ServiceDetailPage() {
       <section className="px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto">
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-3xl font-black text-[#111111]">Products we provide in this service</h2>
-          <Link href={`/products?category=${encodeURIComponent(category.title)}`}>
+          <Link href={`/products?category=${encodeURIComponent(service.category)}`}>
             <Button variant="outline" className="hidden md:flex rounded-full border-[#E2EDE8] font-bold">
               View All Products
             </Button>
@@ -279,7 +279,7 @@ export default function ServiceDetailPage() {
               <PackageSearch className="w-8 h-8 text-zinc-400" />
             </div>
             <h3 className="text-xl font-bold text-[#111111] mb-2">No products found</h3>
-            <p className="text-zinc-500">We are currently updating our catalog for {category.title}.</p>
+            <p className="text-zinc-500">We are currently updating our catalog for {service.category}.</p>
           </div>
         )}
       </section>
