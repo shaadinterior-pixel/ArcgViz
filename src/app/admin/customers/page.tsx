@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
-import { fetchCustomers, saveCustomers, deleteCustomer, onStoreUpdate, type Customer } from '@/lib/store';
+import { type Customer } from '@/lib/store';
+import { collection, getDocs, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const EMPTY: Omit<Customer, 'id'> = {
   name: '', email: '', spent: 0, orders: 0,
@@ -25,28 +27,59 @@ export default function AdminCustomersPage() {
   const [saving,    setSaving]    = useState(false);
 
   const load = useCallback(async () => {
-    try { setCustomers(await fetchCustomers()); }
-    catch { toast('Failed to load customers', 'error'); }
+    try { 
+      const snap = await getDocs(collection(db, 'users'));
+      const usersData: Customer[] = snap.docs.map(d => {
+        const data = d.data();
+        return {
+          id: d.id,
+          name: data.name || 'Unknown',
+          email: data.email || 'N/A',
+          spent: data.spent || 0,
+          orders: data.orders || 0,
+          status: data.status || 'Active',
+          joinDate: data.joinDate?.toDate ? data.joinDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown',
+          plan: data.plan || 'Free'
+        } as Customer;
+      });
+      setCustomers(usersData);
+    }
+    catch (e) { console.error(e); toast('Failed to load customers', 'error'); }
     finally { setLoading(false); }
   }, [toast]);
 
   useEffect(() => { 
     load();
-    const unsub = onStoreUpdate('customers', load);
-    return () => unsub();
   }, [load]);
 
   const persist = async (customerToSave: Customer, isNew: boolean) => {
     setSaving(true);
     try { 
-      await saveCustomers([customerToSave]); 
+      const userRef = doc(db, 'users', customerToSave.id);
+      if (isNew) {
+        await setDoc(userRef, {
+          name: customerToSave.name,
+          email: customerToSave.email,
+          plan: customerToSave.plan,
+          status: customerToSave.status,
+          joinDate: new Date()
+        });
+      } else {
+        await updateDoc(userRef, {
+          name: customerToSave.name,
+          email: customerToSave.email,
+          plan: customerToSave.plan,
+          status: customerToSave.status
+        });
+      }
+      
       setCustomers(prev => {
         const idx = prev.findIndex(c => c.id === customerToSave.id);
         if (idx >= 0) { const a = [...prev]; a[idx] = customerToSave; return a; }
         return [customerToSave, ...prev];
       });
     }
-    catch { toast('Save failed', 'error'); }
+    catch (e) { console.error(e); toast('Save failed', 'error'); }
     finally { setSaving(false); }
   };
 
@@ -61,7 +94,7 @@ export default function AdminCustomersPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this customer?')) return;
     try {
-      await deleteCustomer(id);
+      await deleteDoc(doc(db, 'users', id));
       setCustomers(prev => prev.filter(c => c.id !== id));
       toast('Customer deleted');
     } catch {
@@ -94,7 +127,7 @@ export default function AdminCustomersPage() {
           <h1 className="text-2xl font-bold tracking-tight">Customers</h1>
           <p className="text-sm text-foreground/50 mt-1">{customers.length} registered — {customers.filter(c => c.status === 'Active').length} active</p>
         </div>
-        <Button onClick={openNew} className="bg-primary hover:bg-primary/90 text-primary-foreground shrink-0">
+        <Button onClick={openNew} className="bg-primary hover:bg-primary/90 text-primary-foreground shrink-0 hidden">
           <Plus className="w-4 h-4 mr-2" /> Add Customer
         </Button>
       </div>
