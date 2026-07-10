@@ -477,28 +477,22 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
             </div>
 
             {/* Why choose DESIGNWALLA? */}
-            <div className="mt-6 bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-sm">
-              <h3 className="font-bold text-[#111111] mb-5">Why choose DESIGNWALLA?</h3>
-              <ul className="flex flex-col gap-4">
-                <li className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-full bg-[#F3F8F5] flex flex-shrink-0 items-center justify-center text-[#24B86C] border border-[#24B86C]/10">
-                    <Crown className="w-5 h-5" />
-                  </div>
-                  <span className="text-sm font-bold text-zinc-700">Exclusive content</span>
-                </li>
-                <li className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-full bg-[#F3F8F5] flex flex-shrink-0 items-center justify-center text-[#24B86C] border border-[#24B86C]/10">
-                    <Briefcase className="w-5 h-5" />
-                  </div>
-                  <span className="text-sm font-bold text-zinc-700">Commercial Uses</span>
-                </li>
-                <li className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-full bg-[#F3F8F5] flex flex-shrink-0 items-center justify-center text-[#24B86C] border border-[#24B86C]/10">
-                    <Wallet className="w-5 h-5" />
-                  </div>
-                  <span className="text-sm font-bold text-zinc-700">Budget Friendly</span>
-                </li>
-              </ul>
+            <div className="mt-6 bg-[#F4F7F6] rounded-[16px] p-6 shadow-sm">
+              <h3 className="font-medium text-[#111111] mb-6 text-center text-[17px]">Why choose DESIGNWALLA?</h3>
+              <div className="flex justify-between items-start gap-2 px-2">
+                <div className="flex flex-col items-center gap-3 text-center w-1/3">
+                  <Crown className="w-7 h-7 text-[#111111]" strokeWidth={1.5} />
+                  <span className="text-[13px] font-medium text-zinc-800 leading-tight">Exclusive<br/>content</span>
+                </div>
+                <div className="flex flex-col items-center gap-3 text-center w-1/3">
+                  <ShieldCheck className="w-7 h-7 text-[#111111]" strokeWidth={1.5} />
+                  <span className="text-[13px] font-medium text-zinc-800 leading-tight">Commercial<br/>Uses</span>
+                </div>
+                <div className="flex flex-col items-center gap-3 text-center w-1/3">
+                  <FileText className="w-7 h-7 text-[#111111]" strokeWidth={1.5} />
+                  <span className="text-[13px] font-medium text-zinc-800 leading-tight">Budget<br/>Friendly</span>
+                </div>
+              </div>
             </div>
 
           </div>
