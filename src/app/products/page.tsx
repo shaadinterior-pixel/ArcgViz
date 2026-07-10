@@ -69,8 +69,8 @@ function ProductsContent() {
       })
       // Latest uploaded first
       .sort((a, b) => {
-        const da = a.created_at ? new Date(a.created_at).getTime() : 0;
-        const db2 = b.created_at ? new Date(b.created_at).getTime() : 0;
+        const da = new Date(a.date || a.created_at || 0).getTime();
+        const db2 = new Date(b.date || b.created_at || 0).getTime();
         return db2 - da;
       }),
     [products, deferredSearch, activeCategories, activeSubcategories, selectedProperties]
@@ -313,15 +313,6 @@ function ProductsContent() {
                                 </>
                               ) : (
                                 <>
-                                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wide border backdrop-blur-md bg-black/30 ${
-                                    product.plan_tier === 'Pro'
-                                      ? 'border-purple-400/50 text-purple-300'
-                                      : product.plan_tier === 'Plus'
-                                      ? 'border-green-400/50 text-green-300'
-                                      : 'border-zinc-400/50 text-zinc-300'
-                                  }`}>
-                                    {product.plan_tier === 'Pro' ? 'Plus + Pro' : (product.plan_tier || 'Free')}
-                                  </span>
                                   <span className="text-[10px] font-medium text-zinc-300 drop-shadow-md">Free download</span>
                                 </>
                               )}
