@@ -123,12 +123,12 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-y: scroll;
+  /* overflow-y: scroll is removed — Lenis smooth scroll manages this */
 }
 
-/* ─── Smooth scrolling ─── */
-html[data-scroll-behavior="smooth"] {
-  scroll-behavior: smooth;
+/* ─── Native smooth scrolling — disabled when Lenis is active ─── */
+html {
+  scroll-behavior: auto; /* Lenis handles smooth scroll — native must be 'auto' */
 }
 
 /* ─── Keyframes ─── */
