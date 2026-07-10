@@ -103,7 +103,7 @@ export function ProjectShowcase({ projects, activeProject, onProjectChange }: Pr
                 role="button"
                 tabIndex={0}
                 aria-label={`View project ${project.title}`}
-                onKeyDown={(e) => {
+                onKeyDown={(e: React.KeyboardEvent) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     handleActiveChange(index);
                   }
