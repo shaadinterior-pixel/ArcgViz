@@ -96,7 +96,7 @@ function MegaMenuDropdown({ label, href, children }: { label: string; href: stri
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 15, scale: 0.98 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute top-[64px] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1400px] z-[200] pt-4"
+            className="absolute top-[64px] left-1/2 -translate-x-1/2 w-[95vw] max-w-[960px] z-[200] pt-4"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
@@ -204,53 +204,83 @@ export function Navbar() {
 
             {/* Services Dropdown */}
             <MegaMenuDropdown label="Services" href="/services">
-              <div className="bg-white border border-[#E2EDE8] rounded-[32px] shadow-[0_40px_100px_rgba(0,0,0,0.12)] p-8">
-                <div className="text-center mb-6">
-                  <h1 className="text-2xl font-black text-[#111111] uppercase tracking-wide">
-                    OUR PREMIUM SERVICES DESIGNED TO GROW YOUR BUSINESS
-                  </h1>
-                </div>
+              <div className="bg-white border border-[#E2EDE8] rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.12)] p-6 md:p-8 flex flex-col md:flex-row gap-8 w-full">
                 
-                {services.length === 0 ? (
-                  <div className="flex justify-center items-center py-12">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#24B86C]"></div>
+                {/* Left Side: Categories List (Amazon style) */}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-4 pb-4 border-b border-[#E2EDE8]">
+                    <Briefcase className="w-5 h-5 text-[#24B86C]" />
+                    <h2 className="text-base font-black text-[#111111] uppercase tracking-wide">
+                      Our Services
+                    </h2>
                   </div>
-                ) : (
-                  <div className="flex overflow-x-auto gap-4 pb-4 snap-x [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                    {services.map((service, index) => {
-                      const slug = service.id || service.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || index.toString();
-                      return (
-                        <div 
-                          key={service.id || index}
-                          className="snap-start shrink-0 w-[240px] bg-white rounded-[20px] overflow-hidden shadow-sm border border-[#E2EDE8] flex flex-col group transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
-                        >
-                          <div className="relative h-[160px] w-full overflow-hidden">
-                            <Image 
-                              src={service.image || 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600'} 
-                              alt={service.category || 'Service'}
-                              fill
-                              className="object-cover transition-transform duration-700 group-hover:scale-105"
-                              sizes="240px"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                          </div>
-                          <div className="p-4 flex flex-col items-center text-center flex-1 justify-between bg-white z-10 border-t-2 border-[#F3F6F5]">
-                            <div className="mb-4">
-                              <h2 className="text-[11px] font-black text-[#111111] uppercase tracking-wide mb-1 leading-snug">
-                                {service.category}
-                              </h2>
-                            </div>
-                            <Link href={`/services/${slug}`} className="w-full">
-                              <Button className="w-full rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#1E995A] hover:to-[#0E7F76] text-white font-bold h-10 text-[11px] shadow-sm transition-all uppercase tracking-wide">
-                                Know More
-                              </Button>
-                            </Link>
-                          </div>
+                  
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+                    {SERVICE_CATEGORIES.map((svc) => (
+                      <Link
+                        key={svc.label}
+                        href={svc.href}
+                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F3F6F5] group transition-colors"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:shadow-sm border border-transparent group-hover:border-[#E2EDE8] transition-all">
+                          <svc.icon className="w-4 h-4 text-zinc-400 group-hover:text-[#24B86C] transition-colors" />
                         </div>
-                      );
-                    })}
+                        <span className="text-[13px] font-bold text-zinc-600 group-hover:text-[#111111] transition-colors">{svc.label}</span>
+                      </Link>
+                    ))}
                   </div>
-                )}
+                  
+                  <div className="mt-6 pt-4 border-t border-[#E2EDE8]">
+                    <Link href="/services" className="inline-flex items-center gap-2 text-[13px] font-bold text-[#24B86C] hover:text-[#1E995A] transition-colors">
+                      View All Services →
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Right Side: Featured Services (Promo Cards) */}
+                <div className="w-[320px] shrink-0 bg-[#F8FAF9] rounded-[20px] p-5 border border-[#E2EDE8]">
+                  <h3 className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-4">Featured Services</h3>
+                  
+                  {services.length === 0 ? (
+                    <div className="flex justify-center items-center py-10">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#24B86C]"></div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-4">
+                      {services.slice(0, 2).map((service, index) => {
+                        const slug = service.id || service.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || index.toString();
+                        return (
+                          <Link href={`/services/${slug}`} key={service.id || index} className="group flex gap-4 items-center bg-white p-3 rounded-2xl shadow-sm border border-[#E2EDE8] hover:border-[#24B86C] transition-colors">
+                            <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0">
+                              <Image 
+                                src={service.image || 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600'} 
+                                alt={service.category || 'Service'}
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                sizes="80px"
+                              />
+                            </div>
+                            <div className="flex flex-col flex-1">
+                              <h4 className="text-[11px] font-black text-[#111111] uppercase tracking-wide leading-tight line-clamp-2 mb-1">
+                                {service.category}
+                              </h4>
+                              <span className="text-[10px] font-bold text-[#24B86C] mt-auto">Know More →</span>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                  
+                  <div className="mt-5">
+                    <Link href="/contact">
+                      <Button className="w-full bg-[#111111] hover:bg-[#24B86C] text-white rounded-xl text-xs font-bold h-10 transition-colors">
+                        Hire Our Team
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+
               </div>
             </MegaMenuDropdown>
 
