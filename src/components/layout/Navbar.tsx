@@ -9,7 +9,7 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-
 import { Button } from '../ui/Button';
 import { LiveSearch } from '../ui/LiveSearch';
 import { getCurrentUser, onAuthChange, type AuthUser } from '@/lib/auth';
-import { fetchCategories, type Category } from '@/lib/store';
+import { fetchCategories, fetchServices, type Category, type ServiceDetail } from '@/lib/store';
 
 // Static service categories matching the platform
 const SERVICE_CATEGORIES = [
@@ -66,12 +66,55 @@ function NavDropdown({ label, href, children }: { label: string; href: string; c
   );
 }
 
+// Dropdown component with mega menu hover logic
+function MegaMenuDropdown({ label, href, children }: { label: string; href: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setOpen(true);
+  };
+  const handleMouseLeave = () => {
+    timerRef.current = setTimeout(() => setOpen(false), 120);
+  };
+
+  return (
+    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <Link
+        href={href}
+        className="transition-colors hover:text-[#24B86C] flex items-center gap-1 text-sm font-medium text-foreground/80 py-5"
+      >
+        {label}
+        <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </Link>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 15, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 15, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute top-[64px] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1400px] z-[200] pt-4"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [hidden, setHidden] = useState(false);
   const [marketplaceCategories, setMarketplaceCategories] = useState<Category[]>([]);
+  const [services, setServices] = useState<ServiceDetail[]>([]);
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest: number) => {
@@ -90,6 +133,10 @@ export function Navbar() {
 
   useEffect(() => {
     fetchCategories().then(setMarketplaceCategories).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetchServices().then(setServices).catch(() => {});
   }, []);
 
   return (
@@ -156,33 +203,56 @@ export function Navbar() {
             </NavDropdown>
 
             {/* Services Dropdown */}
-            <NavDropdown label="Services" href="/services">
-              <div className="bg-white border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] p-4 w-[320px]">
-                <div className="flex items-center gap-2 mb-3 px-2">
-                  <Briefcase className="w-4 h-4 text-[#24B86C]" />
-                  <span className="text-xs font-black uppercase tracking-widest text-zinc-500">Our Services</span>
+            <MegaMenuDropdown label="Services" href="/services">
+              <div className="bg-white border border-[#E2EDE8] rounded-[32px] shadow-[0_40px_100px_rgba(0,0,0,0.12)] p-8">
+                <div className="text-center mb-6">
+                  <h1 className="text-2xl font-black text-[#111111] uppercase tracking-wide">
+                    OUR PREMIUM SERVICES DESIGNED TO GROW YOUR BUSINESS
+                  </h1>
                 </div>
-                <div className="grid grid-cols-1 gap-0.5">
-                  {SERVICE_CATEGORIES.map((svc) => (
-                    <Link
-                      key={svc.label}
-                      href={svc.href}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors"
-                    >
-                      <div className="w-7 h-7 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0 group-hover:bg-[#24B86C]/20 transition-colors">
-                        <svc.icon className="w-3.5 h-3.5 text-zinc-500 group-hover:text-[#24B86C] transition-colors" />
-                      </div>
-                      <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">{svc.label}</span>
-                    </Link>
-                  ))}
-                </div>
-                <div className="mt-3 pt-3 border-t border-[#E2EDE8]">
-                  <Link href="/services" className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-[#0D1A12] hover:bg-[#24B86C] text-white text-[12px] font-bold transition-colors">
-                    Hire Our Team →
-                  </Link>
-                </div>
+                
+                {services.length === 0 ? (
+                  <div className="flex justify-center items-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#24B86C]"></div>
+                  </div>
+                ) : (
+                  <div className="flex overflow-x-auto gap-4 pb-4 snap-x [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {services.map((service, index) => {
+                      const slug = service.id || service.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || index.toString();
+                      return (
+                        <div 
+                          key={service.id || index}
+                          className="snap-start shrink-0 w-[240px] bg-white rounded-[20px] overflow-hidden shadow-sm border border-[#E2EDE8] flex flex-col group transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
+                        >
+                          <div className="relative h-[160px] w-full overflow-hidden">
+                            <Image 
+                              src={service.image || 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600'} 
+                              alt={service.category || 'Service'}
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-105"
+                              sizes="240px"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                          </div>
+                          <div className="p-4 flex flex-col items-center text-center flex-1 justify-between bg-white z-10 border-t-2 border-[#F3F6F5]">
+                            <div className="mb-4">
+                              <h2 className="text-[11px] font-black text-[#111111] uppercase tracking-wide mb-1 leading-snug">
+                                {service.category}
+                              </h2>
+                            </div>
+                            <Link href={`/services/${slug}`} className="w-full">
+                              <Button className="w-full rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#1E995A] hover:to-[#0E7F76] text-white font-bold h-10 text-[11px] shadow-sm transition-all uppercase tracking-wide">
+                                Know More
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            </NavDropdown>
+            </MegaMenuDropdown>
 
             {/* Print Dropdown */}
             <NavDropdown label="Print" href="/products?category=Print">
