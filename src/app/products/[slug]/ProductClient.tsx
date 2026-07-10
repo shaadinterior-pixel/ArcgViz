@@ -526,7 +526,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
           
           {/* ── Right Column (Sidebar) ── */}
           <div className="hidden lg:block w-[360px] shrink-0">
-            <div className="sticky top-24 bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)] flex flex-col gap-6">
+            <div className="bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)] flex flex-col gap-6">
               
               {/* Author badge removed */}
               {/* Rating removed */}
