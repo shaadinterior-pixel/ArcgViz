@@ -456,14 +456,23 @@ export async function savePortfolioContent(content: PortfolioContent): Promise<v
   if (error) throw error;
 }
 
+let cachedPortfolioItems: PortfolioItem[] | null = null;
+let lastFetchTime = 0;
+const CACHE_DURATION = 1000 * 60 * 5; // 5 minutes
+
 export async function fetchPortfolioItems(): Promise<PortfolioItem[]> {
+  if (cachedPortfolioItems && Date.now() - lastFetchTime < CACHE_DURATION) {
+    return cachedPortfolioItems;
+  }
   const { data, error } = await supabase
     .from('portfolio_items')
     .select('*')
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false });
   if (error) return [];
-  return data || [];
+  cachedPortfolioItems = data || [];
+  lastFetchTime = Date.now();
+  return cachedPortfolioItems;
 }
 
 export async function savePortfolioItem(item: PortfolioItem): Promise<void> {

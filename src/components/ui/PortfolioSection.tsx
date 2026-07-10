@@ -151,7 +151,11 @@ export function PortfolioSection() {
                     decoding="sync"
                     className="portfolio-carousel-image"
                     onError={(event) => {
-                      event.currentTarget.src = `${FALLBACK_IMAGE_BASE}/${(index % CAROUSEL_ITEM_COUNT) + 1}.jpg`;
+                      const target = event.currentTarget as HTMLImageElement;
+                      if (!target.dataset.failed) {
+                        target.dataset.failed = 'true';
+                        target.src = `${FALLBACK_IMAGE_BASE}/${(index % CAROUSEL_ITEM_COUNT) + 1}.jpg`;
+                      }
                     }}
                   />
                   <span className="portfolio-carousel-shade" aria-hidden="true" />
@@ -179,8 +183,8 @@ export function PortfolioSection() {
           padding: clamp(2rem, 5vw, 3.5rem) 0;
           overflow: hidden;
           perspective: clamp(36rem, 62vw, 58rem);
-          mask: linear-gradient(90deg, transparent, #000 14% 86%, transparent);
-          -webkit-mask: linear-gradient(90deg, transparent, #000 14% 86%, transparent);
+          mask: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
+          -webkit-mask: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
           isolation: isolate;
         }
 
@@ -215,7 +219,7 @@ export function PortfolioSection() {
           -webkit-backface-visibility: hidden;
           transform:
             rotateY(calc(var(--index) * var(--angle)))
-            translateZ(calc(-1 * (.5 * var(--card-width) + 1.5rem) / tan(.5 * var(--angle))));
+            translateZ(calc(-1 * (.5 * var(--card-width) + 2.5rem) / tan(.5 * var(--angle))));
           transition: box-shadow 250ms ease, filter 250ms ease;
         }
 
