@@ -1,10 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Pencil, Trash2, Loader2, GripVertical, Image as ImageIcon } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, Image as ImageIcon, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { fetchPortfolioItems, savePortfolioItem, deletePortfolioItem, type PortfolioItem, fetchPortfolioContent, savePortfolioContent, type PortfolioContent, DEFAULT_PORTFOLIO_CONTENT } from '@/lib/store';
-import { supabase } from '@/lib/supabase';
+
+type UploadResponse = {
+  secure_url?: string;
+  url?: string;
+};
 
 export default function AdminPortfolioPage() {
   const [items, setItems] = useState<PortfolioItem[]>([]);
@@ -14,6 +18,7 @@ export default function AdminPortfolioPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isSavingContent, setIsSavingContent] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [bulkUploading, setBulkUploading] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -80,24 +85,73 @@ export default function AdminPortfolioPage() {
     }
   };
 
+  const uploadImage = async (file: File): Promise<string> => {
+    const fd = new FormData();
+    fd.append('file', file);
+
+    const res = await fetch('/api/upload', { method: 'POST', body: fd });
+    if (!res.ok) throw new Error('Upload failed');
+
+    const data = await res.json() as UploadResponse;
+    const url = data.secure_url || data.url;
+    if (!url) throw new Error('Upload finished without an image URL');
+
+    return url.replace(/^http:\/\/res\.cloudinary\.com/i, 'https://res.cloudinary.com');
+  };
+
+  const getNextSortOrder = () => {
+    if (items.length === 0) return 1;
+    return Math.max(...items.map(item => Number(item.sort_order || 0))) + 1;
+  };
+
+  const titleFromFileName = (name: string) => {
+    const baseName = name.replace(/\.[^/.]+$/, '');
+    return baseName
+      .replace(/[-_]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\b\w/g, char => char.toUpperCase()) || 'Portfolio Project';
+  };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
     try {
-      const fd = new FormData();
-      fd.append('file', file);
-      
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
-      if (!res.ok) throw new Error('Upload failed');
-      
-      const data = await res.json();
-      setIsEditing(prev => ({ ...prev, image_url: data.url }));
+      const url = await uploadImage(file);
+      setIsEditing(prev => ({ ...prev, image_url: url }));
     } catch (err: any) {
       alert(err.message || 'Failed to upload image');
     } finally {
       setUploading(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleBulkImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    setBulkUploading(true);
+    try {
+      const firstOrder = getNextSortOrder();
+      const urls = await Promise.all(files.map(uploadImage));
+
+      await Promise.all(urls.map((url, index) => savePortfolioItem({
+        id: crypto.randomUUID(),
+        title: titleFromFileName(files[index].name),
+        image_url: url,
+        link: '',
+        sort_order: firstOrder + index,
+      })));
+
+      await loadData();
+    } catch (err: any) {
+      alert(err.message || 'Failed to upload images');
+    } finally {
+      setBulkUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -113,7 +167,7 @@ export default function AdminPortfolioPage() {
     <div className="p-8 max-w-5xl mx-auto space-y-8">
       <div>
         <h1 className="text-2xl font-bold">Portfolio Showcase</h1>
-        <p className="text-zinc-500 text-sm mt-1">Manage the content and 3D slider images on the homepage.</p>
+        <p className="text-zinc-500 text-sm mt-1">Manage the content and 3D carousel images on the homepage. The first 12 images by order are used in the carousel.</p>
       </div>
 
       {/* ── Section Content Editor ── */}
@@ -165,11 +219,30 @@ export default function AdminPortfolioPage() {
         </form>
       </div>
 
-      <div className="flex justify-between items-center pt-4">
-        <h2 className="text-lg font-bold">Slider Images</h2>
-        <Button onClick={() => setIsEditing({})} className="bg-[#24B86C] hover:bg-[#1E995A] text-white">
-          <Plus className="w-4 h-4 mr-2" /> Add Item
-        </Button>
+      <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-lg font-bold">Carousel Images</h2>
+          <p className="text-sm text-zinc-500">Upload images in bulk, then adjust titles, links, and order below.</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <div className="relative">
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleBulkImageUpload}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              disabled={bulkUploading}
+            />
+            <Button type="button" variant="outline" disabled={bulkUploading}>
+              {bulkUploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+              {bulkUploading ? 'Uploading...' : 'Bulk Upload'}
+            </Button>
+          </div>
+          <Button onClick={() => setIsEditing({ sort_order: getNextSortOrder() })} className="bg-[#24B86C] hover:bg-[#1E995A] text-white">
+            <Plus className="w-4 h-4 mr-2" /> Add Item
+          </Button>
+        </div>
       </div>
 
       {isEditing && (
