@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { Search, User, Menu, X, ChevronDown, ShoppingBag, Briefcase, Grid3X3, Palette, Monitor, Film, Printer, Megaphone, Box, Layers, PenTool, Video, QrCode, Sparkles, Wand2, FileImage } from 'lucide-react';
+import { Search, User, Menu, X, ChevronDown, ShoppingBag, Briefcase, Grid3X3, Palette, Monitor, Film, Printer, Megaphone, Box, Layers, PenTool, Video, QrCode, Sparkles, Wand2, FileImage, LayoutTemplate } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Button } from '../ui/Button';
 import { LiveSearch } from '../ui/LiveSearch';
