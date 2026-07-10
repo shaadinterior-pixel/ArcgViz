@@ -27,21 +27,8 @@ export function PortfolioSection() {
 
   useEffect(() => {
     const loadItems = async () => {
-      let data = await fetchPortfolioItems();
-      
-      // Use defaults if completely empty
-      if (data.length === 0) {
-        data = DEFAULT_ITEMS;
-      }
-      
-      // For a 3D carousel to look like a cylinder, we need a minimum number of cards (e.g., 6)
-      // If the admin only uploaded a few, we loop/duplicate them so the carousel isn't broken
-      let displayData = [...data];
-      while (displayData.length < 6) {
-        displayData = [...displayData, ...data].map((item, idx) => ({ ...item, id: `${item.id}-${idx}` }));
-      }
-      
-      setItems(displayData);
+      const data = await fetchPortfolioItems();
+      setItems(data.length >= 6 ? data : DEFAULT_ITEMS);
     };
     loadItems();
   }, []);
@@ -93,7 +80,7 @@ export function PortfolioSection() {
 
       {/* ── 3D Rotating Carousel ── */}
       {items.length > 0 && (
-        <div className="w-full mt-12 mb-16 flex justify-center max-w-[100vw] overflow-hidden">
+        <div className="w-full mt-12 mb-16 flex justify-center">
           <div className="scene">
             <div className="a3d" style={{ '--n': items.length } as React.CSSProperties}>
               {items.map((item, i) => (
@@ -107,15 +94,11 @@ export function PortfolioSection() {
                     alt={item.title}
                     loading="lazy"
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      // Fallback if image fails to load
-                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600';
-                    }}
                   />
-                  {/* Title overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none opacity-90" />
-                  <div className="absolute bottom-6 left-5 right-5 text-left pointer-events-none">
-                    <p className="text-white font-bold text-base leading-tight drop-shadow-md line-clamp-2">
+                  {/* Title overlay (optional, adapting to our site's design) */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
+                  <div className="absolute bottom-4 left-4 right-4 text-left pointer-events-none">
+                    <p className="text-white font-bold text-sm leading-tight drop-shadow-md line-clamp-2">
                       {item.title}
                     </p>
                   </div>
@@ -132,13 +115,12 @@ export function PortfolioSection() {
         
         .scene {
           overflow: hidden;
-          perspective: 1200px; /* Increased perspective to flatten the curve slightly */
+          perspective: 35em;
           /* The original mask */
-          mask: linear-gradient(90deg, #0000, #000 15% 85%, #0000);
-          -webkit-mask: linear-gradient(90deg, #0000, #000 15% 85%, #0000);
+          mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
+          -webkit-mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
           width: 100%;
-          max-width: 1200px; /* Constrain maximum width of the scene */
-          padding: 2em 0; 
+          padding: 2em 0; /* Add some vertical padding to avoid clipping shadows */
         }
         
         .a3d {
@@ -153,26 +135,21 @@ export function PortfolioSection() {
         
         .card {
           /* Using the exact math from the source code */
-          --w: 16em; /* Slightly narrower cards */
+          --w: 17.5em;
           --ba: calc(1turn / var(--n));
           grid-area: 1 / 1;
           width: var(--w);
           aspect-ratio: 7 / 10;
           border-radius: 1.5em;
           backface-visibility: hidden;
-          
-          /* POSITIVE TRANSLATE Z: This makes it a convex cylinder (front cards are closer to user) 
-             instead of concave (front cards far away, edge cards clipping user's face) */
           transform:
             rotateY(calc(var(--i) * var(--ba)))
-            translateZ(calc((.5 * var(--w) + .5em) / tan(.5 * var(--ba))));
-            
+            translateZ(calc(-1 * (.5 * var(--w) + .5em) / tan(.5 * var(--ba))));
           /* Additional site-specific styles */
           position: relative;
           overflow: hidden;
           box-shadow: 0 12px 30px rgba(0,0,0,0.15);
         }
-
         
         /* Adjust base font size for the em units if needed based on screen size */
         @media (max-width: 768px) {
