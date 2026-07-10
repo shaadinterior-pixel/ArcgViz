@@ -319,7 +319,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   <div className="border border-zinc-300 rounded-xl p-3 flex justify-between items-center bg-white cursor-pointer hover:border-[#24B86C] transition-colors group">
                     <div>
                       <div className="text-sm font-bold text-[#111111] mb-0.5">
-                        {productPlan === 'Paid' ? `Price: ${product.price || 'N/A'}` : `${productPlan} Tier Product`}
+                        {productPlan === 'Paid' ? `Price: ${product.price || 'N/A'}` : `${productPlan} Tier Resources`}
                       </div>
                       {user && (
                         <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-0.5">
@@ -555,7 +555,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   <div className="border border-zinc-200 rounded-xl p-3 flex justify-between items-center bg-white hover:border-[#24B86C] transition-colors group cursor-pointer">
                     <div>
                       <div className="text-sm font-bold text-[#111111] mb-0.5">
-                        {productPlan === 'Pro' ? 'Plus + Pro' : productPlan} Tier Product
+                        {productPlan === 'Pro' ? 'Plus + Pro' : productPlan} Tier Resources
                       </div>
                     {user && (
                       <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-0.5">
