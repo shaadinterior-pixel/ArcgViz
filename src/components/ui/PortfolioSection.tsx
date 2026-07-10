@@ -158,12 +158,16 @@ export function PortfolioSection() {
                   style={{ '--index': index } as CarouselStyle}
                   aria-label={`View ${item.title}`}
                 >
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
+                    style={{ backgroundImage: `url(${PREMIUM_FALLBACKS[index % 12]})` }}
+                  />
                   <img
                     src={item.image_url}
                     alt={item.title}
                     loading="eager"
                     decoding="sync"
-                    className="portfolio-carousel-image"
+                    className="portfolio-carousel-image relative z-10"
                     onError={(event) => {
                       const target = event.currentTarget as HTMLImageElement;
                       if (!target.dataset.failed) {
@@ -172,8 +176,8 @@ export function PortfolioSection() {
                       }
                     }}
                   />
-                  <span className="portfolio-carousel-shade" aria-hidden="true" />
-                  <span className="portfolio-carousel-title">
+                  <span className="portfolio-carousel-shade z-20" aria-hidden="true" />
+                  <span className="portfolio-carousel-title z-30">
                     <span>{item.title}</span>
                   </span>
                 </Link>
@@ -226,7 +230,9 @@ export function PortfolioSection() {
           display: block;
           overflow: hidden;
           border-radius: clamp(1rem, 1.8vw, 1.5rem);
-          background: #e8efe9;
+          background-color: #e8efe9;
+          background-size: cover;
+          background-position: center;
           border: 1px solid rgba(255, 255, 255, 0.72);
           box-shadow: 0 24px 55px rgba(12, 24, 16, 0.18);
           backface-visibility: hidden;
