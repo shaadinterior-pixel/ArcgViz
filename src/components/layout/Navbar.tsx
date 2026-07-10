@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { Search, User, Menu, X, ChevronDown, ShoppingBag, Briefcase, Grid3X3, Palette, Monitor, Film, Printer, Megaphone, Box, Layers, PenTool, Video } from 'lucide-react';
+import { Search, User, Menu, X, ChevronDown, ShoppingBag, Briefcase, Grid3X3, Palette, Monitor, Film, Printer, Megaphone, Box, Layers, PenTool, Video, QrCode, Sparkles, Wand2, FileImage } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Button } from '../ui/Button';
 import { LiveSearch } from '../ui/LiveSearch';
@@ -68,10 +68,10 @@ function NavDropdown({ label, href, children }: { label: string; href: string; c
 }
 
 // Mega menu dropdown - uses React Portal to escape CSS transform stacking context
-function MegaMenuDropdown({ label, href, children }: { label: string; href: string; children: React.ReactNode }) {
+function MegaMenuDropdown({ label, href, children, width = 'full' }: { label: string; href: string; children: React.ReactNode; width?: 'full' | 'auto' | 'sm' | 'md' }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
+  const [pos, setPos] = useState({ top: 0, left: 0, width: 0, centerX: 0 });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
 
@@ -80,11 +80,15 @@ function MegaMenuDropdown({ label, href, children }: { label: string; href: stri
   const calcPos = () => {
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
+    
+    // Max width for full menus
     const dropW = Math.min(960, window.innerWidth * 0.95);
     const centerX = rect.left + rect.width / 2;
+    
     let left = centerX - dropW / 2;
     left = Math.max(12, Math.min(left, window.innerWidth - dropW - 12));
-    setPos({ top: rect.bottom + 8, left, width: dropW });
+    
+    setPos({ top: rect.bottom + 8, left, width: dropW, centerX });
   };
 
   const handleMouseEnter = () => {
@@ -94,6 +98,15 @@ function MegaMenuDropdown({ label, href, children }: { label: string; href: stri
   };
   const handleMouseLeave = () => {
     timerRef.current = setTimeout(() => setOpen(false), 150);
+  };
+
+  // Determine wrapper styles based on width prop
+  const getPortalStyles = (): React.CSSProperties => {
+    if (width === 'full') {
+      return { position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 99999 };
+    }
+    // For smaller menus, center them exactly under the trigger
+    return { position: 'fixed', top: pos.top, left: pos.centerX, transform: 'translateX(-50%)', zIndex: 99999 };
   };
 
   return (
@@ -109,13 +122,7 @@ function MegaMenuDropdown({ label, href, children }: { label: string; href: stri
       </div>
       {mounted && open && ReactDOM.createPortal(
         <div
-          style={{
-            position: 'fixed',
-            top: pos.top,
-            left: pos.left,
-            width: pos.width,
-            zIndex: 99999,
-          }}
+          style={getPortalStyles()}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -190,43 +197,59 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-6">
           <nav className="flex items-center space-x-2 text-sm font-medium">
 
-            {/* Marketplace Dropdown */}
-            <NavDropdown label="Marketplace" href="/products">
-              <div className="bg-white border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] p-4 w-[320px]">
-                <div className="flex items-center gap-2 mb-3 px-2">
-                  <ShoppingBag className="w-4 h-4 text-[#24B86C]" />
-                  <span className="text-xs font-black uppercase tracking-widest text-zinc-500">Browse Categories</span>
-                </div>
-                <div className="grid grid-cols-1 gap-0.5">
-                  <Link
-                    href="/products"
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-[#24B86C]/10 flex items-center justify-center shrink-0 group-hover:bg-[#24B86C]/20 transition-colors">
-                      <Grid3X3 className="w-3.5 h-3.5 text-[#24B86C]" />
-                    </div>
-                    <span className="text-[13px] font-bold text-[#0D1A12]">All Products</span>
-                  </Link>
-                  {marketplaceCategories.slice(0, 9).map((cat) => (
-                    <Link
-                      key={cat.id}
-                      href={`/products?search=${encodeURIComponent(cat.title)}`}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors"
-                    >
-                      <div className="w-7 h-7 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0 group-hover:bg-[#24B86C]/20 transition-colors">
-                        <Box className="w-3.5 h-3.5 text-zinc-500 group-hover:text-[#24B86C] transition-colors" />
+            {/* Marketplace Mega Menu */}
+            <MegaMenuDropdown label="Marketplace" href="/products" width="full">
+              <div className="bg-white border border-[#E2EDE8] rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.12)] p-6 flex gap-6 w-full">
+                
+                {/* Left: Quick Categories */}
+                <div className="flex-1 border-r border-[#E2EDE8] pr-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <ShoppingBag className="w-4 h-4 text-[#24B86C]" />
+                    <span className="text-[11px] font-black uppercase tracking-widest text-zinc-500">Popular Categories</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link href="/products" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#F3F6F5] group transition-colors">
+                      <div className="w-8 h-8 rounded-lg bg-[#24B86C]/10 flex items-center justify-center shrink-0 group-hover:bg-[#24B86C]/20 transition-colors">
+                        <Grid3X3 className="w-4 h-4 text-[#24B86C]" />
                       </div>
-                      <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">{cat.title}</span>
+                      <span className="text-[13px] font-bold text-[#0D1A12]">All Products</span>
                     </Link>
-                  ))}
+                    
+                    {marketplaceCategories.slice(0, 5).map((cat) => (
+                      <Link
+                        key={cat.id}
+                        href={`/products?search=${encodeURIComponent(cat.title)}`}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#F3F6F5] group transition-colors"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0 border border-transparent group-hover:border-[#E2EDE8] group-hover:bg-white transition-all">
+                          <Box className="w-4 h-4 text-zinc-400 group-hover:text-[#24B86C] transition-colors" />
+                        </div>
+                        <span className="text-[13px] font-medium text-zinc-600 group-hover:text-[#0D1A12] transition-colors">{cat.title}</span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-[#E2EDE8]">
-                  <Link href="/products" className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-[#0D1A12] hover:bg-[#24B86C] text-white text-[12px] font-bold transition-colors">
-                    View All Products →
+
+                {/* Right: Featured Marketplace Promo */}
+                <div className="w-[300px] shrink-0">
+                  <Link href="/products" className="group block relative w-full h-[180px] rounded-2xl overflow-hidden">
+                    <Image 
+                      src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=600" 
+                      alt="Featured Assets" 
+                      fill 
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h4 className="text-white font-black text-sm uppercase tracking-wide mb-1">Premium 3D Assets</h4>
+                      <p className="text-white/80 text-[11px] font-medium">Explore high-quality models for your next big project.</p>
+                    </div>
                   </Link>
                 </div>
+                
               </div>
-            </NavDropdown>
+            </MegaMenuDropdown>
 
             {/* Services Dropdown */}
             <MegaMenuDropdown label="Services" href="/services">
@@ -310,53 +333,117 @@ export function Navbar() {
               </div>
             </MegaMenuDropdown>
 
-            {/* Print Dropdown */}
-            <NavDropdown label="Print" href="/products?category=Print">
-              <div className="bg-white border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] p-4 w-[240px]">
-                <div className="grid grid-cols-1 gap-0.5">
-                  <Link href="/products?category=Business+Cards" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
-                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">Business Cards</span>
+            {/* Print Mega Menu */}
+            <MegaMenuDropdown label="Print" href="/products?category=Print" width="md">
+              <div className="bg-white border border-[#E2EDE8] rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.12)] p-4 w-[400px]">
+                <div className="flex items-center gap-2 mb-3 px-3 pt-2">
+                  <Printer className="w-4 h-4 text-[#24B86C]" />
+                  <span className="text-[11px] font-black uppercase tracking-widest text-zinc-500">Print Templates</span>
+                </div>
+                <div className="grid grid-cols-1 gap-1">
+                  <Link href="/products?category=Business+Cards" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
+                      <Briefcase className="w-5 h-5 text-zinc-400 group-hover:text-[#24B86C]" />
+                    </div>
+                    <div>
+                      <h4 className="text-[13px] font-bold text-[#111111] leading-tight">Business Cards</h4>
+                      <p className="text-[11px] text-zinc-500 mt-0.5">Professional, print-ready card designs.</p>
+                    </div>
                   </Link>
-                  <Link href="/products?category=Flyers" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
-                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">Flyers & Posters</span>
+                  <Link href="/products?category=Flyers" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
+                      <FileImage className="w-5 h-5 text-zinc-400 group-hover:text-[#24B86C]" />
+                    </div>
+                    <div>
+                      <h4 className="text-[13px] font-bold text-[#111111] leading-tight">Flyers & Posters</h4>
+                      <p className="text-[11px] text-zinc-500 mt-0.5">Eye-catching layouts for marketing.</p>
+                    </div>
                   </Link>
-                  <Link href="/products?category=Banners" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
-                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">Banners</span>
+                  <Link href="/products?category=Banners" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
+                      <Megaphone className="w-5 h-5 text-zinc-400 group-hover:text-[#24B86C]" />
+                    </div>
+                    <div>
+                      <h4 className="text-[13px] font-bold text-[#111111] leading-tight">Banners</h4>
+                      <p className="text-[11px] text-zinc-500 mt-0.5">High-resolution large format designs.</p>
+                    </div>
                   </Link>
                 </div>
               </div>
-            </NavDropdown>
+            </MegaMenuDropdown>
 
-            {/* Digital Product Dropdown */}
-            <NavDropdown label="Digital Product" href="/products?category=Digital">
-              <div className="bg-white border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] p-4 w-[240px]">
-                <div className="grid grid-cols-1 gap-0.5">
-                  <Link href="/products?category=Templates" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
-                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">Templates</span>
+            {/* Digital Product Mega Menu */}
+            <MegaMenuDropdown label="Digital Product" href="/products?category=Digital" width="md">
+              <div className="bg-white border border-[#E2EDE8] rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.12)] p-4 w-[400px]">
+                <div className="flex items-center gap-2 mb-3 px-3 pt-2">
+                  <Monitor className="w-4 h-4 text-[#24B86C]" />
+                  <span className="text-[11px] font-black uppercase tracking-widest text-zinc-500">Digital Assets</span>
+                </div>
+                <div className="grid grid-cols-1 gap-1">
+                  <Link href="/products?category=Templates" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
+                      <LayoutTemplate className="w-5 h-5 text-zinc-400 group-hover:text-[#24B86C]" />
+                    </div>
+                    <div>
+                      <h4 className="text-[13px] font-bold text-[#111111] leading-tight">Website Templates</h4>
+                      <p className="text-[11px] text-zinc-500 mt-0.5">Responsive UI kits and landing pages.</p>
+                    </div>
                   </Link>
-                  <Link href="/products?category=Icons" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
-                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">Icons & Graphics</span>
+                  <Link href="/products?category=Icons" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
+                      <Sparkles className="w-5 h-5 text-zinc-400 group-hover:text-[#24B86C]" />
+                    </div>
+                    <div>
+                      <h4 className="text-[13px] font-bold text-[#111111] leading-tight">Icons & Graphics</h4>
+                      <p className="text-[11px] text-zinc-500 mt-0.5">Premium vector packs and illustrations.</p>
+                    </div>
                   </Link>
-                  <Link href="/products?category=3D+Assets" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
-                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">3D Assets</span>
+                  <Link href="/products?category=3D+Assets" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
+                      <Box className="w-5 h-5 text-zinc-400 group-hover:text-[#24B86C]" />
+                    </div>
+                    <div>
+                      <h4 className="text-[13px] font-bold text-[#111111] leading-tight">3D Assets</h4>
+                      <p className="text-[11px] text-zinc-500 mt-0.5">High-poly models and textures.</p>
+                    </div>
                   </Link>
                 </div>
               </div>
-            </NavDropdown>
+            </MegaMenuDropdown>
 
-            {/* DW Tools Dropdown */}
-            <NavDropdown label="DW Tools" href="/tools">
-              <div className="bg-white border border-[#E2EDE8] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] p-4 w-[240px]">
-                <div className="grid grid-cols-1 gap-0.5">
-                  <Link href="/studio" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
-                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">QR Code Studio</span>
+            {/* DW Tools Mega Menu */}
+            <MegaMenuDropdown label="DW Tools" href="/tools" width="md">
+              <div className="bg-white border border-[#E2EDE8] rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.12)] p-4 w-[400px]">
+                <div className="flex items-center gap-2 mb-3 px-3 pt-2">
+                  <Wand2 className="w-4 h-4 text-[#24B86C]" />
+                  <span className="text-[11px] font-black uppercase tracking-widest text-zinc-500">Creative Utilities</span>
+                </div>
+                <div className="grid grid-cols-1 gap-1">
+                  <Link href="/studio" className="flex items-center gap-4 p-3 rounded-2xl bg-[#E8F5F1] hover:bg-[#DDF0E9] group transition-colors border border-[#24B86C]/10">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#24B86C] to-[#11998E] flex items-center justify-center shadow-md">
+                      <QrCode className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-[13px] font-bold text-[#111111] leading-tight">QR Code Studio</h4>
+                        <span className="text-[9px] font-black uppercase text-[#24B86C] bg-white px-2 py-0.5 rounded-full shadow-sm">Live</span>
+                      </div>
+                      <p className="text-[11px] text-zinc-600 mt-1">Generate branded, high-quality QR codes.</p>
+                    </div>
                   </Link>
-                  <Link href="/tools" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#DDF0E9] group transition-colors">
-                    <span className="text-[13px] font-medium text-zinc-700 group-hover:text-[#0D1A12] transition-colors">More Tools</span>
+                  
+                  <Link href="/tools" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors mt-1">
+                    <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
+                      <Sparkles className="w-5 h-5 text-zinc-400 group-hover:text-[#24B86C]" />
+                    </div>
+                    <div>
+                      <h4 className="text-[13px] font-bold text-[#111111] leading-tight">More Tools</h4>
+                      <p className="text-[11px] text-zinc-500 mt-0.5">Explore our full suite of creative tools.</p>
+                    </div>
                   </Link>
                 </div>
               </div>
-            </NavDropdown>
+            </MegaMenuDropdown>
 
             <Link href="/pricing" className="transition-colors hover:text-[#24B86C] text-sm font-medium text-foreground/80 px-2">Pricing</Link>
           </nav>
