@@ -256,25 +256,33 @@ export function PortfolioSection() {
           padding: clamp(2rem, 5vw, 3.5rem) 0;
           overflow: hidden;
           perspective: clamp(36rem, 62vw, 58rem);
+          -webkit-perspective: clamp(36rem, 62vw, 58rem);
           mask: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
           -webkit-mask: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
           isolation: isolate;
         }
 
         .portfolio-carousel-ring {
-          --angle: calc(1turn / var(--count));
+          --angle: calc(360deg / var(--count));
           place-self: center;
           transform-style: preserve-3d;
+          -webkit-transform-style: preserve-3d;
           animation: portfolio-carousel-spin 32s linear infinite;
+          -webkit-animation: portfolio-carousel-spin 32s linear infinite;
           will-change: transform;
         }
 
         .portfolio-carousel-scene:hover .portfolio-carousel-ring {
           animation-play-state: paused;
+          -webkit-animation-play-state: paused;
         }
 
         @keyframes portfolio-carousel-spin {
-          to { transform: rotateY(1turn); }
+          to { transform: rotateY(360deg); }
+        }
+
+        @-webkit-keyframes portfolio-carousel-spin {
+          to { -webkit-transform: rotateY(360deg); }
         }
 
         .portfolio-carousel-card {
@@ -291,6 +299,9 @@ export function PortfolioSection() {
           backface-visibility: hidden;
           -webkit-backface-visibility: hidden;
           transform:
+            rotateY(calc(var(--index) * var(--angle)))
+            translateZ(calc(-1 * (.5 * var(--card-width) + 2.5rem) / tan(.5 * var(--angle))));
+          -webkit-transform:
             rotateY(calc(var(--index) * var(--angle)))
             translateZ(calc(-1 * (.5 * var(--card-width) + 2.5rem) / tan(.5 * var(--angle))));
           transition: box-shadow 250ms ease, filter 250ms ease;
@@ -343,14 +354,9 @@ export function PortfolioSection() {
             --card-width: clamp(7rem, 34vw, 9rem);
             --scene-height: 22rem;
             perspective: 34rem;
+            -webkit-perspective: 34rem;
             mask: linear-gradient(90deg, transparent, #000 8% 92%, transparent);
             -webkit-mask: linear-gradient(90deg, transparent, #000 8% 92%, transparent);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .portfolio-carousel-ring {
-            animation-duration: 90s;
           }
         }
       `}</style>

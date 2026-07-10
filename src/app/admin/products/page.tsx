@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit, Trash2, X, Image as ImageIcon, Package, ChevronDown, ExternalLink, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, X, Image as ImageIcon, Package, ChevronDown, ExternalLink, CheckCircle2, AlertCircle, Loader2, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -75,6 +75,21 @@ export default function AdminProductsPage() {
     if(!confirm('Delete this product?')) return;
     try { await deleteProduct(id); setProducts(prev=>prev.filter(p=>p.id!==id)); toast('Deleted'); }
     catch { toast('Delete failed','error'); }
+  };
+
+  const handleDuplicate = (p: Product) => {
+    setEditing({
+      ...p,
+      id: `tmp-${Date.now()}`,
+      name: `${p.name} (Copy)`,
+      slug: `${p.slug}-copy-${Date.now().toString().slice(-4)}`,
+      google_drive_share_link: '',
+      google_drive_file_id: '',
+      download_url: '',
+    });
+    setDriveStatus('idle');
+    setIsAddingSubcat(false);
+    setIsOpen(true);
   };
 
   const setField = (key: keyof Product, val: unknown) =>
@@ -248,6 +263,7 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center justify-end gap-1">
+                        <button onClick={()=>handleDuplicate(p)} className="p-2 rounded-lg text-foreground/40 hover:text-blue-500 hover:bg-blue-500/10 transition-colors" title="Duplicate"><Copy className="w-4 h-4"/></button>
                         <button onClick={()=>openEdit(p)} className="p-2 rounded-lg text-foreground/40 hover:text-primary hover:bg-primary/10 transition-colors" title="Edit"><Edit className="w-4 h-4"/></button>
                         <button onClick={()=>handleDelete(p.id)} className="p-2 rounded-lg text-foreground/40 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Delete"><Trash2 className="w-4 h-4"/></button>
                       </div>

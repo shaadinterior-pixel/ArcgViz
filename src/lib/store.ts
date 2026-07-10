@@ -120,7 +120,7 @@ export async function fetchProducts(): Promise<Product[]> {
   const { data, error } = await supabase
     .from('products')
     .select('*')
-    .order('date', { ascending: false });
+    .order('created_at', { ascending: false });
   if (error) throw error;
   return (data || []).map(normalizeProduct);
 }
