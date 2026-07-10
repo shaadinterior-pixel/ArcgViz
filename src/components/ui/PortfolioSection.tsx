@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ChevronRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -103,42 +104,88 @@ export function PortfolioSection() {
   }, []);
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#FAFCFB] py-20 sm:py-24">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#f0faf5] via-[#FAFCFB] to-[#FAFCFB] pointer-events-none" />
+    <section className="relative w-full overflow-hidden bg-[#FAFCFB]">
+      
+      {/* ── Top Half (Green Partners Section) ── */}
+      <div className="relative w-full bg-[#24B86C] pt-20 pb-40 overflow-hidden">
+        {/* Grid Background Pattern */}
+        <div 
+          className="absolute inset-0 opacity-10" 
+          style={{ 
+            backgroundImage: 'linear-gradient(to right, #ffffff 2px, transparent 2px), linear-gradient(to bottom, #ffffff 2px, transparent 2px)', 
+            backgroundSize: '120px 120px' 
+          }} 
+        />
+        
+        <div className="container relative z-10 mx-auto px-4 text-center h-[300px]">
+          {/* Angled Typography */}
+          <motion.div 
+            initial={{ opacity: 0, rotate: -5, y: 50 }}
+            whileInView={{ opacity: 1, rotate: -3, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="absolute top-10 left-10 md:left-32 text-4xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-wider drop-shadow-lg"
+          >
+            OUR VALUABLE PARTNERS
+          </motion.div>
 
-      <div className="relative z-10 container mx-auto px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#E8F5F1] text-[#24B86C] text-sm font-bold tracking-wide uppercase mb-6 shadow-sm border border-[#24B86C]/10"
-        >
-          <Star className="w-4 h-4 fill-current" />
-          {content.badge_text}
-        </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, rotate: 5, y: 50 }}
+            whileInView={{ opacity: 1, rotate: 3, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            className="absolute bottom-10 right-10 md:right-32 text-4xl md:text-5xl lg:text-6xl font-black text-white/90 uppercase tracking-wider drop-shadow-lg"
+          >
+            WHO WORK WITH US
+          </motion.div>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="text-4xl md:text-5xl lg:text-[54px] font-black tracking-tighter text-[#111111] leading-tight mb-6"
-        >
-          {content.headline_line1}
-          <br />
-          <span className="text-brand-gradient inline-block pb-1">{content.headline_line2}</span>
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="text-zinc-600 max-w-2xl mx-auto font-medium text-[16px] sm:text-[17px] leading-relaxed"
-        >
-          {content.subheadline}
-        </motion.p>
+          {/* Central Characters (C1.png) */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, type: "spring" }}
+            className="absolute left-1/2 -translate-x-1/2 bottom-[-100px] md:bottom-[-160px] w-[300px] h-[300px] md:w-[450px] md:h-[450px] z-20 pointer-events-none"
+          >
+            <Image src="/C1.png" alt="Partners" fill className="object-contain drop-shadow-2xl" />
+          </motion.div>
+        </div>
       </div>
+
+      {/* ── Bottom Half (Portfolio Slider Section) ── */}
+      <div className="relative w-full pt-20 sm:pt-24 border-t-4 border-white">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#f0faf5] via-[#FAFCFB] to-[#FAFCFB] pointer-events-none" />
+
+        <div className="relative z-10 container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#E8F5F1] text-[#24B86C] text-sm font-bold tracking-wide uppercase mb-6 shadow-sm border border-[#24B86C]/10"
+          >
+            <Star className="w-4 h-4 fill-current" />
+            {content.badge_text}
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-5xl lg:text-[54px] font-black tracking-tighter text-[#111111] leading-tight mb-6"
+          >
+            {content.headline_line1}
+            <br />
+            <span className="text-brand-gradient inline-block pb-1">{content.headline_line2}</span>
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-zinc-600 max-w-2xl mx-auto font-medium text-[16px] sm:text-[17px] leading-relaxed"
+          >
+            {content.subheadline}
+          </motion.p>
+        </div>
 
       {items.length > 0 && (
         <motion.div
@@ -312,6 +359,7 @@ export function PortfolioSection() {
           </Link>
           <p className="text-zinc-500 text-sm font-medium">Let&apos;s create something extraordinary together.</p>
         </motion.div>
+      </div>
       </div>
     </section>
   );
