@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import ClientLayoutWrapper from "@/components/layout/ClientLayoutWrapper";
+import SmoothScrollProvider from "@/components/layout/SmoothScrollProvider";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -57,11 +58,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-primary">
-        <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
-          <ClientLayoutWrapper>
-            {children}
-          </ClientLayoutWrapper>
-        </ThemeProvider>
+        <SmoothScrollProvider>
+          <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
+            <ClientLayoutWrapper>
+              {children}
+            </ClientLayoutWrapper>
+          </ThemeProvider>
+        </SmoothScrollProvider>
       </body>
     </html>
   );
