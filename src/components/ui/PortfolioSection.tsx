@@ -13,6 +13,8 @@ import {
   type PortfolioItem,
 } from '@/lib/store';
 
+const CAROUSEL_ITEM_COUNT = 12;
+
 const PREMIUM_FALLBACKS = [
   'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=600',
   'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600',
