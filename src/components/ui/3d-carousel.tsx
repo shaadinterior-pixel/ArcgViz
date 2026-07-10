@@ -7,7 +7,6 @@ import {
   useAnimation,
   useMotionValue,
   useTransform,
-  PanInfo,
 } from "framer-motion"
 import Image from "next/image"
 import { type PortfolioItem } from "@/lib/store"
@@ -128,11 +127,11 @@ const Carousel = memo(
             width: cylinderWidth,
             transformStyle: "preserve-3d",
           }}
-          onDrag={(_: any, info: PanInfo) =>
+          onDrag={(_: any, info: any) =>
             isCarouselActive &&
             rotation.set(rotation.get() + info.offset.x * 0.05)
           }
-          onDragEnd={(_: any, info: PanInfo) =>
+          onDragEnd={(_: any, info: any) =>
             isCarouselActive &&
             controls.start({
               rotateY: rotation.get() + info.velocity.x * 0.05,
