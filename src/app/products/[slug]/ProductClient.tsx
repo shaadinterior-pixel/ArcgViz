@@ -622,7 +622,6 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
 
         </div>
         
-      </div>
 
       {/* ── Lightbox ── */}
       {lightbox && (
