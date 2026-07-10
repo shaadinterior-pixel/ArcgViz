@@ -120,10 +120,17 @@ export type PortfolioItem = {
 export async function fetchProducts(): Promise<Product[]> {
   const { data, error } = await supabase
     .from('products')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .select('*');
   if (error) throw error;
-  return (data || []).map(normalizeProduct);
+  
+  const products = (data || []).map(normalizeProduct);
+  
+  // Sort in JavaScript to prevent crashes if 'created_at' column doesn't exist in the DB yet
+  return products.sort((a, b) => {
+    const timeA = a.created_at ? new Date(a.created_at).getTime() : new Date(a.date || 0).getTime();
+    const timeB = b.created_at ? new Date(b.created_at).getTime() : new Date(b.date || 0).getTime();
+    return timeB - timeA;
+  });
 }
 
 export async function fetchProductBySlug(slug: string): Promise<Product | null> {
