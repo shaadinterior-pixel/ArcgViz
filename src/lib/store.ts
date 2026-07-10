@@ -105,6 +105,15 @@ export type Testimonial = {
   created_at?: string;
 };
 
+export type PortfolioItem = {
+  id: string;
+  title: string;
+  image_url: string;
+  link?: string;
+  sort_order: number;
+  created_at?: string;
+};
+
 // ─── Products ─────────────────────────────────────────────────────────────────
 
 export async function fetchProducts(): Promise<Product[]> {
@@ -413,6 +422,28 @@ export async function saveTestimonial(testimonial: Testimonial): Promise<void> {
 
 export async function deleteTestimonial(id: string): Promise<void> {
   const { error } = await supabase.from('testimonials').delete().eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Portfolio ─────────────────────────────────────────────────────────────────
+
+export async function fetchPortfolioItems(): Promise<PortfolioItem[]> {
+  const { data, error } = await supabase
+    .from('portfolio_items')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
+  if (error) return [];
+  return data || [];
+}
+
+export async function savePortfolioItem(item: PortfolioItem): Promise<void> {
+  const { error } = await supabase.from('portfolio_items').upsert(item);
+  if (error) throw error;
+}
+
+export async function deletePortfolioItem(id: string): Promise<void> {
+  const { error } = await supabase.from('portfolio_items').delete().eq('id', id);
   if (error) throw error;
 }
 

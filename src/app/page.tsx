@@ -15,6 +15,7 @@ import { LiveSearch } from '@/components/ui/LiveSearch';
 import { ContactSection } from '@/components/ui/ContactSection';
 import { TestimonialSection } from '@/components/ui/TestimonialSection';
 import HireOurTeamSection from '@/components/ui/HireOurTeamSection';
+import { PortfolioSection } from '@/components/ui/PortfolioSection';
 import {
   fetchHeroContent,
   onStoreUpdate, DEFAULT_HERO_CONTENT, type HeroContent,
@@ -313,6 +314,9 @@ export default function Home() {
 
       {/* ── Testimonial Section ── */}
       <TestimonialSection />
+
+      {/* ── Portfolio & Partners Section ── */}
+      <PortfolioSection />
 
       {/* ── Hire Our Team Section ── */}
       <HireOurTeamSection />
