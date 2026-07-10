@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -66,63 +67,70 @@ function NavDropdown({ label, href, children }: { label: string; href: string; c
   );
 }
 
-// Dropdown component with mega menu hover logic
+// Mega menu dropdown - uses React Portal to escape CSS transform stacking context
 function MegaMenuDropdown({ label, href, children }: { label: string; href: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const [dropdownLeft, setDropdownLeft] = useState('50%');
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const calcPos = () => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const dropW = Math.min(960, window.innerWidth * 0.95);
+    const centerX = rect.left + rect.width / 2;
+    let left = centerX - dropW / 2;
+    left = Math.max(12, Math.min(left, window.innerWidth - dropW - 12));
+    setPos({ top: rect.bottom + 8, left, width: dropW });
+  };
 
   const handleMouseEnter = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
-    // Calculate position so dropdown stays within viewport
-    if (triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const dropdownWidth = Math.min(960, window.innerWidth * 0.95);
-      let left = centerX - dropdownWidth / 2;
-      // Clamp so it doesn't go offscreen
-      left = Math.max(12, Math.min(left, window.innerWidth - dropdownWidth - 12));
-      setDropdownLeft(`${left}px`);
-    }
+    calcPos();
     setOpen(true);
   };
   const handleMouseLeave = () => {
-    timerRef.current = setTimeout(() => setOpen(false), 120);
+    timerRef.current = setTimeout(() => setOpen(false), 150);
   };
 
   return (
-    <div ref={triggerRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <Link
-        href={href}
-        className="transition-colors hover:text-[#24B86C] flex items-center gap-1 text-sm font-medium text-foreground/80 py-5"
-      >
-        {label}
-        <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
-      </Link>
-
-      <AnimatePresence>
-        {open && (
+    <>
+      <div ref={triggerRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <Link
+          href={href}
+          className="transition-colors hover:text-[#24B86C] flex items-center gap-1 text-sm font-medium text-foreground/80 py-5"
+        >
+          {label}
+          <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+        </Link>
+      </div>
+      {mounted && open && ReactDOM.createPortal(
+        <div
+          style={{
+            position: 'fixed',
+            top: pos.top,
+            left: pos.left,
+            width: pos.width,
+            zIndex: 99999,
+          }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            initial={{ opacity: 0, y: 8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              position: 'fixed',
-              top: '80px',
-              left: dropdownLeft,
-              width: `min(960px, 95vw)`,
-              zIndex: 9999,
-            }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
           >
             {children}
           </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
 
