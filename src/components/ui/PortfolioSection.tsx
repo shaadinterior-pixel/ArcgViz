@@ -80,80 +80,88 @@ export function PortfolioSection() {
 
       {/* ── 3D Rotating Carousel ── */}
       {items.length > 0 && (
-        <div
-          className="carousel-scene"
-          style={{
-            overflow: 'hidden',
-            perspective: '900px',
-            WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, black 18%, black 82%, transparent 100%)',
-            maskImage: 'linear-gradient(90deg, transparent 0%, black 18%, black 82%, transparent 100%)',
-            height: '380px',
-            display: 'grid',
-            placeItems: 'center',
-          }}
-        >
-          <div
-            style={{
-              display: 'grid',
-              transformStyle: 'preserve-3d',
-              animation: 'carousel3d 32s linear infinite',
-            }}
-          >
-            {items.map((item, i) => {
-              const angle = (i * (360 / n));
-              // radius = (cardWidth/2 + gap) / tan(PI/n)
-              const cardW = 224; // px
-              const radius = Math.round((cardW / 2 + 8) / Math.tan(Math.PI / n));
-              return (
-                <div
-                  key={item.id}
-                  style={{
-                    gridArea: '1 / 1',
-                    width: cardW,
-                    aspectRatio: '7 / 10',
-                    borderRadius: 24,
-                    overflow: 'hidden',
-                    backfaceVisibility: 'hidden',
-                    transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
-                    position: 'relative',
-                    boxShadow: '0 20px 50px rgba(0,0,0,0.2)',
-                  }}
+        <div className="w-full mt-12 mb-16 flex justify-center">
+          <div className="scene">
+            <div className="a3d" style={{ '--n': items.length } as React.CSSProperties}>
+              {items.map((item, i) => (
+                <div 
+                  key={item.id} 
+                  className="card group" 
+                  style={{ '--i': i } as React.CSSProperties}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.image_url.replace(/^http:\/\//i, 'https://')}
                     alt={item.title}
                     loading="lazy"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    className="w-full h-full object-cover"
                   />
-                  {/* Title overlay */}
-                  <div style={{
-                    position: 'absolute', inset: 0,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 55%)',
-                  }} />
-                  <div style={{
-                    position: 'absolute', bottom: 20, left: 16, right: 16, textAlign: 'left',
-                  }}>
-                    <p style={{ color: '#fff', fontWeight: 700, fontSize: 15, lineHeight: 1.3, textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>
+                  {/* Title overlay (optional, adapting to our site's design) */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
+                  <div className="absolute bottom-4 left-4 right-4 text-left pointer-events-none">
+                    <p className="text-white font-bold text-sm leading-tight drop-shadow-md line-clamp-2">
                       {item.title}
                     </p>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </div>
       )}
 
-      {/* CSS animation injected globally via <style> */}
+      {/* Exact CSS from the source code, adapted slightly for scoping */}
       <style>{`
-        @keyframes carousel3d {
+        .scene, .a3d { display: grid; }
+        
+        .scene {
+          overflow: hidden;
+          perspective: 35em;
+          /* The original mask */
+          mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
+          -webkit-mask: linear-gradient(90deg, #0000, red 20% 80%, #0000);
+          width: 100%;
+          padding: 2em 0; /* Add some vertical padding to avoid clipping shadows */
+        }
+        
+        .a3d {
+          place-self: center;
+          transform-style: preserve-3d;
+          animation: ry 32s linear infinite;
+        }
+        
+        @keyframes ry {
           to { transform: rotateY(1turn); }
+        }
+        
+        .card {
+          /* Using the exact math from the source code */
+          --w: 17.5em;
+          --ba: calc(1turn / var(--n));
+          grid-area: 1 / 1;
+          width: var(--w);
+          aspect-ratio: 7 / 10;
+          border-radius: 1.5em;
+          backface-visibility: hidden;
+          transform:
+            rotateY(calc(var(--i) * var(--ba)))
+            translateZ(calc(-1 * (.5 * var(--w) + .5em) / tan(.5 * var(--ba))));
+          /* Additional site-specific styles */
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        
+        /* Adjust base font size for the em units if needed based on screen size */
+        @media (max-width: 768px) {
+          .scene { font-size: 12px; }
+        }
+        @media (min-width: 769px) {
+          .scene { font-size: 16px; }
         }
       `}</style>
 
       {/* CTA */}
-      <div className="relative z-10 flex flex-col items-center gap-3 mt-16">
+      <div className="relative z-10 flex flex-col items-center gap-3 mt-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
