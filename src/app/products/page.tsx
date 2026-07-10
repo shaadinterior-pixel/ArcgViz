@@ -313,7 +313,7 @@ function ProductsContent() {
                                 </>
                               ) : (
                                 <>
-                                  <span className="text-[10px] font-medium text-zinc-300 drop-shadow-md">Free download</span>
+                                  
                                 </>
                               )}
                             </div>

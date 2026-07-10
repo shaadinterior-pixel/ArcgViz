@@ -134,14 +134,11 @@ export function LatestUploadsSection() {
                         {/* Gradient overlay on hover */}
                         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                        {/* Title and Download Text on hover */}
+                        {/* Title on hover */}
                         <div className="absolute bottom-4 left-4 right-12 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-10">
                           <h3 className="text-white font-bold text-[13px] sm:text-sm leading-tight line-clamp-2 drop-shadow-md">
                             {product.name}
                           </h3>
-                          <p className="text-zinc-300 text-[11px] font-medium drop-shadow-md">
-                            {plan === 'Free' ? 'Free download' : 'Premium download'}
-                          </p>
                         </div>
 
                         {/* Badge */}

@@ -261,7 +261,7 @@ export default function ServiceDetailPage() {
                                 }`}>
                                   {product.plan_tier === 'Pro' ? 'Plus + Pro' : (product.plan_tier || 'Free')}
                                 </span>
-                                <span className="text-[10px] font-medium text-zinc-300 drop-shadow-md">Free download</span>
+                                
                               </>
                             )}
                           </div>
