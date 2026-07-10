@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
-import { getCurrentUser, hasPurchased } from '@/lib/auth';
+import { getCurrentUser, hasPurchased, getWishlist, toggleWishlist } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 
 type Props = { 
@@ -44,6 +44,8 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   const [purchased, setPurchased] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -57,6 +59,8 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
         const { hasPurchasedProduct } = await import('@/lib/downloads');
         const has = await hasPurchasedProduct(u.uid, product.id);
         setPurchased(has);
+        const wishlist = await getWishlist(u.uid);
+        setIsWishlisted(wishlist.includes(product.id));
       } else {
         setUser(null);
       }
@@ -130,6 +134,22 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
       alert('Download failed. Please try again.');
     } finally {
       setDownloading(false);
+    }
+  };
+
+  const handleToggleWishlist = async () => {
+    if (!user) {
+      alert('Please sign in to save products.');
+      return;
+    }
+    setWishlistLoading(true);
+    try {
+      await toggleWishlist(user.id, product.id, !isWishlisted);
+      setIsWishlisted(!isWishlisted);
+    } catch (e) {
+      console.error('Error toggling wishlist', e);
+    } finally {
+      setWishlistLoading(false);
     }
   };
 
@@ -375,8 +395,8 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     </Button>
                   </a>
                   <div className="flex gap-2">
-                    <Button variant="outline" className="flex-1 h-12 border-[#E2EDE8] hover:border-[#24B86C] hover:text-[#24B86C] hover:bg-[#24B86C]/5 rounded-xl font-bold transition-colors text-sm">
-                      <Bookmark className="w-4 h-4 mr-2" /> Save
+                    <Button onClick={handleToggleWishlist} disabled={wishlistLoading} variant="outline" className={`flex-1 h-12 border-[#E2EDE8] hover:border-[#24B86C] rounded-xl font-bold transition-colors text-sm ${isWishlisted ? 'bg-[#24B86C]/10 text-[#24B86C] border-[#24B86C]/30' : 'hover:text-[#24B86C] hover:bg-[#24B86C]/5 text-zinc-700'}`}>
+                      <Bookmark className={`w-4 h-4 mr-2 ${isWishlisted ? 'fill-current' : ''}`} /> {isWishlisted ? 'Saved' : 'Save'}
                     </Button>
                     <Button onClick={handleShare} variant="outline" className="flex-1 h-12 border-[#E2EDE8] rounded-xl font-bold hover:bg-zinc-50 transition-colors text-sm text-zinc-700">
                       <Share2 className="w-4 h-4 mr-2" /> Share
@@ -466,8 +486,8 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   </Button>
                 </a>
                 <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1 h-12 border border-[#E2EDE8] font-bold bg-white hover:border-[#24B86C] hover:text-[#24B86C] rounded-xl text-sm text-[#111111] transition-colors">
-                    <Bookmark className="w-4 h-4 mr-2"/> Save
+                  <Button onClick={handleToggleWishlist} disabled={wishlistLoading} variant="outline" className={`flex-1 h-12 border border-[#E2EDE8] font-bold bg-white hover:border-[#24B86C] rounded-xl text-sm transition-colors ${isWishlisted ? 'text-[#24B86C] bg-[#24B86C]/5 border-[#24B86C]/30' : 'hover:text-[#24B86C] text-[#111111]'}`}>
+                    <Bookmark className={`w-4 h-4 mr-2 ${isWishlisted ? 'fill-current' : ''}`}/> {isWishlisted ? 'Saved' : 'Save'}
                   </Button>
                   <Button onClick={handleShare} variant="outline" className="flex-1 h-12 border border-[#E2EDE8] font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111] transition-colors">
                     <Share2 className="w-4 h-4 mr-2"/> Share
@@ -587,7 +607,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                               className="block w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 bg-zinc-100"
                             />
                             
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                             <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
                               <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${

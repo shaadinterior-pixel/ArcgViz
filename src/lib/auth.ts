@@ -11,6 +11,8 @@ export {
   getUserPlan,
   getUserProfile,
   onAuthChange,
+  toggleWishlist,
+  getWishlist,
   type FirebaseUser as AuthUser,
   type PlanTier,
   PLAN_LIMITS,

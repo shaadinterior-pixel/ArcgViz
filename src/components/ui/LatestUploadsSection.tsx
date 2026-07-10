@@ -12,6 +12,8 @@ export function LatestUploadsSection() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeFilter, setActiveFilter] = useState('All');
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<{ id: string } | null>(null);
+  const [wishlist, setWishlist] = useState<string[]>([]);
 
   useEffect(() => {
     Promise.all([
@@ -27,6 +29,15 @@ export function LatestUploadsSection() {
       })
       .catch(console.error)
       .finally(() => setLoading(false));
+
+    import('@/lib/auth').then(async ({ getCurrentUser, getWishlist }) => {
+      const u = await getCurrentUser();
+      if (u) {
+        setUser({ id: u.uid });
+        const list = await getWishlist(u.uid);
+        setWishlist(list);
+      }
+    });
   }, []);
 
   const dynamicTabs = ['All', ...categories.map(c => c.title)];
@@ -99,6 +110,7 @@ export function LatestUploadsSection() {
             {filtered.slice(0, 30).map((product, index) => {
               const plan = product.plan_tier || 'Free';
               const hasVideo = String(product.category || '').toLowerCase().includes('motion') || String(product.category || '').toLowerCase().includes('animation');
+              const isWishlisted = wishlist.includes(product.id);
               return (
                 <motion.div
                   key={product.id}
@@ -120,7 +132,7 @@ export function LatestUploadsSection() {
                           className="block w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 bg-zinc-100"
                         />
                         {/* Gradient overlay on hover */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                         {/* Title and Download Text on hover */}
                         <div className="absolute bottom-4 left-4 right-12 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-10">
@@ -146,8 +158,18 @@ export function LatestUploadsSection() {
 
                         {/* Hover action icons */}
                         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
-                          <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">
-                            <Heart className="w-3.5 h-3.5 text-white drop-shadow-md" />
+                          <button 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (!user) return alert('Please sign in to save products.');
+                              import('@/lib/auth').then(({ toggleWishlist }) => {
+                                toggleWishlist(user.id, product.id, !isWishlisted);
+                                setWishlist(prev => isWishlisted ? prev.filter(id => id !== product.id) : [...prev, product.id]);
+                              });
+                            }}
+                            className={`w-8 h-8 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 text-white ${isWishlisted ? 'bg-[#24B86C] border-[#24B86C]' : 'bg-white/20 backdrop-blur-lg border border-white/30 hover:bg-white/40'}`}
+                          >
+                            <Heart className={`w-3.5 h-3.5 text-white drop-shadow-md ${isWishlisted ? 'fill-current' : ''}`} />
                           </button>
                           {plan === 'Free' ? (
                             <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-lg hover:bg-white/40 hover:scale-110 transition-all text-white">

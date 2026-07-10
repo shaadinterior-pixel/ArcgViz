@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation';
 import {
   User, Mail, Calendar, Shield, Download, ShoppingBag,
   LogOut, Settings, TrendingUp, Star, Zap, Crown,
-  Edit3, Check, X, Camera, ArrowRight, Infinity, Package
+  Edit3, Check, X, Camera, ArrowRight, Infinity, Package, Bookmark
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { getCurrentUser, getUserProfile, signOut, type PlanTier, PLAN_LIMITS } from '@/lib/auth';
+import { getCurrentUser, getUserProfile, signOut, type PlanTier, PLAN_LIMITS, getWishlist } from '@/lib/auth';
 import { getMonthlyDownloadCount, getUserPurchasedProductIds } from '@/lib/downloads';
 import { supabase } from '@/lib/supabase';
 import { updateProfile } from 'firebase/auth';
@@ -29,6 +29,8 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [downloadsUsed, setDownloadsUsed] = useState(0);
   const [purchases, setPurchases] = useState<any[]>([]);
+  const [savedProducts, setSavedProducts] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<'purchases'|'saved'>('purchases');
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [savingName, setSavingName] = useState(false);
@@ -39,10 +41,11 @@ export default function ProfilePage() {
       if (!u) { router.push('/login'); return; }
       setFirebaseUser(u);
 
-      const [prof, used, paidIds] = await Promise.all([
+      const [prof, used, paidIds, savedIds] = await Promise.all([
         getUserProfile(u.uid),
         getMonthlyDownloadCount(u.uid),
         getUserPurchasedProductIds(u.uid),
+        getWishlist(u.uid)
       ]);
       setProfile(prof);
       setDownloadsUsed(used);
@@ -54,6 +57,14 @@ export default function ProfilePage() {
           .select('id, name, price, thumbnail_url, slug, category')
           .in('id', paidIds);
         if (data) setPurchases(data);
+      }
+      
+      if (savedIds.length > 0) {
+        const { data } = await supabase
+          .from('products')
+          .select('id, name, price, thumbnail_url, slug, category')
+          .in('id', savedIds);
+        if (data) setSavedProducts(data);
       }
       setLoading(false);
     });
@@ -314,21 +325,35 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Right — Purchased Products */}
+          {/* Right — Purchased Products & Saved Items */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-3xl p-6 border border-[#E2EDE8] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h3 className="font-black text-[#111111] text-lg">My Purchases</h3>
-                  <p className="text-xs text-zinc-400 font-medium mt-0.5">Paid products with lifetime download access</p>
-                </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200">
-                  <Infinity className="w-3.5 h-3.5 text-amber-500" />
-                  <span className="text-xs font-black text-amber-600">{purchases.length} owned</span>
-                </div>
+              <div className="flex items-center gap-6 mb-6 border-b border-zinc-100 pb-2">
+                <button 
+                  onClick={() => setActiveTab('purchases')}
+                  className={`pb-2 font-black text-lg transition-colors border-b-2 ${activeTab === 'purchases' ? 'text-[#111111] border-[#24B86C]' : 'text-zinc-400 border-transparent hover:text-zinc-600'}`}
+                >
+                  My Purchases
+                </button>
+                <button 
+                  onClick={() => setActiveTab('saved')}
+                  className={`pb-2 font-black text-lg transition-colors border-b-2 ${activeTab === 'saved' ? 'text-[#111111] border-[#24B86C]' : 'text-zinc-400 border-transparent hover:text-zinc-600'}`}
+                >
+                  Saved Items
+                </button>
               </div>
 
-              {purchases.length === 0 ? (
+              {activeTab === 'purchases' ? (
+                <>
+                  <div className="flex items-center justify-between mb-6">
+                    <p className="text-xs text-zinc-400 font-medium">Paid products with lifetime download access</p>
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200">
+                      <Infinity className="w-3.5 h-3.5 text-amber-500" />
+                      <span className="text-xs font-black text-amber-600">{purchases.length} owned</span>
+                    </div>
+                  </div>
+
+                  {purchases.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
                   <div className="w-16 h-16 rounded-2xl bg-zinc-100 flex items-center justify-center mb-4">
                     <ShoppingBag className="w-8 h-8 text-zinc-300" />
@@ -378,6 +403,64 @@ export default function ProfilePage() {
                     </Link>
                   ))}
                 </div>
+              )}
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between mb-6">
+                    <p className="text-xs text-zinc-400 font-medium">Products you have saved for later</p>
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200">
+                      <Bookmark className="w-3.5 h-3.5 text-blue-500" />
+                      <span className="text-xs font-black text-blue-600">{savedProducts.length} saved</span>
+                    </div>
+                  </div>
+
+                  {savedProducts.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <div className="w-16 h-16 rounded-2xl bg-zinc-100 flex items-center justify-center mb-4">
+                        <Bookmark className="w-8 h-8 text-zinc-300" />
+                      </div>
+                      <h4 className="font-black text-[#111111] mb-2">No saved items</h4>
+                      <p className="text-sm text-zinc-500 font-medium mb-6 max-w-xs">
+                        Save products you like by clicking the bookmark or heart icon.
+                      </p>
+                      <Link href="/products">
+                        <Button className="h-11 px-6 rounded-xl bg-[#111111] hover:bg-[#24B86C] text-white font-bold text-sm transition-all">
+                          Browse Marketplace <ArrowRight className="ml-2 w-4 h-4" />
+                        </Button>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {savedProducts.map(p => (
+                        <Link key={p.id} href={`/products/${p.slug || p.id}`}>
+                          <div className="flex items-center gap-4 p-4 rounded-2xl border border-[#E2EDE8] hover:border-[#24B86C]/40 hover:bg-[#F8FAF9] transition-all group cursor-pointer">
+                            <div className="w-16 h-16 rounded-xl overflow-hidden bg-zinc-100 shrink-0 border border-[#E2EDE8]">
+                              {p.thumbnail_url ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={p.thumbnail_url} alt={p.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <Package className="w-6 h-6 text-zinc-300" />
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-black text-[#111111] text-sm leading-tight truncate group-hover:text-[#24B86C] transition-colors">{p.name}</h4>
+                              <p className="text-xs text-zinc-400 font-medium mt-0.5">{p.category}</p>
+                              <div className="mt-2">
+                                <span className="text-[#24B86C] font-black text-sm">{p.price === 'Free' || !p.price ? 'Free' : p.price}</span>
+                              </div>
+                            </div>
+                            <div className="w-9 h-9 rounded-xl bg-zinc-100 group-hover:bg-[#24B86C] flex items-center justify-center transition-all shrink-0">
+                              <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
