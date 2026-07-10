@@ -107,44 +107,46 @@ export function PortfolioSection() {
     <section className="relative w-full overflow-hidden bg-[#FAFCFB]">
       
       {/* ── Top Half (Green Partners Section) ── */}
-      <div className="relative w-full bg-[#24B86C] pt-20 pb-40 overflow-hidden">
+      <div className="relative w-full bg-[#24B86C] pt-20 pb-32 md:pb-48 overflow-hidden">
         {/* Grid Background Pattern */}
         <div 
-          className="absolute inset-0 opacity-10" 
+          className="absolute inset-0" 
           style={{ 
-            backgroundImage: 'linear-gradient(to right, #ffffff 2px, transparent 2px), linear-gradient(to bottom, #ffffff 2px, transparent 2px)', 
-            backgroundSize: '120px 120px' 
+            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.15) 1px, transparent 1px)', 
+            backgroundSize: '100px 100px' 
           }} 
         />
         
-        <div className="container relative z-10 mx-auto px-4 text-center h-[300px]">
-          {/* Angled Typography */}
+        <div className="container relative z-10 mx-auto px-4 h-[350px] md:h-[450px]">
+          
+          {/* Angled Typography - Top Left */}
           <motion.div 
-            initial={{ opacity: 0, rotate: -5, y: 50 }}
-            whileInView={{ opacity: 1, rotate: -3, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="absolute top-10 left-10 md:left-32 text-4xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-wider drop-shadow-lg"
+            initial={{ opacity: 0, rotate: -8, x: -100, y: 30 }}
+            whileInView={{ opacity: 1, rotate: -5, x: 0, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute top-[15%] md:top-[20%] left-[-2%] md:left-[5%] lg:left-[15%] text-[36px] sm:text-[54px] md:text-[64px] lg:text-[76px] font-black text-white uppercase tracking-wider drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)] z-10 whitespace-nowrap"
           >
             OUR VALUABLE PARTNERS
           </motion.div>
 
+          {/* Angled Typography - Bottom Right */}
           <motion.div 
-            initial={{ opacity: 0, rotate: 5, y: 50 }}
-            whileInView={{ opacity: 1, rotate: 3, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            className="absolute bottom-10 right-10 md:right-32 text-4xl md:text-5xl lg:text-6xl font-black text-white/90 uppercase tracking-wider drop-shadow-lg"
+            initial={{ opacity: 0, rotate: 8, x: 100, y: 30 }}
+            whileInView={{ opacity: 1, rotate: 5, x: 0, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+            className="absolute bottom-[20%] md:bottom-[25%] right-[-2%] md:right-[5%] lg:right-[15%] text-[36px] sm:text-[54px] md:text-[64px] lg:text-[76px] font-black text-white uppercase tracking-wider drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)] z-10 whitespace-nowrap"
           >
             WHO WORK WITH US
           </motion.div>
 
           {/* Central Characters (C1.png) */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            initial={{ opacity: 0, scale: 0.7, y: 100 }}
             whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, type: "spring" }}
-            className="absolute left-1/2 -translate-x-1/2 bottom-[-100px] md:bottom-[-160px] w-[300px] h-[300px] md:w-[450px] md:h-[450px] z-20 pointer-events-none"
+            transition={{ duration: 0.9, delay: 0.2, type: "spring", bounce: 0.4 }}
+            className="absolute left-1/2 -translate-x-1/2 bottom-[-80px] md:bottom-[-120px] w-[350px] h-[350px] md:w-[550px] md:h-[550px] z-20 pointer-events-none"
           >
-            <Image src="/C1.png" alt="Partners" fill className="object-contain drop-shadow-2xl" />
+            <Image src="/C1.png" alt="Partners" fill className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.25)]" priority />
           </motion.div>
         </div>
       </div>

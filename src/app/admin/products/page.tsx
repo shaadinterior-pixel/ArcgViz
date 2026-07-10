@@ -344,14 +344,7 @@ export default function AdminProductsPage() {
                       </select>
                     )}
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Author</label>
-                    <Input placeholder="Design Walla Studio" className="bg-gray-50 border-gray-200 focus-visible:ring-primary" value={editing.author} onChange={e=>setField('author',e.target.value)}/>
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Rating</label>
-                    <Input placeholder="4.9" className="bg-gray-50 border-gray-200 focus-visible:ring-primary" value={editing.rating} onChange={e=>setField('rating',e.target.value)}/>
-                  </div>
+
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Status</label>
                     <select className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-900" value={editing.status} onChange={e=>setField('status',e.target.value as Product['status'])}>
