@@ -70,9 +70,21 @@ function NavDropdown({ label, href, children }: { label: string; href: string; c
 function MegaMenuDropdown({ label, href, children }: { label: string; href: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const [dropdownLeft, setDropdownLeft] = useState('50%');
 
   const handleMouseEnter = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
+    // Calculate position so dropdown stays within viewport
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const dropdownWidth = Math.min(960, window.innerWidth * 0.95);
+      let left = centerX - dropdownWidth / 2;
+      // Clamp so it doesn't go offscreen
+      left = Math.max(12, Math.min(left, window.innerWidth - dropdownWidth - 12));
+      setDropdownLeft(`${left}px`);
+    }
     setOpen(true);
   };
   const handleMouseLeave = () => {
@@ -80,7 +92,7 @@ function MegaMenuDropdown({ label, href, children }: { label: string; href: stri
   };
 
   return (
-    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div ref={triggerRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <Link
         href={href}
         className="transition-colors hover:text-[#24B86C] flex items-center gap-1 text-sm font-medium text-foreground/80 py-5"
@@ -92,11 +104,17 @@ function MegaMenuDropdown({ label, href, children }: { label: string; href: stri
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 15, scale: 0.98 }}
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 15, scale: 0.98 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute top-[64px] left-1/2 -translate-x-1/2 w-[95vw] max-w-[960px] z-[200] pt-4"
+            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: 'fixed',
+              top: '80px',
+              left: dropdownLeft,
+              width: `min(960px, 95vw)`,
+              zIndex: 9999,
+            }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
