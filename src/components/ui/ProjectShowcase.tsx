@@ -59,25 +59,26 @@ export function ProjectShowcase({ projects, activeProject, onProjectChange }: Pr
             const offset = index - activeIndex; 
             const absOffset = Math.abs(offset);
             
-            // Determine stacking logic
+            // Determine stacking logic for the "Curved Gallery" Arch effect
             const isLeft = offset < 0;
-            const isRight = offset > 0;
             
             // Base width for calculating offsets
-            const cardWidth = 360; 
-            const overlap = 220; // How much they overlap
+            const overlap = 140; // Less overlap for the arch effect compared to the stack
 
             // Calculate exact position
-            let x = 0;
-            if (isLeft) x = offset * overlap;
-            if (isRight) x = offset * overlap;
+            const x = offset * overlap;
 
             // Scale down based on distance from center
-            const scale = isActive ? 1 : Math.max(0.65, 1 - (absOffset * 0.15));
+            const scale = isActive ? 1.05 : Math.max(0.7, 0.97 - (absOffset * 0.05));
             
-            // Add subtle rotation and Y-offset for a more "framer/apple" dynamic feel
-            const rotate = isActive ? 0 : (isLeft ? -3 * absOffset : 3 * absOffset);
-            const y = isActive ? 0 : absOffset * 10;
+            // Arch effect: push down and rotate based on distance
+            // Active: y=0, rotate=0
+            // Distance 1: y=10px, rotate=5deg
+            // Distance 2: y=25px, rotate=10deg
+            const y = isActive ? 0 : (absOffset === 1 ? 15 : absOffset === 2 ? 30 : absOffset * 20);
+            
+            // Rotation: negative for left side, positive for right side
+            const rotate = isActive ? 0 : (isLeft ? -4 * absOffset : 4 * absOffset);
             
             // Z-index: Active is top (highest). Others decrease outwards.
             const zIndex = 100 - absOffset;
@@ -88,7 +89,7 @@ export function ProjectShowcase({ projects, activeProject, onProjectChange }: Pr
             return (
               <motion.div
                 key={project.id}
-                className="absolute w-[320px] h-[460px] lg:w-[380px] lg:h-[540px] rounded-[32px] overflow-hidden cursor-pointer transform-gpu will-change-transform shadow-[0_30px_60px_rgba(0,0,0,0.12)] border border-white/10"
+                className="absolute w-[180px] h-[360px] lg:w-[240px] lg:h-[480px] rounded-[24px] overflow-hidden cursor-pointer transform-gpu will-change-transform shadow-[0_15px_35px_rgba(0,0,0,0.1)] border border-white/20"
                 style={{ zIndex }}
                 initial={false}
                 animate={{
