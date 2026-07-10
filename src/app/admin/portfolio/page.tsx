@@ -67,21 +67,14 @@ export default function AdminPortfolioPage() {
 
     setUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `portfolio/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('products')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from('products')
-        .getPublicUrl(filePath);
-
-      setIsEditing(prev => ({ ...prev, image_url: data.publicUrl }));
+      const fd = new FormData();
+      fd.append('file', file);
+      
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      if (!res.ok) throw new Error('Upload failed');
+      
+      const data = await res.json();
+      setIsEditing(prev => ({ ...prev, image_url: data.url }));
     } catch (err: any) {
       alert(err.message || 'Failed to upload image');
     } finally {
