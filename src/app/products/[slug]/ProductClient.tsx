@@ -386,6 +386,101 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
               </div>
             </div>
 
+          </div>
+
+          {/* ── Right Column (Sidebar) ── */}
+          <div className="hidden lg:block w-[360px] shrink-0">
+            <div className="bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)] flex flex-col gap-6">
+              
+              {/* Author badge removed */}
+              {/* Rating removed */}
+              
+              {/* Access Level / Price Box */}
+              <div>
+                <span className="text-xs font-bold text-[#111111] block mb-2">Access Level</span>
+                {productPlan === 'Paid' ? (
+                  <div className="border-2 border-[#E2EDE8] rounded-xl p-4 bg-[#F3F6F5]">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-[#E2EDE8] text-[#111111] text-[11px] font-black uppercase tracking-wider shadow-sm">
+                        <Star className="w-3 h-3 text-[#24B86C] fill-[#24B86C]" /> Paid Product
+                      </span>
+                      <span className="text-2xl font-black text-[#111111]">
+                        {product.price || 'Contact us'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-zinc-500 font-medium">One-time purchase · Lifetime download access</p>
+                    {user && (
+                      <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-2 pt-2 border-t border-[#E2EDE8]">
+                        <span>Your Plan: <span className="font-bold text-[#111111]">{userPlan}</span></span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="border border-zinc-200 rounded-xl p-3 flex justify-between items-center bg-white hover:border-[#24B86C] transition-colors group cursor-pointer">
+                    <div>
+                      <div className="text-sm font-bold text-[#111111] mb-0.5">
+                        {productPlan === 'Pro' ? 'Plus + Pro' : productPlan} Tier Resources
+                      </div>
+                    {user && (
+                      <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-0.5">
+                        <span>Your Plan: <span className="font-bold text-[#111111]">{userPlan}</span></span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                )}
+              </div>
+              
+              {/* Purchase/Download Buttons */}
+              <div className="flex flex-col gap-2 mt-2">
+                {authLoading ? (
+                  <Button disabled className="w-full h-12 bg-zinc-100 rounded-xl">
+                    <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
+                  </Button>
+                ) : !user ? (
+                  <Link href={`/login?redirect=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : '')}`}>
+                    <Button className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-sm mb-3">
+                      {productPlan === 'Paid' 
+                        ? 'Login Required Before Downloading' 
+                        : `Upgrade to ${productPlan === 'Pro' ? 'Plus + Pro' : productPlan} to Download`}
+                    </Button>
+                  </Link>
+                ) : canDownload ? (
+                  <Button onClick={handleDownload} disabled={downloading} className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white font-bold rounded-xl text-sm shadow-[0_4px_14px_rgba(36,184,108,0.3)] transition-all">
+                    {downloading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/> Downloading...</> : <><Download className="w-4 h-4 mr-2"/> Download Now</>}
+                  </Button>
+                ) : (
+                  <Button disabled className="w-full h-12 bg-[#8bd1b5] text-[#dcaebb] font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 opacity-100">
+                    Locked (Purchase Required)
+                  </Button>
+                )}
+                
+                <a 
+                  href={`https://wa.me/918969688709?text=${encodeURIComponent(`Hi Design Walla! 👋\n\nI would like to hire your team to customize a product.\n\n*Product Name:* ${product.name}\n*Product Link:* https://designwalla.com/products/${product.slug || product.id}\n\nPlease let me know how we can proceed!`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full block"
+                >
+                  <Button variant="outline" className="w-full h-12 border border-[#E2EDE8] bg-[#FAFCFB] hover:border-[#11998E] hover:text-[#11998E] rounded-xl font-bold transition-colors text-sm text-[#111111]">
+                    <Wand2 className="w-4 h-4 mr-2" /> Hire team to customize
+                  </Button>
+                </a>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="flex-1 h-12 border border-[#E2EDE8] font-bold bg-white hover:border-[#24B86C] hover:text-[#24B86C] rounded-xl text-sm text-[#111111] transition-colors">
+                    <Bookmark className="w-4 h-4 mr-2"/> Save
+                  </Button>
+                  <Button onClick={handleShare} variant="outline" className="flex-1 h-12 border border-[#E2EDE8] font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111] transition-colors">
+                    <Share2 className="w-4 h-4 mr-2"/> Share
+                  </Button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        {/* Full width sections */}
+        <div className='w-full mt-4 lg:mt-8'>
             {/* Description */}
             <div className="mt-8">
               <h2 className="text-xl font-black mb-4 text-[#111111]">Description</h2>
@@ -522,97 +617,9 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 )}
               </div>
             )}
-          </div>
-          
-          {/* ── Right Column (Sidebar) ── */}
-          <div className="hidden lg:block w-[360px] shrink-0">
-            <div className="bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)] flex flex-col gap-6">
-              
-              {/* Author badge removed */}
-              {/* Rating removed */}
-              
-              {/* Access Level / Price Box */}
-              <div>
-                <span className="text-xs font-bold text-[#111111] block mb-2">Access Level</span>
-                {productPlan === 'Paid' ? (
-                  <div className="border-2 border-[#E2EDE8] rounded-xl p-4 bg-[#F3F6F5]">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-[#E2EDE8] text-[#111111] text-[11px] font-black uppercase tracking-wider shadow-sm">
-                        <Star className="w-3 h-3 text-[#24B86C] fill-[#24B86C]" /> Paid Product
-                      </span>
-                      <span className="text-2xl font-black text-[#111111]">
-                        {product.price || 'Contact us'}
-                      </span>
-                    </div>
-                    <p className="text-xs text-zinc-500 font-medium">One-time purchase · Lifetime download access</p>
-                    {user && (
-                      <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-2 pt-2 border-t border-[#E2EDE8]">
-                        <span>Your Plan: <span className="font-bold text-[#111111]">{userPlan}</span></span>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="border border-zinc-200 rounded-xl p-3 flex justify-between items-center bg-white hover:border-[#24B86C] transition-colors group cursor-pointer">
-                    <div>
-                      <div className="text-sm font-bold text-[#111111] mb-0.5">
-                        {productPlan === 'Pro' ? 'Plus + Pro' : productPlan} Tier Resources
-                      </div>
-                    {user && (
-                      <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-0.5">
-                        <span>Your Plan: <span className="font-bold text-[#111111]">{userPlan}</span></span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                )}
-              </div>
-              
-              {/* Purchase/Download Buttons */}
-              <div className="flex flex-col gap-2 mt-2">
-                {authLoading ? (
-                  <Button disabled className="w-full h-12 bg-zinc-100 rounded-xl">
-                    <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
-                  </Button>
-                ) : !user ? (
-                  <Link href={`/login?redirect=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : '')}`}>
-                    <Button className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-sm mb-3">
-                      {productPlan === 'Paid' 
-                        ? 'Login Required Before Downloading' 
-                        : `Upgrade to ${productPlan === 'Pro' ? 'Plus + Pro' : productPlan} to Download`}
-                    </Button>
-                  </Link>
-                ) : canDownload ? (
-                  <Button onClick={handleDownload} disabled={downloading} className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white font-bold rounded-xl text-sm shadow-[0_4px_14px_rgba(36,184,108,0.3)] transition-all">
-                    {downloading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/> Downloading...</> : <><Download className="w-4 h-4 mr-2"/> Download Now</>}
-                  </Button>
-                ) : (
-                  <Button disabled className="w-full h-12 bg-[#8bd1b5] text-[#dcaebb] font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 opacity-100">
-                    Locked (Purchase Required)
-                  </Button>
-                )}
-                
-                <a 
-                  href={`https://wa.me/918969688709?text=${encodeURIComponent(`Hi Design Walla! 👋\n\nI would like to hire your team to customize a product.\n\n*Product Name:* ${product.name}\n*Product Link:* https://designwalla.com/products/${product.slug || product.id}\n\nPlease let me know how we can proceed!`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full block"
-                >
-                  <Button variant="outline" className="w-full h-12 border border-[#E2EDE8] bg-[#FAFCFB] hover:border-[#11998E] hover:text-[#11998E] rounded-xl font-bold transition-colors text-sm text-[#111111]">
-                    <Wand2 className="w-4 h-4 mr-2" /> Hire team to customize
-                  </Button>
-                </a>
-                <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1 h-12 border border-[#E2EDE8] font-bold bg-white hover:border-[#24B86C] hover:text-[#24B86C] rounded-xl text-sm text-[#111111] transition-colors">
-                    <Bookmark className="w-4 h-4 mr-2"/> Save
-                  </Button>
-                  <Button onClick={handleShare} variant="outline" className="flex-1 h-12 border border-[#E2EDE8] font-bold bg-white hover:bg-zinc-50 rounded-xl text-sm text-[#111111] transition-colors">
-                    <Share2 className="w-4 h-4 mr-2"/> Share
-                  </Button>
-                </div>
-              </div>
 
-            </div>
-          </div>
+        </div>
+
         </div>
         
       </div>
