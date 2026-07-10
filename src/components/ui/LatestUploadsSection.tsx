@@ -41,7 +41,7 @@ export function LatestUploadsSection() {
       {/* Gradient orbs */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.04)_0,transparent_60%)] pointer-events-none" />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
@@ -120,7 +120,17 @@ export function LatestUploadsSection() {
                           className="block w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 bg-zinc-100"
                         />
                         {/* Gradient overlay on hover */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                        {/* Title and Download Text on hover */}
+                        <div className="absolute bottom-4 left-4 right-12 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-10">
+                          <h3 className="text-white font-bold text-[13px] sm:text-sm leading-tight line-clamp-2 drop-shadow-md">
+                            {product.name}
+                          </h3>
+                          <p className="text-zinc-300 text-[11px] font-medium drop-shadow-md">
+                            {plan === 'Free' ? 'Free download' : 'Premium download'}
+                          </p>
+                        </div>
 
                         {/* Badge */}
                         <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
