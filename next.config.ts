@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'cdn.simpleicons.org' },
       { protocol: 'https', hostname: 'source.unsplash.com' },
       { protocol: 'https', hostname: 'res.cloudinary.com' },
+      { protocol: 'http', hostname: 'res.cloudinary.com' },
     ],
     formats: ['image/avif', 'image/webp'],
     // Serve the smallest matching width — saves bandwidth on low-end devices
