@@ -19,6 +19,12 @@
 }
 
 @layer utilities {
+  .text-brand-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#24B86C] to-[#11998E];
+  }
+  .bg-brand-gradient {
+    @apply bg-gradient-to-r from-[#24B86C] to-[#11998E] text-white border-0;
+  }
   .glass {
     @apply bg-white/60 backdrop-blur-md border border-white/50;
   }

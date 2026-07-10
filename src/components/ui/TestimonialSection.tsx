@@ -87,7 +87,7 @@ export function TestimonialSection() {
           Wall of Love
         </span>
         <h2 className="text-4xl md:text-5xl font-black text-[#111111] tracking-tight mb-4">
-          Loved by <span className="text-[#24B86C]">creatives & founders</span>
+          Loved by <span className="text-brand-gradient pb-1 inline-block">creatives & founders</span>
         </h2>
         <p className="text-zinc-500 text-lg max-w-2xl mx-auto">
           Don't just take our word for it. Here is what our happy consumers have to say about their experience with Design Walla.

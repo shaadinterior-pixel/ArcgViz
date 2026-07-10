@@ -71,7 +71,7 @@ export function LatestUploadsSection() {
                   transition={{ delay: i * 0.05 }}
                   className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border ${
                     activeFilter === cat
-                      ? 'bg-[#0D1A12] text-white border-[#0D1A12] shadow-md'
+                      ? 'bg-brand-gradient shadow-md'
                       : 'bg-white text-[#4B5563] border-[#E2EDE8] hover:border-[#24B86C] hover:text-[#24B86C]'
                   }`}
                 >

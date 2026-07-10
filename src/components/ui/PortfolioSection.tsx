@@ -112,7 +112,7 @@ export function PortfolioSection() {
         >
           {content.headline_line1}
           <br />
-          <span className="text-[#24B86C]">{content.headline_line2}</span>
+          <span className="text-brand-gradient inline-block pb-1">{content.headline_line2}</span>
         </motion.h2>
 
         <motion.p
@@ -147,7 +147,8 @@ export function PortfolioSection() {
                   <img
                     src={item.image_url}
                     alt={item.title}
-                    loading="lazy"
+                    loading="eager"
+                    decoding="sync"
                     className="portfolio-carousel-image"
                     onError={(event) => {
                       event.currentTarget.src = `${FALLBACK_IMAGE_BASE}/${(index % CAROUSEL_ITEM_COUNT) + 1}.jpg`;
@@ -214,7 +215,7 @@ export function PortfolioSection() {
           -webkit-backface-visibility: hidden;
           transform:
             rotateY(calc(var(--index) * var(--angle)))
-            translateZ(calc(-1 * (.5 * var(--card-width) + .5rem) / tan(.5 * var(--angle))));
+            translateZ(calc(-1 * (.5 * var(--card-width) + 1.5rem) / tan(.5 * var(--angle))));
           transition: box-shadow 250ms ease, filter 250ms ease;
         }
 

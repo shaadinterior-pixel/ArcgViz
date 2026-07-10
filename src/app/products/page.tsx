@@ -348,13 +348,9 @@ function ProductsContent() {
           
           {filteredProducts.length > 0 && (
             <div className="mt-20 flex flex-col items-center gap-3">
-              <button className="group relative inline-flex items-center justify-center px-12 py-3.5 rounded-[2rem] text-[15px] font-black text-white shadow-[0_15px_40px_-10px_rgba(36,184,108,0.7)] hover:shadow-[0_20px_50px_-10px_rgba(36,184,108,0.9)] transition-all duration-300 hover:-translate-y-0.5">
-                {/* Gradient background matching screenshot (very dark left to bright green right) */}
-                <span className="absolute inset-0 bg-gradient-to-r from-[#172e21] via-[#1a7649] to-[#12a77a] rounded-[2rem]" />
-                <span className="relative flex items-center gap-2.5 tracking-wide">
-                  <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700 ease-in-out" strokeWidth={2.5} />
-                  Load More Assets
-                </span>
+              <button className="group inline-flex items-center justify-center px-10 py-3.5 rounded-full bg-[#0D1A12] text-white font-bold text-[15px] shadow-md hover:bg-[#24B86C] hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
+                <RefreshCw className="w-4 h-4 mr-2.5 group-hover:rotate-180 transition-transform duration-700 ease-in-out" strokeWidth={2.5} />
+                Load More Assets
               </button>
               <p className="text-xs text-zinc-400 font-medium">Showing {filteredProducts.length} assets</p>
             </div>

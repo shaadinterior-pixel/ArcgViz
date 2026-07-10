@@ -31,7 +31,7 @@ export function HowWeWorkSection() {
             <span className="text-[#24B86C] font-semibold text-sm tracking-wide">Our Process</span>
           </div>
           <h2 className="text-5xl md:text-6xl font-black tracking-tight text-[#0D1A12]">
-            How We <span className="text-[#24B86C]">Work</span>
+            How We <span className="text-brand-gradient pb-1 inline-block">Work</span>
           </h2>
         </motion.div>
 
