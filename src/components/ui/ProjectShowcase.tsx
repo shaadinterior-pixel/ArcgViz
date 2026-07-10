@@ -73,7 +73,11 @@ export function ProjectShowcase({ projects, activeProject, onProjectChange }: Pr
             if (isRight) x = offset * overlap;
 
             // Scale down based on distance from center
-            const scale = isActive ? 1 : Math.max(0.7, 1 - (absOffset * 0.12));
+            const scale = isActive ? 1 : Math.max(0.65, 1 - (absOffset * 0.15));
+            
+            // Add subtle rotation and Y-offset for a more "framer/apple" dynamic feel
+            const rotate = isActive ? 0 : (isLeft ? -3 * absOffset : 3 * absOffset);
+            const y = isActive ? 0 : absOffset * 10;
             
             // Z-index: Active is top (highest). Others decrease outwards.
             const zIndex = 100 - absOffset;
@@ -89,7 +93,9 @@ export function ProjectShowcase({ projects, activeProject, onProjectChange }: Pr
                 initial={false}
                 animate={{
                   x,
+                  y,
                   scale,
+                  rotateZ: rotate,
                   opacity,
                 }}
                 transition={{

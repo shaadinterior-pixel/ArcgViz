@@ -38,7 +38,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${outfit.variable} h-full antialiased`}
+      className={`${outfit.variable} antialiased`}
     >
       <head>
         {/* DNS prefetch + preconnect for every external origin we load from */}
@@ -57,7 +57,7 @@ export default function RootLayout({
           fetchPriority="high"
         />
       </head>
-      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-primary">
+      <body className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-primary">
         <SmoothScrollProvider>
           <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
             <ClientLayoutWrapper>

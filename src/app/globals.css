@@ -117,18 +117,37 @@
 }
 
 /* ─── Base body ─── */
+html, body {
+  width: 100%;
+  min-height: 100%;
+}
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* overflow-y: scroll is removed — Lenis smooth scroll manages this */
 }
 
-/* ─── Native smooth scrolling — disabled when Lenis is active ─── */
-html {
-  scroll-behavior: auto; /* Lenis handles smooth scroll — native must be 'auto' */
+/* ─── Lenis Smooth Scrolling Required CSS ─── */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 /* ─── Keyframes ─── */
