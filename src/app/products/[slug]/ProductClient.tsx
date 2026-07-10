@@ -531,46 +531,70 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
             </div>
 
             {/* Technical Details Box (Included formats) */}
-            <div className="mt-12 bg-white rounded-[24px] p-8 md:p-10 border border-[#E2EDE8] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-              <div className="flex items-center gap-2 mb-8 pb-6 border-b border-[#E2EDE8]">
-                <div className="w-6 h-6 rounded bg-zinc-800 flex items-center justify-center text-white font-bold text-[10px]">U</div>
-                <span className="bg-zinc-100 text-zinc-800 rounded-full px-4 py-1 text-xs font-bold border border-zinc-200">Unreal Engine</span>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div>
-                  <h3 className="font-bold text-lg mb-6 text-[#111111]">Technical details</h3>
-                  <ul className="text-[13px] text-zinc-600 space-y-2.5">
-                    <li><strong className="text-zinc-800 font-semibold">Rigged:</strong> {product.features?.includes('Rigged') ? 'Yes' : 'No'}</li>
-                    <li><strong className="text-zinc-800 font-semibold">Animated:</strong> {product.features?.includes('Animated') ? 'Yes' : 'No'}</li>
-                    <li><strong className="text-zinc-800 font-semibold">Game-Ready:</strong> {product.features?.includes('Game-Ready') ? 'Yes' : 'No'}</li>
-                    <li><strong className="text-zinc-800 font-semibold">3D Printable:</strong> {product.features?.includes('3D Printable') ? 'Yes' : 'No'}</li>
-                    <li><strong className="text-zinc-800 font-semibold">Vertex / Poly count:</strong> {product.poly_count || '14,434'}</li>
-                    <li><strong className="text-zinc-800 font-semibold">Texture Resolutions:</strong> {product.texture_resolution || '(512x512, 1024x1024, 2048x2048)'}</li>
-                    <li><strong className="text-zinc-800 font-semibold">Supported Platforms:</strong> Windows, Mac</li>
-                  </ul>
+            {(product.specifications && product.specifications.length > 0) ? (
+              <div className="mt-12 bg-white rounded-[24px] p-8 md:p-10 border border-[#E2EDE8] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+                <h3 className="font-bold text-xl mb-6 text-[#111111] border-b border-[#E2EDE8] pb-4">Specifications</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">
+                  {product.specifications.map((spec, i) => (
+                    <div key={i} className="flex flex-col border-b border-zinc-100 pb-3">
+                      <strong className="text-zinc-800 font-bold text-[14px] mb-1">{spec.label}</strong>
+                      <span className="text-[14px] text-zinc-600">{spec.value}</span>
+                    </div>
+                  ))}
+                  {(product.features?.filter(f => f !== 'Disable Hover Zoom').length || 0) > 0 && (
+                    <div className="flex flex-col border-b border-zinc-100 pb-3 md:col-span-2 mt-2">
+                      <strong className="text-zinc-800 font-bold text-[14px] mb-2">Other Features</strong>
+                      <ul className="list-disc pl-5 text-[14px] text-zinc-600 space-y-1">
+                        {product.features?.filter(f => f !== 'Disable Hover Zoom').map((f, i) => (
+                          <li key={i}>{f}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-6 text-[#111111]">Compatibility</h3>
-                  <div className="text-[13px] text-zinc-600 mb-8">
-                    <p className="mb-1"><strong className="text-zinc-800 font-semibold">Supported Unreal Engine Versions</strong></p>
-                    <p>4.19 - 4.27 and 5.0 - 5.7</p>
+              </div>
+            ) : (
+              <div className="mt-12 bg-white rounded-[24px] p-8 md:p-10 border border-[#E2EDE8] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+                <div className="flex items-center gap-2 mb-8 pb-6 border-b border-[#E2EDE8]">
+                  <div className="w-6 h-6 rounded bg-zinc-800 flex items-center justify-center text-white font-bold text-[10px]">U</div>
+                  <span className="bg-zinc-100 text-zinc-800 rounded-full px-4 py-1 text-xs font-bold border border-zinc-200">Unreal Engine</span>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <div>
+                    <h3 className="font-bold text-lg mb-6 text-[#111111]">Technical details</h3>
+                    <ul className="text-[13px] text-zinc-600 space-y-2.5">
+                      <li><strong className="text-zinc-800 font-semibold">Rigged:</strong> {product.features?.includes('Rigged') ? 'Yes' : 'No'}</li>
+                      <li><strong className="text-zinc-800 font-semibold">Animated:</strong> {product.features?.includes('Animated') ? 'Yes' : 'No'}</li>
+                      <li><strong className="text-zinc-800 font-semibold">Game-Ready:</strong> {product.features?.includes('Game-Ready') ? 'Yes' : 'No'}</li>
+                      <li><strong className="text-zinc-800 font-semibold">3D Printable:</strong> {product.features?.includes('3D Printable') ? 'Yes' : 'No'}</li>
+                      <li><strong className="text-zinc-800 font-semibold">Vertex / Poly count:</strong> {product.poly_count || '14,434'}</li>
+                      <li><strong className="text-zinc-800 font-semibold">Texture Resolutions:</strong> {product.texture_resolution || '(512x512, 1024x1024, 2048x2048)'}</li>
+                      <li><strong className="text-zinc-800 font-semibold">Supported Platforms:</strong> Windows, Mac</li>
+                    </ul>
                   </div>
-                  <div className="text-[13px] text-zinc-600 mb-8">
-                    <p className="mb-2"><strong className="text-zinc-800 font-semibold">Supported Target Platforms</strong></p>
-                    <div className="flex gap-2">
-                       <span className="px-3 py-1 bg-zinc-100 border border-zinc-200 rounded text-xs font-bold text-zinc-700">Windows</span>
-                       <span className="px-3 py-1 bg-zinc-100 border border-zinc-200 rounded text-xs font-bold text-zinc-700">Mac</span>
+                  <div>
+                    <h3 className="font-bold text-lg mb-6 text-[#111111]">Compatibility</h3>
+                    <div className="text-[13px] text-zinc-600 mb-8">
+                      <p className="mb-1"><strong className="text-zinc-800 font-semibold">Supported Unreal Engine Versions</strong></p>
+                      <p>4.19 - 4.27 and 5.0 - 5.7</p>
+                    </div>
+                    <div className="text-[13px] text-zinc-600 mb-8">
+                      <p className="mb-2"><strong className="text-zinc-800 font-semibold">Supported Target Platforms</strong></p>
+                      <div className="flex gap-2">
+                        <span className="px-3 py-1 bg-zinc-100 border border-zinc-200 rounded text-xs font-bold text-zinc-700">Windows</span>
+                        <span className="px-3 py-1 bg-zinc-100 border border-zinc-200 rounded text-xs font-bold text-zinc-700">Mac</span>
+                      </div>
+                    </div>
+                    <h3 className="font-bold text-lg mb-4 text-[#111111]">Other information</h3>
+                    <div className="text-[13px] text-zinc-600">
+                      <p className="mb-1"><strong className="text-zinc-800 font-semibold">Distribution Method</strong></p>
+                      <p>Asset Package</p>
                     </div>
                   </div>
-                  <h3 className="font-bold text-lg mb-4 text-[#111111]">Other information</h3>
-                  <div className="text-[13px] text-zinc-600">
-                    <p className="mb-1"><strong className="text-zinc-800 font-semibold">Distribution Method</strong></p>
-                    <p>Asset Package</p>
-                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Tags */}
             <div className="mt-12">

@@ -377,49 +377,61 @@ export default function AdminProductsPage() {
               {/* Specifications */}
               <section className="space-y-4">
                 <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Specifications</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    {label:'File Formats',key:'file_formats',placeholder:'BLEND, FBX, OBJ',help:'comma-separated'},
-                    {label:'Software Support',key:'software_support',placeholder:'Blender 3.0+, 3ds Max',help:'comma-separated'},
-                    {label:'Poly Count',key:'poly_count',placeholder:'1.2M'},
-                    {label:'Texture Resolution',key:'texture_resolution',placeholder:'4K PBR'},
-                    {label:'File Size',key:'file_size',placeholder:'1.4 GB'},
-                  ].map(f=>(
-                    <div key={f.key} className="space-y-1.5">
-                      <label className="text-xs font-bold uppercase tracking-widest text-gray-600">{f.label} <span className="normal-case font-normal opacity-60">{f.help}</span></label>
-                      <Input placeholder={f.placeholder} className="bg-gray-50 border-gray-200 focus-visible:ring-primary"
-                        value={Array.isArray((editing as Record<string,unknown>)[f.key]) ? ((editing as Record<string,unknown>)[f.key] as string[]).join(', ') : String((editing as Record<string,unknown>)[f.key]??'')}
-                        onChange={e=>{
-                          const val = e.target.value;
-                          if(f.key==='file_formats'||f.key==='software_support') setField(f.key as keyof Product, val.split(',').map(s=>s.trim()).filter(Boolean));
-                          else setField(f.key as keyof Product, val);
-                        }}/>
-                    </div>
-                  ))}
-                  <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Technical Properties</label>
-                    <div className="flex flex-wrap gap-4 mt-1">
-                      {['Rigged', 'Animated', 'Game-Ready', '3D Printable'].map(feat => (
-                        <label key={feat} className="flex items-center gap-2 text-sm cursor-pointer">
-                          <input type="checkbox" className="rounded border-border text-primary focus:ring-primary" 
-                            checked={(editing.features??[]).includes(feat)}
-                            onChange={(e) => {
-                              const current = editing.features || [];
-                              if (e.target.checked) setField('features', [...current, feat]);
-                              else setField('features', current.filter(f => f !== feat));
-                            }}
-                          />
-                          <span>{feat}</span>
-                        </label>
-                      ))}
-                    </div>
+                <div className="space-y-4">
+                  <div className="flex flex-col gap-3">
+                    {(editing.specifications || []).map((spec, idx) => (
+                      <div key={idx} className="flex gap-2 items-center">
+                        <Input 
+                          placeholder="Label (e.g. Software, Resolution)" 
+                          className="bg-gray-50 border-gray-200 focus-visible:ring-primary w-1/3 text-sm"
+                          value={spec.label}
+                          onChange={e => {
+                            const newSpecs = [...(editing.specifications || [])];
+                            newSpecs[idx] = { ...newSpecs[idx], label: e.target.value };
+                            setField('specifications', newSpecs);
+                          }}
+                        />
+                        <Input 
+                          placeholder="Value (e.g. Figma, 4K)" 
+                          className="bg-gray-50 border-gray-200 focus-visible:ring-primary flex-1 text-sm"
+                          value={spec.value}
+                          onChange={e => {
+                            const newSpecs = [...(editing.specifications || [])];
+                            newSpecs[idx] = { ...newSpecs[idx], value: e.target.value };
+                            setField('specifications', newSpecs);
+                          }}
+                        />
+                        <button 
+                          onClick={() => {
+                            const newSpecs = [...(editing.specifications || [])];
+                            newSpecs.splice(idx, 1);
+                            setField('specifications', newSpecs);
+                          }} 
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                          title="Remove"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                  <div className="sm:col-span-2 space-y-1.5 mt-2">
+                  <Button 
+                    variant="outline" 
+                    className="w-full text-xs font-bold border-dashed text-gray-500 hover:text-gray-900"
+                    onClick={() => {
+                      const newSpecs = [...(editing.specifications || []), { label: '', value: '' }];
+                      setField('specifications', newSpecs);
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2"/> Add Specification Row
+                  </Button>
+
+                  <div className="mt-4 pt-4 border-t border-gray-100">
                     <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Other Features <span className="normal-case font-normal opacity-60">one per line</span></label>
-                    <textarea rows={3} placeholder={"Fully textured\nIncludes lighting"} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-gray-900"
-                      value={(editing.features??[]).filter(f => !['Rigged', 'Animated', 'Game-Ready', '3D Printable'].includes(f)).join('\n')}
+                    <textarea rows={3} placeholder={"Fully textured\nIncludes lighting"} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary text-gray-900 mt-2"
+                      value={(editing.features??[]).filter(f => f !== 'Disable Hover Zoom').join('\n')}
                       onChange={e=>{
-                        const standard = ['Rigged', 'Animated', 'Game-Ready', '3D Printable'].filter(f => (editing.features??[]).includes(f));
+                        const standard = ['Disable Hover Zoom'].filter(f => (editing.features??[]).includes(f));
                         const custom = e.target.value.split('\n').map(s=>s.trim()).filter(Boolean);
                         setField('features', [...standard, ...custom]);
                       }}/>
