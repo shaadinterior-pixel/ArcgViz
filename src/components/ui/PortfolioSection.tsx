@@ -3,19 +3,28 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Star, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { fetchPortfolioItems, type PortfolioItem } from '@/lib/store';
 
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+import 'swiper/css/autoplay';
+
+// import required modules
+import { EffectCoverflow, Pagination, Autoplay } from 'swiper/modules';
+
 export function PortfolioSection() {
   const [items, setItems] = useState<PortfolioItem[]>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const loadItems = async () => {
       const data = await fetchPortfolioItems();
-      // If no data, use some nice placeholders
       if (data.length === 0) {
         setItems([
           { id: '1', title: 'Luxury Villa', image_url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800', sort_order: 1 },
@@ -32,15 +41,6 @@ export function PortfolioSection() {
     loadItems();
   }, []);
 
-  // Auto slide
-  useEffect(() => {
-    if (items.length === 0) return;
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % items.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [items.length]);
-
   return (
     <section className="relative w-full overflow-hidden bg-white">
       
@@ -48,42 +48,46 @@ export function PortfolioSection() {
       <div className="relative w-full bg-[#24B86C] pt-20 pb-40 overflow-hidden">
         {/* Grid Background Pattern */}
         <div 
-          className="absolute inset-0 opacity-10" 
+          className="absolute inset-0 opacity-20" 
           style={{ 
-            backgroundImage: 'linear-gradient(to right, #ffffff 2px, transparent 2px), linear-gradient(to bottom, #ffffff 2px, transparent 2px)', 
-            backgroundSize: '120px 120px' 
+            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.4) 1px, transparent 1px)', 
+            backgroundSize: '90px 90px',
+            backgroundPosition: 'center center'
           }} 
         />
         
-        <div className="container relative z-10 mx-auto px-4 text-center h-[300px]">
-          {/* Angled Typography */}
-          <motion.div 
-            initial={{ opacity: 0, rotate: -5, y: 50 }}
-            whileInView={{ opacity: 1, rotate: -3, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="absolute top-10 left-10 md:left-32 text-4xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-wider drop-shadow-lg"
-          >
-            OUR VALUABLE PARTNERS
-          </motion.div>
+        <div className="container relative z-10 mx-auto px-4 h-[300px] flex items-center justify-center">
+          <div className="relative w-full max-w-5xl mx-auto h-full flex flex-col items-center justify-center -mt-10">
+            
+            {/* Typography */}
+            <motion.div 
+              initial={{ opacity: 0, rotate: -2, y: 30 }}
+              whileInView={{ opacity: 1, rotate: -2, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="text-4xl md:text-5xl lg:text-[68px] font-black text-white uppercase tracking-wider drop-shadow-md z-10 relative left-[-5%]"
+            >
+              OUR VALUABLE PARTNERS
+            </motion.div>
 
-          <motion.div 
-            initial={{ opacity: 0, rotate: 5, y: 50 }}
-            whileInView={{ opacity: 1, rotate: 3, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            className="absolute bottom-10 right-10 md:right-32 text-4xl md:text-5xl lg:text-6xl font-black text-white/90 uppercase tracking-wider drop-shadow-lg"
-          >
-            WHO WORK WITH US
-          </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, rotate: 2, y: 30 }}
+              whileInView={{ opacity: 1, rotate: 2, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+              className="text-4xl md:text-5xl lg:text-[68px] font-black text-white uppercase tracking-wider drop-shadow-md z-10 relative right-[-5%] mt-2 lg:mt-4"
+            >
+              WHO WORK WITH US
+            </motion.div>
 
-          {/* Central Characters (C1.png) */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8, y: 50 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, type: "spring" }}
-            className="absolute left-1/2 -translate-x-1/2 bottom-[-100px] md:bottom-[-160px] w-[300px] h-[300px] md:w-[450px] md:h-[450px] z-20 pointer-events-none"
-          >
-            <Image src="/C1.png" alt="Partners" fill className="object-contain drop-shadow-2xl" />
-          </motion.div>
+            {/* Central Characters (C1.png) */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, type: "spring" }}
+              className="absolute left-1/2 -translate-x-1/2 bottom-[-120px] md:bottom-[-200px] w-[350px] h-[350px] md:w-[550px] md:h-[550px] z-20 pointer-events-none"
+            >
+              <Image src="/C1.png" alt="Partners" fill className="object-contain drop-shadow-2xl" priority />
+            </motion.div>
+          </div>
         </div>
       </div>
 
@@ -113,67 +117,64 @@ export function PortfolioSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-zinc-600 max-w-2xl mx-auto font-medium text-[17px] mb-16"
+            className="text-zinc-600 max-w-2xl mx-auto font-medium text-[17px] mb-12"
           >
             From stunning interiors and exteriors to branding, websites, and digital marketing – every project reflects our passion for creativity, quality, and real business results.
           </motion.p>
 
-          {/* ── 3D Coverflow Slider ── */}
-          <div className="relative w-full h-[400px] md:h-[450px] flex items-center justify-center overflow-hidden perspective-[1200px] mb-16 mt-10">
-            <div className="relative w-full max-w-5xl h-full flex items-center justify-center transform-style-preserve-3d">
-              <AnimatePresence initial={false}>
-                {items.map((item, index) => {
-                  // Calculate distance from active index
-                  let offset = index - activeIndex;
-                  if (offset < -Math.floor(items.length / 2)) offset += items.length;
-                  if (offset > Math.floor(items.length / 2)) offset -= items.length;
-
-                  // Define 3D transform properties based on offset
-                  const absOffset = Math.abs(offset);
-                  const isCenter = offset === 0;
-                  
-                  // Limit the number of visible items for performance and look
-                  if (absOffset > 3) return null;
-
-                  return (
-                    <motion.div
-                      key={item.id}
-                      animate={{
-                        x: offset * 240, // Horizontal spread
-                        scale: isCenter ? 1 : Math.max(0.7, 1 - absOffset * 0.15),
-                        rotateY: offset * -25, // Turn inwards
-                        zIndex: 100 - absOffset,
-                        opacity: absOffset > 2 ? 0 : 1,
-                      }}
-                      transition={{ type: "spring", stiffness: 200, damping: 25 }}
-                      className="absolute w-[280px] h-[360px] md:w-[320px] md:h-[420px] rounded-[24px] overflow-hidden shadow-2xl cursor-pointer"
-                      onClick={() => setActiveIndex(index)}
-                      style={{ transformOrigin: 'center center' }}
+          {/* ── 3D Coverflow Slider (Swiper) ── */}
+          {items.length > 0 && (
+            <div className="relative w-full max-w-[1400px] mx-auto mb-16 mt-4">
+              {/* Force hardware acceleration for smooth 90fps animations */}
+              <div className="transform-gpu will-change-transform">
+                <Swiper
+                  effect={'coverflow'}
+                  grabCursor={true}
+                  centeredSlides={true}
+                  slidesPerView={'auto'}
+                  initialSlide={Math.floor(items.length / 2)}
+                  coverflowEffect={{
+                    rotate: 0,
+                    stretch: 0,
+                    depth: 150,
+                    modifier: 2.5,
+                    slideShadows: true,
+                  }}
+                  loop={true}
+                  autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true
+                  }}
+                  pagination={{ clickable: true, dynamicBullets: true }}
+                  modules={[EffectCoverflow, Pagination, Autoplay]}
+                  className="w-full py-10 !px-4"
+                >
+                  {items.map((item) => (
+                    <SwiperSlide 
+                      key={item.id} 
+                      className="!w-[280px] !h-[400px] md:!w-[340px] md:!h-[480px] rounded-[28px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] group"
                     >
-                      <Image 
-                        src={item.image_url} 
-                        alt={item.title} 
-                        fill 
-                        className="object-cover"
-                      />
-                      {/* Gradient Overlay & Title */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
-                      <div className="absolute bottom-6 left-6 right-6">
-                        <h3 className="text-white font-bold text-xl drop-shadow-md">{item.title}</h3>
+                      <div className="w-full h-full relative">
+                        <Image 
+                          src={item.image_url} 
+                          alt={item.title} 
+                          fill 
+                          className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
+                        <div className="absolute bottom-8 left-8 right-8 text-left">
+                          <h3 className="text-white font-bold text-2xl drop-shadow-md leading-tight">{item.title}</h3>
+                        </div>
                       </div>
-                      
-                      {/* Click overlay for non-active items */}
-                      {!isCenter && (
-                        <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px] transition-all hover:bg-transparent" />
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* ── Call to Action with scribbles ── */}
+          {/* ── Call to Action ── */}
           <div className="relative flex flex-col items-center justify-center mt-12 mb-8">
             <Link href="/portfolio">
               <Button className="h-14 px-8 rounded-full bg-[#24B86C] hover:bg-[#1E995A] text-white font-bold text-[16px] shadow-[0_8px_30px_rgba(36,184,108,0.4)] transition-all hover:-translate-y-1 group">
@@ -181,7 +182,7 @@ export function PortfolioSection() {
                 <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <p className="text-zinc-500 text-sm mt-4">Let's create something extraordinary together.</p>
+            <p className="text-zinc-500 text-sm mt-4 font-medium">Let's create something extraordinary together.</p>
           </div>
 
         </div>
