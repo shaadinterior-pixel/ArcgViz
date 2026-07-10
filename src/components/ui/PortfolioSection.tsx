@@ -160,7 +160,7 @@ export function PortfolioSection() {
                     >
                       <div className="w-full h-full relative">
                         <Image 
-                          src={item.image_url} 
+                          src={item.image_url.replace(/^http:\/\//i, 'https://')} 
                           alt={item.title} 
                           fill 
                           className="object-cover transition-transform duration-700 group-hover:scale-105" 
