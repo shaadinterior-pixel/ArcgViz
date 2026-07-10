@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-32 max-w-4xl min-h-[80vh] flex flex-col justify-center">
+    <div className="container mx-auto px-4 py-32 max-w-7xl min-h-[80vh] flex flex-col justify-center">
       <Link href="/">
         <Button variant="ghost" className="mb-8">
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
