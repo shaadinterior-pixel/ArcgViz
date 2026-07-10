@@ -103,3 +103,19 @@ export async function getUserProfile(userId: string) {
 export function onAuthChange(callback: (user: FirebaseUser | null) => void) {
   return onAuthStateChanged(auth, callback);
 }
+
+// ── Wishlist ──────────────────────────────────────────────────────────────────
+import { arrayUnion, arrayRemove, updateDoc } from 'firebase/firestore';
+
+export async function toggleWishlist(userId: string, productId: string, isAdding: boolean) {
+  const ref = doc(db, 'users', userId);
+  await updateDoc(ref, {
+    wishlist: isAdding ? arrayUnion(productId) : arrayRemove(productId)
+  });
+}
+
+export async function getWishlist(userId: string): Promise<string[]> {
+  const snap = await getDoc(doc(db, 'users', userId));
+  if (!snap.exists()) return [];
+  return snap.data().wishlist || [];
+}
