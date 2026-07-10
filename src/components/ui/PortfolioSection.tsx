@@ -46,34 +46,34 @@ export function PortfolioSection() {
       
       {/* ── Top Half (Green Section) ── */}
       <div className="relative w-full bg-[#24B86C] pt-20 pb-40 overflow-hidden">
-        {/* Grid Background Pattern */}
+        {/* Glassmorphic Grid Background Pattern (Rounded Squares) */}
         <div 
-          className="absolute inset-0 opacity-20" 
+          className="absolute inset-0 opacity-40 mix-blend-overlay" 
           style={{ 
-            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.4) 1px, transparent 1px)', 
-            backgroundSize: '90px 90px',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='10' y='10' width='80' height='80' rx='16' fill='rgba(255,255,255,0.2)' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' /%3E%3C/svg%3E")`, 
+            backgroundSize: '100px 100px',
             backgroundPosition: 'center center'
           }} 
         />
         
-        <div className="container relative z-10 mx-auto px-4 h-[300px] flex items-center justify-center">
-          <div className="relative w-full max-w-5xl mx-auto h-full flex flex-col items-center justify-center -mt-10">
+        <div className="container relative z-10 mx-auto px-4 h-[340px] flex items-center justify-center">
+          <div className="relative w-full max-w-6xl mx-auto h-full flex items-center justify-center">
             
-            {/* Typography */}
+            {/* Typography - Placed further out so characters don't block them */}
             <motion.div 
-              initial={{ opacity: 0, rotate: -2, y: 30 }}
-              whileInView={{ opacity: 1, rotate: -2, y: 0 }}
+              initial={{ opacity: 0, rotate: -3, x: -50 }}
+              whileInView={{ opacity: 1, rotate: -3, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="text-4xl md:text-5xl lg:text-[68px] font-black text-white uppercase tracking-wider drop-shadow-md z-10 relative left-[-5%]"
+              className="absolute top-12 left-0 md:left-10 lg:left-0 text-[32px] sm:text-4xl md:text-5xl lg:text-[64px] font-black text-white uppercase tracking-wider drop-shadow-lg z-10 whitespace-nowrap"
             >
               OUR VALUABLE PARTNERS
             </motion.div>
 
             <motion.div 
-              initial={{ opacity: 0, rotate: 2, y: 30 }}
-              whileInView={{ opacity: 1, rotate: 2, y: 0 }}
+              initial={{ opacity: 0, rotate: 3, x: 50 }}
+              whileInView={{ opacity: 1, rotate: 3, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-              className="text-4xl md:text-5xl lg:text-[68px] font-black text-white uppercase tracking-wider drop-shadow-md z-10 relative right-[-5%] mt-2 lg:mt-4"
+              className="absolute bottom-12 right-0 md:right-10 lg:right-0 text-[32px] sm:text-4xl md:text-5xl lg:text-[64px] font-black text-white uppercase tracking-wider drop-shadow-lg z-10 whitespace-nowrap"
             >
               WHO WORK WITH US
             </motion.div>
@@ -83,7 +83,7 @@ export function PortfolioSection() {
               initial={{ opacity: 0, scale: 0.8, y: 50 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, type: "spring" }}
-              className="absolute left-1/2 -translate-x-1/2 bottom-[-120px] md:bottom-[-200px] w-[350px] h-[350px] md:w-[550px] md:h-[550px] z-20 pointer-events-none"
+              className="absolute left-1/2 -translate-x-1/2 bottom-[-130px] md:bottom-[-200px] w-[350px] h-[350px] md:w-[550px] md:h-[550px] z-20 pointer-events-none"
             >
               <Image src="/C1.png" alt="Partners" fill className="object-contain drop-shadow-2xl" priority />
             </motion.div>
@@ -122,10 +122,9 @@ export function PortfolioSection() {
             From stunning interiors and exteriors to branding, websites, and digital marketing – every project reflects our passion for creativity, quality, and real business results.
           </motion.p>
 
-          {/* ── 3D Coverflow Slider (Swiper) ── */}
+          {/* ── 3D Coverflow Slider (Convex Mirror Style) ── */}
           {items.length > 0 && (
             <div className="relative w-full max-w-[1400px] mx-auto mb-16 mt-4">
-              {/* Force hardware acceleration for smooth 90fps animations */}
               <div className="transform-gpu will-change-transform">
                 <Swiper
                   effect={'coverflow'}
@@ -134,10 +133,10 @@ export function PortfolioSection() {
                   slidesPerView={'auto'}
                   initialSlide={Math.floor(items.length / 2)}
                   coverflowEffect={{
-                    rotate: 0,
-                    stretch: 0,
-                    depth: 150,
-                    modifier: 2.5,
+                    rotate: 2,         // Very slight rotation
+                    stretch: -20,      // Pull items slightly closer together
+                    depth: 180,        // Push background items further back
+                    modifier: 1.5,
                     slideShadows: true,
                   }}
                   loop={true}
@@ -153,7 +152,7 @@ export function PortfolioSection() {
                   {items.map((item) => (
                     <SwiperSlide 
                       key={item.id} 
-                      className="!w-[280px] !h-[400px] md:!w-[340px] md:!h-[480px] rounded-[28px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] group"
+                      className="!w-[260px] !h-[380px] md:!w-[320px] md:!h-[460px] rounded-[24px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] group"
                     >
                       <div className="w-full h-full relative">
                         <Image 
@@ -162,9 +161,9 @@ export function PortfolioSection() {
                           fill 
                           className="object-cover transition-transform duration-700 group-hover:scale-105" 
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
                         <div className="absolute bottom-8 left-8 right-8 text-left">
-                          <h3 className="text-white font-bold text-2xl drop-shadow-md leading-tight">{item.title}</h3>
+                          <h3 className="text-white font-bold text-xl md:text-2xl drop-shadow-md leading-tight">{item.title}</h3>
                         </div>
                       </div>
                     </SwiperSlide>
