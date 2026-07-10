@@ -7,6 +7,7 @@ import {
   useAnimation,
   useMotionValue,
   useTransform,
+  PanInfo,
 } from "framer-motion"
 import Image from "next/image"
 import { type PortfolioItem } from "@/lib/store"
@@ -85,7 +86,7 @@ const Carousel = memo(
     const rotation = useMotionValue(0)
     const transform = useTransform(
       rotation,
-      (value) => `rotate3d(0, 1, 0, ${value}deg)`
+      (value: number) => `rotate3d(0, 1, 0, ${value}deg)`
     )
 
     // Auto-scroll loop
@@ -127,11 +128,11 @@ const Carousel = memo(
             width: cylinderWidth,
             transformStyle: "preserve-3d",
           }}
-          onDrag={(_, info) =>
+          onDrag={(_: any, info: PanInfo) =>
             isCarouselActive &&
             rotation.set(rotation.get() + info.offset.x * 0.05)
           }
-          onDragEnd={(_, info) =>
+          onDragEnd={(_: any, info: PanInfo) =>
             isCarouselActive &&
             controls.start({
               rotateY: rotation.get() + info.velocity.x * 0.05,
