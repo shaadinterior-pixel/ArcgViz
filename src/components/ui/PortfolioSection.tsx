@@ -158,16 +158,12 @@ export function PortfolioSection() {
                   style={{ '--index': index } as CarouselStyle}
                   aria-label={`View ${item.title}`}
                 >
-                  <div 
-                    className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
-                    style={{ backgroundImage: `url(${PREMIUM_FALLBACKS[index % 12]})` }}
-                  />
                   <img
                     src={item.image_url}
                     alt={item.title}
                     loading="eager"
                     decoding="sync"
-                    className="portfolio-carousel-image relative z-10"
+                    className="portfolio-carousel-image"
                     onError={(event) => {
                       const target = event.currentTarget as HTMLImageElement;
                       if (!target.dataset.failed) {
@@ -176,8 +172,8 @@ export function PortfolioSection() {
                       }
                     }}
                   />
-                  <span className="portfolio-carousel-shade z-20" aria-hidden="true" />
-                  <span className="portfolio-carousel-title z-30">
+                  <span className="portfolio-carousel-shade" aria-hidden="true" />
+                  <span className="portfolio-carousel-title">
                     <span>{item.title}</span>
                   </span>
                 </Link>
@@ -230,9 +226,7 @@ export function PortfolioSection() {
           display: block;
           overflow: hidden;
           border-radius: clamp(1rem, 1.8vw, 1.5rem);
-          background-color: #e8efe9;
-          background-size: cover;
-          background-position: center;
+          background: #1a2a1f;
           border: 1px solid rgba(255, 255, 255, 0.72);
           box-shadow: 0 24px 55px rgba(12, 24, 16, 0.18);
           backface-visibility: hidden;
@@ -261,8 +255,8 @@ export function PortfolioSection() {
           inset: 0;
           pointer-events: none;
           background:
-            linear-gradient(180deg, rgba(255,255,255,0.1), transparent 34%),
-            linear-gradient(0deg, rgba(0,0,0,0.82), rgba(0,0,0,0.04) 54%, transparent 72%);
+            linear-gradient(180deg, rgba(255,255,255,0.06), transparent 30%),
+            linear-gradient(0deg, rgba(0,0,0,0.55), rgba(0,0,0,0.02) 45%, transparent 65%);
         }
 
         .portfolio-carousel-title {
