@@ -8,16 +8,7 @@ import { Star, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { fetchPortfolioItems, type PortfolioItem } from '@/lib/store';
 
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/effect-coverflow';
-import 'swiper/css/pagination';
-import 'swiper/css/autoplay';
-
-// import required modules
-import { EffectCoverflow, Pagination, Autoplay } from 'swiper/modules';
+import { ProjectShowcase } from '@/components/ui/ProjectShowcase';
 
 export function PortfolioSection() {
   const [items, setItems] = useState<PortfolioItem[]>([]);
@@ -122,55 +113,9 @@ export function PortfolioSection() {
             From stunning interiors and exteriors to branding, websites, and digital marketing – every project reflects our passion for creativity, quality, and real business results.
           </motion.p>
 
-          {/* ── 3D Coverflow Slider (Convex Mirror Style) ── */}
+          {/* ── Custom Interactive Project Showcase ── */}
           {items.length > 0 && (
-            <div className="relative w-full max-w-[1400px] mx-auto mb-16 mt-4">
-              <div className="transform-gpu will-change-transform">
-                <Swiper
-                  effect={'coverflow'}
-                  grabCursor={true}
-                  centeredSlides={true}
-                  slidesPerView={'auto'}
-                  initialSlide={Math.floor(items.length / 2)}
-                  coverflowEffect={{
-                    rotate: 2,         // Very slight rotation
-                    stretch: -20,      // Pull items slightly closer together
-                    depth: 180,        // Push background items further back
-                    modifier: 1.5,
-                    slideShadows: true,
-                  }}
-                  loop={true}
-                  autoplay={{
-                    delay: 2500,
-                    disableOnInteraction: false,
-                    pauseOnMouseEnter: true
-                  }}
-                  pagination={{ clickable: true, dynamicBullets: true }}
-                  modules={[EffectCoverflow, Pagination, Autoplay]}
-                  className="w-full py-10 !px-4"
-                >
-                  {items.map((item) => (
-                    <SwiperSlide 
-                      key={item.id} 
-                      className="!w-[260px] !h-[380px] md:!w-[320px] md:!h-[460px] rounded-[24px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] group"
-                    >
-                      <div className="w-full h-full relative">
-                        <Image 
-                          src={item.image_url} 
-                          alt={item.title} 
-                          fill 
-                          className="object-cover transition-transform duration-700 group-hover:scale-105" 
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
-                        <div className="absolute bottom-8 left-8 right-8 text-left">
-                          <h3 className="text-white font-bold text-xl md:text-2xl drop-shadow-md leading-tight">{item.title}</h3>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
-            </div>
+            <ProjectShowcase projects={items} />
           )}
 
           {/* ── Call to Action ── */}
