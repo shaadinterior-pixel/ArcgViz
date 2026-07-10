@@ -13,22 +13,34 @@ import {
   type PortfolioItem,
 } from '@/lib/store';
 
-const CAROUSEL_ITEM_COUNT = 12;
-const FALLBACK_IMAGE_BASE = '/Carousel effect/crousal effect/png';
+const PREMIUM_FALLBACKS = [
+  'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1600566753086-00f18efc2291?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1600210491369-e753d80a41f3?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1600121848594-ce15509a25b1?auto=format&fit=crop&q=80&w=600',
+];
 
 const DEFAULT_ITEMS: PortfolioItem[] = [
-  { id: '1', title: 'Luxury Villa', image_url: `${FALLBACK_IMAGE_BASE}/1.jpg`, sort_order: 1 },
-  { id: '2', title: 'Food Truck', image_url: `${FALLBACK_IMAGE_BASE}/2.jpg`, sort_order: 2 },
-  { id: '3', title: 'Modern Studio', image_url: `${FALLBACK_IMAGE_BASE}/3.jpg`, sort_order: 3 },
-  { id: '4', title: 'Product Branding', image_url: `${FALLBACK_IMAGE_BASE}/4.jpg`, sort_order: 4 },
-  { id: '5', title: 'App UI Design', image_url: `${FALLBACK_IMAGE_BASE}/5.jpg`, sort_order: 5 },
-  { id: '6', title: 'Creative Website', image_url: `${FALLBACK_IMAGE_BASE}/6.jpg`, sort_order: 6 },
-  { id: '7', title: 'Interior Design', image_url: `${FALLBACK_IMAGE_BASE}/7.jpg`, sort_order: 7 },
-  { id: '8', title: '3D Model', image_url: `${FALLBACK_IMAGE_BASE}/8.jpg`, sort_order: 8 },
-  { id: '9', title: 'Architecture', image_url: `${FALLBACK_IMAGE_BASE}/9.jpg`, sort_order: 9 },
-  { id: '10', title: 'Brand Identity', image_url: `${FALLBACK_IMAGE_BASE}/10.jpg`, sort_order: 10 },
-  { id: '11', title: 'Motion Graphics', image_url: `${FALLBACK_IMAGE_BASE}/11.jpg`, sort_order: 11 },
-  { id: '12', title: 'Social Media Kit', image_url: `${FALLBACK_IMAGE_BASE}/12.jpg`, sort_order: 12 },
+  { id: '1', title: 'Luxury Villa', image_url: PREMIUM_FALLBACKS[0], sort_order: 1 },
+  { id: '2', title: 'Food Truck', image_url: PREMIUM_FALLBACKS[1], sort_order: 2 },
+  { id: '3', title: 'Modern Studio', image_url: PREMIUM_FALLBACKS[2], sort_order: 3 },
+  { id: '4', title: 'Product Branding', image_url: PREMIUM_FALLBACKS[3], sort_order: 4 },
+  { id: '5', title: 'App UI Design', image_url: PREMIUM_FALLBACKS[4], sort_order: 5 },
+  { id: '6', title: 'Creative Website', image_url: PREMIUM_FALLBACKS[5], sort_order: 6 },
+  { id: '7', title: 'Interior Design', image_url: PREMIUM_FALLBACKS[6], sort_order: 7 },
+  { id: '8', title: '3D Model', image_url: PREMIUM_FALLBACKS[7], sort_order: 8 },
+  { id: '9', title: 'Architecture', image_url: PREMIUM_FALLBACKS[8], sort_order: 9 },
+  { id: '10', title: 'Brand Identity', image_url: PREMIUM_FALLBACKS[9], sort_order: 10 },
+  { id: '11', title: 'Motion Graphics', image_url: PREMIUM_FALLBACKS[10], sort_order: 11 },
+  { id: '12', title: 'Social Media Kit', image_url: PREMIUM_FALLBACKS[11], sort_order: 12 },
 ];
 
 type CarouselStyle = React.CSSProperties & {
@@ -37,7 +49,7 @@ type CarouselStyle = React.CSSProperties & {
 };
 
 function normalizeImageUrl(url?: string, index = 0): string {
-  const fallback = `${FALLBACK_IMAGE_BASE}/${(index % CAROUSEL_ITEM_COUNT) + 1}.jpg`;
+  const fallback = PREMIUM_FALLBACKS[index % 12];
   if (!url || !url.trim()) return fallback;
 
   return url
@@ -154,7 +166,7 @@ export function PortfolioSection() {
                       const target = event.currentTarget as HTMLImageElement;
                       if (!target.dataset.failed) {
                         target.dataset.failed = 'true';
-                        target.src = `${FALLBACK_IMAGE_BASE}/${(index % CAROUSEL_ITEM_COUNT) + 1}.jpg`;
+                        target.src = PREMIUM_FALLBACKS[index % 12];
                       }
                     }}
                   />
