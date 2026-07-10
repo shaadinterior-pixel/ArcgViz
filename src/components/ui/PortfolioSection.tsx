@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Star, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { fetchPortfolioItems, type PortfolioItem } from '@/lib/store';
+import { fetchPortfolioItems, type PortfolioItem, fetchPortfolioContent, type PortfolioContent, DEFAULT_PORTFOLIO_CONTENT } from '@/lib/store';
 
+// ... (keep DEFAULT_ITEMS)
 const DEFAULT_ITEMS: PortfolioItem[] = [
   { id: '1',  title: 'Luxury Villa',      image_url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=600', sort_order: 1 },
   { id: '2',  title: 'Food Truck',        image_url: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600', sort_order: 2 },
@@ -24,13 +25,38 @@ const DEFAULT_ITEMS: PortfolioItem[] = [
 
 export function PortfolioSection() {
   const [items, setItems] = useState<PortfolioItem[]>([]);
+  const [content, setContent] = useState<PortfolioContent>(DEFAULT_PORTFOLIO_CONTENT);
 
   useEffect(() => {
-    const loadItems = async () => {
-      const data = await fetchPortfolioItems();
-      setItems(data.length >= 6 ? data : DEFAULT_ITEMS);
+    const loadData = async () => {
+      const [itemsData, contentData] = await Promise.all([
+        fetchPortfolioItems(),
+        fetchPortfolioContent()
+      ]);
+      
+      let finalItems = itemsData;
+      
+      // Fallback to defaults only if absolutely empty
+      if (!itemsData || itemsData.length === 0) {
+        finalItems = DEFAULT_ITEMS;
+      } 
+      // If the user uploaded images, but fewer than 6, the 3D cylinder math (tan(PI/n)) 
+      // will break or look bad (e.g. n=2 means dividing by infinity). 
+      // We duplicate the items to create a full cylinder.
+      else if (itemsData.length < 6) {
+        finalItems = [];
+        let counter = 0;
+        while (finalItems.length < 6) {
+          // Add a unique suffix to the ID so React keys don't clash during duplication
+          finalItems.push(...itemsData.map(item => ({ ...item, id: `${item.id}-dup-${counter}` })));
+          counter++;
+        }
+      }
+      
+      setItems(finalItems);
+      setContent(contentData);
     };
-    loadItems();
+    loadData();
   }, []);
 
   const n = items.length || 12;
@@ -50,7 +76,7 @@ export function PortfolioSection() {
           viewport={{ once: true }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#E8F5F1] text-[#24B86C] text-sm font-bold tracking-wide uppercase mb-6 shadow-sm border border-[#24B86C]/10"
         >
-          <Star className="w-4 h-4 fill-current" /> Trusted by 100+ Amazing Clients
+          <Star className="w-4 h-4 fill-current" /> {content.badge_text}
         </motion.div>
 
         {/* Heading */}
@@ -61,8 +87,8 @@ export function PortfolioSection() {
           transition={{ delay: 0.1 }}
           className="text-4xl md:text-5xl lg:text-[54px] font-black tracking-tighter text-[#111111] leading-tight mb-6"
         >
-          Projects That <span className="text-[#24B86C]">Build Brands</span><br />
-          &amp; <span className="text-[#24B86C]">Transform</span> Spaces
+          {content.headline_line1} <br />
+          <span className="text-[#24B86C]">{content.headline_line2}</span>
         </motion.h2>
 
         <motion.p
@@ -72,8 +98,7 @@ export function PortfolioSection() {
           transition={{ delay: 0.2 }}
           className="text-zinc-600 max-w-2xl mx-auto font-medium text-[17px] mb-12"
         >
-          From stunning interiors and exteriors to branding, websites, and digital marketing – every
-          project reflects our passion for creativity, quality, and real business results.
+          {content.subheadline}
         </motion.p>
 
       </div>

@@ -427,6 +427,35 @@ export async function deleteTestimonial(id: string): Promise<void> {
 
 // ─── Portfolio ─────────────────────────────────────────────────────────────────
 
+export type PortfolioContent = {
+  badge_text: string;
+  headline_line1: string;
+  headline_line2: string;
+  subheadline: string;
+};
+
+export const DEFAULT_PORTFOLIO_CONTENT: PortfolioContent = {
+  badge_text: 'Trusted by 100+ Amazing Clients',
+  headline_line1: 'Projects That Build Brands',
+  headline_line2: '& Transform Spaces',
+  subheadline: 'From stunning interiors and exteriors to branding, websites, and digital marketing – every project reflects our passion for creativity, quality, and real business results.',
+};
+
+export async function fetchPortfolioContent(): Promise<PortfolioContent> {
+  const { data, error } = await supabase
+    .from('portfolio_content')
+    .select('*')
+    .eq('id', 1)
+    .single();
+  if (error && error.code !== 'PGRST116') return DEFAULT_PORTFOLIO_CONTENT;
+  return data ? { ...DEFAULT_PORTFOLIO_CONTENT, ...data } : DEFAULT_PORTFOLIO_CONTENT;
+}
+
+export async function savePortfolioContent(content: PortfolioContent): Promise<void> {
+  const { error } = await supabase.from('portfolio_content').upsert({ id: 1, ...content });
+  if (error) throw error;
+}
+
 export async function fetchPortfolioItems(): Promise<PortfolioItem[]> {
   const { data, error } = await supabase
     .from('portfolio_items')

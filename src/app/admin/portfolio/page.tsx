@@ -3,25 +3,44 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, Loader2, GripVertical, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { fetchPortfolioItems, savePortfolioItem, deletePortfolioItem, type PortfolioItem } from '@/lib/store';
+import { fetchPortfolioItems, savePortfolioItem, deletePortfolioItem, type PortfolioItem, fetchPortfolioContent, savePortfolioContent, type PortfolioContent, DEFAULT_PORTFOLIO_CONTENT } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
 
 export default function AdminPortfolioPage() {
   const [items, setItems] = useState<PortfolioItem[]>([]);
+  const [content, setContent] = useState<PortfolioContent>(DEFAULT_PORTFOLIO_CONTENT);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState<Partial<PortfolioItem> | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isSavingContent, setIsSavingContent] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    loadItems();
+    loadData();
   }, []);
 
-  const loadItems = async () => {
+  const loadData = async () => {
     setLoading(true);
-    const data = await fetchPortfolioItems();
-    setItems(data);
+    const [itemsData, contentData] = await Promise.all([
+      fetchPortfolioItems(),
+      fetchPortfolioContent()
+    ]);
+    setItems(itemsData);
+    setContent(contentData);
     setLoading(false);
+  };
+
+  const handleSaveContent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingContent(true);
+    try {
+      await savePortfolioContent(content);
+      alert('Content saved successfully');
+    } catch (err: any) {
+      alert(err.message || 'Failed to save content');
+    } finally {
+      setIsSavingContent(false);
+    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -42,7 +61,7 @@ export default function AdminPortfolioPage() {
       };
       
       await savePortfolioItem(itemToSave);
-      await loadItems();
+      await loadData();
       setIsEditing(null);
     } catch (err: any) {
       alert(err.message || 'Failed to save item');
@@ -55,7 +74,7 @@ export default function AdminPortfolioPage() {
     if (!confirm('Are you sure you want to delete this portfolio item?')) return;
     try {
       await deletePortfolioItem(id);
-      await loadItems();
+      await loadData();
     } catch (err: any) {
       alert(err.message || 'Failed to delete');
     }
@@ -91,12 +110,63 @@ export default function AdminPortfolioPage() {
   }
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-2xl font-bold">Portfolio Showcase</h1>
-          <p className="text-zinc-500 text-sm mt-1">Manage the 3D slider images on the homepage.</p>
-        </div>
+    <div className="p-8 max-w-5xl mx-auto space-y-8">
+      <div>
+        <h1 className="text-2xl font-bold">Portfolio Showcase</h1>
+        <p className="text-zinc-500 text-sm mt-1">Manage the content and 3D slider images on the homepage.</p>
+      </div>
+
+      {/* ── Section Content Editor ── */}
+      <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
+        <h2 className="text-lg font-bold mb-4">Section Header Text</h2>
+        <form onSubmit={handleSaveContent} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Badge Text</label>
+              <input
+                type="text"
+                value={content.badge_text}
+                onChange={e => setContent({ ...content, badge_text: e.target.value })}
+                className="w-full px-4 py-2 border rounded-xl bg-zinc-50"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Headline Line 1</label>
+              <input
+                type="text"
+                value={content.headline_line1}
+                onChange={e => setContent({ ...content, headline_line1: e.target.value })}
+                className="w-full px-4 py-2 border rounded-xl bg-zinc-50"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Headline Line 2 (Highlighted)</label>
+              <input
+                type="text"
+                value={content.headline_line2}
+                onChange={e => setContent({ ...content, headline_line2: e.target.value })}
+                className="w-full px-4 py-2 border rounded-xl bg-zinc-50"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Subheadline</label>
+              <textarea
+                value={content.subheadline}
+                onChange={e => setContent({ ...content, subheadline: e.target.value })}
+                className="w-full px-4 py-2 border rounded-xl bg-zinc-50 h-24 resize-none"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isSavingContent} className="bg-[#24B86C] text-white">
+              {isSavingContent ? 'Saving...' : 'Save Text Content'}
+            </Button>
+          </div>
+        </form>
+      </div>
+
+      <div className="flex justify-between items-center pt-4">
+        <h2 className="text-lg font-bold">Slider Images</h2>
         <Button onClick={() => setIsEditing({})} className="bg-[#24B86C] hover:bg-[#1E995A] text-white">
           <Plus className="w-4 h-4 mr-2" /> Add Item
         </Button>
