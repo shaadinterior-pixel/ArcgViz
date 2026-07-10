@@ -8,7 +8,7 @@ import {
   Star, Check, Box, FileText, Download, ShieldCheck,
   Heart, Share2, Image as ImageIcon, X, ChevronLeft,
   ChevronRight, ZoomIn, LogIn, Loader2, Monitor, MessageCircle, ArrowRight,
-  ChevronDown, Bookmark, Info, Wand2, ShoppingCart, Play
+  ChevronDown, Bookmark, Info, Wand2, ShoppingCart, Play, Crown, Briefcase, Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
@@ -474,8 +474,33 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   </Button>
                 </div>
               </div>
-
             </div>
+
+            {/* Why choose DESIGNWALLA? */}
+            <div className="mt-6 bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-sm">
+              <h3 className="font-bold text-[#111111] mb-5">Why choose DESIGNWALLA?</h3>
+              <ul className="flex flex-col gap-4">
+                <li className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-full bg-[#F3F8F5] flex flex-shrink-0 items-center justify-center text-[#24B86C] border border-[#24B86C]/10">
+                    <Crown className="w-5 h-5" />
+                  </div>
+                  <span className="text-sm font-bold text-zinc-700">Exclusive content</span>
+                </li>
+                <li className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-full bg-[#F3F8F5] flex flex-shrink-0 items-center justify-center text-[#24B86C] border border-[#24B86C]/10">
+                    <Briefcase className="w-5 h-5" />
+                  </div>
+                  <span className="text-sm font-bold text-zinc-700">Commercial Uses</span>
+                </li>
+                <li className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-full bg-[#F3F8F5] flex flex-shrink-0 items-center justify-center text-[#24B86C] border border-[#24B86C]/10">
+                    <Wallet className="w-5 h-5" />
+                  </div>
+                  <span className="text-sm font-bold text-zinc-700">Budget Friendly</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </div>
 
