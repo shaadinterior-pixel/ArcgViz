@@ -101,7 +101,7 @@ function ProductsContent() {
 
   return (
     <div className="min-h-screen bg-[#F8FAF9]">
-      <div className="container max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-16">
         {/* Header & Search */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
@@ -243,7 +243,7 @@ function ProductsContent() {
         <div className="flex-1">
           {filteredProducts.length > 0 ? (
             <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 items-start"
+              className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5 gap-5 space-y-0"
             >
               <AnimatePresence mode="popLayout">
                 {filteredProducts.map((product, index) => (
@@ -252,8 +252,8 @@ function ProductsContent() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                    className="transform-gpu"
+                    transition={{ duration: 0.5, delay: (index % 10) * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                    className="transform-gpu break-inside-avoid mb-5 block"
                   >
                     <Link href={`/products/${product.slug || product.id}`} className="block h-full outline-none">
                       <div className="group bg-white rounded-3xl overflow-hidden border border-[#E2EDE8] shadow-sm hover:shadow-[0_20px_40px_rgba(36,184,108,0.08)] hover:-translate-y-1 transition-all duration-400 h-full flex flex-col">
