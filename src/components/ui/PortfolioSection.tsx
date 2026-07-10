@@ -107,46 +107,56 @@ export function PortfolioSection() {
     <section className="relative w-full overflow-hidden bg-[#FAFCFB]">
       
       {/* ── Top Half (Green Partners Section) ── */}
-      <div className="relative w-full bg-[#24B86C] pt-20 pb-32 md:pb-48 overflow-hidden">
+      <div className="relative w-full bg-[#24B86C] pt-16 sm:pt-24 overflow-hidden min-h-[400px] md:min-h-[500px] flex items-end justify-center">
         {/* Grid Background Pattern */}
         <div 
           className="absolute inset-0" 
           style={{ 
             backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.15) 1px, transparent 1px)', 
-            backgroundSize: '100px 100px' 
+            backgroundSize: '100px 100px',
+            backgroundPosition: 'center bottom'
           }} 
         />
         
-        <div className="container relative z-10 mx-auto px-4 h-[350px] md:h-[450px]">
-          
-          {/* Angled Typography - Top Left */}
+        {/* Floating Text Container (Perfectly Centered) */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 overflow-visible mt-[-50px]">
+          {/* Top Line */}
           <motion.div 
-            initial={{ opacity: 0, rotate: -8, x: -100, y: 30 }}
-            whileInView={{ opacity: 1, rotate: -5, x: 0, y: 0 }}
+            initial={{ opacity: 0, rotate: -8, x: -120, y: -40 }}
+            whileInView={{ opacity: 1, rotate: -5, x: -80, y: -40 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute top-[15%] md:top-[20%] left-[-2%] md:left-[5%] lg:left-[15%] text-[36px] sm:text-[54px] md:text-[64px] lg:text-[76px] font-black text-white uppercase tracking-wider drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)] z-10 whitespace-nowrap"
+            className="text-[32px] sm:text-[48px] md:text-[64px] lg:text-[76px] font-black text-white uppercase tracking-wider drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)] whitespace-nowrap"
           >
             OUR VALUABLE PARTNERS
           </motion.div>
 
-          {/* Angled Typography - Bottom Right */}
+          {/* Bottom Line */}
           <motion.div 
-            initial={{ opacity: 0, rotate: 8, x: 100, y: 30 }}
-            whileInView={{ opacity: 1, rotate: 5, x: 0, y: 0 }}
+            initial={{ opacity: 0, rotate: 8, x: 120, y: 40 }}
+            whileInView={{ opacity: 1, rotate: 5, x: 80, y: 40 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-            className="absolute bottom-[20%] md:bottom-[25%] right-[-2%] md:right-[5%] lg:right-[15%] text-[36px] sm:text-[54px] md:text-[64px] lg:text-[76px] font-black text-white uppercase tracking-wider drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)] z-10 whitespace-nowrap"
+            className="text-[32px] sm:text-[48px] md:text-[64px] lg:text-[76px] font-black text-white uppercase tracking-wider drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)] whitespace-nowrap"
           >
             WHO WORK WITH US
           </motion.div>
+        </div>
 
-          {/* Central Characters (C1.png) */}
+        {/* Central Characters (C1.png) - Flush to Bottom */}
+        <div className="container relative z-20 mx-auto px-4 flex justify-center">
           <motion.div 
-            initial={{ opacity: 0, scale: 0.7, y: 100 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.2, type: "spring", bounce: 0.4 }}
-            className="absolute left-1/2 -translate-x-1/2 bottom-[-80px] md:bottom-[-120px] w-[350px] h-[350px] md:w-[550px] md:h-[550px] z-20 pointer-events-none"
+            initial={{ opacity: 0, y: 150 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.2, type: "spring", bounce: 0.3 }}
+            className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] pointer-events-none"
+            style={{ marginBottom: '-2px' }} // Ensures the cut-off image touches the edge perfectly
           >
-            <Image src="/C1.png" alt="Partners" fill className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.25)]" priority />
+            <Image 
+              src="/C1.png" 
+              alt="Partners" 
+              fill 
+              className="object-contain object-bottom drop-shadow-[0_20px_40px_rgba(0,0,0,0.25)]" 
+              priority 
+            />
           </motion.div>
         </div>
       </div>
