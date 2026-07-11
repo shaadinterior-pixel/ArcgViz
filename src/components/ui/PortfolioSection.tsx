@@ -61,7 +61,8 @@ function normalizeImageUrl(url?: string, index = 0): string {
 }
 
 function buildCarouselItems(sourceItems: PortfolioItem[]): PortfolioItem[] {
-  const usableItems = sourceItems.length > 0 ? sourceItems : DEFAULT_ITEMS;
+  // The user requested to strictly use the 12 custom images. We bypass the database items here.
+  const usableItems = DEFAULT_ITEMS;
   const normalizedItems = usableItems.map((item, index) => ({
     ...item,
     image_url: normalizeImageUrl(item.image_url, index),
