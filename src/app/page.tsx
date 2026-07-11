@@ -210,7 +210,7 @@ export default function Home() {
             <motion.p
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="text-lg sm:text-[17px] font-medium text-zinc-600 max-w-[540px] leading-relaxed gpu-layer pr-4 sm:pr-0"
+              className="text-[13px] sm:text-[17px] font-medium text-zinc-600 max-w-[540px] leading-relaxed gpu-layer pr-4 sm:pr-0"
             >
               The ultimate digital ecosystem. Elevate your brand with premium Website Templates, Motion Design, Interior Renders, and high-end 3D Assets.
             </motion.p>
@@ -227,21 +227,13 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/#services" className="flex-1 sm:flex-none">
-              className="flex flex-row items-center justify-start gap-2 mt-4 w-full gpu-layer"
-            >
-              <Link href="/products" className="flex-1">
-                <Button className="w-full h-10 px-2 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-[10px] sm:text-[14px] shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(17,153,142,0.4)] border border-white/20 whitespace-nowrap">
-                  Marketplace
+                <Button variant="outline" className="w-full sm:w-auto h-10 px-1 sm:h-12 sm:px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[9px] sm:text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
+                  Hire Our Team
                 </Button>
               </Link>
-              <Link href="/#services" className="flex-1">
-                <Button variant="outline" className="w-full h-10 px-2 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[10px] sm:text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
-                  Services
-                </Button>
-              </Link>
-              <Link href="/resources" className="flex-1">
-                <Button variant="outline" className="w-full h-10 px-2 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[10px] sm:text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
-                  Assets
+              <Link href="/resources" className="flex-1 sm:flex-none">
+                <Button variant="outline" className="w-full sm:w-auto h-10 px-1 sm:h-12 sm:px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[9px] sm:text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
+                  Free Assets
                 </Button>
               </Link>
             </motion.div>
