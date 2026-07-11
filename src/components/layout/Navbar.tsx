@@ -10,7 +10,7 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-
 import { Button } from '../ui/Button';
 import { LiveSearch } from '../ui/LiveSearch';
 import { getCurrentUser, onAuthChange, type AuthUser } from '@/lib/auth';
-import { fetchCategories, fetchServices, type Category, type ServiceDetail } from '@/lib/store';
+import { fetchCategories, fetchServices, fetchProducts, type Category, type ServiceDetail, type Product } from '@/lib/store';
 
 // Static service categories matching the platform
 const SERVICE_CATEGORIES = [
@@ -148,6 +148,7 @@ export function Navbar() {
   const [hidden, setHidden] = useState(false);
   const [marketplaceCategories, setMarketplaceCategories] = useState<Category[]>([]);
   const [services, setServices] = useState<ServiceDetail[]>([]);
+  const [latestProduct, setLatestProduct] = useState<Product | null>(null);
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest: number) => {
@@ -170,6 +171,14 @@ export function Navbar() {
 
   useEffect(() => {
     fetchServices().then(setServices).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetchProducts().then(products => {
+      if (products && products.length > 0) {
+        setLatestProduct(products[0]);
+      }
+    }).catch(() => {});
   }, []);
 
   return (
@@ -232,18 +241,27 @@ export function Navbar() {
                 </div>
 
                 {/* Right: Featured Marketplace Promo */}
-                <div className="w-[300px] shrink-0">
-                  <Link href="/products" className="group block relative w-full h-[180px] rounded-2xl overflow-hidden">
+                <div className="w-[300px] shrink-0 bg-[#F8FAF9] rounded-[20px] p-2 border border-[#E2EDE8]">
+                  <Link href={latestProduct ? `/products/${latestProduct.slug}` : "/products"} className="group block relative w-full h-[162px] rounded-2xl overflow-hidden shadow-sm border border-transparent hover:border-[#24B86C]/30 transition-all">
                     <Image 
-                      src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=600" 
-                      alt="Featured Assets" 
+                      src={latestProduct?.thumbnail_url || latestProduct?.image || "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=600"} 
+                      alt={latestProduct?.name || "Featured Assets"} 
                       fill 
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                    
+                    {latestProduct && (
+                      <div className="absolute top-3 right-3 bg-[#24B86C] text-white text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-full shadow-lg">
+                        New Release
+                      </div>
+                    )}
+
                     <div className="absolute bottom-4 left-4 right-4">
-                      <h4 className="text-white font-black text-sm uppercase tracking-wide mb-1">Premium 3D Assets</h4>
-                      <p className="text-white/80 text-[11px] font-medium">Explore high-quality models for your next big project.</p>
+                      <h4 className="text-white font-black text-sm tracking-wide mb-1 line-clamp-1">{latestProduct?.name || "Premium 3D Assets"}</h4>
+                      <p className="text-white/80 text-[11px] font-medium line-clamp-1">
+                        {latestProduct ? `In ${latestProduct.category}` : "Explore high-quality models."}
+                      </p>
                     </div>
                   </Link>
                 </div>
