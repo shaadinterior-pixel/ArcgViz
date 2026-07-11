@@ -126,7 +126,10 @@ export function Footer() {
 
         {/* ── Bottom bar ── */}
         <div className="flex flex-col md:flex-row items-center justify-between py-6 gap-4 text-xs text-[#9CA3AF] text-center md:text-left">
-          <p>&copy; {new Date().getFullYear()} Design Walla. All rights reserved. Made with ♥ in India.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Design Walla. All rights reserved.
+            <span className="hidden sm:inline"> Made with ♥ in India.</span>
+          </p>
           <div className="flex gap-5">
             <Link href="/privacy" className="hover:text-[#24B86C] transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-[#24B86C] transition-colors">Terms of Service</Link>
