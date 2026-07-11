@@ -201,7 +201,7 @@ function LoginContent() {
       const result = await sendPhoneOtp(fullPhone);
       setConfirmation(result);
       setOtpSent(true);
-      setResendTimer(30);
+      setResendTimer(60);
     } catch (err: unknown) {
       setError(cleanError(err instanceof Error ? err.message : 'Failed to send OTP.'));
     } finally {
