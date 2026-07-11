@@ -53,20 +53,22 @@ type CarouselStyle = React.CSSProperties & {
 
 function normalizeImageUrl(url?: string, index = 0): string {
   const fallback = PREMIUM_FALLBACKS[index % 12];
-  if (!url || !url.trim()) return fallback;
+  
+  if (!url) return fallback;
+  
+  const trimmed = url.trim();
+  if (!trimmed || trimmed === 'undefined' || trimmed === 'null' || trimmed === '') {
+    return fallback;
+  }
 
-  return url
-    .trim()
-    .replace(/^http:\/\/res\.cloudinary\.com/i, 'https://res.cloudinary.com');
+  return trimmed.replace(/^http:\/\/res\.cloudinary\.com/i, 'https://res.cloudinary.com');
 }
 
 function buildCarouselItems(sourceItems: PortfolioItem[]): PortfolioItem[] {
-  // If no items are uploaded from admin, return empty to hide carousel
-  if (!sourceItems || sourceItems.length === 0) {
-    return [];
-  }
+  // Use database items if available, otherwise fallback to defaults
+  const usableItems = sourceItems && sourceItems.length > 0 ? sourceItems : DEFAULT_ITEMS;
   
-  const normalizedItems = sourceItems.map((item, index) => ({
+  const normalizedItems = usableItems.map((item, index) => ({
     ...item,
     image_url: normalizeImageUrl(item.image_url, index),
   }));
