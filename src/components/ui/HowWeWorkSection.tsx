@@ -14,23 +14,23 @@ const steps = [
 
 export function HowWeWorkSection() {
   return (
-    <section className="py-24 bg-[#F8FAF9] relative overflow-hidden">
+    <section className="py-16 sm:py-24 bg-[#F8FAF9] relative overflow-hidden">
       {/* Decorative orbs */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.06)_0,transparent_60%)] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.06)_0,transparent_60%)] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="glass-card rounded-[3rem] p-8 md:p-16 border border-[#E2EDE8]/50 shadow-[0_8px_40px_rgba(36,184,108,0.04)]">
+        <div className="glass-card rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-8 md:p-16 border border-[#E2EDE8]/50 shadow-[0_8px_40px_rgba(36,184,108,0.04)]">
           {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-20 gpu-layer"
+          className="text-center mb-12 sm:mb-20 gpu-layer"
         >
           <div className="inline-block px-4 py-1.5 rounded-full bg-[#24B86C]/10 mb-6">
             <span className="text-[#24B86C] font-semibold text-sm tracking-wide">Our Process</span>
           </div>
-          <h2 className="text-5xl md:text-6xl font-black tracking-tight text-[#0D1A12]">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#0D1A12]">
             How We <span className="text-brand-gradient pb-1 inline-block">Work</span>
           </h2>
         </motion.div>
