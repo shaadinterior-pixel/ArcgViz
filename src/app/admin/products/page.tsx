@@ -380,10 +380,10 @@ export default function AdminProductsPage() {
                 <div className="space-y-4">
                   <div className="flex flex-col gap-3">
                     {(editing.specifications || []).map((spec, idx) => (
-                      <div key={idx} className="flex gap-2 items-center">
+                      <div key={idx} className="grid grid-cols-[1fr_1fr_auto] gap-3 items-center">
                         <Input 
-                          placeholder="Label (e.g. Software, Resolution)" 
-                          className="bg-gray-50 border-gray-200 focus-visible:ring-primary w-1/3 text-sm"
+                          placeholder="Label (e.g. Software)" 
+                          className="bg-gray-50 border-gray-200 focus-visible:ring-primary w-full text-sm"
                           value={spec.label}
                           onChange={e => {
                             const newSpecs = [...(editing.specifications || [])];
@@ -392,8 +392,8 @@ export default function AdminProductsPage() {
                           }}
                         />
                         <Input 
-                          placeholder="Value (e.g. Figma, 4K)" 
-                          className="bg-gray-50 border-gray-200 focus-visible:ring-primary flex-1 text-sm"
+                          placeholder="Value (e.g. Figma)" 
+                          className="bg-gray-50 border-gray-200 focus-visible:ring-primary w-full text-sm"
                           value={spec.value}
                           onChange={e => {
                             const newSpecs = [...(editing.specifications || [])];
@@ -407,7 +407,7 @@ export default function AdminProductsPage() {
                             newSpecs.splice(idx, 1);
                             setField('specifications', newSpecs);
                           }} 
-                          className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors flex-shrink-0"
                           title="Remove"
                         >
                           <Trash2 className="w-4 h-4" />
