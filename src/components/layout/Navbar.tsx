@@ -149,7 +149,9 @@ export function Navbar() {
   const [marketplaceCategories, setMarketplaceCategories] = useState<Category[]>([]);
   const [services, setServices] = useState<ServiceDetail[]>([]);
   const [latestProduct, setLatestProduct] = useState<Product | null>(null);
+  const [latestProducts, setLatestProducts] = useState<Product[]>([]);
   const [printProducts, setPrintProducts] = useState<Product[]>([]);
+  const [mobileExpandedMenu, setMobileExpandedMenu] = useState<string | null>(null);
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest: number) => {
@@ -178,6 +180,7 @@ export function Navbar() {
     fetchProducts().then(products => {
       if (products && products.length > 0) {
         setLatestProduct(products[0]);
+        setLatestProducts(products.slice(0, 5));
         setPrintProducts(products.filter(p => p.category?.toLowerCase().includes('print') || p.subcategory?.toLowerCase().includes('print')));
       }
     }).catch(() => {});
@@ -212,11 +215,11 @@ export function Navbar() {
             <MegaMenuDropdown label="Marketplace" href="/products" width="full">
               <div className="bg-white border border-[#E2EDE8] rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.12)] p-6 flex gap-6 w-full">
                 
-                {/* Left: Quick Categories */}
+                {/* Left: Quick Categories / Latest Uploads */}
                 <div className="flex-1 border-r border-[#E2EDE8] pr-6">
                   <div className="flex items-center gap-2 mb-4">
                     <ShoppingBag className="w-4 h-4 text-[#24B86C]" />
-                    <span className="text-[11px] font-black uppercase tracking-widest text-zinc-500">Popular Categories</span>
+                    <span className="text-[11px] font-black uppercase tracking-widest text-zinc-500">Latest Uploads</span>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-2">
@@ -227,16 +230,21 @@ export function Navbar() {
                       <span className="text-[13px] font-bold text-[#0D1A12]">All Products</span>
                     </Link>
                     
-                    {marketplaceCategories.slice(0, 5).map((cat) => (
+                    {latestProducts.map((prod) => (
                       <Link
-                        key={cat.id}
-                        href={`/products?search=${encodeURIComponent(cat.title)}`}
+                        key={prod.id}
+                        href={`/products/${prod.slug}`}
                         className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#F3F6F5] group transition-colors"
+                        title={prod.name}
                       >
-                        <div className="w-8 h-8 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0 border border-transparent group-hover:border-[#E2EDE8] group-hover:bg-white transition-all">
-                          <Box className="w-4 h-4 text-zinc-400 group-hover:text-[#24B86C] transition-colors" />
+                        <div className="w-8 h-8 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0 border border-transparent group-hover:border-[#E2EDE8] group-hover:bg-white transition-all overflow-hidden relative">
+                          {prod.thumbnail_url || prod.image ? (
+                            <img src={prod.thumbnail_url || prod.image} alt={prod.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <Box className="w-4 h-4 text-zinc-400 group-hover:text-[#24B86C] transition-colors" />
+                          )}
                         </div>
-                        <span className="text-[13px] font-medium text-zinc-600 group-hover:text-[#0D1A12] transition-colors">{cat.title}</span>
+                        <span className="text-[13px] font-medium text-zinc-600 group-hover:text-[#0D1A12] transition-colors line-clamp-1">{prod.name}</span>
                       </Link>
                     ))}
                   </div>
@@ -569,7 +577,27 @@ export function Navbar() {
               style={{ top: '-1rem', right: '-1rem', height: '110vh' }}
             >
               <div className="p-6 pt-10 flex items-center justify-between border-b border-[#E2EDE8] bg-white">
-                <span className="font-black text-xl text-[#0D1A12]">Menu</span>
+                {user ? (
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#24B86C] to-[#11998E] shadow-sm flex items-center justify-center overflow-hidden border-2 border-white">
+                      {(user as any).photoURL ? (
+                        <img src={(user as any).photoURL} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-white font-black text-sm">
+                          {(user as any).displayName?.charAt(0)?.toUpperCase() || (user as any).email?.charAt(0)?.toUpperCase() || 'U'}
+                        </span>
+                      )}
+                    </div>
+                    <span className="font-bold text-lg text-[#0D1A12]">{(user as any).displayName?.split(' ')[0] || 'My Profile'}</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center">
+                      <User className="w-5 h-5 text-zinc-400" />
+                    </div>
+                    <span className="font-bold text-lg text-[#0D1A12]">Guest</span>
+                  </div>
+                )}
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center hover:bg-zinc-200 transition-colors text-zinc-600"
@@ -581,28 +609,78 @@ export function Navbar() {
               <div className="p-6 flex-1 bg-white overflow-y-auto">
                 <nav className="flex flex-col space-y-1">
                   <Link href="/" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
-                  <Link href="/products" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Marketplace</Link>
-
-                  {/* Mobile Categories */}
-                  {marketplaceCategories.slice(0, 6).map((cat) => (
-                    <Link
-                      key={cat.id}
-                      href={`/products?search=${encodeURIComponent(cat.title)}`}
-                      className="text-sm font-medium text-zinc-500 py-2 pl-4 border-b border-zinc-50 hover:text-[#24B86C]"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                  
+                  {/* Marketplace Accordion */}
+                  <div className="border-b border-zinc-100">
+                    <button 
+                      className="w-full text-left flex justify-between items-center text-base font-bold text-[#0D1A12] py-3 outline-none"
+                      onClick={() => setMobileExpandedMenu(mobileExpandedMenu === 'marketplace' ? null : 'marketplace')}
                     >
-                      → {cat.title}
-                    </Link>
-                  ))}
+                      Marketplace
+                      <ChevronDown className={`w-4 h-4 transition-transform text-zinc-400 ${mobileExpandedMenu === 'marketplace' ? 'rotate-180' : ''}`} />
+                    </button>
+                    <AnimatePresence>
+                      {mobileExpandedMenu === 'marketplace' && (
+                        <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="overflow-hidden">
+                          <div className="flex flex-col space-y-1 pb-3">
+                            <Link href="/products" className="text-[13px] font-bold text-zinc-600 py-2 pl-4 border-l-2 border-transparent hover:border-[#24B86C] hover:text-[#24B86C] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                              View All Products
+                            </Link>
+                            {marketplaceCategories.map((cat) => (
+                              <Link
+                                key={cat.id}
+                                href={`/products?search=${encodeURIComponent(cat.title)}`}
+                                className="text-[13px] font-medium text-zinc-500 py-2 pl-4 border-l-2 border-zinc-100 hover:border-[#24B86C] hover:text-[#24B86C] transition-colors"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                              >
+                                {cat.title}
+                              </Link>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
 
-                  <Link href="/services" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100 mt-2" onClick={() => setIsMobileMenuOpen(false)}>Services</Link>
-                  <Link href="/products?category=Print" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100 mt-2" onClick={() => setIsMobileMenuOpen(false)}>Print</Link>
-                  <Link href="/products?category=Digital" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100 mt-2" onClick={() => setIsMobileMenuOpen(false)}>Digital Product</Link>
-                  <Link href="/tools" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100 mt-2" onClick={() => setIsMobileMenuOpen(false)}>DW Tools</Link>
+                  {/* Services Accordion */}
+                  <div className="border-b border-zinc-100">
+                    <button 
+                      className="w-full text-left flex justify-between items-center text-base font-bold text-[#0D1A12] py-3 outline-none"
+                      onClick={() => setMobileExpandedMenu(mobileExpandedMenu === 'services' ? null : 'services')}
+                    >
+                      Services
+                      <ChevronDown className={`w-4 h-4 transition-transform text-zinc-400 ${mobileExpandedMenu === 'services' ? 'rotate-180' : ''}`} />
+                    </button>
+                    <AnimatePresence>
+                      {mobileExpandedMenu === 'services' && (
+                        <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="overflow-hidden">
+                          <div className="flex flex-col space-y-1 pb-3">
+                            <Link href="/services" className="text-[13px] font-bold text-zinc-600 py-2 pl-4 border-l-2 border-transparent hover:border-[#24B86C] hover:text-[#24B86C] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                              View All Services
+                            </Link>
+                            {SERVICE_CATEGORIES.map((svc) => (
+                              <Link
+                                key={svc.label}
+                                href={svc.href}
+                                className="text-[13px] font-medium text-zinc-500 py-2 pl-4 border-l-2 border-zinc-100 hover:border-[#24B86C] hover:text-[#24B86C] transition-colors line-clamp-1"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                              >
+                                {svc.label}
+                              </Link>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <Link href="/products?category=Print" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Print</Link>
+                  <Link href="/products?category=Digital" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Digital Product</Link>
+                  <Link href="/tools" className="text-base font-bold text-[#0D1A12] py-3 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>DW Tools</Link>
                   <Link href="/pricing" className="text-base font-bold text-zinc-600 py-3 border-b border-zinc-100" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
 
                   {user ? (
-                    <Link href="/profile" className="text-base font-bold text-[#24B86C] mt-4 py-3" onClick={() => setIsMobileMenuOpen(false)}>My Profile</Link>
+                    <Link href="/profile" className="text-base font-bold text-[#24B86C] mt-4 py-3" onClick={() => setIsMobileMenuOpen(false)}>My Profile Dashboard</Link>
                   ) : (
                     <Link href="/login" className="text-base font-bold text-[#24B86C] mt-4 py-3" onClick={() => setIsMobileMenuOpen(false)}>Login / Signup</Link>
                   )}
