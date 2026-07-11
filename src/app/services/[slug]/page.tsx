@@ -243,9 +243,7 @@ export default function ServiceDetailPage() {
                           <div className="flex items-center justify-between gap-2">
                             {product.plan_tier === 'Paid' ? (
                               <>
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-amber-400/50 text-amber-300 text-[10px] font-black uppercase tracking-wide bg-black/30 backdrop-blur-md">
-                                  ★ Paid
-                                </span>
+                                  <div />
                                 <span className="text-[13px] font-black text-white drop-shadow-md">
                                   {product.price || 'Contact'}
                                 </span>
