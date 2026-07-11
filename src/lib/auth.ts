@@ -16,6 +16,7 @@ export {
   setupRecaptcha,
   sendPhoneOtp,
   confirmPhoneOtp,
+  sendPasswordReset,
   type FirebaseUser as AuthUser,
   type PlanTier,
   type ConfirmationResult,

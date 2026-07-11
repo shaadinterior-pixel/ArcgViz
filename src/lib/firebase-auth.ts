@@ -7,6 +7,7 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
   updateProfile,
+  sendPasswordResetEmail as firebaseSendPasswordReset,
   RecaptchaVerifier,
   signInWithPhoneNumber,
   type User,
@@ -68,6 +69,11 @@ export async function signInWithGoogle() {
   const cred = await signInWithPopup(auth, provider);
   await createUserDoc(cred.user);
   return cred.user;
+}
+
+// ── Password Reset ────────────────────────────────────────────────────────────
+export async function sendPasswordReset(email: string): Promise<void> {
+  await firebaseSendPasswordReset(auth, email);
 }
 
 // ── Phone Auth ───────────────────────────────────────────────────────────────
