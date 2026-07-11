@@ -120,27 +120,27 @@ export function PortfolioSection() {
           }} 
         />
 
-        {/* Animated Background Logos */}
+        {/* Animated Background Logos (Frames) */}
         {(() => {
           const logosToUse = content.partner_logos && content.partner_logos.length > 0 ? content.partner_logos : PREMIUM_FALLBACKS;
 
           return (
-            <div className="absolute inset-0 z-0 opacity-[0.15] overflow-hidden flex flex-col justify-evenly py-10 pointer-events-none mix-blend-overlay" style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)', maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' }}>
-              {[...Array(4)].map((_, rowIndex) => {
+            <div className="absolute inset-0 z-0 overflow-hidden flex flex-col justify-evenly py-6 pointer-events-none" style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 2%, black 98%, transparent)', maskImage: 'linear-gradient(to right, transparent, black 2%, black 98%, transparent)' }}>
+              {[...Array(3)].map((_, rowIndex) => {
                 const logos = [...logosToUse, ...logosToUse, ...logosToUse, ...logosToUse, ...logosToUse];
                 const isReverse = rowIndex % 2 !== 0;
-                const duration = 40 + (rowIndex * 10);
+                const duration = 45 + (rowIndex * 10);
                 
                 return (
                   <div key={rowIndex} className="flex whitespace-nowrap overflow-hidden">
                     <motion.div
-                      className="flex gap-16 sm:gap-24 items-center shrink-0 min-w-max pr-16 sm:pr-24"
+                      className="flex gap-4 sm:gap-6 items-center shrink-0 min-w-max pr-4 sm:pr-6"
                       animate={{ x: isReverse ? ['-50%', '0%'] : ['0%', '-50%'] }}
                       transition={{ duration, repeat: Infinity, ease: 'linear' }}
                     >
                       {logos.map((logo, i) => (
-                        <div key={i} className="relative w-28 h-12 sm:w-36 sm:h-16 grayscale brightness-[3] contrast-200">
-                          <img src={logo} alt="Partner Logo" className="w-full h-full object-contain" onError={(e) => e.currentTarget.style.display = 'none'} />
+                        <div key={i} className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-white/20 rounded-2xl sm:rounded-[2rem] p-3 sm:p-4 flex items-center justify-center backdrop-blur-sm shadow-sm">
+                          <img src={logo} alt="Partner Logo" className="w-full h-full object-contain rounded-lg" onError={(e) => e.currentTarget.style.display = 'none'} />
                         </div>
                       ))}
                     </motion.div>
@@ -150,28 +150,21 @@ export function PortfolioSection() {
             </div>
           );
         })()}
-        
-        {/* Floating Text Container (Perfectly Centered) */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 overflow-visible mt-[-50px]">
-          {/* Top Line */}
-          <motion.div 
-            initial={{ opacity: 0, rotate: -8, x: -120, y: -40 }}
-            whileInView={{ opacity: 1, rotate: -5, x: -80, y: -40 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[32px] sm:text-[48px] md:text-[64px] lg:text-[76px] font-black text-white uppercase tracking-wider drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)] whitespace-nowrap"
-          >
-            OUR VALUABLE PARTNERS
-          </motion.div>
-
-          {/* Bottom Line */}
-          <motion.div 
-            initial={{ opacity: 0, rotate: 8, x: 120, y: 40 }}
-            whileInView={{ opacity: 1, rotate: 5, x: 80, y: 40 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-            className="text-[32px] sm:text-[48px] md:text-[64px] lg:text-[76px] font-black text-white uppercase tracking-wider drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)] whitespace-nowrap"
-          >
-            WHO WORK WITH US
-          </motion.div>
+        {/* Floating Text Container (Positioned Top-Left and Bottom-Right) */}
+        <div className="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between py-12 sm:py-20 px-4 sm:px-12 md:px-20 lg:px-32">
+          {/* Top Left Text */}
+          <div className="w-full flex justify-center md:justify-start pt-4 sm:pt-8 md:pt-12">
+            <h2 className="text-[1.75rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-extrabold text-white tracking-tight rotate-[-3deg] drop-shadow-xl">
+              OUR VALUABLE PARTNERS
+            </h2>
+          </div>
+          
+          {/* Bottom Right Text */}
+          <div className="w-full flex justify-center md:justify-end pb-8 sm:pb-12 md:pb-16 pl-0 md:pl-20">
+            <h2 className="text-[1.5rem] sm:text-4xl md:text-5xl lg:text-[4rem] font-extrabold text-white tracking-tight rotate-[-3deg] drop-shadow-xl">
+              WHO WORK WITH US
+            </h2>
+          </div>
         </div>
 
         {/* Central Characters (C1.png) - Flush to Bottom */}
