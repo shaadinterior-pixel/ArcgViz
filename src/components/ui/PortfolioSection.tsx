@@ -88,6 +88,7 @@ function buildCarouselItems(sourceItems: PortfolioItem[]): PortfolioItem[] {
 export function PortfolioSection() {
   const [items, setItems] = useState<PortfolioItem[]>([]);
   const [content, setContent] = useState<PortfolioContent>(DEFAULT_PORTFOLIO_CONTENT);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -235,7 +236,7 @@ export function PortfolioSection() {
           className="relative z-10 mt-12 sm:mt-14 mb-14 sm:mb-16"
         >
           <div className="portfolio-carousel-scene">
-            <div className="portfolio-carousel-ring" style={{ '--count': items.length } as CarouselStyle}>
+            <div className={`portfolio-carousel-ring ${isPaused ? 'is-paused' : ''}`} style={{ '--count': items.length } as CarouselStyle}>
               {items.map((item, index) => (
                 <Link
                   key={item.id}
@@ -243,6 +244,8 @@ export function PortfolioSection() {
                   className="portfolio-carousel-card group"
                   style={{ '--index': index } as CarouselStyle}
                   aria-label={`View ${item.title}`}
+                  onMouseEnter={() => setIsPaused(true)}
+                  onMouseLeave={() => setIsPaused(false)}
                 >
                   <img
                     src={item.image_url}
@@ -299,11 +302,9 @@ export function PortfolioSection() {
           will-change: transform;
         }
 
-        @media (hover: hover) and (pointer: fine) {
-          .portfolio-carousel-scene:hover .portfolio-carousel-ring {
-            animation-play-state: paused;
-            -webkit-animation-play-state: paused;
-          }
+        .portfolio-carousel-ring.is-paused {
+          animation-play-state: paused;
+          -webkit-animation-play-state: paused;
         }
 
         @keyframes portfolio-carousel-spin {
