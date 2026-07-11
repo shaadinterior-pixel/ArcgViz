@@ -62,7 +62,7 @@ export function TestimonialSection() {
 
   if (loading) {
     return (
-      <section className="py-24 bg-[#F8FAF9] flex items-center justify-center min-h-[400px]">
+      <section className="py-16 sm:py-24 bg-[#F8FAF9] flex items-center justify-center min-h-[400px]">
         <Loader2 className="w-8 h-8 animate-spin text-[#24B86C]" />
       </section>
     );
@@ -71,7 +71,7 @@ export function TestimonialSection() {
   const displayTestimonials = [...testimonials, ...testimonials, ...testimonials];
 
   return (
-    <section className="py-24 bg-[#F8FAF9] relative overflow-hidden border-t border-[#E2EDE8]">
+    <section className="py-16 sm:py-24 bg-[#F8FAF9] relative overflow-hidden border-t border-[#E2EDE8]">
       {/* Decorative Gradients */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.04)_0,transparent_60%)] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.04)_0,transparent_60%)] pointer-events-none" />
@@ -86,7 +86,7 @@ export function TestimonialSection() {
         <span className="inline-block px-4 py-1.5 rounded-full bg-[#24B86C]/10 text-[#24B86C] text-xs font-bold tracking-widest uppercase mb-4">
           Wall of Love
         </span>
-        <h2 className="text-4xl md:text-5xl font-black text-[#111111] tracking-tight mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#111111] tracking-tight mb-4">
           Loved by <span className="text-brand-gradient pb-1 inline-block">creatives & founders</span>
         </h2>
         <p className="text-zinc-500 text-lg max-w-2xl mx-auto">
@@ -104,7 +104,7 @@ export function TestimonialSection() {
           {displayTestimonials.map((testimonial, idx) => (
             <div 
               key={testimonial.id ? `${testimonial.id}-${idx}` : idx} 
-              className="w-[340px] md:w-[400px] flex-shrink-0 mx-4 bg-white rounded-3xl p-8 shadow-[0_10px_40px_rgba(0,0,0,0.04)] border border-zinc-100 relative group transition-all duration-300 hover:shadow-[0_20px_60px_rgba(36,184,108,0.1)] hover:-translate-y-1"
+              className="w-[300px] sm:w-[340px] md:w-[400px] flex-shrink-0 mx-4 bg-white rounded-3xl p-6 md:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.04)] border border-zinc-100 relative group transition-all duration-300 hover:shadow-[0_20px_60px_rgba(36,184,108,0.1)] hover:-translate-y-1"
             >
               <Quote className="absolute top-6 right-6 w-8 h-8 text-[#24B86C]/10 group-hover:text-[#24B86C]/20 transition-colors" />
               
