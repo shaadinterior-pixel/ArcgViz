@@ -7,9 +7,7 @@ import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
 import { type Customer } from '@/lib/store';
-import { collection, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-import { fetchAdminCustomers } from '@/app/actions/admin';
+import { fetchAdminCustomers, saveAdminCustomer, deleteAdminCustomer } from '@/app/actions/admin';
 
 const EMPTY: Omit<Customer, 'id'> = {
   name: '', email: '', spent: 0, orders: 0,
@@ -43,23 +41,7 @@ export default function AdminCustomersPage() {
   const persist = async (customerToSave: Customer, isNew: boolean) => {
     setSaving(true);
     try { 
-      const userRef = doc(db, 'users', customerToSave.id);
-      if (isNew) {
-        await setDoc(userRef, {
-          name: customerToSave.name,
-          email: customerToSave.email,
-          plan: customerToSave.plan,
-          status: customerToSave.status,
-          joinDate: new Date()
-        });
-      } else {
-        await updateDoc(userRef, {
-          name: customerToSave.name,
-          email: customerToSave.email,
-          plan: customerToSave.plan,
-          status: customerToSave.status
-        });
-      }
+      await saveAdminCustomer(customerToSave, isNew);
       
       setCustomers(prev => {
         const idx = prev.findIndex(c => c.id === customerToSave.id);
@@ -82,7 +64,7 @@ export default function AdminCustomersPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this customer?')) return;
     try {
-      await deleteDoc(doc(db, 'users', id));
+      await deleteAdminCustomer(id);
       setCustomers(prev => prev.filter(c => c.id !== id));
       toast('Customer deleted');
     } catch {
@@ -205,43 +187,43 @@ export default function AdminCustomersPage() {
 
       {/* Modal */}
       {isOpen && editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-          <div className="glass-card w-full max-w-md rounded-2xl flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5">
-              <h2 className="text-lg font-bold">{editing.id.startsWith('tmp-') ? 'Add Customer' : 'Edit Customer'}</h2>
-              <button onClick={() => setIsOpen(false)} className="p-1.5 rounded-lg text-foreground/40 hover:text-foreground hover:bg-secondary transition-colors"><X className="w-5 h-5" /></button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D1A12]/40 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-md rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[#E2EDE8] bg-[#F8FAF9]">
+              <h2 className="text-xl font-black text-[#111111]">{editing.id.startsWith('tmp-') ? 'Add Customer' : 'Edit Customer'}</h2>
+              <button onClick={() => setIsOpen(false)} className="p-2 rounded-full text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 transition-colors"><X className="w-5 h-5" /></button>
             </div>
-            <div className="px-6 py-5 space-y-4">
+            <div className="px-6 py-6 space-y-5">
               {[
                 { label: 'Full Name *', key: 'name', placeholder: 'Alex Johnson', type: 'text' },
                 { label: 'Email *',     key: 'email', placeholder: 'alex@example.com', type: 'email' },
                 { label: 'Total Spent (₹)', key: 'spent', placeholder: '0', type: 'number' },
                 { label: 'Orders',     key: 'orders', placeholder: '0', type: 'number' },
               ].map(f => (
-                <div key={f.key} className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">{f.label}</label>
+                <div key={f.key} className="space-y-2">
+                  <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">{f.label}</label>
                   <Input
                     type={f.type}
                     placeholder={f.placeholder}
-                    className="bg-black/20 border-white/10 focus-visible:ring-primary"
+                    className="bg-[#F8FAF9] border-[#E2EDE8] focus:border-[#24B86C] focus:ring-[#24B86C]/20 text-[#111111] font-medium h-12 rounded-xl"
                     value={(editing as any)[f.key]}
                     onChange={e => setEditing({ ...editing, [f.key]: f.type === 'number' ? Number(e.target.value) : e.target.value })}
                   />
                 </div>
               ))}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Plan Tier</label>
-                  <select className="appearance-none w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+              <div className="grid grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Plan Tier</label>
+                  <select className="w-full bg-[#F8FAF9] border border-[#E2EDE8] rounded-xl px-4 py-3 h-12 text-sm font-medium text-[#111111] focus:outline-none focus:border-[#24B86C] focus:ring-2 focus:ring-[#24B86C]/20"
                     value={editing.plan} onChange={e=>setEditing({...editing, plan:e.target.value as 'Free'|'Pro'})}>
-                    <option className="bg-black text-white" value="Free">Free</option>
-                    <option className="bg-black text-white" value="Pro">Plus + Pro</option>
+                    <option value="Free">Free</option>
+                    <option value="Pro">Plus + Pro</option>
                   </select>
                 </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Status</label>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Status</label>
                   <select
-                    className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                    className="w-full bg-[#F8FAF9] border border-[#E2EDE8] rounded-xl px-4 py-3 h-12 text-sm font-medium text-[#111111] focus:outline-none focus:border-[#24B86C] focus:ring-2 focus:ring-[#24B86C]/20"
                     value={editing.status}
                     onChange={e => setEditing({ ...editing, status: e.target.value as Customer['status'] })}
                   >
@@ -250,10 +232,10 @@ export default function AdminCustomersPage() {
                 </div>
               </div>
             </div>
-            <div className="px-6 py-4 border-t border-white/10 flex justify-end gap-3 bg-white/5">
-              <Button variant="outline" className="border-white/10 hover:bg-white/10" onClick={() => setIsOpen(false)}>Cancel</Button>
-              <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[90px] font-semibold">
-                {saving ? 'Saving…' : 'Save'}
+            <div className="px-6 py-5 border-t border-[#E2EDE8] flex justify-end gap-3 bg-[#F8FAF9]">
+              <Button variant="outline" className="border-[#E2EDE8] hover:bg-zinc-100 text-[#111111] font-bold rounded-xl" onClick={() => setIsOpen(false)}>Cancel</Button>
+              <Button onClick={handleSave} disabled={saving} className="bg-[#24B86C] hover:bg-[#1E995A] text-white min-w-[100px] font-bold rounded-xl">
+                {saving ? 'Saving…' : 'Save Changes'}
               </Button>
             </div>
           </div>
