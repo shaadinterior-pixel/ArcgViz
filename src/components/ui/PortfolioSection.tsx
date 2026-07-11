@@ -299,9 +299,11 @@ export function PortfolioSection() {
           will-change: transform;
         }
 
-        .portfolio-carousel-scene:hover .portfolio-carousel-ring {
-          animation-play-state: paused;
-          -webkit-animation-play-state: paused;
+        @media (hover: hover) and (pointer: fine) {
+          .portfolio-carousel-scene:hover .portfolio-carousel-ring {
+            animation-play-state: paused;
+            -webkit-animation-play-state: paused;
+          }
         }
 
         @keyframes portfolio-carousel-spin {
