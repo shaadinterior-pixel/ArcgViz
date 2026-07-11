@@ -40,7 +40,7 @@ export function HowWeWorkSection() {
           {/* Connector line */}
           <div className="hidden lg:block absolute top-[45px] left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-transparent via-[#24B86C]/40 to-transparent z-0" />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-4 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-4 relative z-10">
             {steps.map((step, index) => {
               const Icon = step.icon;
               return (
@@ -52,14 +52,14 @@ export function HowWeWorkSection() {
                   transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
                   className="flex flex-col items-center text-center group gpu-layer"
                 >
-                  <div className="w-24 h-24 rounded-full bg-white border-[6px] border-[#F8FAF9] shadow-[0_0_30px_rgba(36,184,108,0.15)] flex items-center justify-center mb-6 group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(36,184,108,0.3)] transition-all duration-500 will-change-transform">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#24B86C] to-[#11998E] flex items-center justify-center shadow-inner">
-                      <Icon className="w-7 h-7 text-white" />
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-white border-4 sm:border-[6px] border-[#F8FAF9] shadow-[0_0_30px_rgba(36,184,108,0.15)] flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(36,184,108,0.3)] transition-all duration-500 will-change-transform">
+                    <div className="w-10 h-10 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-[#24B86C] to-[#11998E] flex items-center justify-center shadow-inner">
+                      <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                     </div>
                   </div>
-                  <span className="text-[#24B86C] font-black text-sm mb-2">{step.id}</span>
-                  <h3 className="text-xl font-bold text-[#0D1A12] mb-3">{step.title}</h3>
-                  <p className="text-[#6B7280] text-sm leading-relaxed max-w-[200px] mx-auto">{step.description}</p>
+                  <span className="text-[#24B86C] font-black text-xs sm:text-sm mb-1 sm:mb-2">{step.id}</span>
+                  <h3 className="text-sm sm:text-xl font-bold text-[#0D1A12] mb-2 sm:mb-3">{step.title}</h3>
+                  <p className="text-[#6B7280] text-[11px] sm:text-sm leading-relaxed max-w-[200px] mx-auto px-1 sm:px-0">{step.description}</p>
                 </motion.div>
               );
             })}
