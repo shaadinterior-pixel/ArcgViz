@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import ClientLayoutWrapper from "@/components/layout/ClientLayoutWrapper";
 import SmoothScrollProvider from "@/components/layout/SmoothScrollProvider";
@@ -65,6 +66,7 @@ export default function RootLayout({
             </ClientLayoutWrapper>
           </ThemeProvider>
         </SmoothScrollProvider>
+        <Analytics />
       </body>
     </html>
   );
