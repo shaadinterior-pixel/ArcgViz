@@ -139,8 +139,8 @@ export function PortfolioSection() {
                       transition={{ duration, repeat: Infinity, ease: 'linear' }}
                     >
                       {logos.map((logo, i) => (
-                        <div key={i} className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-white/20 rounded-2xl sm:rounded-[2rem] p-3 sm:p-4 flex items-center justify-center backdrop-blur-sm shadow-sm">
-                          <img src={logo} alt="Partner Logo" className="w-full h-full object-contain rounded-lg" onError={(e) => e.currentTarget.style.display = 'none'} />
+                        <div key={i} className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-white/20 rounded-2xl sm:rounded-[2rem] p-2 flex items-center justify-center backdrop-blur-sm shadow-sm overflow-hidden">
+                          <img src={logo} alt="Partner Logo" className="w-full h-full object-cover rounded-xl" onError={(e) => e.currentTarget.style.display = 'none'} />
                         </div>
                       ))}
                     </motion.div>
@@ -151,17 +151,17 @@ export function PortfolioSection() {
           );
         })()}
         {/* Floating Text Container (Positioned Top-Left and Bottom-Right) */}
-        <div className="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between py-12 sm:py-20 px-4 sm:px-12 md:px-20 lg:px-32">
+        <div className="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between py-12 sm:py-16 md:py-24 px-4 sm:px-12 md:px-16 lg:px-24">
           {/* Top Left Text */}
-          <div className="w-full flex justify-center md:justify-start pt-4 sm:pt-8 md:pt-12">
-            <h2 className="text-[1.75rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-extrabold text-white tracking-tight rotate-[-3deg] drop-shadow-xl">
+          <div className="w-full flex justify-center md:justify-start">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight rotate-[-4deg] drop-shadow-2xl max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg leading-[1.1] text-center md:text-left">
               OUR VALUABLE PARTNERS
             </h2>
           </div>
           
           {/* Bottom Right Text */}
-          <div className="w-full flex justify-center md:justify-end pb-8 sm:pb-12 md:pb-16 pl-0 md:pl-20">
-            <h2 className="text-[1.5rem] sm:text-4xl md:text-5xl lg:text-[4rem] font-extrabold text-white tracking-tight rotate-[-3deg] drop-shadow-xl">
+          <div className="w-full flex justify-center md:justify-end">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight rotate-[-4deg] drop-shadow-2xl max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg leading-[1.1] text-center md:text-right">
               WHO WORK WITH US
             </h2>
           </div>
