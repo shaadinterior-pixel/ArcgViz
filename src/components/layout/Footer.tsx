@@ -55,14 +55,14 @@ export function Footer() {
           {/* Brand column */}
           <div className="lg:w-[35%] xl:w-[40%] flex flex-col items-center text-center lg:items-start lg:text-left">
             <Link href="/" className="flex flex-col lg:flex-row items-center lg:items-start gap-4 mb-6">
-              <div className="relative w-20 h-20 lg:w-12 lg:h-12 rounded-2xl lg:rounded-xl overflow-hidden shadow-sm border border-[#E2EDE8] bg-white">
+              <div className="relative w-20 h-20 lg:w-16 lg:h-16 rounded-2xl lg:rounded-[14px] overflow-hidden shadow-sm border border-[#E2EDE8] bg-white">
                 <Image src="/DESIGN_WALLA_LOGO_-removebg-preview.png" alt="Design Walla" fill className="object-contain p-1 lg:p-0" />
               </div>
               <div>
-                <p className="font-black text-2xl lg:text-xl leading-none text-[#0D1A12]">
+                <p className="font-black text-2xl lg:text-2xl leading-none text-[#0D1A12] lg:pt-1">
                   DESIGN <span className="bg-gradient-to-r from-[#24B86C] to-[#11998E] bg-clip-text text-transparent">WALLA</span>
                 </p>
-                <p className="text-xs lg:text-[11px] text-[#9CA3AF] mt-1.5 lg:mt-1 font-medium">Smart Logon Ka Smart Solution</p>
+                <p className="text-xs lg:text-xs text-[#9CA3AF] mt-1.5 lg:mt-1.5 font-medium">Smart Logon Ka Smart Solution</p>
               </div>
             </Link>
 
