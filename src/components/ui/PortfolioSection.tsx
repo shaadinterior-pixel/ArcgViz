@@ -68,7 +68,7 @@ function buildCarouselItems(sourceItems: PortfolioItem[]): PortfolioItem[] {
   
   const normalizedItems = sourceItems.map((item, index) => ({
     ...item,
-    image_url: item.image_url || '',
+    image_url: normalizeImageUrl(item.image_url, index),
   }));
 
   const carouselItems: PortfolioItem[] = [];
@@ -247,7 +247,7 @@ export function PortfolioSection() {
                       const target = event.currentTarget as HTMLImageElement;
                       if (!target.dataset.failed) {
                         target.dataset.failed = 'true';
-                        target.src = 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800';
+                        target.src = PREMIUM_FALLBACKS[index % 12];
                       }
                     }}
                   />
