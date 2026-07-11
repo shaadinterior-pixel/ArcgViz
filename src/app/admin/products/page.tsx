@@ -29,7 +29,7 @@ const makeEmpty = (firstCategory: string): Omit<Product,'id'> => ({
   date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
   google_drive_share_link:'', google_drive_file_id:'', download_url:'', model_url:'',
   software_support:[], file_formats:[], poly_count:'', texture_resolution:'', file_size:'', features:[],
-  plan_tier: 'Free',
+  tags:[], plan_tier: 'Free',
 });
 
 type DriveStatus = 'idle'|'valid'|'invalid'|'checking';
@@ -435,6 +435,17 @@ export default function AdminProductsPage() {
                         const custom = e.target.value.split('\n').map(s=>s.trim()).filter(Boolean);
                         setField('features', [...standard, ...custom]);
                       }}/>
+                  </div>
+                  
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Tags <span className="normal-case font-normal opacity-60">comma separated</span></label>
+                    <Input placeholder="Modular, 3D Model, Lowpoly..." className="w-full bg-gray-50 border-gray-200 focus-visible:ring-primary mt-2 text-sm"
+                      value={(editing.tags??[]).join(', ')}
+                      onChange={e=>{
+                        const tags = e.target.value.split(',').map(s=>s.trim()).filter(Boolean);
+                        setField('tags', tags);
+                      }}
+                    />
                   </div>
                 </div>
               </section>

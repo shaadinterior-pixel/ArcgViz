@@ -536,7 +536,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
         <div className='w-full mt-4 lg:mt-8'>
             {/* Description */}
             <div className="mt-8">
-              <h2 className="text-xl font-black mb-4 text-[#111111]">Description</h2>
+              <h2 className="text-3xl font-black leading-tight mb-4 text-[#111111]">Description</h2>
               {product.description ? (
                 <p className="text-zinc-700 leading-relaxed whitespace-pre-line text-[15px]">{product.description}</p>
               ) : (
@@ -611,16 +611,18 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
             )}
 
             {/* Tags */}
-            <div className="mt-12">
-              <h3 className="font-bold mb-4 text-[#111111] text-lg">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {['Modular', 'Lowpoly', 'Fantasy', 'Medieval', 'Character', '3D Model', 'Rigged', 'Human'].map(tag => (
-                  <span key={tag} className="bg-white border border-[#E2EDE8] text-zinc-600 px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm cursor-pointer hover:border-[#24B86C] hover:text-[#24B86C] transition-colors">
-                    {tag}
-                  </span>
-                ))}
+            {(product.tags && product.tags.length > 0) && (
+              <div className="mt-12">
+                <h3 className="font-bold mb-4 text-[#111111] text-lg">Tags</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.tags.map(tag => (
+                    <span key={tag} className="bg-white border border-[#E2EDE8] text-zinc-600 px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm cursor-pointer hover:border-[#24B86C] hover:text-[#24B86C] transition-colors">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Recommendations ("More from") */}
             {similarProducts.length > 0 && (

@@ -29,6 +29,7 @@ export type Product = {
   file_size: string;
   features: string[];
   specifications?: { label: string; value: string }[];
+  tags?: string[];
   updated_at?: string;
   created_at?: string;
   plan_tier: 'Free' | 'Plus' | 'Pro' | 'Paid';
@@ -219,6 +220,7 @@ function normalizeProduct(row: Record<string, unknown>): Product {
     texture_resolution:      String(row.texture_resolution ?? ''),
     file_size:               String(row.file_size ?? ''),
     features:                Array.isArray(row.features) ? row.features as string[] : [],
+    tags:                    Array.isArray(row.tags) ? row.tags as string[] : [],
     specifications:          Array.isArray(row.specifications) ? row.specifications as {label:string,value:string}[] : [],
     updated_at:              row.updated_at ? String(row.updated_at) : undefined,
     plan_tier:               plan as 'Free' | 'Pro' | 'Paid',
