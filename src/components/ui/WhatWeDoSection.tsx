@@ -78,7 +78,7 @@ export function WhatWeDoSection() {
               <span className="text-[#111111]">Eleven crafts</span><br />
               <span className="text-zinc-400">One studio</span>
             </h2>
-            <p className="max-w-md text-zinc-500 text-lg sm:text-sm font-medium leading-relaxed pr-4 sm:pr-0">
+            <p className="max-w-md text-zinc-500 text-[13px] sm:text-sm font-medium leading-relaxed pr-4 sm:pr-0">
               Tap any service below to reveal its full details — projects, deliverables and how we work.
             </p>
           </div>
