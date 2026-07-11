@@ -149,12 +149,8 @@ function LoginContent() {
     return () => clearTimeout(t);
   }, [resendTimer]);
 
-  // Setup recaptcha once on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try { setupRecaptcha('recaptcha-container'); } catch {}
-    }
-  }, []);
+  // reCAPTCHA is initialized fresh on each OTP send — not on mount
+  // This prevents the 'already rendered' error on React hot reloads
 
   const cleanError = (msg: string) => msg
     .replace('Firebase: ', '')
@@ -163,7 +159,8 @@ function LoginContent() {
     .replace(' (auth/wrong-password).', '.\nIncorrect password.')
     .replace(' (auth/too-many-requests).', '.\nToo many attempts. Try again later.')
     .replace(' (auth/invalid-phone-number).', '.\nEnter a valid phone number.')
-    .replace(' (auth/invalid-verification-code).', '.\nInvalid OTP. Please try again.');
+    .replace(' (auth/invalid-verification-code).', '.\nInvalid OTP. Please try again.')
+    .replace(' (auth/operation-not-allowed).', '.\nPhone sign-in is not enabled. Please enable it in Firebase Console → Authentication → Sign-in method.');
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,14 +196,14 @@ function LoginContent() {
     if (phoneNumber.length < 5) { setError('Please enter a valid phone number.'); return; }
     setPhoneLoading(true);
     try {
+      // Always set up a fresh reCAPTCHA before each send to avoid 'already rendered' errors
+      setupRecaptcha('recaptcha-container');
       const result = await sendPhoneOtp(fullPhone);
       setConfirmation(result);
       setOtpSent(true);
       setResendTimer(30);
     } catch (err: unknown) {
       setError(cleanError(err instanceof Error ? err.message : 'Failed to send OTP.'));
-      // Reset recaptcha on error
-      try { setupRecaptcha('recaptcha-container'); } catch {}
     } finally {
       setPhoneLoading(false);
     }
