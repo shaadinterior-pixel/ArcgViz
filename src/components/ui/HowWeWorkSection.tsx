@@ -46,11 +46,10 @@ export function HowWeWorkSection() {
               return (
                 <motion.div
                   key={step.id}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-50px' }}
                   transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col items-center text-center group gpu-layer"
+                  className={`flex flex-col items-center text-center group gpu-layer ${index === 4 ? 'col-span-2 md:col-span-1' : ''}`}
                 >
                   <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-white border-4 sm:border-[6px] border-[#F8FAF9] shadow-[0_0_30px_rgba(36,184,108,0.15)] flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(36,184,108,0.3)] transition-all duration-500 will-change-transform">
                     <div className="w-10 h-10 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-[#24B86C] to-[#11998E] flex items-center justify-center shadow-inner">
