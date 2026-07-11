@@ -7,10 +7,15 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
   updateProfile,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
   type User,
+  type ConfirmationResult,
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './firebase';
+
+export type { ConfirmationResult };
 
 export type FirebaseUser = User;
 
@@ -61,6 +66,38 @@ export async function signIn(email: string, password: string) {
 export async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   const cred = await signInWithPopup(auth, provider);
+  await createUserDoc(cred.user);
+  return cred.user;
+}
+
+// ── Phone Auth ───────────────────────────────────────────────────────────────
+let recaptchaVerifier: RecaptchaVerifier | null = null;
+
+export function setupRecaptcha(containerId: string): RecaptchaVerifier {
+  // Clean up old verifier if exists
+  if (recaptchaVerifier) {
+    try { recaptchaVerifier.clear(); } catch {}
+    recaptchaVerifier = null;
+  }
+  recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
+    size: 'invisible',
+    callback: () => {},
+    'expired-callback': () => { recaptchaVerifier = null; },
+  });
+  return recaptchaVerifier;
+}
+
+export async function sendPhoneOtp(phoneNumber: string): Promise<ConfirmationResult> {
+  // Ensure recaptcha is ready
+  if (!recaptchaVerifier) {
+    setupRecaptcha('recaptcha-container');
+  }
+  const confirmation = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier!);
+  return confirmation;
+}
+
+export async function confirmPhoneOtp(confirmationResult: ConfirmationResult, otp: string) {
+  const cred = await confirmationResult.confirm(otp);
   await createUserDoc(cred.user);
   return cred.user;
 }

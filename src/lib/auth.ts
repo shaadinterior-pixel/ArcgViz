@@ -13,8 +13,12 @@ export {
   onAuthChange,
   toggleWishlist,
   getWishlist,
+  setupRecaptcha,
+  sendPhoneOtp,
+  confirmPhoneOtp,
   type FirebaseUser as AuthUser,
   type PlanTier,
+  type ConfirmationResult,
   PLAN_LIMITS,
 } from './firebase-auth';
 
