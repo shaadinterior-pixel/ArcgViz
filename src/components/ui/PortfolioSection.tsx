@@ -51,6 +51,31 @@ type CarouselStyle = React.CSSProperties & {
   '--index'?: number;
 };
 
+function CarouselImage({ 
+  src, 
+  alt, 
+  fallbackSrc 
+}: { 
+  src: string; 
+  alt: string; 
+  fallbackSrc: string;
+}) {
+  const [error, setError] = useState(false);
+  
+  return (
+    <img
+      src={error ? fallbackSrc : src}
+      alt={alt}
+      loading="eager"
+      decoding="sync"
+      className="portfolio-carousel-image"
+      onError={() => {
+        if (!error) setError(true);
+      }}
+    />
+  );
+}
+
 function normalizeImageUrl(url?: string, index = 0): string {
   const fallback = PREMIUM_FALLBACKS[index % 12];
   
@@ -239,19 +264,10 @@ export function PortfolioSection() {
                   onMouseEnter={() => setIsPaused(true)}
                   onMouseLeave={() => setIsPaused(false)}
                 >
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                    loading="eager"
-                    decoding="sync"
-                    className="portfolio-carousel-image"
-                    onError={(event) => {
-                      const target = event.currentTarget as HTMLImageElement;
-                      if (!target.dataset.failed) {
-                        target.dataset.failed = 'true';
-                        target.src = PREMIUM_FALLBACKS[index % 12];
-                      }
-                    }}
+                  <CarouselImage 
+                    src={item.image_url} 
+                    alt={item.title} 
+                    fallbackSrc={PREMIUM_FALLBACKS[index % 12]} 
                   />
                   <span className="portfolio-carousel-shade" aria-hidden="true" />
                   <span className="portfolio-carousel-title">
