@@ -48,6 +48,38 @@ export default function AdminPortfolioPage() {
     }
   };
 
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    setIsSavingContent(true);
+    try {
+      const urls = await Promise.all(files.map(uploadImage));
+      const newLogos = [...(content.partner_logos || []), ...urls];
+      setContent({ ...content, partner_logos: newLogos });
+      await savePortfolioContent({ ...content, partner_logos: newLogos });
+    } catch (err: any) {
+      alert(err.message || 'Failed to upload logos');
+    } finally {
+      setIsSavingContent(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleRemoveLogo = async (indexToRemove: number) => {
+    if (!confirm('Remove this logo?')) return;
+    setIsSavingContent(true);
+    try {
+      const newLogos = (content.partner_logos || []).filter((_, idx) => idx !== indexToRemove);
+      setContent({ ...content, partner_logos: newLogos });
+      await savePortfolioContent({ ...content, partner_logos: newLogos });
+    } catch (err: any) {
+      alert(err.message || 'Failed to remove logo');
+    } finally {
+      setIsSavingContent(false);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isEditing?.title || !isEditing?.image_url) {
@@ -211,12 +243,57 @@ export default function AdminPortfolioPage() {
               />
             </div>
           </div>
-          <div className="flex justify-end">
-            <Button type="submit" disabled={isSavingContent} className="bg-[#24B86C] text-white">
+          <div className="flex justify-end pt-2 border-t border-zinc-100">
+            <Button type="submit" disabled={isSavingContent} className="bg-[#24B86C] text-white hover:bg-[#1E995A]">
               {isSavingContent ? 'Saving...' : 'Save Text Content'}
             </Button>
           </div>
         </form>
+
+        <div className="mt-8 pt-8 border-t border-zinc-200">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-bold">Partner Logos</h3>
+              <p className="text-sm text-zinc-500">Logos displayed moving behind the main image in the Portfolio Section.</p>
+            </div>
+            <div className="relative">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleLogoUpload}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                disabled={isSavingContent}
+              />
+              <Button type="button" variant="outline" disabled={isSavingContent}>
+                {isSavingContent ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                Add Logos
+              </Button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
+            {(content.partner_logos || []).map((logo, idx) => (
+              <div key={idx} className="relative group bg-zinc-50 rounded-xl border border-zinc-200 overflow-hidden aspect-square flex items-center justify-center p-2">
+                <img src={logo} alt={`Logo ${idx}`} className="max-w-full max-h-full object-contain" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                  <button 
+                    onClick={() => handleRemoveLogo(idx)}
+                    className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg"
+                    title="Remove Logo"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+            {(content.partner_logos || []).length === 0 && (
+              <div className="col-span-full py-6 text-center text-zinc-400 bg-zinc-50 rounded-xl border border-zinc-200 border-dashed">
+                No logos added. Click "Add Logos" to upload.
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between">

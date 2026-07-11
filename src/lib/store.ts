@@ -439,6 +439,7 @@ export type PortfolioContent = {
   headline_line1: string;
   headline_line2: string;
   subheadline: string;
+  partner_logos: string[];
 };
 
 export const DEFAULT_PORTFOLIO_CONTENT: PortfolioContent = {
@@ -446,6 +447,7 @@ export const DEFAULT_PORTFOLIO_CONTENT: PortfolioContent = {
   headline_line1: 'Projects That Build Brands',
   headline_line2: '& Transform Spaces',
   subheadline: 'From stunning interiors and exteriors to branding, websites, and digital marketing – every project reflects our passion for creativity, quality, and real business results.',
+  partner_logos: [],
 };
 
 export async function fetchPortfolioContent(): Promise<PortfolioContent> {
@@ -455,7 +457,11 @@ export async function fetchPortfolioContent(): Promise<PortfolioContent> {
     .eq('id', 1)
     .single();
   if (error && error.code !== 'PGRST116') return DEFAULT_PORTFOLIO_CONTENT;
-  return data ? { ...DEFAULT_PORTFOLIO_CONTENT, ...data } : DEFAULT_PORTFOLIO_CONTENT;
+  return data ? {
+    ...DEFAULT_PORTFOLIO_CONTENT,
+    ...data,
+    partner_logos: Array.isArray(data.partner_logos) ? data.partner_logos : [],
+  } : DEFAULT_PORTFOLIO_CONTENT;
 }
 
 export async function savePortfolioContent(content: PortfolioContent): Promise<void> {
