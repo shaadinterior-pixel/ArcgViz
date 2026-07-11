@@ -149,6 +149,7 @@ export function Navbar() {
   const [marketplaceCategories, setMarketplaceCategories] = useState<Category[]>([]);
   const [services, setServices] = useState<ServiceDetail[]>([]);
   const [latestProduct, setLatestProduct] = useState<Product | null>(null);
+  const [printProducts, setPrintProducts] = useState<Product[]>([]);
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest: number) => {
@@ -177,6 +178,7 @@ export function Navbar() {
     fetchProducts().then(products => {
       if (products && products.length > 0) {
         setLatestProduct(products[0]);
+        setPrintProducts(products.filter(p => p.category?.toLowerCase().includes('print') || p.subcategory?.toLowerCase().includes('print')));
       }
     }).catch(() => {});
   }, []);
@@ -352,40 +354,50 @@ export function Navbar() {
             </MegaMenuDropdown>
 
             {/* Print Mega Menu */}
-            <MegaMenuDropdown label="Print" href="/products?category=Print" width="md">
-              <div className="bg-white border border-[#E2EDE8] rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.12)] p-4 w-[400px]">
-                <div className="flex items-center gap-2 mb-3 px-3 pt-2">
-                  <Printer className="w-4 h-4 text-[#24B86C]" />
-                  <span className="text-[11px] font-black uppercase tracking-widest text-zinc-500">Print Templates</span>
+            <MegaMenuDropdown label="Print" href="/products?category=Print" width="full">
+              <div className="bg-white border border-[#E2EDE8] rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.12)] p-6 w-full">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Printer className="w-5 h-5 text-[#24B86C]" />
+                    <h2 className="text-base font-black text-[#111111] uppercase tracking-wide">
+                      Print Templates
+                    </h2>
+                  </div>
+                  <Link href="/products?category=Print" className="text-[13px] font-bold text-[#24B86C] hover:text-[#1E995A] transition-colors">
+                    View All →
+                  </Link>
                 </div>
-                <div className="grid grid-cols-1 gap-1">
-                  <Link href="/products?category=Business+Cards" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors">
-                    <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
-                      <Briefcase className="w-5 h-5 text-zinc-400 group-hover:text-[#24B86C]" />
+
+                <div className="grid grid-cols-5 gap-4">
+                  {printProducts.length > 0 ? (
+                    printProducts.slice(0, 5).map(product => (
+                      <Link key={product.id} href={`/products/${product.slug}`} className="group bg-white rounded-[20px] overflow-hidden shadow-sm border border-[#E2EDE8] hover:border-[#24B86C]/50 hover:shadow-md transition-all flex flex-col">
+                        <div className="relative aspect-[4/3] w-full bg-zinc-100 overflow-hidden p-2">
+                          <div className="relative w-full h-full rounded-[14px] overflow-hidden">
+                            <Image 
+                              src={product.thumbnail_url || product.image || "https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?auto=format&fit=crop&q=80&w=600"} 
+                              alt={product.name}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                          </div>
+                        </div>
+                        <div className="p-4 flex flex-col flex-1 items-center justify-between">
+                          <h4 className="text-[11px] font-black text-[#111111] uppercase tracking-wide text-center line-clamp-2 mb-3">
+                            {product.name}
+                          </h4>
+                          <span className="w-full text-center bg-[#24B86C] hover:bg-[#1E995A] text-white text-[11px] font-bold uppercase tracking-wider py-2.5 rounded-xl transition-colors">
+                            KNOW MORE
+                          </span>
+                        </div>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="col-span-5 py-12 flex flex-col items-center justify-center text-zinc-400">
+                      <Printer className="w-8 h-8 mb-2 opacity-30" />
+                      <p className="text-sm font-medium">No print products found.</p>
                     </div>
-                    <div>
-                      <h4 className="text-[13px] font-bold text-[#111111] leading-tight">Business Cards</h4>
-                      <p className="text-[11px] text-zinc-500 mt-0.5">Professional, print-ready card designs.</p>
-                    </div>
-                  </Link>
-                  <Link href="/products?category=Flyers" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors">
-                    <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
-                      <FileImage className="w-5 h-5 text-zinc-400 group-hover:text-[#24B86C]" />
-                    </div>
-                    <div>
-                      <h4 className="text-[13px] font-bold text-[#111111] leading-tight">Flyers & Posters</h4>
-                      <p className="text-[11px] text-zinc-500 mt-0.5">Eye-catching layouts for marketing.</p>
-                    </div>
-                  </Link>
-                  <Link href="/products?category=Banners" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors">
-                    <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
-                      <Megaphone className="w-5 h-5 text-zinc-400 group-hover:text-[#24B86C]" />
-                    </div>
-                    <div>
-                      <h4 className="text-[13px] font-bold text-[#111111] leading-tight">Banners</h4>
-                      <p className="text-[11px] text-zinc-500 mt-0.5">High-resolution large format designs.</p>
-                    </div>
-                  </Link>
+                  )}
                 </div>
               </div>
             </MegaMenuDropdown>
