@@ -127,14 +127,15 @@ export function PortfolioSection() {
           return (
             <div className="absolute inset-0 z-0 overflow-hidden flex flex-col justify-evenly py-6 pointer-events-none" style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 2%, black 98%, transparent)', maskImage: 'linear-gradient(to right, transparent, black 2%, black 98%, transparent)' }}>
               {[...Array(3)].map((_, rowIndex) => {
-                const logos = [...logosToUse, ...logosToUse, ...logosToUse, ...logosToUse, ...logosToUse];
+                // Duplicating twice is enough to cover the screen width and create a seamless loop
+                const logos = [...logosToUse, ...logosToUse];
                 const isReverse = rowIndex % 2 !== 0;
                 const duration = 45 + (rowIndex * 10);
                 
                 return (
                   <div key={rowIndex} className="flex whitespace-nowrap overflow-hidden">
                     <motion.div
-                      className="flex gap-4 sm:gap-6 items-center shrink-0 min-w-max pr-4 sm:pr-6"
+                      className="flex gap-4 sm:gap-6 items-center shrink-0 min-w-max pr-4 sm:pr-6 will-change-transform transform-gpu"
                       animate={{ x: isReverse ? ['-50%', '0%'] : ['0%', '-50%'] }}
                       transition={{ duration, repeat: Infinity, ease: 'linear' }}
                     >
