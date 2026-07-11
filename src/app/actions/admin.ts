@@ -35,3 +35,41 @@ export async function fetchAdminCustomers(): Promise<Customer[]> {
     return [];
   }
 }
+
+export async function saveAdminCustomer(customer: Customer, isNew: boolean): Promise<void> {
+  try {
+    const userRef = adminDb.collection('users').doc(customer.id);
+    if (isNew) {
+      await userRef.set({
+        name: customer.name,
+        email: customer.email,
+        plan: customer.plan,
+        status: customer.status,
+        spent: customer.spent || 0,
+        orders: customer.orders || 0,
+        joinDate: new Date()
+      });
+    } else {
+      await userRef.update({
+        name: customer.name,
+        email: customer.email,
+        plan: customer.plan,
+        status: customer.status,
+        spent: customer.spent || 0,
+        orders: customer.orders || 0
+      });
+    }
+  } catch (error) {
+    console.error('Error saving admin customer:', error);
+    throw new Error('Failed to save customer');
+  }
+}
+
+export async function deleteAdminCustomer(id: string): Promise<void> {
+  try {
+    await adminDb.collection('users').doc(id).delete();
+  } catch (error) {
+    console.error('Error deleting admin customer:', error);
+    throw new Error('Failed to delete customer');
+  }
+}
