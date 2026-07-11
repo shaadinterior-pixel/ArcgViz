@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit, Trash2, X, Image as ImageIcon, Package, ChevronDown, ExternalLink, CheckCircle2, AlertCircle, Loader2, Copy } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, X, Image as ImageIcon, Package, ChevronDown, ExternalLink, CheckCircle2, AlertCircle, Loader2, Copy, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -438,7 +438,28 @@ export default function AdminProductsPage() {
                   </div>
                   
                   <div className="mt-4 pt-4 border-t border-gray-100">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Tags <span className="normal-case font-normal opacity-60">comma separated</span></label>
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Tags <span className="normal-case font-normal opacity-60">comma separated</span></label>
+                      <button 
+                        type="button"
+                        className="text-[11px] font-bold text-[#24B86C] hover:text-[#1E995A] flex items-center gap-1.5 transition-colors bg-[#24B86C]/10 px-2 py-1 rounded-md"
+                        onClick={() => {
+                          if (!editing.name) return;
+                          const words = editing.name
+                            .split(/[\s-]+/)
+                            .map(w => w.replace(/[^a-zA-Z0-9]/g, ''))
+                            .filter(w => w.length > 2);
+                          
+                          const autoTags = words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+                          
+                          // Merge with existing tags to prevent duplicates
+                          const merged = Array.from(new Set([...(editing.tags||[]), ...autoTags]));
+                          setField('tags', merged);
+                        }}
+                      >
+                        <Wand2 className="w-3 h-3"/> Auto-generate from Name
+                      </button>
+                    </div>
                     <Input placeholder="Modular, 3D Model, Lowpoly..." className="w-full bg-gray-50 border-gray-200 focus-visible:ring-primary mt-2 text-sm"
                       value={(editing.tags??[]).join(', ')}
                       onChange={e=>{
