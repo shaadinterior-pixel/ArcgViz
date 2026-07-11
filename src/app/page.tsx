@@ -219,75 +219,55 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row flex-wrap xl:flex-nowrap items-stretch sm:items-center gap-3 mt-4 w-full sm:w-auto gpu-layer"
+              className="flex flex-row items-center justify-between sm:justify-start gap-2 mt-4 w-full sm:w-auto gpu-layer"
             >
-              <Link href="/products" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto h-12 px-6 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-[14px] shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(17,153,142,0.4)] border border-white/20 whitespace-nowrap">
+              <Link href="/products" className="flex-1 sm:flex-none">
+                <Button className="w-full sm:w-auto h-10 px-1 sm:h-12 sm:px-6 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-[9px] sm:text-[14px] shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(17,153,142,0.4)] border border-white/20 whitespace-nowrap">
                   Explore Marketplace
                 </Button>
               </Link>
-              <Link href="/#services" className="w-full sm:w-auto">
-                <Button variant="outline" className="w-full sm:w-auto h-12 px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
-                  Hire Our Team
+              <Link href="/#services" className="flex-1 sm:flex-none">
+              className="flex flex-row items-center justify-start gap-2 mt-4 w-full gpu-layer"
+            >
+              <Link href="/products" className="flex-1">
+                <Button className="w-full h-10 px-2 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-[10px] sm:text-[14px] shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(17,153,142,0.4)] border border-white/20 whitespace-nowrap">
+                  Marketplace
                 </Button>
               </Link>
-              <Link href="/resources" className="w-full sm:w-auto">
-                <Button variant="outline" className="w-full sm:w-auto h-12 px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
-                  Download Free Assets
+              <Link href="/#services" className="flex-1">
+                <Button variant="outline" className="w-full h-10 px-2 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[10px] sm:text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
+                  Services
+                </Button>
+              </Link>
+              <Link href="/resources" className="flex-1">
+                <Button variant="outline" className="w-full h-10 px-2 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[10px] sm:text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
+                  Assets
                 </Button>
               </Link>
             </motion.div>
           </motion.div>
 
-          {/* RIGHT — Desktop floating card scatter */}
-          <div className="relative h-[540px] w-full hidden lg:block">
-            {(() => {
-              let cards = HERO_CARDS;
-              try {
-                const raw = (heroContent as any).hero_cards;
-                if (raw) {
-                  const parsed = Array.isArray(raw) ? raw : JSON.parse(raw);
-                  if (parsed && parsed.length > 0) cards = parsed;
-                }
-              } catch {}
-              return cards.slice(0, 7).map((card: any, i: number) => {
-                // Ensure featured card (index 2) gets the center slot (index 3) and vice versa
-                let slotIndex = i;
-                if (i === 2) slotIndex = 3;
-                else if (i === 3) slotIndex = 2;
-                return <HeroCard key={card.id || i} card={card} slot={CARD_SLOTS[slotIndex]} delay={0.2 + i * 0.08} />;
-              });
-            })()}
-          </div>
-
-            {/* RIGHT — Mobile scrollable strip */}
-          <div className="lg:hidden flex gap-3 overflow-x-auto hide-scrollbar pb-2 -mx-4 px-4">
-            {(() => {
-              let cards = HERO_CARDS;
-              try {
-                const raw = (heroContent as any).hero_cards;
-                if (raw) {
-                  const parsed = Array.isArray(raw) ? raw : JSON.parse(raw);
-                  if (parsed && parsed.length > 0) cards = parsed;
-                }
-              } catch {}
-              return cards.slice(0, 4).map((card: any, i: number) => (
-                <motion.div
-                  key={card.id || i}
-                  initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  className="glass-card rounded-xl overflow-hidden shrink-0 w-36 gpu-layer flex-shrink-0"
-                  style={{ minWidth: 144 }}
-                >
-                  <div className={`relative w-full ${card.aspect || 'aspect-video'}`}>
-                    {card.img && <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="144px" />}
-                  </div>
-                  <div className="px-2 py-1.5 bg-white/60 backdrop-blur-md border-t border-white/30">
-                    <span className="text-xs font-bold text-[#0D1A12] line-clamp-1">{card.label}</span>
-                  </div>
-                </motion.div>
-              ));
-            })()}
+          {/* RIGHT — Floating card scatter (Desktop & Mobile) */}
+          <div className="relative h-[400px] sm:h-[450px] lg:h-[540px] w-full mt-10 lg:mt-0 overflow-hidden lg:overflow-visible">
+            <div className="absolute inset-0 transform scale-[0.6] sm:scale-[0.8] lg:scale-100 origin-top lg:origin-center w-[160%] -left-[30%] lg:w-full lg:left-0 h-[150%] -top-[10%] lg:h-full lg:top-0">
+              {(() => {
+                let cards = HERO_CARDS;
+                try {
+                  const raw = (heroContent as any).hero_cards;
+                  if (raw) {
+                    const parsed = Array.isArray(raw) ? raw : JSON.parse(raw);
+                    if (parsed && parsed.length > 0) cards = parsed;
+                  }
+                } catch {}
+                return cards.slice(0, 7).map((card: any, i: number) => {
+                  // Ensure featured card (index 2) gets the center slot (index 3) and vice versa
+                  let slotIndex = i;
+                  if (i === 2) slotIndex = 3;
+                  else if (i === 3) slotIndex = 2;
+                  return <HeroCard key={card.id || i} card={card} slot={CARD_SLOTS[slotIndex]} delay={0.2 + i * 0.08} />;
+                });
+              })()}
+            </div>
           </div>
         </div>
 
