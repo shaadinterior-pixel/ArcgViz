@@ -55,7 +55,7 @@ export function WhatWeDoSection() {
   const serviceIndex = services.findIndex(s => s.id === activeTab) + 1;
 
   return (
-    <section id="services" className="w-full bg-white/70 backdrop-blur-3xl py-24 relative overflow-hidden border-y border-[#E2EDE8]">
+    <section id="services" className="w-full bg-white/70 backdrop-blur-3xl py-16 sm:py-24 relative overflow-hidden border-y border-[#E2EDE8]">
       {/* Decorative Gradients for Translucent effect */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.08)_0,transparent_60%)] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.06)_0,transparent_60%)] pointer-events-none" />
@@ -74,7 +74,7 @@ export function WhatWeDoSection() {
             <div className="inline-block px-4 py-1.5 rounded-full bg-white border border-[#E2EDE8] shadow-sm mb-4">
                <span className="text-[#24B86C] font-semibold text-xs tracking-[0.2em] uppercase">WHAT WE DO</span>
             </div>
-            <h2 className="text-6xl md:text-7xl font-black tracking-tighter leading-[0.9] mb-4">
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.9] mb-4">
               <span className="text-[#111111]">Eleven crafts</span><br />
               <span className="text-zinc-400">One studio</span>
             </h2>
@@ -144,7 +144,7 @@ export function WhatWeDoSection() {
                   <p className="bg-gradient-to-r from-[#24B86C] to-[#11998E] bg-clip-text text-transparent font-bold tracking-widest text-xs uppercase mb-2">
                     SERVICE {String(serviceIndex).padStart(2, '0')}
                   </p>
-                  <h3 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2 drop-shadow-md">
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight mb-2 drop-shadow-md">
                     {activeService.title}
                   </h3>
                   <p className="text-zinc-200 text-sm md:text-base italic font-medium drop-shadow-md">
@@ -156,7 +156,7 @@ export function WhatWeDoSection() {
           </div>
 
           {/* Right: Details Card */}
-          <div className="bg-white/80 backdrop-blur-2xl border border-[#E2EDE8] rounded-3xl p-8 flex flex-col justify-between shadow-[0_20px_60px_rgba(0,0,0,0.04)]">
+          <div className="bg-white/80 backdrop-blur-2xl border border-[#E2EDE8] rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-[0_20px_60px_rgba(0,0,0,0.04)]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeService.id}
