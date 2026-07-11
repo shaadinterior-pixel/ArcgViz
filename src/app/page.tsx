@@ -138,7 +138,7 @@ export default function Home() {
     <div className="flex flex-col">
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-32 pb-20 bg-white z-30">
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-24 pb-12 sm:pt-32 sm:pb-20 bg-white z-30">
 
         {/* Ethereal Mesh Gradients & Backgrounds (Clipped) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -194,7 +194,7 @@ export default function Home() {
             <motion.h1
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05] gpu-layer"
+              className="text-4xl sm:text-5xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05] gpu-layer"
             >
               One Platform <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E] pr-1.5 pb-2">
@@ -210,7 +210,7 @@ export default function Home() {
             <motion.p
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[17px] font-medium text-zinc-600 max-w-[540px] leading-relaxed gpu-layer"
+              className="text-base sm:text-[17px] font-medium text-zinc-600 max-w-[540px] leading-relaxed gpu-layer"
             >
               The ultimate digital ecosystem. Elevate your brand with premium Website Templates, Motion Design, Interior Renders, and high-end 3D Assets.
             </motion.p>
@@ -219,20 +219,20 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row flex-wrap xl:flex-nowrap items-start sm:items-center gap-3 mt-4 gpu-layer"
+              className="flex flex-col sm:flex-row flex-wrap xl:flex-nowrap items-stretch sm:items-center gap-3 mt-4 w-full sm:w-auto gpu-layer"
             >
-              <Link href="/products">
-                <Button className="h-12 px-6 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-[14px] shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(17,153,142,0.4)] border border-white/20 whitespace-nowrap">
+              <Link href="/products" className="w-full sm:w-auto">
+                <Button className="w-full sm:w-auto h-12 px-6 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-[14px] shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(17,153,142,0.4)] border border-white/20 whitespace-nowrap">
                   Explore Marketplace
                 </Button>
               </Link>
-              <Link href="/#services">
-                <Button variant="outline" className="h-12 px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
+              <Link href="/#services" className="w-full sm:w-auto">
+                <Button variant="outline" className="w-full sm:w-auto h-12 px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
                   Hire Our Team
                 </Button>
               </Link>
-              <Link href="/resources">
-                <Button variant="outline" className="h-12 px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
+              <Link href="/resources" className="w-full sm:w-auto">
+                <Button variant="outline" className="w-full sm:w-auto h-12 px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
                   Download Free Assets
                 </Button>
               </Link>
