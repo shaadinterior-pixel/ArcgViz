@@ -50,7 +50,7 @@ export function Footer() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* ── Main grid ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-12 py-16 border-b border-[#E2EDE8]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-8 lg:gap-12 py-12 lg:py-16 border-b border-[#E2EDE8]">
 
           {/* Brand column */}
           <div>
@@ -123,7 +123,7 @@ export function Footer() {
         </div>
 
         {/* ── Bottom bar ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-between py-6 gap-4 text-xs text-[#9CA3AF]">
+        <div className="flex flex-col md:flex-row items-center justify-between py-6 gap-4 text-xs text-[#9CA3AF] text-center md:text-left">
           <p>&copy; {new Date().getFullYear()} Design Walla. All rights reserved. Made with ♥ in India.</p>
           <div className="flex gap-5">
             <Link href="/privacy" className="hover:text-[#24B86C] transition-colors">Privacy Policy</Link>
