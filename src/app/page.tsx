@@ -239,27 +239,63 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          {/* RIGHT — Floating card scatter (Desktop & Mobile) */}
-          <div className="relative h-[400px] sm:h-[450px] lg:h-[540px] w-full mt-10 lg:mt-0 overflow-hidden lg:overflow-visible">
-            <div className="absolute inset-0 transform scale-[0.6] sm:scale-[0.8] lg:scale-100 origin-top lg:origin-center w-[160%] -left-[30%] lg:w-full lg:left-0 h-[150%] -top-[10%] lg:h-full lg:top-0">
-              {(() => {
-                let cards = HERO_CARDS;
-                try {
-                  const raw = (heroContent as any).hero_cards;
-                  if (raw) {
-                    const parsed = Array.isArray(raw) ? raw : JSON.parse(raw);
-                    if (parsed && parsed.length > 0) cards = parsed;
-                  }
-                } catch {}
-                return cards.slice(0, 7).map((card: any, i: number) => {
-                  // Ensure featured card (index 2) gets the center slot (index 3) and vice versa
-                  let slotIndex = i;
-                  if (i === 2) slotIndex = 3;
-                  else if (i === 3) slotIndex = 2;
-                  return <HeroCard key={card.id || i} card={card} slot={CARD_SLOTS[slotIndex]} delay={0.2 + i * 0.08} />;
-                });
-              })()}
-            </div>
+          {/* RIGHT — Desktop floating card scatter */}
+          <div className="relative h-[540px] w-full hidden lg:block">
+            {(() => {
+              let cards = HERO_CARDS;
+              try {
+                const raw = (heroContent as any).hero_cards;
+                if (raw) {
+                  const parsed = Array.isArray(raw) ? raw : JSON.parse(raw);
+                  if (parsed && parsed.length > 0) cards = parsed;
+                }
+              } catch {}
+              return cards.slice(0, 7).map((card: any, i: number) => {
+                // Ensure featured card (index 2) gets the center slot (index 3) and vice versa
+                let slotIndex = i;
+                if (i === 2) slotIndex = 3;
+                else if (i === 3) slotIndex = 2;
+                return <HeroCard key={card.id || i} card={card} slot={CARD_SLOTS[slotIndex]} delay={0.2 + i * 0.08} />;
+              });
+            })()}
+          </div>
+
+          {/* RIGHT — Mobile scrollable strip (Premium) */}
+          <div 
+            className="lg:hidden flex gap-4 overflow-x-auto hide-scrollbar pb-6 pt-4 -mx-4 px-8 snap-x snap-mandatory mt-6"
+            style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}
+          >
+            {(() => {
+              let cards = HERO_CARDS;
+              try {
+                const raw = (heroContent as any).hero_cards;
+                if (raw) {
+                  const parsed = Array.isArray(raw) ? raw : JSON.parse(raw);
+                  if (parsed && parsed.length > 0) cards = parsed;
+                }
+              } catch {}
+              return cards.slice(0, 5).map((card: any, i: number) => (
+                <motion.div
+                  key={card.id || i}
+                  initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  className="rounded-[1.25rem] overflow-hidden shrink-0 w-[160px] gpu-layer flex-shrink-0 snap-center shadow-[0_8px_30px_rgba(36,184,108,0.12)] border border-[#24B86C]/15 bg-white/80 backdrop-blur-xl"
+                >
+                  <div className={`relative w-full ${card.aspect || 'aspect-[4/3]'} p-1.5`}>
+                    <div className="relative w-full h-full rounded-xl overflow-hidden shadow-inner bg-black/5">
+                      {card.img && <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="160px" />}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                    </div>
+                  </div>
+                  <div className="px-3 py-2.5 flex items-center justify-between">
+                    <span className="text-[13px] font-black tracking-tight text-[#0D1A12] line-clamp-1">{card.label}</span>
+                    <div className="w-5 h-5 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0 ml-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#24B86C]" />
+                    </div>
+                  </div>
+                </motion.div>
+              ));
+            })()}
           </div>
         </div>
 
