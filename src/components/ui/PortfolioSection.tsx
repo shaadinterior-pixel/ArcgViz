@@ -120,31 +120,35 @@ export function PortfolioSection() {
         />
 
         {/* Animated Background Logos */}
-        {content.partner_logos && content.partner_logos.length > 0 && (
-          <div className="absolute inset-0 z-0 opacity-[0.15] overflow-hidden flex flex-col justify-evenly py-10 pointer-events-none mix-blend-overlay" style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)', maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' }}>
-            {[...Array(4)].map((_, rowIndex) => {
-              const logos = [...content.partner_logos!, ...content.partner_logos!, ...content.partner_logos!, ...content.partner_logos!, ...content.partner_logos!];
-              const isReverse = rowIndex % 2 !== 0;
-              const duration = 40 + (rowIndex * 10);
-              
-              return (
-                <div key={rowIndex} className="flex whitespace-nowrap overflow-hidden">
-                  <motion.div
-                    className="flex gap-16 sm:gap-24 items-center shrink-0 min-w-max pr-16 sm:pr-24"
-                    animate={{ x: isReverse ? ['-50%', '0%'] : ['0%', '-50%'] }}
-                    transition={{ duration, repeat: Infinity, ease: 'linear' }}
-                  >
-                    {logos.map((logo, i) => (
-                      <div key={i} className="relative w-28 h-12 sm:w-36 sm:h-16 grayscale brightness-[3] contrast-200">
-                        <img src={logo} alt="Partner Logo" className="w-full h-full object-contain" />
-                      </div>
-                    ))}
-                  </motion.div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {(() => {
+          const logosToUse = content.partner_logos && content.partner_logos.length > 0 ? content.partner_logos : PREMIUM_FALLBACKS;
+
+          return (
+            <div className="absolute inset-0 z-0 opacity-[0.15] overflow-hidden flex flex-col justify-evenly py-10 pointer-events-none mix-blend-overlay" style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)', maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' }}>
+              {[...Array(4)].map((_, rowIndex) => {
+                const logos = [...logosToUse, ...logosToUse, ...logosToUse, ...logosToUse, ...logosToUse];
+                const isReverse = rowIndex % 2 !== 0;
+                const duration = 40 + (rowIndex * 10);
+                
+                return (
+                  <div key={rowIndex} className="flex whitespace-nowrap overflow-hidden">
+                    <motion.div
+                      className="flex gap-16 sm:gap-24 items-center shrink-0 min-w-max pr-16 sm:pr-24"
+                      animate={{ x: isReverse ? ['-50%', '0%'] : ['0%', '-50%'] }}
+                      transition={{ duration, repeat: Infinity, ease: 'linear' }}
+                    >
+                      {logos.map((logo, i) => (
+                        <div key={i} className="relative w-28 h-12 sm:w-36 sm:h-16 grayscale brightness-[3] contrast-200">
+                          <img src={logo} alt="Partner Logo" className="w-full h-full object-contain" onError={(e) => e.currentTarget.style.display = 'none'} />
+                        </div>
+                      ))}
+                    </motion.div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
         
         {/* Floating Text Container (Perfectly Centered) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 overflow-visible mt-[-50px]">
