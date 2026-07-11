@@ -17,18 +17,18 @@ import {
 const CAROUSEL_ITEM_COUNT = 12;
 
 const PREMIUM_FALLBACKS = [
-  'https://picsum.photos/id/10/600/800',
-  'https://picsum.photos/id/11/600/800',
-  'https://picsum.photos/id/15/600/800',
-  'https://picsum.photos/id/20/600/800',
-  'https://picsum.photos/id/24/600/800',
-  'https://picsum.photos/id/28/600/800',
-  'https://picsum.photos/id/29/600/800',
-  'https://picsum.photos/id/33/600/800',
-  'https://picsum.photos/id/42/600/800',
-  'https://picsum.photos/id/48/600/800',
-  'https://picsum.photos/id/57/600/800',
-  'https://picsum.photos/id/60/600/800',
+  '/portfolio-carousel/1.jpg',
+  '/portfolio-carousel/2.jpg',
+  '/portfolio-carousel/3.jpg',
+  '/portfolio-carousel/4.jpg',
+  '/portfolio-carousel/5.jpg',
+  '/portfolio-carousel/6.jpg',
+  '/portfolio-carousel/7.jpg',
+  '/portfolio-carousel/8.jpg',
+  '/portfolio-carousel/9.jpg',
+  '/portfolio-carousel/10.jpg',
+  '/portfolio-carousel/11.jpg',
+  '/portfolio-carousel/12.jpg',
 ];
 
 const DEFAULT_ITEMS: PortfolioItem[] = [
