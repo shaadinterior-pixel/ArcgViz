@@ -138,7 +138,7 @@ export default function Home() {
     <div className="flex flex-col">
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-24 pb-8 sm:pt-32 sm:pb-20 bg-white z-30 overflow-hidden">
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-20 pb-8 sm:pt-32 sm:pb-20 bg-white z-30 overflow-hidden">
 
         {/* Ethereal Mesh Gradients & Backgrounds (Clipped) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -194,7 +194,7 @@ export default function Home() {
             <motion.h1
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05] gpu-layer pr-2 sm:pr-0"
+              className="text-[3.25rem] leading-[1.05] sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] gpu-layer pr-2 sm:pr-0"
             >
               One Platform <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E] pr-1.5 pb-2">
