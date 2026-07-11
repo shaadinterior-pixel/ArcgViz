@@ -55,7 +55,7 @@ export function WhatWeDoSection() {
   const serviceIndex = services.findIndex(s => s.id === activeTab) + 1;
 
   return (
-    <section id="services" className="w-full bg-white/70 backdrop-blur-3xl py-16 sm:py-24 relative overflow-hidden border-y border-[#E2EDE8]">
+    <section id="services" className="w-full bg-white/70 backdrop-blur-3xl py-10 sm:py-24 relative overflow-hidden border-y border-[#E2EDE8]">
       {/* Decorative Gradients for Translucent effect */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.08)_0,transparent_60%)] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.06)_0,transparent_60%)] pointer-events-none" />
@@ -71,14 +71,14 @@ export function WhatWeDoSection() {
           className="flex flex-col gap-6 mb-12 gpu-layer"
         >
           <div>
-            <div className="inline-block px-4 py-1.5 rounded-full bg-white border border-[#E2EDE8] shadow-sm mb-4">
-               <span className="text-[#24B86C] font-semibold text-xs tracking-[0.2em] uppercase">WHAT WE DO</span>
+            <div className="inline-block px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-white border border-[#E2EDE8] shadow-sm mb-4">
+               <span className="text-[#24B86C] font-semibold text-[10px] sm:text-xs tracking-[0.2em] uppercase">WHAT WE DO</span>
             </div>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.9] mb-4">
+            <h2 className="text-6xl md:text-7xl lg:text-7xl font-black tracking-tighter leading-[0.9] mb-4 pr-2 sm:pr-0">
               <span className="text-[#111111]">Eleven crafts</span><br />
               <span className="text-zinc-400">One studio</span>
             </h2>
-            <p className="max-w-md text-zinc-500 text-sm font-medium leading-relaxed">
+            <p className="max-w-md text-zinc-500 text-lg sm:text-sm font-medium leading-relaxed pr-4 sm:pr-0">
               Tap any service below to reveal its full details — projects, deliverables and how we work.
             </p>
           </div>

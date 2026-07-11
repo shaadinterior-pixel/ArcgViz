@@ -243,7 +243,7 @@ function ProductsContent() {
         <div className="flex-1">
           {filteredProducts.length > 0 ? (
             <motion.div
-              className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5 gap-5 space-y-0"
+              className="columns-2 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5 gap-3 sm:gap-5 space-y-0"
             >
               <AnimatePresence mode="popLayout">
                 {filteredProducts.map((product, index) => (

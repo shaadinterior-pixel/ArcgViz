@@ -48,7 +48,7 @@ export function LatestUploadsSection() {
   }, [products, activeFilter]);
 
   return (
-    <section className="py-16 sm:py-24 bg-white relative overflow-hidden">
+    <section className="py-10 sm:py-24 bg-white relative overflow-hidden">
       {/* Gradient orbs */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.04)_0,transparent_60%)] pointer-events-none" />
 
@@ -60,10 +60,10 @@ export function LatestUploadsSection() {
           className="text-center mb-6 sm:mb-10 gpu-layer"
         >
           <span className="inline-block text-[#24B86C] text-xs font-bold tracking-[0.25em] uppercase mb-4">TRENDING</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#0D1A12] tracking-tight leading-tight">
+          <h2 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#0D1A12] tracking-tight leading-tight pr-2 sm:pr-0">
             Freshly dropped<br className="hidden sm:block" /> Endlessly scrollable
           </h2>
-          <p className="text-zinc-500 font-medium max-w-2xl mx-auto text-lg">
+          <p className="text-zinc-500 font-medium max-w-2xl mx-auto text-lg pr-2 sm:pr-0">
             Design Walla style browsing, curated by our design team.
           </p>
         </motion.div>

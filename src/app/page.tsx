@@ -138,7 +138,7 @@ export default function Home() {
     <div className="flex flex-col">
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-24 pb-12 sm:pt-32 sm:pb-20 bg-white z-30">
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-24 pb-8 sm:pt-32 sm:pb-20 bg-white z-30 overflow-hidden">
 
         {/* Ethereal Mesh Gradients & Backgrounds (Clipped) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -194,7 +194,7 @@ export default function Home() {
             <motion.h1
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl sm:text-5xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05] gpu-layer"
+              className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tighter text-[#111111] leading-[1.05] gpu-layer pr-2 sm:pr-0"
             >
               One Platform <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E] pr-1.5 pb-2">
@@ -210,7 +210,7 @@ export default function Home() {
             <motion.p
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="text-base sm:text-[17px] font-medium text-zinc-600 max-w-[540px] leading-relaxed gpu-layer"
+              className="text-lg sm:text-[17px] font-medium text-zinc-600 max-w-[540px] leading-relaxed gpu-layer pr-4 sm:pr-0"
             >
               The ultimate digital ecosystem. Elevate your brand with premium Website Templates, Motion Design, Interior Renders, and high-end 3D Assets.
             </motion.p>

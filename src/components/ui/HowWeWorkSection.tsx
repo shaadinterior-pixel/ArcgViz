@@ -14,7 +14,7 @@ const steps = [
 
 export function HowWeWorkSection() {
   return (
-    <section className="py-16 sm:py-24 bg-[#F8FAF9] relative overflow-hidden">
+    <section className="py-10 sm:py-24 bg-[#F8FAF9] relative overflow-hidden">
       {/* Decorative orbs */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(36,184,108,0.06)_0,transparent_60%)] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,rgba(17,153,142,0.06)_0,transparent_60%)] pointer-events-none" />
@@ -30,7 +30,7 @@ export function HowWeWorkSection() {
           <div className="inline-block px-4 py-1.5 rounded-full bg-[#24B86C]/10 mb-6">
             <span className="text-[#24B86C] font-semibold text-sm tracking-wide">Our Process</span>
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#0D1A12]">
+          <h2 className="text-5xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#0D1A12] pr-2 sm:pr-0">
             How We <span className="text-brand-gradient pb-1 inline-block">Work</span>
           </h2>
         </motion.div>
