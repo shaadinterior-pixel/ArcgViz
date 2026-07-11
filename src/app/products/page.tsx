@@ -126,19 +126,18 @@ function ProductsContent() {
           </div>
         
           <div className="flex items-center space-x-3 w-full md:w-auto mt-4 md:mt-0">
-            <Button 
-              variant="outline" 
-              className="w-full md:w-auto h-14 rounded-2xl border-[#E2EDE8] text-[#0D1A12] font-semibold relative px-6"
+            <button 
+              className="w-full md:w-auto bg-white border border-[#E2EDE8] rounded-2xl px-8 py-4 text-sm font-bold text-[#0D1A12] shadow-sm hover:border-[#24B86C] focus:border-[#24B86C] focus:ring-4 focus:ring-[#24B86C]/10 hover:ring-4 hover:ring-[#24B86C]/10 transition-all flex items-center justify-center relative"
               onClick={() => setIsFilterOpen(true)}
             >
               <Filter className="w-4 h-4 mr-2 text-[#24B86C]" />
               Filters
               {(activeCategories.length + activeSubcategories.length + selectedProperties.length) > 0 && (
-                <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#24B86C] text-white text-[11px] font-black flex items-center justify-center border-2 border-[#F8FAF9] shadow-sm">
+                <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#24B86C] text-white text-[11px] font-black flex items-center justify-center border-2 border-white shadow-sm">
                   {activeCategories.length + activeSubcategories.length + selectedProperties.length}
                 </span>
               )}
-            </Button>
+            </button>
             <div className="hidden md:flex relative">
               <select className="appearance-none bg-white border border-[#E2EDE8] rounded-2xl px-6 py-4 pr-12 text-sm focus:outline-none focus:border-[#24B86C] focus:ring-4 focus:ring-[#24B86C]/10 w-56 cursor-pointer font-bold text-[#0D1A12] shadow-sm transition-all">
                 <option>Latest Arrivals</option>
