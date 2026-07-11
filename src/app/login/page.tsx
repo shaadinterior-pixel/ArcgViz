@@ -152,15 +152,39 @@ function LoginContent() {
   // reCAPTCHA is initialized fresh on each OTP send — not on mount
   // This prevents the 'already rendered' error on React hot reloads
 
-  const cleanError = (msg: string) => msg
-    .replace('Firebase: ', '')
-    .replace(' (auth/invalid-credential).', '.\nDouble-check your email and password.')
-    .replace(' (auth/user-not-found).', '.\nNo account found with this email.')
-    .replace(' (auth/wrong-password).', '.\nIncorrect password.')
-    .replace(' (auth/too-many-requests).', '.\nToo many attempts. Try again later.')
-    .replace(' (auth/invalid-phone-number).', '.\nEnter a valid phone number.')
-    .replace(' (auth/invalid-verification-code).', '.\nInvalid OTP. Please try again.')
-    .replace(' (auth/operation-not-allowed).', '.\nPhone sign-in is not enabled. Please enable it in Firebase Console → Authentication → Sign-in method.');
+  const handleError = (err: unknown, fallback = 'Something went wrong. Please try again.') => {
+    const raw = err instanceof Error ? err.message : String(err);
+    console.error('[Auth Error]', raw);
+
+    // Map known user-facing errors to friendly messages
+    if (raw.includes('auth/invalid-credential') || raw.includes('auth/wrong-password') || raw.includes('auth/user-not-found'))
+      return 'Incorrect email or password. Please try again.';
+    if (raw.includes('auth/too-many-requests'))
+      return 'Too many attempts. Please wait a while and try again.';
+    if (raw.includes('auth/invalid-phone-number'))
+      return 'Please enter a valid phone number with country code.';
+    if (raw.includes('auth/invalid-verification-code') || raw.includes('auth/code-expired'))
+      return 'The OTP you entered is incorrect or has expired. Please try again.';
+    if (raw.includes('auth/email-already-in-use'))
+      return 'This email is already registered. Please sign in instead.';
+    if (raw.includes('auth/invalid-email'))
+      return 'Please enter a valid email address.';
+
+    // Config/billing/technical errors — show generic message, log to console
+    if (
+      raw.includes('auth/billing-not-enabled') ||
+      raw.includes('auth/operation-not-allowed') ||
+      raw.includes('auth/internal-error') ||
+      raw.includes('auth/app-not-authorized') ||
+      raw.includes('auth/quota-exceeded') ||
+      raw.includes('recaptcha')
+    ) {
+      console.warn('[Auth Config Error]', raw);
+      return 'Unable to complete this action right now. Please try again later or use a different sign-in method.';
+    }
+
+    return fallback;
+  };
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,7 +194,7 @@ function LoginContent() {
       await signIn(email, password);
       router.push(redirectTo);
     } catch (err: unknown) {
-      setError(cleanError(err instanceof Error ? err.message : 'Sign in failed.'));
+      setError(handleError(err, 'Sign in failed. Please check your credentials.'));
     } finally {
       setIsLoading(false);
     }
@@ -183,8 +207,10 @@ function LoginContent() {
       await signInWithGoogle();
       router.push(redirectTo);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Google sign-in failed.';
-      if (!msg.includes('popup-closed')) setError(cleanError(msg));
+      const raw = err instanceof Error ? err.message : '';
+      if (!raw.includes('popup-closed') && !raw.includes('cancelled-popup-request')) {
+        setError(handleError(err, 'Google sign-in failed. Please try again.'));
+      }
     } finally {
       setGoogleLoading(false);
     }
@@ -203,7 +229,7 @@ function LoginContent() {
       setOtpSent(true);
       setResendTimer(60);
     } catch (err: unknown) {
-      setError(cleanError(err instanceof Error ? err.message : 'Failed to send OTP.'));
+      setError(handleError(err, 'Failed to send OTP. Please check your number and try again.'));
     } finally {
       setPhoneLoading(false);
     }
@@ -218,7 +244,7 @@ function LoginContent() {
       await confirmPhoneOtp(confirmation, otp);
       router.push(redirectTo);
     } catch (err: unknown) {
-      setError(cleanError(err instanceof Error ? err.message : 'OTP verification failed.'));
+      setError(handleError(err, 'OTP verification failed. Please try again.'));
     } finally {
       setOtpLoading(false);
     }
