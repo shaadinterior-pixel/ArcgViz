@@ -535,12 +535,12 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
         {/* Full width sections */}
         <div className='w-full mt-4 lg:mt-8'>
             {/* Description */}
-            <div className="mt-8">
-              <h2 className="text-3xl font-black leading-tight mb-4 text-[#111111]">Description</h2>
+            <div className="mt-8 bg-white rounded-[24px] p-8 md:p-10 border border-[#E2EDE8] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+              <h3 className="font-bold text-xl mb-6 text-[#111111] border-b border-[#E2EDE8] pb-4">Description</h3>
               {product.description ? (
-                <p className="text-zinc-700 leading-relaxed whitespace-pre-line text-[15px]">{product.description}</p>
+                <p className="text-[14px] text-zinc-600 leading-relaxed whitespace-pre-line">{product.description}</p>
               ) : (
-                <p className="text-zinc-500 italic text-sm">No description provided for this product.</p>
+                <p className="text-zinc-500 italic text-[14px]">No description provided for this product.</p>
               )}
             </div>
 
@@ -576,8 +576,8 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                   <div>
-                    <h3 className="font-bold text-lg mb-6 text-[#111111]">Technical details</h3>
-                    <ul className="text-[13px] text-zinc-600 space-y-2.5">
+                    <h3 className="font-bold text-xl mb-6 text-[#111111] border-b border-[#E2EDE8] pb-4">Technical details</h3>
+                    <ul className="text-[14px] text-zinc-600 space-y-2.5">
                       <li><strong className="text-zinc-800 font-semibold">Rigged:</strong> {product.features?.includes('Rigged') ? 'Yes' : 'No'}</li>
                       <li><strong className="text-zinc-800 font-semibold">Animated:</strong> {product.features?.includes('Animated') ? 'Yes' : 'No'}</li>
                       <li><strong className="text-zinc-800 font-semibold">Game-Ready:</strong> {product.features?.includes('Game-Ready') ? 'Yes' : 'No'}</li>
