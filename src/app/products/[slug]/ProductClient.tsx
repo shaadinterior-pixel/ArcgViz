@@ -497,7 +497,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
             </div>
 
             {/* Why choose DESIGNWALLA? */}
-            <div className="mt-6 bg-[#F4F7F6] rounded-[16px] p-6 shadow-sm">
+            <div className="mt-6 bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)]">
               <h3 className="font-medium text-[#111111] mb-6 text-center text-[17px]">Why choose DESIGNWALLA?</h3>
               <div className="flex justify-between items-start gap-2 px-2">
                 <div className="flex flex-col items-center gap-3 text-center w-1/3">
@@ -512,6 +512,20 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   <FileText className="w-7 h-7 text-[#111111]" strokeWidth={1.5} />
                   <span className="text-[13px] font-medium text-zinc-800 leading-tight">Budget<br/>Friendly</span>
                 </div>
+              </div>
+
+              {/* Important Note */}
+              <div className="mt-6 bg-[#FFFCF5] border border-[#F5E6C8] rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-5 h-5 rounded-full bg-[#F59E0B] flex items-center justify-center">
+                    <ShieldCheck className="w-3 h-3 text-white" strokeWidth={3} />
+                  </div>
+                  <span className="font-bold text-[#111111] text-sm">Important Note</span>
+                </div>
+                <p className="text-[12px] text-zinc-700 leading-relaxed">
+                  You are not allowed to sell, resell, or redistribute any resource without our prior written permission.<br/>
+                  If you need resale or distribution rights, please contact us first
+                </p>
               </div>
             </div>
 
