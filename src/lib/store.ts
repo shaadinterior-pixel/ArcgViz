@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { fetchAdminCustomers } from '@/app/actions/admin';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -240,12 +241,7 @@ export function generateSlug(name: string): string {
 // ─── Customers ─────────────────────────────────────────────────────────────────
 
 export async function fetchCustomers(): Promise<Customer[]> {
-  const { data, error } = await supabase
-    .from('customers')
-    .select('*')
-    .order('joinDate', { ascending: false });
-  if (error) throw error;
-  return data || [];
+  return await fetchAdminCustomers();
 }
 
 export async function saveCustomers(customers: Customer[]): Promise<void> {

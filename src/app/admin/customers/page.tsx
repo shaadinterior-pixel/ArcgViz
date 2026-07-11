@@ -7,8 +7,9 @@ import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
 import { type Customer } from '@/lib/store';
-import { collection, getDocs, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { fetchAdminCustomers } from '@/app/actions/admin';
 
 const EMPTY: Omit<Customer, 'id'> = {
   name: '', email: '', spent: 0, orders: 0,
@@ -28,20 +29,7 @@ export default function AdminCustomersPage() {
 
   const load = useCallback(async () => {
     try { 
-      const snap = await getDocs(collection(db, 'users'));
-      const usersData: Customer[] = snap.docs.map(d => {
-        const data = d.data();
-        return {
-          id: d.id,
-          name: data.name || 'Unknown',
-          email: data.email || 'N/A',
-          spent: data.spent || 0,
-          orders: data.orders || 0,
-          status: data.status || 'Active',
-          joinDate: data.joinDate?.toDate ? data.joinDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown',
-          plan: data.plan || 'Free'
-        } as Customer;
-      });
+      const usersData = await fetchAdminCustomers();
       setCustomers(usersData);
     }
     catch (e) { console.error(e); toast('Failed to load customers', 'error'); }
