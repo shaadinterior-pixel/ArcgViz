@@ -331,8 +331,6 @@ export function PortfolioSection() {
           background: #1a2a1f;
           border: 1px solid rgba(255, 255, 255, 0.72);
           box-shadow: 0 24px 55px rgba(12, 24, 16, 0.18);
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
           transform:
             rotateY(calc(var(--index) * var(--angle)))
             translateZ(calc(-1 * (.5 * var(--card-width) + 2.5rem) / tan(.5 * var(--angle))));
@@ -340,6 +338,9 @@ export function PortfolioSection() {
             rotateY(calc(var(--index) * var(--angle)))
             translateZ(calc(-1 * (.5 * var(--card-width) + 2.5rem) / tan(.5 * var(--angle))));
           transition: box-shadow 250ms ease, filter 250ms ease;
+          will-change: transform;
+          transform-style: preserve-3d;
+          -webkit-transform-style: preserve-3d;
         }
 
         .portfolio-carousel-card:hover {
@@ -353,6 +354,8 @@ export function PortfolioSection() {
           display: block;
           object-fit: cover;
           object-position: center;
+          transform: translateZ(0);
+          -webkit-transform: translateZ(0);
         }
 
         .portfolio-carousel-shade {
@@ -362,6 +365,8 @@ export function PortfolioSection() {
           background:
             linear-gradient(180deg, rgba(255,255,255,0.06), transparent 30%),
             linear-gradient(0deg, rgba(0,0,0,0.55), rgba(0,0,0,0.02) 45%, transparent 65%);
+          transform: translateZ(0);
+          -webkit-transform: translateZ(0);
         }
 
         .portfolio-carousel-title {
@@ -375,6 +380,8 @@ export function PortfolioSection() {
           line-height: 1.2;
           text-align: left;
           text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+          transform: translateZ(0);
+          -webkit-transform: translateZ(0);
         }
 
         .portfolio-carousel-title span {
