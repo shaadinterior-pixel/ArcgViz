@@ -457,7 +457,7 @@ export function Navbar() {
                   <span className="text-[11px] font-black uppercase tracking-widest text-zinc-500">Creative Utilities</span>
                 </div>
                 <div className="grid grid-cols-1 gap-1">
-                  <Link href="/studio" className="flex items-center gap-4 p-3 rounded-2xl bg-[#E8F5F1] hover:bg-[#DDF0E9] group transition-colors border border-[#24B86C]/10">
+                  <a href="https://digital-heros-sri.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-3 rounded-2xl bg-[#E8F5F1] hover:bg-[#DDF0E9] group transition-colors border border-[#24B86C]/10">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#24B86C] to-[#11998E] flex items-center justify-center shadow-md">
                       <QrCode className="w-6 h-6 text-white" />
                     </div>
@@ -468,7 +468,7 @@ export function Navbar() {
                       </div>
                       <p className="text-[11px] text-zinc-600 mt-1">Generate branded, high-quality QR codes.</p>
                     </div>
-                  </Link>
+                  </a>
                   
                   <Link href="/tools" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-[#F3F6F5] group transition-colors mt-1">
                     <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-[#E2EDE8]">
