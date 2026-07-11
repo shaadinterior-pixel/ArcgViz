@@ -139,7 +139,7 @@ export function PortfolioSection() {
                       transition={{ duration, repeat: Infinity, ease: 'linear' }}
                     >
                       {logos.map((logo, i) => (
-                        <div key={i} className="relative w-20 h-28 sm:w-28 sm:h-40 md:w-32 md:h-44 bg-white/10 rounded-2xl sm:rounded-[1.5rem] p-2 flex items-center justify-center backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.1)] overflow-hidden border border-white/20">
+                        <div key={i} className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-white rounded-2xl sm:rounded-[1.5rem] p-2 flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.1)] overflow-hidden border border-white">
                           <img src={logo} alt="Partner Logo" className="w-full h-full object-cover rounded-xl" onError={(e) => e.currentTarget.style.display = 'none'} />
                         </div>
                       ))}
