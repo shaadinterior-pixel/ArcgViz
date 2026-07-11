@@ -389,8 +389,8 @@ export function PortfolioSection() {
 
         @media (max-width: 768px) {
           .portfolio-carousel-scene {
-            --card-width: clamp(7rem, 34vw, 9rem);
-            --scene-height: 22rem;
+            --card-width: clamp(9rem, 45vw, 12rem);
+            --scene-height: 28rem;
             perspective: 34rem;
             -webkit-perspective: 34rem;
             mask: linear-gradient(90deg, transparent, #000 8% 92%, transparent);
