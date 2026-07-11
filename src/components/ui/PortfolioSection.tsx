@@ -61,11 +61,14 @@ function normalizeImageUrl(url?: string, index = 0): string {
 }
 
 function buildCarouselItems(sourceItems: PortfolioItem[]): PortfolioItem[] {
-  // The user requested to strictly use the 12 custom images. We bypass the database items here.
-  const usableItems = DEFAULT_ITEMS;
-  const normalizedItems = usableItems.map((item, index) => ({
+  // If no items are uploaded from admin, return empty to hide carousel
+  if (!sourceItems || sourceItems.length === 0) {
+    return [];
+  }
+  
+  const normalizedItems = sourceItems.map((item, index) => ({
     ...item,
-    image_url: normalizeImageUrl(item.image_url, index),
+    image_url: item.image_url || '',
   }));
 
   const carouselItems: PortfolioItem[] = [];
@@ -127,8 +130,10 @@ export function PortfolioSection() {
           return (
             <div className="absolute inset-0 z-0 overflow-hidden flex flex-col justify-evenly py-6 pointer-events-none" style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 2%, black 98%, transparent)', maskImage: 'linear-gradient(to right, transparent, black 2%, black 98%, transparent)' }}>
               {[...Array(3)].map((_, rowIndex) => {
-                // Duplicating twice is enough to cover the screen width and create a seamless loop
-                const logos = [...logosToUse, ...logosToUse];
+                // Ensure we have enough copies to span wide screens (at least 15 logos)
+                const copiesNeeded = Math.max(2, Math.ceil(15 / Math.max(logosToUse.length, 1)));
+                const logos = Array(copiesNeeded).fill(logosToUse).flat();
+                
                 const isReverse = rowIndex % 2 !== 0;
                 const duration = 45 + (rowIndex * 10);
                 
@@ -242,7 +247,7 @@ export function PortfolioSection() {
                       const target = event.currentTarget as HTMLImageElement;
                       if (!target.dataset.failed) {
                         target.dataset.failed = 'true';
-                        target.src = PREMIUM_FALLBACKS[index % 12];
+                        target.src = 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800';
                       }
                     }}
                   />
