@@ -94,7 +94,11 @@ function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]
           className="bg-[#24B86C]/10 backdrop-blur-xl rounded-2xl p-2.5 border border-[#24B86C]/20 shadow-[0_8px_32px_rgba(36,184,108,0.15)] hover:bg-[#24B86C]/20 hover:border-[#24B86C]/40 transition-all duration-500 relative w-full h-full"
         >
           <div className={`relative w-full ${card.aspect || 'aspect-video'} rounded-xl overflow-hidden shadow-inner bg-black/5`}>
-            {card.img && <Image src={card.img} alt={card.label} fill className="object-cover pointer-events-none" quality={75} sizes="300px" priority />}
+            {card.img?.match(/\.(mp4|webm|mov)(\?.*)?$/i) ? (
+              <video src={card.img} autoPlay loop muted playsInline className="object-cover pointer-events-none absolute inset-0 w-full h-full" />
+            ) : (
+              card.img && <Image src={card.img} alt={card.label} fill className="object-cover pointer-events-none" quality={75} sizes="300px" priority />
+            )}
 
             
             {/* Top-right green badge/icon */}
