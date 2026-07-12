@@ -28,7 +28,7 @@ export function MobileHeroStack({ cards }: MobileHeroStackProps) {
   const total = cardsState.length;
 
   return (
-    <div className="relative w-full h-[320px] sm:h-[380px] flex items-center justify-center mt-10 mb-6 lg:hidden overflow-visible">
+    <div className="relative w-full h-[240px] sm:h-[280px] flex items-center justify-center mt-6 mb-2 lg:hidden overflow-visible">
       {cardsState.map((card, index) => {
         // Calculate relative distance from current active index
         const d = (index - (activeIndex % total) + total) % total;
@@ -57,7 +57,7 @@ export function MobileHeroStack({ cards }: MobileHeroStackProps) {
             key={card.id || card.label}
             initial={false}
             animate={style}
-            transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            transition={{ type: "tween", ease: [0.16, 1, 0.3, 1], duration: 0.8 }}
             className="absolute w-[220px] sm:w-[260px] rounded-[1.25rem] overflow-hidden shadow-[0_8px_30px_rgba(36,184,108,0.12)] border border-[#24B86C]/15 bg-white backdrop-blur-xl"
             style={{ transformOrigin: 'center center' }}
           >
