@@ -270,8 +270,11 @@ export default function AdminHeroPage() {
                   {/* Thumbnail */}
                   <div className="w-12 h-9 rounded-lg bg-[#F4F6F8] overflow-hidden shrink-0 border border-[#E5E7EB]">
                     {card.img ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={card.img} alt={card.label} className="w-full h-full object-cover" />
+                      card.img.match(/\.(mp4|webm|mov)(\?.*)?$/i) ? (
+                        <video src={card.img} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                      ) : (
+                        <img src={card.img} alt={card.label} className="w-full h-full object-cover" />
+                      )
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <ImageIcon className="w-4 h-4 text-[#D1D5DB]" />
@@ -333,19 +336,19 @@ export default function AdminHeroPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold uppercase tracking-wider text-[#9CA3AF]">Image URL</label>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-[#9CA3AF]">Media URL (Image/Video)</label>
                       <div className="flex items-center gap-2">
                         <label className={`cursor-pointer flex items-center gap-2 text-sm px-4 py-2 rounded-xl border border-[#E5E7EB] bg-white hover:bg-[#F4F6F8] text-[#6B7280] hover:text-[#111827] transition-colors shrink-0 ${uploadingId === card.id ? 'opacity-50' : ''}`}>
                           {uploadingId === card.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                           {uploadingId === card.id ? 'Uploading…' : 'Upload'}
-                          <input type="file" accept="image/*" className="hidden"
+                          <input type="file" accept="image/*,video/*" className="hidden"
                             onChange={async (e) => {
                               const file = e.target.files?.[0]; if (!file) return;
                               setUploadingId(card.id);
                               try {
                                 const url = await uploadImage(file);
                                 updateCard(card.id, { img: url });
-                                toast('Image uploaded ✓');
+                                toast('Media uploaded ✓');
                               } catch {
                                 toast('Upload failed', 'error');
                               } finally {
@@ -364,11 +367,14 @@ export default function AdminHeroPage() {
                       </div>
                     </div>
 
-                    {/* Image preview */}
+                    {/* Media preview */}
                     {card.img && (
                       <div className={`relative w-full max-w-[200px] ${card.aspect} rounded-xl overflow-hidden border border-[#E5E7EB]`}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={card.img} alt={card.label} className="absolute inset-0 w-full h-full object-cover" />
+                        {card.img.match(/\.(mp4|webm|mov)(\?.*)?$/i) ? (
+                          <video src={card.img} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
+                        ) : (
+                          <img src={card.img} alt={card.label} className="absolute inset-0 w-full h-full object-cover" />
+                        )}
                       </div>
                     )}
 
@@ -412,8 +418,11 @@ export default function AdminHeroPage() {
                 <div key={card.id} className="flex flex-col items-center gap-1.5">
                   <div className="w-16 h-12 rounded-lg bg-[#F4F6F8] overflow-hidden border border-[#E5E7EB]">
                     {card.img ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={card.img} alt={card.label} className="w-full h-full object-cover" />
+                      card.img.match(/\.(mp4|webm|mov)(\?.*)?$/i) ? (
+                        <video src={card.img} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                      ) : (
+                        <img src={card.img} alt={card.label} className="w-full h-full object-cover" />
+                      )
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <ImageIcon className="w-4 h-4 text-[#D1D5DB]" />
