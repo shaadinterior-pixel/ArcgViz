@@ -63,7 +63,11 @@ export function MobileHeroStack({ cards }: MobileHeroStackProps) {
           >
             <div className={`relative w-full ${card.aspect || 'aspect-[4/3]'} p-1.5`}>
               <div className="relative w-full h-full rounded-xl overflow-hidden shadow-inner bg-black/5">
-                {card.img && <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="(max-width: 640px) 220px, 260px" />}
+                {card.img?.match(/\.(mp4|webm|mov)(\?.*)?$/i) ? (
+                  <video src={card.img} autoPlay loop muted playsInline className="object-cover pointer-events-none absolute inset-0 w-full h-full" />
+                ) : (
+                  card.img && <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="(max-width: 640px) 220px, 260px" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
               </div>
             </div>
