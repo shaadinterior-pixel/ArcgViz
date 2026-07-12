@@ -95,13 +95,7 @@ function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]
         >
           <div className={`relative w-full ${card.aspect || 'aspect-video'} rounded-xl overflow-hidden shadow-inner bg-black/5`}>
             {card.img && <Image src={card.img} alt={card.label} fill className="object-cover pointer-events-none" quality={75} sizes="300px" priority />}
-            {card.dark && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
-                <div className="w-12 h-12 rounded-[14px] bg-[#9333EA] flex items-center justify-center shadow-lg">
-                  <Play className="w-5 h-5 text-white fill-white ml-1" />
-                </div>
-              </div>
-            )}
+
             
             {/* Top-right green badge/icon */}
             <div className="absolute top-2 right-2 bg-[#24B86C] text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md pointer-events-none">
