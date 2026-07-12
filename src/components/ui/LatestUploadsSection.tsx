@@ -63,7 +63,7 @@ export function LatestUploadsSection() {
           <h2 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#0D1A12] tracking-tight leading-tight pr-2 sm:pr-0">
             Freshly dropped<br className="hidden sm:block" /> Endlessly scrollable
           </h2>
-          <p className="text-zinc-500 font-medium max-w-2xl mx-auto text-lg pr-2 sm:pr-0">
+          <p className="text-[13px] sm:text-lg text-zinc-500 font-medium max-w-2xl mx-auto mt-4 sm:mt-0 pr-2 sm:pr-0">
             Design Walla style browsing, curated by our design team.
           </p>
         </motion.div>

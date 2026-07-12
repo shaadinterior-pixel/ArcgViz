@@ -89,7 +89,7 @@ export function TestimonialSection() {
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#111111] tracking-tight mb-4">
           Loved by <span className="text-brand-gradient pb-1 inline-block">creatives & founders</span>
         </h2>
-        <p className="text-zinc-500 text-lg max-w-2xl mx-auto">
+        <p className="text-[13px] sm:text-lg text-zinc-500 max-w-2xl mx-auto mt-2 sm:mt-0 px-2 sm:px-0">
           Don't just take our word for it. Here is what our happy consumers have to say about their experience with Design Walla.
         </p>
       </motion.div>

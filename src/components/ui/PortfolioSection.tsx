@@ -238,7 +238,7 @@ export function PortfolioSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-zinc-600 max-w-2xl mx-auto font-medium text-[16px] sm:text-[17px] leading-relaxed"
+            className="text-zinc-600 max-w-2xl mx-auto font-medium text-[13px] sm:text-[17px] leading-relaxed mt-3 sm:mt-0 px-2 sm:px-0"
           >
             {content.subheadline}
           </motion.p>

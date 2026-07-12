@@ -57,7 +57,7 @@ export function ContactSection() {
                 something<br />
                 <span className="text-brand-gradient">amazing together</span>
               </h2>
-              <p className="text-[17px] text-zinc-500 leading-relaxed max-w-[420px]">
+              <p className="text-[13px] sm:text-[17px] text-zinc-500 leading-relaxed max-w-[420px] mt-4 sm:mt-0">
                 Tell us what you need — interior, branding, a website, a printing run, or a full launch. We'll come back with a tailored plan.
               </p>
             </div>

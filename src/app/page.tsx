@@ -40,7 +40,7 @@ export const HERO_CARDS = [
     aspect: 'aspect-[16/10]'
   },
   {
-    id: 'motion', label: 'Motion Graphics', dark: true,
+    id: 'motion', label: 'Motion Graphics',
     img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=300',
     aspect: 'aspect-video'
   },

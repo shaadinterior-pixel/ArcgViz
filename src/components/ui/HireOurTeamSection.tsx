@@ -37,7 +37,7 @@ export default function HireOurTeamSection() {
               Bring Your Vision to Life with <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24B86C] to-[#11998E]">Design Walla Studio</span>
             </h2>
             
-            <p className="text-lg text-zinc-600 leading-relaxed max-w-lg">
+            <p className="text-[13px] sm:text-lg text-zinc-600 leading-relaxed max-w-lg mt-4 sm:mt-0">
               Whether you need bespoke 3D assets, full-scale interior visualization, or a complete brand identity, our in-house team of elite artists is ready to deliver.
             </p>
 
