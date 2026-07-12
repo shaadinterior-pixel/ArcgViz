@@ -16,6 +16,7 @@ import { ContactSection } from '@/components/ui/ContactSection';
 import { TestimonialSection } from '@/components/ui/TestimonialSection';
 import HireOurTeamSection from '@/components/ui/HireOurTeamSection';
 import { PortfolioSection } from '@/components/ui/PortfolioSection';
+import { MobileHeroStack } from '@/components/ui/MobileHeroStack';
 import {
   fetchHeroContent,
   onStoreUpdate, DEFAULT_HERO_CONTENT, type HeroContent,
@@ -260,43 +261,18 @@ export default function Home() {
             })()}
           </div>
 
-          {/* RIGHT — Mobile scrollable strip (Premium) */}
-          <div 
-            className="lg:hidden flex gap-4 overflow-x-auto hide-scrollbar pb-6 pt-4 -mx-4 px-8 snap-x snap-mandatory mt-6"
-            style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}
-          >
-            {(() => {
-              let cards = HERO_CARDS;
-              try {
-                const raw = (heroContent as any).hero_cards;
-                if (raw) {
-                  const parsed = Array.isArray(raw) ? raw : JSON.parse(raw);
-                  if (parsed && parsed.length > 0) cards = parsed;
-                }
-              } catch {}
-              return cards.slice(0, 5).map((card: any, i: number) => (
-                <motion.div
-                  key={card.id || i}
-                  initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  className="rounded-[1.25rem] overflow-hidden shrink-0 w-[160px] gpu-layer flex-shrink-0 snap-center shadow-[0_8px_30px_rgba(36,184,108,0.12)] border border-[#24B86C]/15 bg-white/80 backdrop-blur-xl"
-                >
-                  <div className={`relative w-full ${card.aspect || 'aspect-[4/3]'} p-1.5`}>
-                    <div className="relative w-full h-full rounded-xl overflow-hidden shadow-inner bg-black/5">
-                      {card.img && <Image src={card.img} alt={card.label} fill className="object-cover" quality={60} sizes="160px" />}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
-                    </div>
-                  </div>
-                  <div className="px-3 py-2.5 flex items-center justify-between">
-                    <span className="text-[13px] font-black tracking-tight text-[#0D1A12] line-clamp-1">{card.label}</span>
-                    <div className="w-5 h-5 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0 ml-1">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#24B86C]" />
-                    </div>
-                  </div>
-                </motion.div>
-              ));
-            })()}
-          </div>
+          {/* RIGHT — Mobile Card Stack (Premium) */}
+          {(() => {
+            let cards = HERO_CARDS;
+            try {
+              const raw = (heroContent as any).hero_cards;
+              if (raw) {
+                const parsed = Array.isArray(raw) ? raw : JSON.parse(raw);
+                if (parsed && parsed.length > 0) cards = parsed;
+              }
+            } catch {}
+            return <MobileHeroStack cards={cards} />;
+          })()}
         </div>
 
         {/* ── Search bar ── */}
