@@ -10,45 +10,56 @@ interface MobileHeroStackProps {
 
 export function MobileHeroStack({ cards }: MobileHeroStackProps) {
   const [cardsState, setCardsState] = useState(cards.slice(0, 5));
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    // Sync state if props change
     setCardsState(cards.slice(0, 5));
   }, [cards]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCardsState((prev) => {
-        if (prev.length === 0) return prev;
-        const newCards = [...prev];
-        const first = newCards.shift();
-        if (first) newCards.push(first);
-        return newCards;
-      });
-    }, 2500); // cycle every 2.5s
+      setActiveIndex((prev) => prev + 1);
+    }, 3000); // cycle every 3s
     return () => clearInterval(timer);
   }, []);
 
   if (!cardsState || cardsState.length === 0) return null;
 
+  const total = cardsState.length;
+
   return (
-    <div className="relative w-full h-[320px] sm:h-[380px] flex items-center justify-center mt-10 mb-6 lg:hidden">
+    <div className="relative w-full h-[320px] sm:h-[380px] flex items-center justify-center mt-10 mb-6 lg:hidden overflow-visible">
       {cardsState.map((card, index) => {
-        const isFront = index === 0;
+        // Calculate relative distance from current active index
+        const d = (index - (activeIndex % total) + total) % total;
+        
+        let style = { x: "0%", scale: 1, zIndex: 10, opacity: 0 };
+        
+        if (d === 0) {
+          // Front
+          style = { x: "0%", scale: 1, zIndex: 30, opacity: 1 };
+        } else if (d === 1) {
+          // Right
+          style = { x: "55%", scale: 0.85, zIndex: 20, opacity: 0.8 };
+        } else if (d === total - 1) {
+          // Left
+          style = { x: "-55%", scale: 0.85, zIndex: 20, opacity: 0.8 };
+        } else if (d === 2) {
+          // Hidden Right (fading out/in)
+          style = { x: "80%", scale: 0.7, zIndex: 10, opacity: 0 };
+        } else if (d === total - 2) {
+          // Hidden Left
+          style = { x: "-80%", scale: 0.7, zIndex: 10, opacity: 0 };
+        }
+
         return (
           <motion.div
             key={card.id || card.label}
-            layout
-            initial={{ scale: 0.8, opacity: 0, y: 50 }}
-            animate={{ 
-              scale: 1 - index * 0.06, 
-              y: index * 18,
-              zIndex: cardsState.length - index,
-              opacity: 1 - index * 0.15
-            }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="absolute w-[220px] sm:w-[260px] rounded-[1.25rem] overflow-hidden shadow-[0_8px_30px_rgba(36,184,108,0.12)] border border-[#24B86C]/15 bg-white/90 backdrop-blur-xl"
-            style={{ transformOrigin: 'top center' }}
+            initial={false}
+            animate={style}
+            transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            className="absolute w-[220px] sm:w-[260px] rounded-[1.25rem] overflow-hidden shadow-[0_8px_30px_rgba(36,184,108,0.12)] border border-[#24B86C]/15 bg-white backdrop-blur-xl"
+            style={{ transformOrigin: 'center center' }}
           >
             <div className={`relative w-full ${card.aspect || 'aspect-[4/3]'} p-1.5`}>
               <div className="relative w-full h-full rounded-xl overflow-hidden shadow-inner bg-black/5">
