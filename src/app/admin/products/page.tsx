@@ -34,6 +34,18 @@ const makeEmpty = (firstCategory: string): Omit<Product,'id'> => ({
 
 type DriveStatus = 'idle'|'valid'|'invalid'|'checking';
 
+const formatBytes = (bytes: number): string => {
+  if (!Number.isFinite(bytes) || bytes <= 0) return '';
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let value = bytes;
+  let unitIndex = 0;
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+  return `${value >= 10 || unitIndex === 0 ? value.toFixed(0) : value.toFixed(1)} ${units[unitIndex]}`;
+};
+
 export default function AdminProductsPage() {
   const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
@@ -46,6 +58,8 @@ export default function AdminProductsPage() {
   const [editing, setEditing] = useState<Product|null>(null);
   const [saving, setSaving] = useState(false);
   const [uploadingIdx, setUploadingIdx] = useState<number|null>(null);
+  const [zipUploading, setZipUploading] = useState(false);
+  const [zipProgress, setZipProgress] = useState(0);
   const [driveStatus, setDriveStatus] = useState<DriveStatus>('idle');
   const [isAddingSubcat, setIsAddingSubcat] = useState(false);
 
@@ -68,8 +82,9 @@ export default function AdminProductsPage() {
       (statusFilter==='All' || p.status===statusFilter);
   });
 
-  const openNew = () => { setEditing({id:`tmp-${Date.now()}`,...makeEmpty(dbCategories[0])}); setDriveStatus('idle'); setIsAddingSubcat(false); setIsOpen(true); };
-  const openEdit = (p: Product) => { setEditing({...p}); setDriveStatus(p.google_drive_file_id?'valid':'idle'); setIsAddingSubcat(false); setIsOpen(true); };
+  const resetUploadState = () => { setDriveStatus('idle'); setZipUploading(false); setZipProgress(0); };
+  const openNew = () => { setEditing({id:`tmp-${Date.now()}`,...makeEmpty(dbCategories[0])}); resetUploadState(); setIsAddingSubcat(false); setIsOpen(true); };
+  const openEdit = (p: Product) => { setEditing({...p}); setDriveStatus(p.google_drive_file_id?'valid':'idle'); setZipUploading(false); setZipProgress(0); setIsAddingSubcat(false); setIsOpen(true); };
 
   const handleDelete = async (id:string) => {
     if(!confirm('Delete this product?')) return;
@@ -87,7 +102,7 @@ export default function AdminProductsPage() {
       google_drive_file_id: '',
       download_url: '',
     });
-    setDriveStatus('idle');
+    resetUploadState();
     setIsAddingSubcat(false);
     setIsOpen(true);
   };
@@ -115,6 +130,75 @@ export default function AdminProductsPage() {
     if(!res.ok) throw new Error('Upload failed');
     const data = await res.json();
     return data.secure_url as string;
+  };
+
+  const uploadZipToR2 = async (file: File): Promise<{ objectKey: string; downloadUrl: string }> => {
+    if (!file.name.toLowerCase().endsWith('.zip')) {
+      throw new Error('Please choose a .zip file.');
+    }
+
+    const contentType = file.type || 'application/zip';
+    const ticketRes = await fetch('/api/r2/upload-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fileName: file.name, contentType, size: file.size }),
+    });
+
+    const ticket = await ticketRes.json().catch(() => ({}));
+    if (!ticketRes.ok) {
+      throw new Error(ticket.error || 'Could not create R2 upload URL.');
+    }
+
+    await new Promise<void>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', ticket.uploadUrl);
+      xhr.setRequestHeader('Content-Type', contentType);
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          setZipProgress(Math.max(1, Math.round((event.loaded / event.total) * 100)));
+        }
+      };
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) resolve();
+        else reject(new Error(`R2 upload failed (${xhr.status}). Check bucket CORS and token permissions.`));
+      };
+      xhr.onerror = () => reject(new Error('R2 upload failed. Check bucket CORS settings.'));
+      xhr.send(file);
+    });
+
+    return { objectKey: ticket.objectKey, downloadUrl: ticket.downloadUrl };
+  };
+
+  const handleZipUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    setZipUploading(true);
+    setZipProgress(1);
+    try {
+      const { objectKey, downloadUrl } = await uploadZipToR2(file);
+      setEditing(prev => {
+        if (!prev) return null;
+        const formats = Array.from(new Set([...(prev.file_formats || []), 'ZIP']));
+        return {
+          ...prev,
+          google_drive_share_link: `Cloudflare R2: ${file.name}`,
+          google_drive_file_id: objectKey,
+          download_url: downloadUrl,
+          file_size: prev.file_size || formatBytes(file.size),
+          file_formats: formats,
+        };
+      });
+      setDriveStatus('valid');
+      setZipProgress(100);
+      toast('ZIP uploaded to R2 ✓');
+    } catch (err: any) {
+      setDriveStatus('invalid');
+      toast(err.message || 'ZIP upload failed','error');
+    } finally {
+      setZipUploading(false);
+    }
   };
 
   const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -213,7 +297,7 @@ export default function AdminProductsPage() {
                   <th className="text-left px-5 py-3 font-medium">Product</th>
                   <th className="text-left px-5 py-3 font-medium hidden sm:table-cell">Category</th>
                   <th className="text-left px-5 py-3 font-medium">Price</th>
-                  <th className="text-left px-5 py-3 font-medium hidden md:table-cell">Drive</th>
+                  <th className="text-left px-5 py-3 font-medium hidden md:table-cell">File</th>
                   <th className="text-left px-5 py-3 font-medium">Plan</th>
                   <th className="text-left px-5 py-3 font-medium">Status</th>
                   <th className="text-right px-5 py-3 font-medium">Actions</th>
@@ -532,10 +616,31 @@ export default function AdminProductsPage() {
                 </div>
               </section>
 
-              {/* Google Drive */}
+              {/* Download Asset */}
               <section className="space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Google Drive Download</h3>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Download Asset</h3>
                 <div className="space-y-3">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Cloudflare R2 ZIP File</label>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      <label className={`cursor-pointer flex items-center justify-center gap-2 text-sm px-4 py-2.5 rounded-lg border border-gray-200 transition-colors w-fit ${zipUploading?'opacity-60 pointer-events-none bg-gray-100':'bg-gray-50 hover:bg-gray-100 text-gray-900'}`}>
+                        {zipUploading?<Loader2 className="w-4 h-4 animate-spin"/>:<Package className="w-4 h-4"/>}
+                        {zipUploading ? `Uploading ${zipProgress}%` : 'Upload ZIP to R2'}
+                        <input type="file" accept=".zip,application/zip,application/x-zip-compressed" className="hidden" onChange={handleZipUpload} disabled={zipUploading}/>
+                      </label>
+                      {editing.google_drive_file_id && (
+                        <span className="text-xs font-mono text-gray-500 break-all">Key: {editing.google_drive_file_id}</span>
+                      )}
+                    </div>
+                    {zipUploading && (
+                      <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                        <div className="h-full rounded-full bg-[#24B86C] transition-all" style={{ width: `${zipProgress}%` }} />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-3 border-t border-gray-100 space-y-3">
+                    <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-400">Google Drive fallback</h4>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Share Link</label>
                     <div className="flex gap-2">
@@ -550,14 +655,19 @@ export default function AdminProductsPage() {
                       </Button>
                     </div>
                   </div>
+                  </div>
 
                   {driveStatus==='valid' && (
                     <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-xl text-sm space-y-1">
-                      <div className="flex items-center gap-2 text-green-400 font-semibold"><CheckCircle2 className="w-4 h-4"/>Link valid</div>
-                      <p className="text-gray-500 text-xs font-mono break-all">File ID: {editing.google_drive_file_id}</p>
-                      <a href={editing.download_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-primary hover:underline">
-                        <ExternalLink className="w-3 h-3"/>Preview download URL
-                      </a>
+                      <div className="flex items-center gap-2 text-green-400 font-semibold"><CheckCircle2 className="w-4 h-4"/>Download file attached</div>
+                      <p className="text-gray-500 text-xs font-mono break-all">File key / ID: {editing.google_drive_file_id}</p>
+                      {editing.download_url.startsWith('r2://') ? (
+                        <p className="text-xs text-gray-500">Private R2 file. Customers download through the protected product page.</p>
+                      ) : (
+                        <a href={editing.download_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-primary hover:underline">
+                          <ExternalLink className="w-3 h-3"/>Preview download URL
+                        </a>
+                      )}
                     </div>
                   )}
                   {driveStatus==='invalid' && (
@@ -569,7 +679,7 @@ export default function AdminProductsPage() {
                   {editing.google_drive_file_id && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase tracking-widest text-gray-600">File ID</label>
+                        <label className="text-xs font-bold uppercase tracking-widest text-gray-600">File key / ID</label>
                         <Input className="bg-gray-50 border-gray-200 font-mono text-xs focus-visible:ring-primary" value={editing.google_drive_file_id} readOnly/>
                       </div>
                       <div className="space-y-1.5">
