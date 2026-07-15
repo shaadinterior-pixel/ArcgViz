@@ -60,6 +60,7 @@ export default function AdminProductsPage() {
   const [uploadingIdx, setUploadingIdx] = useState<number|null>(null);
   const [zipUploading, setZipUploading] = useState(false);
   const [zipProgress, setZipProgress] = useState(0);
+  const [zipError, setZipError] = useState('');
   const [driveStatus, setDriveStatus] = useState<DriveStatus>('idle');
   const [isAddingSubcat, setIsAddingSubcat] = useState(false);
   const modalScrollRef = useRef<HTMLDivElement | null>(null);
@@ -92,7 +93,7 @@ export default function AdminProductsPage() {
       (statusFilter==='All' || p.status===statusFilter);
   });
 
-  const resetUploadState = () => { setDriveStatus('idle'); setZipUploading(false); setZipProgress(0); };
+  const resetUploadState = () => { setDriveStatus('idle'); setZipUploading(false); setZipProgress(0); setZipError(''); };
   const openNew = () => { setEditing({id:`tmp-${Date.now()}`,...makeEmpty(dbCategories[0])}); resetUploadState(); setIsAddingSubcat(false); setIsOpen(true); };
   const openEdit = (p: Product) => { setEditing({...p}); setDriveStatus(p.google_drive_file_id?'valid':'idle'); setZipUploading(false); setZipProgress(0); setIsAddingSubcat(false); setIsOpen(true); };
 
@@ -196,6 +197,7 @@ export default function AdminProductsPage() {
 
     setZipUploading(true);
     setZipProgress(1);
+    setZipError('');
     try {
       const { objectKey, downloadUrl } = await uploadZipToR2(file);
       setEditing(prev => {
@@ -214,8 +216,9 @@ export default function AdminProductsPage() {
       setZipProgress(100);
       toast('ZIP uploaded to R2 ✓');
     } catch (err: any) {
-      setDriveStatus('invalid');
-      toast(err.message || 'ZIP upload failed','error');
+      const message = err.message || 'ZIP upload failed';
+      setZipError(message);
+      toast(message,'error');
     } finally {
       setZipUploading(false);
     }
@@ -664,6 +667,12 @@ export default function AdminProductsPage() {
                     {zipUploading && (
                       <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
                         <div className="h-full rounded-full bg-[#24B86C] transition-all" style={{ width: `${zipProgress}%` }} />
+                      </div>
+                    )}
+                    {zipError && (
+                      <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-sm">
+                        <div className="flex items-center gap-2 text-red-500 font-semibold"><AlertCircle className="w-4 h-4"/>R2 upload failed</div>
+                        <p className="text-xs text-red-500/80 mt-1">{zipError}</p>
                       </div>
                     )}
                   </div>
