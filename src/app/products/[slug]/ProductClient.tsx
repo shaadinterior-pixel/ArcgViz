@@ -363,13 +363,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                       </Button>
                     </Link>
                   ) : canDownload ? (
-                    product.download_url ? (
-                      <a href={product.download_url} target="_blank" rel="noreferrer" className="w-full">
-                        <Button className="w-full h-12 bg-[#24B86C] hover:bg-[#1DA05D] text-white font-bold rounded-xl text-sm shadow-[0_8px_20px_rgba(36,184,108,0.25)] hover:-translate-y-0.5 transition-all">
-                          <Download className="w-4 h-4 mr-2" /> Download Asset
-                        </Button>
-                      </a>
-                    ) : product.google_drive_file_id ? (
+                    product.download_url || product.google_drive_file_id ? (
                       <Button onClick={handleDownload} disabled={downloading} className="w-full h-12 bg-[#24B86C] hover:bg-[#1DA05D] text-white font-bold rounded-xl text-sm shadow-[0_8px_20px_rgba(36,184,108,0.25)] hover:-translate-y-0.5 transition-all">
                         {downloading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
                         {downloading ? 'Preparing...' : 'Download Asset'}
