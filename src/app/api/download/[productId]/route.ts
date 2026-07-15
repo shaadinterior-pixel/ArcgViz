@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { createR2SignedDownloadUrl, extractR2ObjectKey } from '@/lib/storage/r2';
+
+export const runtime = 'nodejs';
 
 // ── Firebase Admin (server-side) ────────────────────────────────────────────
 // Initialize Firebase Admin only once
@@ -152,5 +155,10 @@ export async function GET(
   });
 
   // ── 4. Redirect to download URL ───────────────────────────────────────────
-  return NextResponse.redirect(product.download_url, { status: 302 });
+  const r2ObjectKey = extractR2ObjectKey(product.download_url);
+  const finalDownloadUrl = r2ObjectKey
+    ? await createR2SignedDownloadUrl(r2ObjectKey)
+    : product.download_url;
+
+  return NextResponse.redirect(finalDownloadUrl, { status: 302 });
 }
