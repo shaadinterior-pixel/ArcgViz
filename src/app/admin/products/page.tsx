@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Plus, Search, Edit, Trash2, X, Image as ImageIcon, Package, ChevronDown, ExternalLink, CheckCircle2, AlertCircle, Loader2, Copy, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -62,6 +62,7 @@ export default function AdminProductsPage() {
   const [zipProgress, setZipProgress] = useState(0);
   const [driveStatus, setDriveStatus] = useState<DriveStatus>('idle');
   const [isAddingSubcat, setIsAddingSubcat] = useState(false);
+  const modalScrollRef = useRef<HTMLDivElement | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -75,6 +76,15 @@ export default function AdminProductsPage() {
   }, [toast]);
 
   useEffect(() => { load(); const u = onStoreUpdate('products', load); return u; }, [load]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
 
   const filtered = products.filter(p => {
     const q = search.toLowerCase();
@@ -109,6 +119,16 @@ export default function AdminProductsPage() {
 
   const setField = (key: keyof Product, val: unknown) =>
     setEditing(prev => prev ? {...prev,[key]:val} : null);
+
+  const handleModalWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    const scroller = modalScrollRef.current;
+    if (!scroller || !event.deltaY) return;
+    if (scroller.scrollHeight <= scroller.clientHeight) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    scroller.scrollTop += event.deltaY;
+  };
 
   const validateDriveLink = () => {
     if(!editing) return;
@@ -365,14 +385,23 @@ export default function AdminProductsPage() {
 
       {/* ── Modal ── */}
       {isOpen && editing && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="w-full max-w-3xl rounded-2xl flex flex-col max-h-[92vh] overflow-hidden bg-white border border-gray-200 shadow-2xl">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-hidden">
+          <div
+            className="w-full max-w-3xl rounded-2xl flex flex-col max-h-[92vh] min-h-0 overflow-hidden bg-white border border-gray-200 shadow-2xl"
+            data-lenis-prevent-wheel
+            data-lenis-prevent-touch
+            onWheelCapture={handleModalWheel}
+          >
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50 shrink-0">
               <h2 className="text-lg font-bold text-gray-900">{editing.id.startsWith('tmp-')?'Add New Product':'Edit Product'}</h2>
               <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700:text-gray-900 hover:bg-gray-100:bg-secondary transition-colors"><X className="w-5 h-5"/></button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+            <div
+              ref={modalScrollRef}
+              className="flex-1 min-h-0 overflow-y-auto overscroll-contain thin-scrollbar px-6 py-5 space-y-6"
+              data-lenis-prevent
+            >
 
               {/* Basic Info */}
               <section className="space-y-4">
