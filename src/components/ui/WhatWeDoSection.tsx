@@ -5,32 +5,10 @@ import { CheckCircle2, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchServices } from '@/lib/store';
+import { fetchServices, type ServiceDetail } from '@/lib/store';
+import { CORE_SERVICES, getServicePath, serviceSeoToDetail } from '@/lib/service-seo';
 
-export type ServiceDetail = {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
-  tagline: string;
-  description: string;
-  includes: string[];
-};
-
-export const defaultServices: ServiceDetail[] = [
-  {
-    id: "s1",
-    category: "Example Service",
-    title: "Example Service Title",
-    tagline: "Update this in the admin panel.",
-    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200",
-    description: "This is a placeholder service. Please add your actual services from the Admin Panel under the 'Services' section.",
-    includes: [
-      "Example included item 1",
-      "Example included item 2"
-    ]
-  }
-];
+export const defaultServices: ServiceDetail[] = CORE_SERVICES.map(serviceSeoToDetail);
 
 export function WhatWeDoSection() {
   const [services, setServices] = useState<ServiceDetail[]>(defaultServices);
@@ -195,6 +173,13 @@ export function WhatWeDoSection() {
                     <ArrowUpRight className="relative z-10 w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
                   </button>
                 </a>
+                <Link
+                  href={getServicePath(activeService)}
+                  className="mt-3 inline-flex items-center justify-center gap-2 text-sm font-bold text-[#11998E] hover:text-[#24B86C] transition-colors"
+                >
+                  View {activeService.category} page
+                  <ArrowUpRight className="w-4 h-4" />
+                </Link>
               </motion.div>
             </AnimatePresence>
           </div>

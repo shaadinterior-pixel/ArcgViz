@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, Download, Heart, Play, ShoppingCart, PackageSearch } from 'lucide-react';
 import { fetchServices, fetchProducts, type ServiceDetail, type Product } from '@/lib/store';
 import { Button } from '@/components/ui/Button';
+import { getServiceSeoBySlug, getServiceSlug, serviceSeoToDetail } from '@/lib/service-seo';
 
 export default function ServiceDetailPage() {
   const params = useParams();
@@ -28,14 +29,18 @@ export default function ServiceDetailPage() {
         // Find matching service by id, title, or category slugified
         const matched = allServices.find(s => 
           s.id === slug || 
+          getServiceSlug(s) === slug ||
           s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug ||
           s.category.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug
         );
+
+        const fallbackService = getServiceSeoBySlug(slug);
+        const resolvedService = matched || (fallbackService ? serviceSeoToDetail(fallbackService) : null);
         
-        if (matched) {
-          setService(matched);
+        if (resolvedService) {
+          setService(resolvedService);
           const categoryProducts = allProducts
-            .filter(p => p.status !== 'Draft' && p.category?.toLowerCase() === matched.category.toLowerCase())
+            .filter(p => p.status !== 'Draft' && p.category?.toLowerCase() === resolvedService.category.toLowerCase())
             .sort((a, b) => {
               const da = a.created_at ? new Date(a.created_at).getTime() : 0;
               const db2 = b.created_at ? new Date(b.created_at).getTime() : 0;

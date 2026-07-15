@@ -211,7 +211,7 @@ export default function Home() {
               transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="text-[13px] sm:text-[17px] font-medium text-zinc-600 max-w-[540px] leading-relaxed gpu-layer pr-4 sm:pr-0"
             >
-              The ultimate digital ecosystem. Elevate your brand with premium Website Templates, Motion Design, Interior Renders, and high-end 3D Assets.
+              The ultimate digital ecosystem. Elevate your brand with premium Website Templates, 3D Models, Interior Design, Digital Marketing, Graphic Design, Video Editing, and Printing Work.
             </motion.p>
 
             {/* CTAs */}

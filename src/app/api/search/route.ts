@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { getServiceSlug } from '@/lib/service-seo';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -52,7 +53,7 @@ export async function GET(request: Request) {
         price: 'Service',
         plan: 'Service',
         image: s.image || '',
-        slug: '',
+        slug: getServiceSlug(s),
         type: 'service',
       });
     }

@@ -89,7 +89,7 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
     setOpen(false);
     setQuery('');
     if (result.type === 'service') {
-      router.push(`/services`);
+      router.push(`/services/${result.slug || result.id}`);
     } else {
       router.push(`/products/${result.slug || result.id}`);
     }

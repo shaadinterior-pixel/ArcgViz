@@ -2,6 +2,7 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getPerformance, type FirebasePerformance } from 'firebase/performance';
 
 const firebaseConfig = {
   apiKey:            process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
@@ -18,4 +19,12 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
 export const auth = getAuth(app);
 export const db   = getFirestore(app);
+
+// Initialize Performance Monitoring only on the client side
+let perf: FirebasePerformance | null = null;
+if (typeof window !== 'undefined') {
+  perf = getPerformance(app);
+}
+
+export { perf };
 export default app;

@@ -1,12 +1,11 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Plus, Search, Edit, Trash2, X, Image as ImageIcon, Package, ChevronDown, ExternalLink, CheckCircle2, AlertCircle, Loader2, Copy, Wand2 } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, X, Image as ImageIcon, Package, ChevronDown, CheckCircle2, AlertCircle, Loader2, Copy, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
 import { fetchProducts, saveProducts, deleteProduct, fetchCategories, saveCategories, onStoreUpdate, generateSlug, type Product, type Category } from '@/lib/store';
-import { googleDriveProvider } from '@/lib/storage/google-drive';
 
 const FALLBACK_CATEGORIES = [
   'INTERIOR / EXTERIOR DESIGN AND WORK',
@@ -32,7 +31,7 @@ const makeEmpty = (firstCategory: string): Omit<Product,'id'> => ({
   tags:[], plan_tier: 'Free',
 });
 
-type DriveStatus = 'idle'|'valid'|'invalid'|'checking';
+type AttachmentStatus = 'idle'|'valid';
 
 const formatBytes = (bytes: number): string => {
   if (!Number.isFinite(bytes) || bytes <= 0) return '';
@@ -61,7 +60,7 @@ export default function AdminProductsPage() {
   const [zipUploading, setZipUploading] = useState(false);
   const [zipProgress, setZipProgress] = useState(0);
   const [zipError, setZipError] = useState('');
-  const [driveStatus, setDriveStatus] = useState<DriveStatus>('idle');
+  const [attachmentStatus, setAttachmentStatus] = useState<AttachmentStatus>('idle');
   const [isAddingSubcat, setIsAddingSubcat] = useState(false);
   const modalScrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -93,9 +92,9 @@ export default function AdminProductsPage() {
       (statusFilter==='All' || p.status===statusFilter);
   });
 
-  const resetUploadState = () => { setDriveStatus('idle'); setZipUploading(false); setZipProgress(0); setZipError(''); };
+  const resetUploadState = () => { setAttachmentStatus('idle'); setZipUploading(false); setZipProgress(0); setZipError(''); };
   const openNew = () => { setEditing({id:`tmp-${Date.now()}`,...makeEmpty(dbCategories[0])}); resetUploadState(); setIsAddingSubcat(false); setIsOpen(true); };
-  const openEdit = (p: Product) => { setEditing({...p}); setDriveStatus(p.google_drive_file_id?'valid':'idle'); setZipUploading(false); setZipProgress(0); setIsAddingSubcat(false); setIsOpen(true); };
+  const openEdit = (p: Product) => { setEditing({...p}); setAttachmentStatus(p.google_drive_file_id?'valid':'idle'); setZipUploading(false); setZipProgress(0); setZipError(''); setIsAddingSubcat(false); setIsOpen(true); };
 
   const handleDelete = async (id:string) => {
     if(!confirm('Delete this product?')) return;
@@ -129,20 +128,6 @@ export default function AdminProductsPage() {
     event.preventDefault();
     event.stopPropagation();
     scroller.scrollTop += event.deltaY;
-  };
-
-  const validateDriveLink = () => {
-    if(!editing) return;
-    setDriveStatus('checking');
-    const result = googleDriveProvider.validateLink(editing.google_drive_share_link);
-    if(result.valid && result.fileId && result.downloadUrl) {
-      setEditing(prev => prev ? {...prev, google_drive_file_id:result.fileId!, download_url:result.downloadUrl!} : null);
-      setDriveStatus('valid');
-      toast('Drive link valid ✓');
-    } else {
-      setDriveStatus('invalid');
-      toast(result.error ?? 'Invalid link','error');
-    }
   };
 
   const uploadImage = async (file: File): Promise<string> => {
@@ -212,7 +197,7 @@ export default function AdminProductsPage() {
           file_formats: formats,
         };
       });
-      setDriveStatus('valid');
+      setAttachmentStatus('valid');
       setZipProgress(100);
       toast('ZIP uploaded to R2 ✓');
     } catch (err: any) {
@@ -677,40 +662,11 @@ export default function AdminProductsPage() {
                     )}
                   </div>
 
-                  <div className="pt-3 border-t border-gray-100 space-y-3">
-                    <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-400">Google Drive fallback</h4>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Share Link</label>
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="https://drive.google.com/file/d/.../view?usp=sharing"
-                        className="bg-gray-50 border-gray-200 flex-1 focus-visible:ring-primary"
-                        value={editing.google_drive_share_link}
-                        onChange={e=>{setField('google_drive_share_link',e.target.value); setDriveStatus('idle');}}
-                      />
-                      <Button type="button" variant="outline" onClick={validateDriveLink} disabled={!editing.google_drive_share_link||driveStatus==='checking'} className="shrink-0">
-                        {driveStatus==='checking'?<Loader2 className="w-4 h-4 animate-spin"/>:'Validate'}
-                      </Button>
-                    </div>
-                  </div>
-                  </div>
-
-                  {driveStatus==='valid' && (
+                  {attachmentStatus==='valid' && (
                     <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-xl text-sm space-y-1">
                       <div className="flex items-center gap-2 text-green-400 font-semibold"><CheckCircle2 className="w-4 h-4"/>Download file attached</div>
                       <p className="text-gray-500 text-xs font-mono break-all">File key / ID: {editing.google_drive_file_id}</p>
-                      {editing.download_url.startsWith('r2://') ? (
-                        <p className="text-xs text-gray-500">Private R2 file. Customers download through the protected product page.</p>
-                      ) : (
-                        <a href={editing.download_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-primary hover:underline">
-                          <ExternalLink className="w-3 h-3"/>Preview download URL
-                        </a>
-                      )}
-                    </div>
-                  )}
-                  {driveStatus==='invalid' && (
-                    <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-sm">
-                      <div className="flex items-center gap-2 text-red-400 font-semibold"><AlertCircle className="w-4 h-4"/>Invalid link — check the URL format</div>
+                      <p className="text-xs text-gray-500">Private R2 file. Customers download through the protected product page.</p>
                     </div>
                   )}
 

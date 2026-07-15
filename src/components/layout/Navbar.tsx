@@ -11,18 +11,19 @@ import { Button } from '../ui/Button';
 import { LiveSearch } from '../ui/LiveSearch';
 import { getCurrentUser, onAuthChange, type AuthUser } from '@/lib/auth';
 import { fetchCategories, fetchServices, fetchProducts, type Category, type ServiceDetail, type Product } from '@/lib/store';
+import { getServicePath } from '@/lib/service-seo';
 
 // Static service categories matching the platform
 const SERVICE_CATEGORIES = [
-  { label: 'Interior / Exterior Design', icon: Layers, href: '/services#interior' },
-  { label: '3D Model & Product Design', icon: Box, href: '/services#3d-model' },
-  { label: 'Digital Marketing', icon: Megaphone, href: '/services#digital-marketing' },
-  { label: 'Company Branding', icon: Palette, href: '/services#branding' },
-  { label: 'Website / Apps / Software', icon: Monitor, href: '/services#web' },
-  { label: 'Animation & Motion Graphic', icon: Film, href: '/services#animation' },
-  { label: 'Graphic Design', icon: PenTool, href: '/services#graphic' },
-  { label: 'Video Editing', icon: Video, href: '/services#video' },
-  { label: 'Printing Work', icon: Printer, href: '/services#printing' },
+  { label: 'Interior / Exterior Design', icon: Layers, href: getServicePath('Interior / Exterior Design') },
+  { label: '3D Model & Product Design', icon: Box, href: getServicePath('3D Model & Product Design') },
+  { label: 'Digital Marketing', icon: Megaphone, href: getServicePath('Digital Marketing') },
+  { label: 'Company Branding', icon: Palette, href: getServicePath('Company Branding') },
+  { label: 'Website / Apps / Software', icon: Monitor, href: getServicePath('Website / Apps / Software') },
+  { label: 'Animation & Motion Graphic', icon: Film, href: getServicePath('Animation & Motion Graphic') },
+  { label: 'Graphic Design', icon: PenTool, href: getServicePath('Graphic Design') },
+  { label: 'Video Editing', icon: Video, href: getServicePath('Video Editing') },
+  { label: 'Printing Work', icon: Printer, href: getServicePath('Printing Work') },
 ];
 
 // Dropdown component with hover logic
@@ -297,6 +298,7 @@ export function Navbar() {
                       <Link
                         key={svc.label}
                         href={svc.href}
+                        title={`Professional ${svc.label} Services`}
                         className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F3F6F5] group transition-colors"
                       >
                         <div className="w-8 h-8 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:shadow-sm border border-transparent group-hover:border-[#E2EDE8] transition-all">
@@ -325,9 +327,8 @@ export function Navbar() {
                   ) : (
                     <div className="flex flex-col gap-4">
                       {services.slice(0, 2).map((service, index) => {
-                        const slug = service.id || service.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || index.toString();
                         return (
-                          <Link href={`/services/${slug}`} key={service.id || index} className="group flex gap-4 items-center bg-white p-3 rounded-2xl shadow-sm border border-[#E2EDE8] hover:border-[#24B86C] transition-colors">
+                          <Link href={getServicePath(service)} key={service.id || index} className="group flex gap-4 items-center bg-white p-3 rounded-2xl shadow-sm border border-[#E2EDE8] hover:border-[#24B86C] transition-colors">
                             <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0">
                               <Image 
                                 src={service.image || 'https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&q=80&w=600'} 
@@ -662,6 +663,7 @@ export function Navbar() {
                               <Link
                                 key={svc.label}
                                 href={svc.href}
+                                title={`Professional ${svc.label} Services`}
                                 className="text-[13px] font-medium text-zinc-500 py-2 pl-4 border-l-2 border-zinc-100 hover:border-[#24B86C] hover:text-[#24B86C] transition-colors line-clamp-1"
                                 onClick={() => setIsMobileMenuOpen(false)}
                               >

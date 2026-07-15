@@ -1,0 +1,37 @@
+# Design Walla
+
+Design Walla is a creative services and digital asset marketplace for 3D models, OBJ/FBX/GLB assets, interior and exterior design, food cart design, product design, branding, websites, apps, software, digital marketing, animation, video editing, graphic design, and printing work.
+
+## Main Pages
+
+- Home: https://designwalla.com/
+- Marketplace: https://designwalla.com/products
+- Services: https://designwalla.com/services
+- Portfolio: https://designwalla.com/portfolio
+- Contact: https://designwalla.com/contact
+
+## Core Services
+
+- Interior / Exterior Design: https://designwalla.com/services/interior-exterior-design
+  - Covers interior design, exterior design, shop design, facade design, kiosk design, food cart design, 3D interior renders, and commercial space concepts.
+- 3D Model & Product Design: https://designwalla.com/services/3d-model-product-design
+  - Covers custom 3D models, product design, OBJ files, FBX files, GLB models, Blender assets, product renders, and ecommerce visuals.
+- Digital Marketing: https://designwalla.com/services/digital-marketing
+  - Covers SEO planning, social media creatives, paid ad creatives, local marketing, campaign design, and brand growth.
+- Company Branding: https://designwalla.com/services/company-branding
+  - Covers logo design, brand identity, brand kits, packaging direction, launch assets, and business branding.
+- Website / Apps / Software: https://designwalla.com/services/website-apps-software
+  - Covers business websites, ecommerce websites, web apps, dashboards, booking systems, portals, and custom software.
+- Animation & Motion Graphic: https://designwalla.com/services/animation-motion-graphics
+  - Covers logo animation, product animation, explainer videos, reels, brand motion, and motion graphics.
+- Graphic Design: https://designwalla.com/services/graphic-design
+  - Covers posters, menus, brochures, catalogs, flyers, social media creatives, and marketing collateral.
+- Video Editing: https://designwalla.com/services/video-editing
+  - Covers reels, shorts, product videos, ads, YouTube videos, captions, sound cleanup, and color grading.
+- Printing Work: https://designwalla.com/services/printing-work
+  - Covers print design, business cards, banners, packaging, labels, menus, catalogs, signage, and print-ready files.
+
+## Contact
+
+- Email: designwalla.co@gmail.com
+- Website: https://designwalla.com

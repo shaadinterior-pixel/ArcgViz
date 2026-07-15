@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Layers, ArrowRight, Zap, Trophy, Target, Sparkles, CheckCircle2, ArrowUpRight } from 'lucide-react';
 import { fetchServices, type ServiceDetail } from '@/lib/store';
 import { Button } from '@/components/ui/Button';
+import { CORE_SERVICES, getServicePath, serviceSeoToDetail } from '@/lib/service-seo';
 
 export default function ServicesPage() {
   const [services, setServices] = useState<ServiceDetail[]>([]);
@@ -14,8 +15,11 @@ export default function ServicesPage() {
 
   useEffect(() => {
     fetchServices()
-      .then(data => setServices(data || []))
-      .catch(console.error)
+      .then(data => setServices(data && data.length > 0 ? data : CORE_SERVICES.map(serviceSeoToDetail)))
+      .catch((error) => {
+        console.error(error);
+        setServices(CORE_SERVICES.map(serviceSeoToDetail));
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -73,7 +77,6 @@ export default function ServicesPage() {
         ) : (
           <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
             {services.map((service, index) => {
-              const slug = service.id || service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
               // Alternating heights for masonry look
               const isTall = index % 3 === 0 || index % 5 === 0;
               
@@ -86,7 +89,7 @@ export default function ServicesPage() {
                   transition={{ duration: 0.7, delay: (index % 4) * 0.1, ease: [0.16, 1, 0.3, 1] }}
                   className="break-inside-avoid"
                 >
-                  <Link href={`/services/${slug}`} className="group block w-full bg-white rounded-[2rem] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_rgba(36,184,108,0.12)] border border-[#E2EDE8] hover:border-[#24B86C]/40 transition-all duration-500 hover:-translate-y-2 relative flex flex-col">
+                  <Link href={getServicePath(service)} className="group block w-full bg-white rounded-[2rem] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_rgba(36,184,108,0.12)] border border-[#E2EDE8] hover:border-[#24B86C]/40 transition-all duration-500 hover:-translate-y-2 relative flex flex-col">
                     
                     {/* Image Section */}
                     <div className={`relative w-full overflow-hidden bg-zinc-100 ${isTall ? 'h-[360px]' : 'h-[240px]'}`}>

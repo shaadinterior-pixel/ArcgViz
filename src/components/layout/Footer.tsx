@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Twitter, Instagram, Linkedin, Youtube, ArrowRight } from 'lucide-react';
+import { getServicePath } from '@/lib/service-seo';
 
 const FOOTER_LINKS = {
   Marketplace: [
@@ -15,11 +16,12 @@ const FOOTER_LINKS = {
     { label: 'Motion Graphics', href: '/products?category=motion' },
   ],
   Services: [
-    { label: 'Interior Design', href: '/services' },
-    { label: 'Digital Marketing', href: '/services' },
-    { label: 'Branding & Identity', href: '/services' },
-    { label: 'Web Development', href: '/services' },
-    { label: 'Hire Our Team', href: '/services' },
+    { label: 'Interior Design', href: getServicePath('Interior / Exterior Design') },
+    { label: '3D Model Design', href: getServicePath('3D Model & Product Design') },
+    { label: 'Digital Marketing', href: getServicePath('Digital Marketing') },
+    { label: 'Branding & Identity', href: getServicePath('Company Branding') },
+    { label: 'Web Development', href: getServicePath('Website / Apps / Software') },
+    { label: 'Printing Work', href: getServicePath('Printing Work') },
   ],
   Company: [
     { label: 'About Us', href: '/about' },
