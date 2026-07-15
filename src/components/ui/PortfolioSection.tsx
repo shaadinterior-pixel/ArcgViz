@@ -76,6 +76,30 @@ function CarouselImage({
   );
 }
 
+function CarouselCardFace({
+  item,
+  fallbackSrc,
+  side,
+}: {
+  item: PortfolioItem;
+  fallbackSrc: string;
+  side: 'front' | 'back';
+}) {
+  return (
+    <span className={`portfolio-carousel-face portfolio-carousel-face-${side}`} aria-hidden={side === 'back'}>
+      <CarouselImage
+        src={item.image_url}
+        alt={item.title}
+        fallbackSrc={fallbackSrc}
+      />
+      <span className="portfolio-carousel-shade" aria-hidden="true" />
+      <span className="portfolio-carousel-title">
+        <span>{item.title}</span>
+      </span>
+    </span>
+  );
+}
+
 function normalizeImageUrl(url?: string, index = 0): string {
   const fallback = PREMIUM_FALLBACKS[index % 12];
   
@@ -86,7 +110,14 @@ function normalizeImageUrl(url?: string, index = 0): string {
     return fallback;
   }
 
-  return trimmed.replace(/^http:\/\/res\.cloudinary\.com/i, 'https://res.cloudinary.com');
+  const normalized = trimmed.replace(/^http:\/\/res\.cloudinary\.com/i, 'https://res.cloudinary.com');
+  const isUsableImageSource =
+    normalized.startsWith('/') ||
+    /^https?:\/\//i.test(normalized) ||
+    /^data:image\//i.test(normalized) ||
+    /^blob:/i.test(normalized);
+
+  return isUsableImageSource ? normalized : fallback;
 }
 
 function buildCarouselItems(sourceItems: PortfolioItem[]): PortfolioItem[] {
@@ -264,15 +295,8 @@ export function PortfolioSection() {
                   onMouseEnter={() => setIsPaused(true)}
                   onMouseLeave={() => setIsPaused(false)}
                 >
-                  <CarouselImage 
-                    src={item.image_url} 
-                    alt={item.title} 
-                    fallbackSrc={PREMIUM_FALLBACKS[index % 12]} 
-                  />
-                  <span className="portfolio-carousel-shade" aria-hidden="true" />
-                  <span className="portfolio-carousel-title">
-                    <span>{item.title}</span>
-                  </span>
+                  <CarouselCardFace item={item} fallbackSrc={PREMIUM_FALLBACKS[index % 12]} side="front" />
+                  <CarouselCardFace item={item} fallbackSrc={PREMIUM_FALLBACKS[index % 12]} side="back" />
                 </Link>
               ))}
             </div>
@@ -334,8 +358,10 @@ export function PortfolioSection() {
           background: #1a2a1f;
           border: 1px solid rgba(255, 255, 255, 0.72);
           box-shadow: 0 24px 55px rgba(12, 24, 16, 0.18);
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
+          transform-style: preserve-3d;
+          -webkit-transform-style: preserve-3d;
+          backface-visibility: visible;
+          -webkit-backface-visibility: visible;
           transform:
             rotateY(calc(var(--index) * var(--angle)))
             translateZ(calc(-1 * (.5 * var(--card-width) + 2.5rem) / tan(.5 * var(--angle))));
@@ -348,6 +374,21 @@ export function PortfolioSection() {
         .portfolio-carousel-card:hover {
           box-shadow: 0 30px 75px rgba(12, 24, 16, 0.24);
           filter: saturate(1.06);
+        }
+
+        .portfolio-carousel-face {
+          position: absolute;
+          inset: 0;
+          display: block;
+          overflow: hidden;
+          border-radius: inherit;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+        }
+
+        .portfolio-carousel-face-back {
+          transform: rotateY(180deg);
+          -webkit-transform: rotateY(180deg);
         }
 
         .portfolio-carousel-image {
