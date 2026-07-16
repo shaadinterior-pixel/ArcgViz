@@ -192,7 +192,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
             
             {/* Title & Breadcrumbs (Above Image) */}
             <div className="mb-6">
-              <h1 className="text-[20px] sm:text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-tight text-[#111111]">{product.name}</h1>
+              <h1 className="text-[16px] sm:text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-tight text-[#111111]">{product.name}</h1>
               <div className="text-[11px] font-bold text-[#11998E] mt-3 flex items-center gap-1.5 flex-wrap">
                 <Link href={`/products?search=${encodeURIComponent(product.category || '')}`} className="hover:underline">{product.category || 'General'}</Link> 
                 {product.subcategory && (
