@@ -11,6 +11,7 @@ import {
 import { ToastProvider } from '@/components/ui/Toast';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { supabase } from '@/lib/supabase';
+import { getCurrentUser, signInWithGoogle, signOut, type AuthUser } from '@/lib/auth';
 
 const ADMIN_NAV = [
   { group: 'Store',    items: [
@@ -35,9 +36,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [connected, setConnected] = useState<boolean | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+        setAuthLoading(false);
+      } catch (e) {
+        setAuthLoading(false);
+      }
+
       try {
         const { error } = await supabase.from('products').select('id', { count: 'exact', head: true });
         setConnected(!error || error.code === 'PGRST116');
@@ -46,6 +57,55 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       }
     })();
   }, []);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F4F6F8]">
+        <div className="w-8 h-8 border-4 border-[#24B86C] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!user || user.email !== 'shaadinterior@gmail.com') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F4F6F8]">
+        <div className="bg-white p-8 rounded-[24px] shadow-sm border border-[#E5E7EB] text-center max-w-sm w-full mx-4">
+          <div className="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-5">
+            <LogOut className="w-8 h-8" />
+          </div>
+          <h2 className="text-xl font-bold text-[#111827] mb-2">Admin Access Restricted</h2>
+          <p className="text-[#6B7280] text-[13px] mb-8 leading-relaxed">
+            You must be signed in with the authorized administrator account to access this panel.
+          </p>
+          <button 
+            onClick={async () => {
+              try {
+                const u = await signInWithGoogle();
+                setUser(u);
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+            className="w-full h-12 bg-[#0D1A12] hover:bg-[#24B86C] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-md hover:shadow-lg"
+          >
+            Sign in with Google
+          </button>
+          
+          {user && (
+            <button
+              onClick={async () => {
+                await signOut();
+                setUser(null);
+              }}
+              className="mt-4 w-full h-12 bg-white border border-[#E5E7EB] hover:border-red-200 hover:text-red-600 text-[#6B7280] rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+            >
+              Sign out current account
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <ToastProvider>
