@@ -297,23 +297,9 @@ function ProductsContent() {
                             )}
                           </div>
                           
-                          {/* Hover info overlay (Title & Price) */}
+                          {/* Hover info overlay (Title only) */}
                           <div className="absolute inset-x-0 bottom-0 p-4 pt-12 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 pointer-events-none rounded-b-3xl flex flex-col justify-end">
-                            <h3 className="text-sm font-bold text-white leading-tight line-clamp-2 mb-2 drop-shadow-md">{product.name}</h3>
-                            <div className="flex items-center justify-between gap-2">
-                              {product.plan_tier === 'Paid' ? (
-                                <>
-                                  <div />
-                                  <span className="text-[13px] font-black text-white drop-shadow-md">
-                                    {product.price || 'Contact'}
-                                  </span>
-                                </>
-                              ) : (
-                                <>
-                                  
-                                </>
-                              )}
-                            </div>
+                            <h3 className="text-sm font-bold text-white leading-tight line-clamp-2 drop-shadow-md">{product.name}</h3>
                           </div>
                         </div>
                       </div>

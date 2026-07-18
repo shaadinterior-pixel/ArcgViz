@@ -544,7 +544,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 <h3 className="font-bold text-xl mb-6 text-[#111111] border-b border-[#E2EDE8] pb-4">Specifications</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">
                   {product.specifications.map((spec, i) => (
-                    <div key={i} className="flex items-start gap-2 border-b border-zinc-100 pb-3">
+                    <div key={i} className="flex flex-col md:flex-row md:items-start gap-1 md:gap-2 border-b border-zinc-100 pb-3">
                       <strong className="text-zinc-800 font-bold text-[14px] shrink-0">{spec.label}</strong>
                       <span className="text-[14px] text-zinc-600">{spec.value}</span>
                     </div>

@@ -242,32 +242,9 @@ export default function ServiceDetailPage() {
                           )}
                         </div>
 
-                        {/* Hover info overlay (Title & Price) */}
+                        {/* Hover info overlay (Title only) */}
                         <div className="absolute inset-x-0 bottom-0 p-4 pt-12 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 pointer-events-none rounded-b-3xl">
-                          <h3 className="text-sm font-bold text-white leading-tight line-clamp-2 mb-2 drop-shadow-md">{product.name}</h3>
-                          <div className="flex items-center justify-between gap-2">
-                            {product.plan_tier === 'Paid' ? (
-                              <>
-                                  <div />
-                                <span className="text-[13px] font-black text-white drop-shadow-md">
-                                  {product.price || 'Contact'}
-                                </span>
-                              </>
-                            ) : (
-                              <>
-                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wide border backdrop-blur-md bg-black/30 ${
-                                  product.plan_tier === 'Pro'
-                                    ? 'border-purple-400/50 text-purple-300'
-                                    : product.plan_tier === 'Plus'
-                                    ? 'border-green-400/50 text-green-300'
-                                    : 'border-zinc-400/50 text-zinc-300'
-                                }`}>
-                                  {product.plan_tier === 'Pro' ? 'Plus + Pro' : (product.plan_tier || 'Free')}
-                                </span>
-                                
-                              </>
-                            )}
-                          </div>
+                          <h3 className="text-sm font-bold text-white leading-tight line-clamp-2 drop-shadow-md">{product.name}</h3>
                         </div>
                       </div>
                     </div>
