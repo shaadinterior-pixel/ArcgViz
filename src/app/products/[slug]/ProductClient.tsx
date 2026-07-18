@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
 import { getCurrentUser, hasPurchased, getWishlist, toggleWishlist } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
+import PrintingOrderForm from './PrintingOrderForm';
 
 type Props = { 
   product: Product;
@@ -22,6 +23,12 @@ type Props = {
 
 export default function ProductClient({ product, similarProducts = [] }: Props) {
   const [visibleSimilar, setVisibleSimilar] = useState(8);
+
+  const isPrintingService = React.useMemo(() => {
+    const cat = (product.category || '').toLowerCase();
+    const subcat = (product.subcategory || '').toLowerCase();
+    return cat.includes('printing') || subcat.includes('poster') || subcat.includes('card');
+  }, [product.category, product.subcategory]);
 
   // ── All product images (thumbnail + gallery deduped) ─────────────────────
   const allImages = React.useMemo(() => {
@@ -332,6 +339,9 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
 
             {/* Mobile Buy Box (Below Image) */}
             <div className="block lg:hidden mt-6">
+              {isPrintingService ? (
+                <PrintingOrderForm product={product} />
+              ) : (
               <div className="bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-sm flex flex-col gap-6">
                 {/* License Box */}
                 <div>
@@ -398,12 +408,16 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   </div>
                 </div>
               </div>
+              )}
             </div>
 
           </div>
 
           {/* ── Right Column (Sidebar) ── */}
           <div className="hidden lg:block w-[360px] shrink-0">
+            {isPrintingService ? (
+              <PrintingOrderForm product={product} />
+            ) : (
             <div className="bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)] flex flex-col gap-6">
               
               {/* Author badge removed */}
@@ -489,6 +503,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 </div>
               </div>
             </div>
+            )}
 
             {/* Why choose DESIGNWALLA? */}
             <div className="mt-6 bg-white border border-[#E2EDE8] rounded-[24px] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.04)]">
