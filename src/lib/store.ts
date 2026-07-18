@@ -40,11 +40,16 @@ export type Customer = {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   spent: number;
   orders: number;
   status: 'Active' | 'Inactive';
   joinDate: string;
   plan: 'Free' | 'Pro';
+  downloadsUsed?: number;
+  downloadsRemaining?: number;
+  wishlistCount?: number;
+  freeProDownloadsRemaining?: number;
 };
 
 export type Order = {
