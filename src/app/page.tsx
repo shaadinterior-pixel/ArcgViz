@@ -137,7 +137,7 @@ export default function Home() {
     <div className="flex flex-col">
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-20 pb-8 sm:pt-32 sm:pb-20 bg-white z-30 overflow-hidden">
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-20 pb-8 sm:pt-32 sm:pb-20 bg-white z-30">
 
         {/* Ethereal Mesh Gradients & Backgrounds (Clipped) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
