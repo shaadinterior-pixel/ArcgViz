@@ -142,11 +142,7 @@ export default function PrintingOrderForm({ product }: Props) {
           className="w-full p-3 rounded-xl border border-zinc-300 bg-white text-[14px] text-zinc-800 focus:outline-none focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
         />
 
-        <Button 
-          className="w-full h-12 bg-[#7DD3FC] hover:bg-[#38BDF8] text-black font-bold rounded-xl text-[14px] transition-colors flex items-center justify-center shadow-none mt-2"
-        >
-          Browse designs <ImageIcon className="w-4 h-4 ml-2" />
-        </Button>
+
         <label 
           className={`w-full h-12 border border-zinc-300 font-bold rounded-xl text-[14px] transition-colors flex items-center justify-center cursor-pointer shadow-none ${
             designUrl ? 'bg-[#E2EDE8] text-[#1E995A] border-[#24B86C]' : 'bg-white hover:bg-zinc-50 text-[#111111]'
