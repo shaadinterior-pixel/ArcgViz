@@ -17,15 +17,28 @@ export async function fetchAdminCustomers(): Promise<Customer[]> {
         joinDate = new Date(data.joinDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       }
 
+      const plan = (data.plan || 'Free') as 'Free' | 'Plus' | 'Pro';
+      const PLAN_LIMITS = { Free: 10, Plus: 50, Pro: 100 };
+      const limit = PLAN_LIMITS[plan] || 10;
+      
+      const d = new Date();
+      const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const downloadsUsed = data.monthlyDownloads?.[monthKey] || 0;
+      
       return {
         id: doc.id,
         name: data.name || 'Unknown',
         email: data.email || 'N/A',
+        phone: data.phoneNumber || 'N/A',
         spent: data.spent || 0,
         orders: data.orders || 0,
         status: data.status || 'Active',
         joinDate,
-        plan: data.plan || 'Free',
+        plan,
+        downloadsUsed,
+        downloadsRemaining: Math.max(0, limit - downloadsUsed),
+        wishlistCount: Array.isArray(data.wishlist) ? data.wishlist.length : 0,
+        freeProDownloadsRemaining: data.freeProDownloadsRemaining || 0,
       } as Customer;
     });
 
