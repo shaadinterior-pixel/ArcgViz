@@ -121,29 +121,41 @@ export async function GET(
     }
     // Paid products don't consume monthly quota → go straight to download
   } else {
+    let bypassMonthlyQuota = false;
     // PRO/PLUS product: check user plan tier
     if (/^pro$/i.test(productPlan) && userPlan === 'Free') {
-      return NextResponse.json(
-        { error: 'This asset requires a Plus + Pro plan. Upgrade to download.' },
-        { status: 403 }
-      );
+      const freeProRem = (userData?.freeProDownloadsRemaining || 0) as number;
+      if (freeProRem > 0) {
+        // User has free pro downloads remaining, allow and decrement
+        await userRef.update({
+          freeProDownloadsRemaining: FieldValue.increment(-1),
+        });
+        bypassMonthlyQuota = true;
+      } else {
+        return NextResponse.json(
+          { error: 'This asset requires a Plus + Pro plan. Upgrade to download.' },
+          { status: 403 }
+        );
+      }
     }
 
-    // Check monthly download quota
-    const used = (userData?.monthlyDownloads?.[key] || 0) as number;
-    const limit = PLAN_LIMITS[userPlan] ?? 10;
+    if (!bypassMonthlyQuota) {
+      // Check monthly download quota
+      const used = (userData?.monthlyDownloads?.[key] || 0) as number;
+      const limit = PLAN_LIMITS[userPlan] ?? 10;
 
-    if (used >= limit) {
-      return NextResponse.json(
-        { error: `Monthly download limit reached (${used}/${limit}). Upgrade your plan for more downloads.` },
-        { status: 403 }
-      );
+      if (used >= limit) {
+        return NextResponse.json(
+          { error: `Monthly download limit reached (${used}/${limit}). Upgrade your plan for more downloads.` },
+          { status: 403 }
+        );
+      }
+
+      // Increment monthly counter
+      await userRef.update({
+        [`monthlyDownloads.${key}`]: FieldValue.increment(1),
+      });
     }
-
-    // Increment monthly counter
-    await userRef.update({
-      [`monthlyDownloads.${key}`]: FieldValue.increment(1),
-    });
   }
 
   // Log download event
