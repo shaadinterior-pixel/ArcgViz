@@ -126,8 +126,11 @@ export default function AdminCustomersPage() {
                 <tr>
                   <th className="text-left px-5 py-3 font-medium">Customer</th>
                   <th className="text-left px-5 py-3 font-medium hidden sm:table-cell">Joined</th>
+                  <th className="text-left px-5 py-3 font-medium">Phone</th>
+                  <th className="text-left px-5 py-3 font-medium">Downloads</th>
+                  <th className="text-left px-5 py-3 font-medium hidden md:table-cell">Wishlist</th>
                   <th className="text-left px-5 py-3 font-medium">Spent</th>
-                  <th className="text-left px-5 py-3 font-medium hidden md:table-cell">Orders</th>
+                  <th className="text-left px-5 py-3 font-medium hidden xl:table-cell">Orders</th>
                   <th className="text-left px-5 py-3 font-medium">Plan</th>
                   <th className="text-left px-5 py-3 font-medium">Status</th>
                   <th className="text-right px-5 py-3 font-medium">Actions</th>
@@ -148,8 +151,14 @@ export default function AdminCustomersPage() {
                       </div>
                     </td>
                     <td className="px-5 py-4 text-foreground/50 font-medium hidden sm:table-cell">{c.joinDate}</td>
+                    <td className="px-5 py-4 font-bold text-foreground/80">{c.phone || 'N/A'}</td>
+                    <td className="px-5 py-4 text-xs font-medium">
+                      <span className="text-red-400">{c.downloadsUsed || 0} used</span> / <span className="text-green-400">{c.downloadsRemaining || 0} left</span>
+                      {!!c.freeProDownloadsRemaining && <span className="block text-[10px] text-amber-500 mt-1">+{c.freeProDownloadsRemaining} Free Pro</span>}
+                    </td>
+                    <td className="px-5 py-4 font-bold text-blue-400 hidden md:table-cell">{c.wishlistCount || 0}</td>
                     <td className="px-5 py-4 font-bold text-primary">₹{c.spent.toLocaleString('en-IN')}</td>
-                    <td className="px-5 py-4 hidden md:table-cell">{c.orders}</td>
+                    <td className="px-5 py-4 hidden xl:table-cell">{c.orders}</td>
                     <td className="px-5 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border ${
                         c.plan === 'Free' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
@@ -173,7 +182,7 @@ export default function AdminCustomersPage() {
                     </td>
                   </tr>
                 )) : (
-                  <tr><td colSpan={6} className="px-5 py-16 text-center text-foreground/40">No customers found.</td></tr>
+                  <tr><td colSpan={10} className="px-5 py-16 text-center text-foreground/40">No customers found.</td></tr>
                 )}
               </tbody>
             </table>
@@ -211,6 +220,25 @@ export default function AdminCustomersPage() {
                   />
                 </div>
               ))}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1 bg-white p-3 rounded-xl border border-zinc-100">
+                  <p className="text-[10px] uppercase font-bold text-zinc-400">Downloads Used</p>
+                  <p className="text-lg font-black text-red-500">{editing.downloadsUsed || 0}</p>
+                </div>
+                <div className="space-y-1 bg-white p-3 rounded-xl border border-zinc-100">
+                  <p className="text-[10px] uppercase font-bold text-zinc-400">Downloads Remaining</p>
+                  <p className="text-lg font-black text-green-500">{editing.downloadsRemaining || 0}</p>
+                </div>
+                <div className="space-y-1 bg-white p-3 rounded-xl border border-zinc-100">
+                  <p className="text-[10px] uppercase font-bold text-zinc-400">Wishlist Items</p>
+                  <p className="text-lg font-black text-blue-500">{editing.wishlistCount || 0}</p>
+                </div>
+                <div className="space-y-1 bg-white p-3 rounded-xl border border-zinc-100">
+                  <p className="text-[10px] uppercase font-bold text-zinc-400">Phone</p>
+                  <p className="text-sm font-bold text-zinc-700 mt-1">{editing.phone || 'Not verified'}</p>
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Plan Tier</label>
