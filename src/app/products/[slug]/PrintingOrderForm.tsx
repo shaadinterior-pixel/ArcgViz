@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Truck, UploadCloud, Image as ImageIcon, MessageCircle, ShoppingCart } from 'lucide-react';
+import { Truck, UploadCloud, Image as ImageIcon, MessageCircle, ShoppingCart, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
+import { db } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 type Props = {
   product: Product;
@@ -13,6 +15,8 @@ export default function PrintingOrderForm({ product }: Props) {
   const [deliverySpeed, setDeliverySpeed] = useState<'standard' | 'sameday'>('standard');
   const [corners, setCorners] = useState('');
   const [quantity, setQuantity] = useState('100');
+  const [uploading, setUploading] = useState(false);
+  const [designUrl, setDesignUrl] = useState('');
 
   const basePrice = parseInt((product.price || '0').replace(/[^0-9]/g, ''), 10) || 200;
   // Mock pricing logic based on quantity
@@ -26,12 +30,58 @@ export default function PrintingOrderForm({ product }: Props) {
     unitPrice: opt.unitPrice < 1 ? 1 : Math.round(opt.unitPrice)
   }));
 
-  const handleWhatsApp = () => {
-    const text = `Hi Design Walla! 👋\n\nI need customization for this printing service.\n\n*Product:* ${product.name}\n*Quantity:* ${quantity}\n*Corners:* ${corners || 'Standard'}\n*Delivery:* ${deliverySpeed === 'standard' ? 'Standard' : 'Same Day'}\n*Link:* https://designwalla.com/products/${product.slug || product.id}`;
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData(); 
+      fd.append('file', file);
+      const res = await fetch('/api/upload', {method:'POST', body:fd});
+      if (!res.ok) throw new Error('Upload failed');
+      const data = await res.json();
+      if (data.secure_url) {
+        setDesignUrl(data.secure_url);
+      } else {
+        throw new Error('No URL returned');
+      }
+    } catch (err) {
+      alert('Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+      e.target.value = '';
+    }
+  };
+
+  const submitOrderToDB = async (type: 'checkout' | 'whatsapp') => {
+    try {
+      await addDoc(collection(db, 'printing_orders'), {
+        productName: product.name,
+        productId: product.id,
+        slug: product.slug,
+        quantity,
+        corners: corners || 'Standard',
+        deliverySpeed,
+        designUrl,
+        type,
+        createdAt: serverTimestamp(),
+      });
+    } catch (e) {
+      console.error('Error saving printing order:', e);
+    }
+  };
+
+  const handleWhatsApp = async () => {
+    await submitOrderToDB('whatsapp');
+    let text = `Hi Design Walla! 👋\n\nI need customization for this printing service.\n\n*Product:* ${product.name}\n*Quantity:* ${quantity}\n*Corners:* ${corners || 'Standard'}\n*Delivery:* ${deliverySpeed === 'standard' ? 'Standard' : 'Same Day'}\n*Link:* https://designwalla.com/products/${product.slug || product.id}`;
+    if (designUrl) {
+      text += `\n\n*My Uploaded Design:* ${designUrl}`;
+    }
     window.open(`https://wa.me/918969688709?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
+    await submitOrderToDB('checkout');
     // Add to cart or direct checkout logic here
     alert(`Proceeding to checkout for ${quantity} units of ${product.name}.`);
   };
@@ -116,12 +166,20 @@ export default function PrintingOrderForm({ product }: Props) {
         >
           Browse designs <ImageIcon className="w-4 h-4 ml-2" />
         </Button>
-        <Button 
-          variant="outline"
-          className="w-full h-12 bg-white border-zinc-300 hover:bg-zinc-50 text-[#111111] font-bold rounded-xl text-[14px] transition-colors flex items-center justify-center shadow-none"
+        <label 
+          className={`w-full h-12 border border-zinc-300 font-bold rounded-xl text-[14px] transition-colors flex items-center justify-center cursor-pointer shadow-none ${
+            designUrl ? 'bg-[#E2EDE8] text-[#1E995A] border-[#24B86C]' : 'bg-white hover:bg-zinc-50 text-[#111111]'
+          } ${uploading ? 'opacity-70 pointer-events-none' : ''}`}
         >
-          Upload design <UploadCloud className="w-4 h-4 ml-2" />
-        </Button>
+          {uploading ? (
+            <><Loader2 className="w-4 h-4 mr-2 animate-spin"/> Uploading...</>
+          ) : designUrl ? (
+            <><CheckCircle2 className="w-4 h-4 mr-2" /> Design Uploaded</>
+          ) : (
+            <>Upload design <UploadCloud className="w-4 h-4 ml-2" /></>
+          )}
+          <input type="file" className="hidden" accept="image/*,.pdf" onChange={handleUpload} disabled={uploading} />
+        </label>
       </div>
 
       <div className="w-full h-[1px] bg-zinc-200 my-1"></div>
