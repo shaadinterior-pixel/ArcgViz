@@ -9,7 +9,7 @@ import {
   Edit3, Check, X, Camera, ArrowRight, Infinity, Package, Bookmark
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { getCurrentUser, getUserProfile, signOut, type PlanTier, PLAN_LIMITS, getWishlist } from '@/lib/auth';
+import { getCurrentUser, getUserProfile, signOut, type PlanTier, PLAN_LIMITS, getWishlist, setupRecaptcha, sendPhoneOtp, confirmPhoneOtp, type ConfirmationResult } from '@/lib/auth';
 import { getMonthlyDownloadCount, getUserPurchasedProductIds } from '@/lib/downloads';
 import { supabase } from '@/lib/supabase';
 import { updateProfile } from 'firebase/auth';
@@ -35,6 +35,12 @@ export default function ProfilePage() {
   const [newName, setNewName] = useState('');
   const [savingName, setSavingName] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
+
+  const [phoneInput, setPhoneInput] = useState('');
+  const [otpInput, setOtpInput] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [phoneLoading, setPhoneLoading] = useState(false);
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
   useEffect(() => {
     getCurrentUser().then(async (u) => {
@@ -87,6 +93,43 @@ export default function ProfilePage() {
       console.error(e);
     } finally {
       setSavingName(false);
+    }
+  };
+
+  const handleSendOtp = async () => {
+    if (!/^\d{10}$/.test(phoneInput)) {
+      alert("Please enter a valid 10-digit phone number");
+      return;
+    }
+    setPhoneLoading(true);
+    try {
+      const res = await sendPhoneOtp(`+91${phoneInput}`);
+      setConfirmationResult(res);
+      setOtpSent(true);
+    } catch (e: any) {
+      alert(e.message || "Failed to send OTP");
+    } finally {
+      setPhoneLoading(false);
+    }
+  };
+
+  const handleConfirmOtp = async () => {
+    if (!confirmationResult || !otpInput) return;
+    setPhoneLoading(true);
+    try {
+      await confirmPhoneOtp(confirmationResult, otpInput);
+      await updateDoc(doc(db, 'users', firebaseUser.uid), {
+        phoneNumber: `+91${phoneInput}`,
+        phoneVerified: true,
+        freeProDownloadsRemaining: 2
+      });
+      setProfile((p: any) => ({ ...p, phoneNumber: `+91${phoneInput}`, freeProDownloadsRemaining: 2 }));
+      setOtpSent(false);
+      alert("Phone verified successfully! You received 2 Free Pro Downloads.");
+    } catch (e: any) {
+      alert(e.message || "Invalid OTP");
+    } finally {
+      setPhoneLoading(false);
     }
   };
 
@@ -314,12 +357,78 @@ export default function ProfilePage() {
                     <div className="text-sm font-bold text-[#111111] break-all">{email}</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 py-2.5">
+                <div className="flex items-center gap-3 py-2.5 border-b border-[#F0F7F3]">
                   <Shield className="w-4 h-4 text-zinc-400 shrink-0" />
                   <div>
                     <div className="text-xs text-zinc-400 font-medium">Auth Provider</div>
                     <div className="text-sm font-bold text-[#111111]">Firebase Authentication</div>
                   </div>
+                </div>
+                
+                <div className="pt-2">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-xs font-bold uppercase tracking-widest text-zinc-500">Phone Verification</div>
+                  </div>
+                  {profile?.phoneNumber ? (
+                    <div className="flex items-center justify-between bg-green-50/50 border border-green-100 p-3 rounded-xl">
+                      <div>
+                        <div className="text-[13px] font-bold text-green-700 flex items-center gap-1.5">
+                          <Check className="w-4 h-4" /> {profile.phoneNumber}
+                        </div>
+                        {profile.freeProDownloadsRemaining > 0 && (
+                          <div className="text-[11px] font-medium text-green-600 mt-0.5">
+                            You have {profile.freeProDownloadsRemaining} Free Pro Download(s) remaining!
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-zinc-50 border border-[#E2EDE8] p-3.5 rounded-xl">
+                      <p className="text-[11px] text-zinc-500 font-medium mb-3">Verify your phone number (India) to instantly unlock 2 free Pro downloads.</p>
+                      
+                      {!otpSent ? (
+                        <div className="flex gap-2">
+                          <div className="relative flex-1">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] font-medium text-zinc-500">+91</span>
+                            <input 
+                              type="tel" 
+                              maxLength={10}
+                              placeholder="10-digit number"
+                              value={phoneInput}
+                              onChange={e => setPhoneInput(e.target.value.replace(/\D/g, ''))}
+                              className="w-full pl-[42px] pr-3 h-10 bg-white border border-[#E2EDE8] rounded-lg text-[13px] font-bold focus:outline-none focus:border-[#24B86C]"
+                            />
+                          </div>
+                          <Button 
+                            onClick={handleSendOtp} 
+                            disabled={phoneInput.length !== 10 || phoneLoading}
+                            className="h-10 px-4 rounded-lg bg-[#111111] hover:bg-[#24B86C] text-white text-[13px] font-bold shrink-0"
+                          >
+                            {phoneLoading ? 'Sending...' : 'Verify'}
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          <input 
+                            type="text" 
+                            maxLength={6}
+                            placeholder="Enter 6-digit OTP"
+                            value={otpInput}
+                            onChange={e => setOtpInput(e.target.value.replace(/\D/g, ''))}
+                            className="w-full px-3 h-10 bg-white border border-[#E2EDE8] rounded-lg text-[13px] font-bold text-center tracking-widest focus:outline-none focus:border-[#24B86C]"
+                          />
+                          <Button 
+                            onClick={handleConfirmOtp} 
+                            disabled={otpInput.length !== 6 || phoneLoading}
+                            className="h-10 px-4 rounded-lg bg-[#24B86C] hover:bg-[#1E995A] text-white text-[13px] font-bold shrink-0"
+                          >
+                            {phoneLoading ? 'Checking...' : 'Confirm'}
+                          </Button>
+                        </div>
+                      )}
+                      <div id="recaptcha-container" className="mt-2"></div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
