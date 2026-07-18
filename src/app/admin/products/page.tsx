@@ -458,7 +458,10 @@ export default function AdminProductsPage() {
                         }}
                       >
                         <option value="">None</option>
-                        {(allCats.find(c => c.title === editing.category)?.subcategories || []).map(sub=><option key={sub} value={sub}>{sub}</option>)}
+                        {Array.from(new Set([
+                          ...(allCats.find(c => c.title === editing.category)?.subcategories || []),
+                          ...(editing.category === 'PRINTING WORK' ? ['Poster', 'Card', 'Business Card'] : [])
+                        ])).map(sub=><option key={sub} value={sub}>{sub}</option>)}
                         <option value="ADD_NEW" className="font-bold text-primary">+ Add New Subcategory...</option>
                       </select>
                     )}
