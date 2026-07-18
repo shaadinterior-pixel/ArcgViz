@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Package, Users, ShoppingCart,
   Settings, LogOut, Menu, X, Box, Layers, ChevronRight,
-  ExternalLink, Image as ImageIcon, Briefcase,
+  ExternalLink, Image as ImageIcon, Briefcase, Printer
 } from 'lucide-react';
 import { ToastProvider } from '@/components/ui/Toast';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -19,6 +19,7 @@ const ADMIN_NAV = [
     { name: 'Products',           href: '/admin/products',            icon: Package },
     { name: 'Product Categories', href: '/admin/showcase-categories', icon: Layers },
     { name: 'Orders',             href: '/admin/orders',              icon: ShoppingCart },
+    { name: 'Custom Orders',      href: '/admin/custom-orders',       icon: Printer },
     { name: 'Customers',          href: '/admin/customers',           icon: Users },
   ]},
   { group: 'Homepage', items: [
