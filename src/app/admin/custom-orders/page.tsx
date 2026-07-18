@@ -13,7 +13,9 @@ type CustomOrder = {
   productId: string;
   quantity: string;
   corners: string;
-  deliverySpeed: string;
+  customerName?: string;
+  address?: string;
+  deliverySpeed?: string;
   designUrl: string;
   type: string;
   createdAt: any;
@@ -84,9 +86,10 @@ export default function CustomOrdersPage() {
                     </td>
                     <td className="px-5 py-4">
                       <div className="text-xs text-foreground/60 space-y-0.5">
+                        <p><span className="font-bold text-foreground">Name:</span> {o.customerName || 'N/A'}</p>
+                        <p><span className="font-bold text-foreground">Address:</span> {o.address ? <span className="line-clamp-1" title={o.address}>{o.address}</span> : 'N/A'}</p>
                         <p><span className="font-bold text-foreground">Qty:</span> {o.quantity}</p>
                         <p><span className="font-bold text-foreground">Corners:</span> {o.corners}</p>
-                        <p><span className="font-bold text-foreground">Delivery:</span> {o.deliverySpeed}</p>
                       </div>
                     </td>
                     <td className="px-5 py-4">
