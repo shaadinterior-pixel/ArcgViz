@@ -58,7 +58,14 @@ export async function canUserDownload(
 
   // PRO product: user needs Plus or Pro plan
   if (productPlan === 'Pro') {
-    if (userPlan === 'Free') return { allowed: false, reason: 'Plus + Pro plan required' };
+    if (userPlan === 'Free') {
+      const freeProRem = userData.freeProDownloadsRemaining || 0;
+      if (freeProRem > 0) {
+        // They have free pro downloads from phone verification
+        return { allowed: true, reason: 'FREE_PRO_BYPASS' };
+      }
+      return { allowed: false, reason: 'Plus + Pro plan required' };
+    }
   }
 
   // FREE product: available to everyone with a download quota
@@ -77,17 +84,24 @@ export async function canUserDownload(
 }
 
 // ── Record a download (increment counter + log) ───────────────────────────────
-export async function recordDownload(userId: string, productId: string): Promise<void> {
+export async function recordDownload(userId: string, productId: string, bypassReason?: string): Promise<void> {
   const key = monthKey();
   const userRef = doc(db, 'users', userId);
 
-  // Increment the monthly counter
-  await updateDoc(userRef, {
-    [`monthlyDownloads.${key}`]: increment(1),
-  }).catch(async () => {
-    // If doc doesn't exist yet, create it
-    await setDoc(userRef, { monthlyDownloads: { [key]: 1 } }, { merge: true });
-  });
+  if (bypassReason === 'FREE_PRO_BYPASS') {
+    // If they used a free pro download, decrement that counter INSTEAD of monthly quota
+    await updateDoc(userRef, {
+      freeProDownloadsRemaining: increment(-1)
+    }).catch(() => {});
+  } else {
+    // Increment the standard monthly counter
+    await updateDoc(userRef, {
+      [`monthlyDownloads.${key}`]: increment(1),
+    }).catch(async () => {
+      // If doc doesn't exist yet, create it
+      await setDoc(userRef, { monthlyDownloads: { [key]: 1 } }, { merge: true });
+    });
+  }
 
   // Log the download event
   await addDoc(collection(db, 'users', userId, 'downloadLogs'), {
