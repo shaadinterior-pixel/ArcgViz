@@ -408,8 +408,10 @@ export default function AdminProductsPage() {
                   {/* Price — only visible for Paid tier */}
                   {editing.plan_tier === 'Paid' && (
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold uppercase tracking-widest text-gray-600">Price *</label>
-                      <Input placeholder="₹1,999" className="bg-gray-50 border-gray-200 focus-visible:ring-primary" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
+                      <label className="text-xs font-bold uppercase tracking-widest text-gray-600">
+                        {editing.category?.toLowerCase().includes('printing') ? 'Price (for 100 pieces) *' : 'Price *'}
+                      </label>
+                      <Input placeholder={editing.category?.toLowerCase().includes('printing') ? '₹200' : '₹1,999'} className="bg-gray-50 border-gray-200 focus-visible:ring-primary" value={editing.price} onChange={e=>setField('price',e.target.value)}/>
                     </div>
                   )}
                   <div className="space-y-1.5">
