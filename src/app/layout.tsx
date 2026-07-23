@@ -140,7 +140,7 @@ export default function RootLayout({
           fetchPriority="high"
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-primary">
+      <body className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-primary max-w-[100vw] overflow-x-hidden">
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe 
