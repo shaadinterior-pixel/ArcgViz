@@ -20,13 +20,13 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   }
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen w-full max-w-[100vw] overflow-x-hidden relative">
       <Navbar />
       <div className="h-24 shrink-0" /> {/* Global spacer to offset fixed Navbar */}
-      <main className="flex-1">
+      <main className="flex-1 w-full flex flex-col">
         {children}
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
