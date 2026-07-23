@@ -197,14 +197,16 @@ export function Navbar() {
     >
       <div className="h-16 flex items-center justify-between bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 border border-[#E2EDE8] rounded-full px-4 sm:px-6 shadow-[0_4px_24px_rgba(36,184,108,0.08)]">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2 sm:space-x-3 shrink-0">
-          <Image src="/DESIGN_WALLA_LOGO_-removebg-preview.png" alt="Design Walla Logo" width={40} height={40} className="object-contain" />
-          <div className="flex flex-col">
-            <span className="font-bold text-lg sm:text-xl tracking-tight leading-none flex gap-1">
+        <Link href="/" className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+          <div className="shrink-0 flex items-center justify-center">
+            <Image src="/DESIGN_WALLA_LOGO_-removebg-preview.png" alt="Design Walla Logo" width={40} height={40} className="object-contain w-8 h-8 sm:w-10 sm:h-10" />
+          </div>
+          <div className="flex flex-col min-w-0">
+            <span className="font-bold text-[15px] sm:text-xl tracking-tight leading-none flex gap-1">
               <span className="text-black font-black">DESIGN</span>
               <span className="bg-gradient-to-r from-[#24B86C] to-[#11998E] bg-clip-text text-transparent font-black">WALLA</span>
             </span>
-            <span className="block text-[7px] sm:text-[10px] text-muted-foreground font-medium -mt-0.5 whitespace-nowrap">Smart Logon Ka Smart Solution</span>
+            <span className="block text-[7px] sm:text-[10px] text-muted-foreground font-medium -mt-0.5 whitespace-nowrap truncate">Smart Logon Ka Smart Solution</span>
           </div>
         </Link>
 
@@ -565,7 +567,6 @@ export function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 bg-[#0D1A12]/40 backdrop-blur-sm z-[100] md:hidden"
-              style={{ top: '-1rem', left: '-1rem', right: '-1rem', height: '110vh' }}
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -574,8 +575,7 @@ export function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 w-full max-w-[300px] h-screen bg-white z-[110] shadow-2xl overflow-y-auto flex flex-col md:hidden"
-              style={{ top: '-1rem', right: '-1rem', height: '110vh' }}
+              className="fixed inset-y-0 right-0 w-full max-w-[300px] h-[100dvh] bg-white z-[110] shadow-2xl flex flex-col md:hidden"
             >
               <div className="p-6 pt-10 flex items-center justify-between border-b border-[#E2EDE8] bg-white">
                 {user ? (
