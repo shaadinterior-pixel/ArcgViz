@@ -63,7 +63,6 @@
   .gpu-layer {
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
-    will-change: transform, opacity;
     perspective: 1000px;
     -webkit-font-smoothing: subpixel-antialiased;
   }
@@ -238,13 +237,6 @@ html.lenis, html.lenis body {
   animation: shine 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ─── Performance: content-visibility ─── */
-section:not(:first-child),
-footer {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 600px;
-}
-
 /* ─── Performance: passive touch + instant taps ─── */
 * {
   -webkit-tap-highlight-color: transparent;
@@ -254,7 +246,6 @@ footer {
 /* ─── Performance: image rendering ─── */
 img {
   image-rendering: auto;
-  content-visibility: auto;
 }
 
 /* ─── Performance: backdrop-filter containment ─── */
