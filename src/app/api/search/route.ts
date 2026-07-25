@@ -12,14 +12,24 @@ export async function GET(request: Request) {
 
   try {
     const term = `%${q.trim()}%`;
+    const exactUpper = q.trim().toUpperCase();
+    const isResourceSearch = /^dw-\d+$/i.test(q.trim());
     
-    const [productsRes, servicesRes] = await Promise.all([
+    const [productsRes, resourceRes, servicesRes] = await Promise.all([
       supabase
         .from('products')
         .select('id, name, category, price, plan, image, slug, thumbnail_url')
         .or(`name.ilike.${term},category.ilike.${term},description.ilike.${term}`)
         .eq('status', 'Active')
         .limit(8),
+      isResourceSearch 
+        ? supabase
+            .from('products')
+            .select('id, name, category, price, plan, image, slug, thumbnail_url')
+            .contains('specifications', [{ value: exactUpper }])
+            .eq('status', 'Active')
+            .limit(4)
+        : Promise.resolve({ data: [] }),
       supabase
         .from('services')
         .select('id, title, category, image')
@@ -27,7 +37,16 @@ export async function GET(request: Request) {
         .limit(4)
     ]);
 
-    const products = productsRes.data || [];
+    const baseProducts = productsRes.data || [];
+    const resourceProducts = resourceRes.data || [];
+    
+    // Merge and deduplicate products
+    const productMap = new Map();
+    [...resourceProducts, ...baseProducts].forEach(p => {
+      if (!productMap.has(p.id)) productMap.set(p.id, p);
+    });
+    const products = Array.from(productMap.values()).slice(0, 8);
+
     const services = servicesRes.data || [];
     
     const finalResults = [];
