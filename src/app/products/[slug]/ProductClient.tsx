@@ -627,9 +627,11 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                 <h3 className="font-bold mb-4 text-[#111111] text-lg">Tags</h3>
                 <div className="flex flex-wrap gap-2">
                   {product.tags.map(tag => (
-                    <span key={tag} className="bg-white border border-[#E2EDE8] text-zinc-600 px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm cursor-pointer hover:border-[#24B86C] hover:text-[#24B86C] transition-colors">
-                      {tag}
-                    </span>
+                    <Link key={tag} href={`/products?search=${encodeURIComponent(tag)}`}>
+                      <span className="bg-white border border-[#E2EDE8] text-zinc-600 px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm cursor-pointer hover:border-[#24B86C] hover:text-[#24B86C] transition-colors inline-block">
+                        {tag}
+                      </span>
+                    </Link>
                   ))}
                 </div>
               </div>
