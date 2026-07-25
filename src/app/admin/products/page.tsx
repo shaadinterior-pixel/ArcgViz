@@ -93,7 +93,15 @@ export default function AdminProductsPage() {
   });
 
   const resetUploadState = () => { setAttachmentStatus('idle'); setZipUploading(false); setZipProgress(0); setZipError(''); };
-  const openNew = () => { setEditing({id:`tmp-${Date.now()}`,...makeEmpty(dbCategories[0])}); resetUploadState(); setIsAddingSubcat(false); setIsOpen(true); };
+  const openNew = () => { 
+    const nextNumber = products.length + 1;
+    const emptyProduct = makeEmpty(dbCategories[0]);
+    emptyProduct.specifications = [{ label: 'Resources Id', value: `DW-${nextNumber}` }];
+    setEditing({id:`tmp-${Date.now()}`,...emptyProduct}); 
+    resetUploadState(); 
+    setIsAddingSubcat(false); 
+    setIsOpen(true); 
+  };
   const openEdit = (p: Product) => { setEditing({...p}); setAttachmentStatus(p.google_drive_file_id?'valid':'idle'); setZipUploading(false); setZipProgress(0); setZipError(''); setIsAddingSubcat(false); setIsOpen(true); };
 
   const handleDelete = async (id:string) => {
