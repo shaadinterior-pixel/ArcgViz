@@ -27,7 +27,9 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   const isPrintingService = React.useMemo(() => {
     const cat = (product.category || '').toLowerCase();
     const subcat = (product.subcategory || '').toLowerCase();
-    return cat.includes('printing') || subcat.includes('poster') || subcat.includes('card');
+    
+    // Only show printing section if category or subcategory explicitly contains "printing"
+    return cat.includes('printing') || subcat.includes('printing');
   }, [product.category, product.subcategory]);
 
   // ── All product images (thumbnail + gallery deduped) ─────────────────────
