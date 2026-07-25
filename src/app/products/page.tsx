@@ -55,7 +55,8 @@ function ProductsContent() {
                               product.author?.toLowerCase().includes(q) ||
                               product.description?.toLowerCase().includes(q) ||
                               product.category?.toLowerCase().includes(q) ||
-                              product.subcategory?.toLowerCase().includes(q);
+                              product.subcategory?.toLowerCase().includes(q) ||
+                              product.tags?.some(t => t.toLowerCase().includes(q));
         
         // If activeCategories is empty, it means "All"
         const matchesCategory = activeCategories.length === 0 || activeCategories.includes(product.category);
