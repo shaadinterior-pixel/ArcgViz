@@ -31,6 +31,8 @@ const FOOTER_LINKS = {
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms of Service', href: '/terms' },
     { label: 'Refund Policy', href: '/refund' },
+    { label: 'Shipping Policy', href: '/shipping' },
+    { label: 'Cookie Policy', href: '/cookies' },
   ],
 };
 
@@ -136,6 +138,7 @@ export function Footer() {
             <Link href="/privacy" className="hover:text-[#24B86C] transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-[#24B86C] transition-colors">Terms of Service</Link>
             <Link href="/refund" className="hover:text-[#24B86C] transition-colors">Refund Policy</Link>
+            <Link href="/shipping" className="hover:text-[#24B86C] transition-colors">Shipping Policy</Link>
           </div>
         </div>
       </div>

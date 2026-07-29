@@ -334,7 +334,7 @@ export async function fetchSettings(): Promise<StoreSettings> {
   if (error && error.code !== 'PGRST116') throw error;
   return data || {
     storeName: 'Design Walla',
-    supportEmail: 'support@designwalla.com',
+    supportEmail: 'info.designwalla.ss@gmail.com',
     currency: 'INR',
     razorpayEnabled: true,
     stripeEnabled: false,

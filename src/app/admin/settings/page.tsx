@@ -11,7 +11,7 @@ import { fetchSettings, saveSettings, onStoreUpdate, type StoreSettings } from '
 
 const DEFAULT: StoreSettings = {
   storeName: 'Design Walla',
-  supportEmail: 'support@designwalla.com',
+  supportEmail: 'info.designwalla.ss@gmail.com',
   currency: 'INR',
   razorpayEnabled: true,
   stripeEnabled: false,

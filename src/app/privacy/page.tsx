@@ -77,7 +77,7 @@ export default function PrivacyPage() {
               <p className="mb-2">If you have any questions or suggestions about our Privacy Policy, please contact us:</p>
               <ul className="space-y-1">
                 <li><strong>Phone:</strong> +91 8969688709</li>
-                <li><strong>Email:</strong> designwalla.co@gmail.com</li>
+                <li><strong>Email:</strong> info.designwalla.ss@gmail.com</li>
                 <li><strong>Address:</strong> Mahendru Post Office, Patna — 6, India</li>
               </ul>
             </section>

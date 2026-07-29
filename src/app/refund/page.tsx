@@ -57,7 +57,7 @@ export default function RefundPage() {
               <p className="mb-2">To request a refund under the exceptions listed above, please contact our support team with your order number and detailed reasons for the request. We will review your request within 5-7 business days.</p>
               <ul className="space-y-1">
                 <li><strong>Phone:</strong> +91 8969688709</li>
-                <li><strong>Email:</strong> designwalla.co@gmail.com</li>
+                <li><strong>Email:</strong> info.designwalla.ss@gmail.com</li>
               </ul>
             </section>
           </div>

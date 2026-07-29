@@ -24,7 +24,7 @@ export function ContactSection() {
   };
 
   const getMailtoLink = () => {
-    const email = 'hello@designwalla.com';
+    const email = 'info.designwalla.ss@gmail.com';
     const subject = `New Inquiry: ${formData.service} from ${formData.name}`;
     const body = `Name: ${formData.name}\nPhone: ${formData.phone}\nService Required: ${formData.service}\n\nMessage:\n${formData.message}`;
     return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -73,7 +73,7 @@ export function ContactSection() {
                 <div className="w-10 h-10 rounded-full bg-[#24B86C]/10 flex items-center justify-center shrink-0">
                   <Mail className="w-4 h-4 text-[#24B86C]" />
                 </div>
-                <span className="font-bold text-[15px] text-zinc-800">designwalla.co@gmail.com</span>
+                <span className="font-bold text-[15px] text-zinc-800">info.designwalla.ss@gmail.com</span>
               </div>
 
               <div className="flex items-center gap-4 p-4 rounded-3xl bg-white border border-zinc-100 shadow-sm transition-all hover:shadow-md">
