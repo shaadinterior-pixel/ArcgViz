@@ -5,6 +5,28 @@
 
 const CHECKOUT_SCRIPT_SRC = 'https://checkout.razorpay.com/v1/checkout.js';
 
+/**
+ * Desktop browsers cannot use the UPI "intent" flow (there is no app to hand off
+ * to), so Razorpay falls back to showing only a QR code — which the user cannot
+ * scan from the same screen they are paying on. Asking for the `collect` flow as
+ * well surfaces the "enter your UPI ID" input next to the QR.
+ *
+ * `show_default_blocks` keeps cards, netbanking, wallets and the rest visible.
+ * Pass your own `config` to override this entirely.
+ */
+const DEFAULT_CHECKOUT_CONFIG = {
+  display: {
+    blocks: {
+      upi: {
+        name: 'Pay using UPI',
+        instruments: [{ method: 'upi', flows: ['collect', 'qr'] }],
+      },
+    },
+    sequence: ['block.upi'],
+    preferences: { show_default_blocks: true },
+  },
+};
+
 type RazorpayHandlerResponse = {
   razorpay_payment_id: string;
   razorpay_order_id: string;
@@ -55,8 +77,10 @@ export type CheckoutParams = {
   /** Shown as the merchant name in the modal. */
   name?: string;
   description?: string;
-  prefill?: { name?: string; email?: string; contact?: string };
+  prefill?: { name?: string; email?: string; contact?: string; method?: 'upi' | 'card' | 'netbanking' | 'wallet' | 'emi' };
   notes?: Record<string, string>;
+  /** Razorpay `config` object. Overrides the default UPI-collect display config. */
+  config?: Record<string, unknown>;
   /** Unlocks this product for the buyer once the signature is verified. */
   productId?: string;
   /** Human-readable label recorded against the order. */
@@ -152,6 +176,7 @@ export async function startRazorpayCheckout(params: CheckoutParams): Promise<Che
       description: params.description,
       prefill: params.prefill,
       notes: params.notes,
+      config: params.config ?? DEFAULT_CHECKOUT_CONFIG,
       theme: { color: '#24B86C' },
       handler: async (response: RazorpayHandlerResponse) => {
         try {
