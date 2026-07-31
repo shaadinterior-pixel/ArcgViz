@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Trash2, ArrowRight, ShieldCheck, CreditCard, ChevronRight } from 'lucide-react';
+import { Trash2, ArrowRight, ShieldCheck, CreditCard, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { startRazorpayCheckout } from '@/lib/razorpay-checkout';
 
 // Mock data for UI presentation
 const MOCK_CART = [
@@ -28,6 +29,9 @@ const MOCK_CART = [
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState(MOCK_CART);
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
+  const [paySuccess, setPaySuccess] = useState<string | null>(null);
 
   const removeItem = (id: string) => {
     setCartItems(cartItems.filter(item => item.id !== id));
@@ -36,6 +40,44 @@ export default function CartPage() {
   const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0);
   const tax = Math.round(subtotal * 0.18); // 18% GST mock
   const total = subtotal + tax;
+
+  const handleCheckout = async () => {
+    setPaying(true);
+    setPayError(null);
+    setPaySuccess(null);
+
+    try {
+      // Link the purchase to the signed-in user when there is one; guests can still pay.
+      const { getCurrentUser } = await import('@/lib/auth');
+      const user = await getCurrentUser();
+      const idToken = user ? await user.getIdToken() : undefined;
+
+      const result = await startRazorpayCheckout({
+        amount: total * 100, // Razorpay works in paise
+        currency: 'INR',
+        receipt: `cart_${Date.now()}`,
+        description: `${cartItems.length} item${cartItems.length === 1 ? '' : 's'} from Design Walla`,
+        product: cartItems.map(item => item.name).join(', '),
+        prefill: {
+          name: user?.displayName || undefined,
+          email: user?.email || undefined,
+        },
+        idToken,
+      });
+
+      if (result.status === 'success') {
+        setPaySuccess(result.warning || `Payment successful. Order ${result.orderId} is confirmed.`);
+        setCartItems([]);
+      } else if (result.status === 'failed') {
+        setPayError(result.message);
+      }
+      // 'dismissed' → the user closed the modal, nothing to report.
+    } catch (error) {
+      setPayError(error instanceof Error ? error.message : 'Checkout could not be started.');
+    } finally {
+      setPaying(false);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-12 min-h-[80vh]">
@@ -46,6 +88,17 @@ export default function CartPage() {
       </div>
 
       <h1 className="text-4xl font-bold tracking-tight mb-8">Your Cart</h1>
+
+      {paySuccess && (
+        <div className="mb-8 rounded-2xl border border-green-500/30 bg-green-500/10 px-6 py-4 text-sm text-green-600 dark:text-green-400">
+          {paySuccess}
+        </div>
+      )}
+      {payError && (
+        <div className="mb-8 rounded-2xl border border-red-500/30 bg-red-500/10 px-6 py-4 text-sm text-red-500">
+          {payError}
+        </div>
+      )}
 
       {cartItems.length === 0 ? (
         <motion.div 
@@ -143,9 +196,22 @@ export default function CartPage() {
                 <span className="text-primary">₹{total.toLocaleString('en-IN')}</span>
               </div>
               
-              <Button className="w-full h-14 text-lg rounded-2xl mb-6 bg-primary hover:bg-primary/90 text-primary-foreground group">
-                Checkout Now
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              <Button
+                onClick={handleCheckout}
+                disabled={paying || total <= 0}
+                className="w-full h-14 text-lg rounded-2xl mb-6 bg-primary hover:bg-primary/90 text-primary-foreground group"
+              >
+                {paying ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Opening checkout…
+                  </>
+                ) : (
+                  <>
+                    Checkout Now
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
               </Button>
 
               <div className="space-y-4">
