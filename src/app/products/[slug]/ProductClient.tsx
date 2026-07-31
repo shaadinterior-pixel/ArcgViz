@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Script from 'next/script';
+import { useRouter } from 'next/navigation';
 import {
   Star, Check, Box, FileText, Download, ShieldCheck,
   Heart, Share2, Image as ImageIcon, X, ChevronLeft,
@@ -14,6 +15,7 @@ import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
 import { getCurrentUser, hasPurchased, getWishlist, toggleWishlist } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
+import { useCart } from '@/lib/cart';
 import PrintingOrderForm from './PrintingOrderForm';
 
 type Props = { 
@@ -22,6 +24,7 @@ type Props = {
 };
 
 export default function ProductClient({ product, similarProducts = [] }: Props) {
+  const router = useRouter();
   const [visibleSimilar, setVisibleSimilar] = useState(8);
 
   const isPrintingService = React.useMemo(() => {
@@ -76,6 +79,24 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
       setAuthLoading(false);
     })();
   }, [product.id]);
+
+  // ── Cart ──────────────────────────────────────────────────────────────────
+  const { items: cartItems, add: addItemToCart } = useCart();
+  const inCart = cartItems.some(item => item.productId === product.id);
+
+  const handleAddToCart = () => {
+    if (inCart) { router.push('/cart'); return; }
+    addItemToCart({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.thumbnail_url || product.image,
+      slug: product.slug,
+      category: product.category,
+      author: product.author,
+    });
+    router.push('/cart');
+  };
 
   const productPlan = product.plan_tier || 'Free';
   const productPlanDisplay = productPlan === 'Pro' ? 'Plus + Pro' : productPlan;
@@ -385,10 +406,21 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                         File unavailable
                       </Button>
                     )
-                  ) : (
-                    <Button disabled className="w-full h-12 bg-[#8bd1b5] text-[#dcaebb] font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 opacity-100">
-                      Locked (Purchase Required)
+                  ) : productPlan === 'Paid' ? (
+                    <Button
+                      onClick={handleAddToCart}
+                      className="w-full h-12 bg-[#24B86C] hover:bg-[#1DA05D] text-white font-bold rounded-xl text-sm shadow-[0_8px_20px_rgba(36,184,108,0.25)] hover:-translate-y-0.5 transition-all"
+                    >
+                      {inCart
+                        ? <><Check className="w-4 h-4 mr-2" /> In cart — view cart</>
+                        : <><ShoppingCart className="w-4 h-4 mr-2" /> Add to cart · {product.price || ''}</>}
                     </Button>
+                  ) : (
+                    <Link href="/pricing">
+                      <Button className="w-full h-12 bg-[#111111] hover:bg-[#24B86C] text-white font-bold rounded-xl text-sm transition-all">
+                        <Wallet className="w-4 h-4 mr-2" /> Recharge to download
+                      </Button>
+                    </Link>
                   )}
                   <a 
                     href={`https://wa.me/918969688709?text=${encodeURIComponent(`Hi Design Walla! 👋\n\nI would like to hire your team to customize a product.\n\n*Product Name:* ${product.name}\n*Product Link:* https://designwalla.com/products/${product.slug || product.id}\n\nPlease let me know how we can proceed!`)}`}
@@ -479,10 +511,21 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   <Button onClick={handleDownload} disabled={downloading} className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white font-bold rounded-xl text-sm shadow-[0_4px_14px_rgba(36,184,108,0.3)] transition-all">
                     {downloading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/> Downloading...</> : <><Download className="w-4 h-4 mr-2"/> Download Now</>}
                   </Button>
-                ) : (
-                  <Button disabled className="w-full h-12 bg-[#8bd1b5] text-[#dcaebb] font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 opacity-100">
-                    Locked (Purchase Required)
+                ) : productPlan === 'Paid' ? (
+                  <Button
+                    onClick={handleAddToCart}
+                    className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white font-bold rounded-xl text-sm shadow-[0_4px_14px_rgba(36,184,108,0.3)] transition-all"
+                  >
+                    {inCart
+                      ? <><Check className="w-4 h-4 mr-2" /> In cart — view cart</>
+                      : <><ShoppingCart className="w-4 h-4 mr-2" /> Add to cart · {product.price || ''}</>}
                   </Button>
+                ) : (
+                  <Link href="/pricing" className="w-full">
+                    <Button className="w-full h-12 bg-[#111111] hover:bg-[#24B86C] text-white font-bold rounded-xl text-sm transition-all">
+                      <Wallet className="w-4 h-4 mr-2" /> Recharge to download
+                    </Button>
+                  </Link>
                 )}
                 
                 <a 

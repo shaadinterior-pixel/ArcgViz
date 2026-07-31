@@ -8,10 +8,11 @@ import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
 import { fetchSettings, saveSettings, onStoreUpdate, type StoreSettings } from '@/lib/store';
+import { SUPPORT_EMAIL } from '@/lib/constants';
 
 const DEFAULT: StoreSettings = {
   storeName: 'Design Walla',
-  supportEmail: 'info.designwalla.ss@gmail.com',
+  supportEmail: SUPPORT_EMAIL,
   currency: 'INR',
   razorpayEnabled: true,
   stripeEnabled: false,

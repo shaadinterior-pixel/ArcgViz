@@ -12,6 +12,7 @@ import { ToastProvider } from '@/components/ui/Toast';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser, signInWithGoogle, signOut, type AuthUser } from '@/lib/auth';
+import { isAdminEmail } from '@/lib/constants';
 
 const ADMIN_NAV = [
   { group: 'Store',    items: [
@@ -67,7 +68,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  if (!user || user.email !== 'shaadinterior@gmail.com') {
+  if (!user || !isAdminEmail(user.email)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F4F6F8]">
         <div className="bg-white p-8 rounded-[24px] shadow-sm border border-[#E5E7EB] text-center max-w-sm w-full mx-4">

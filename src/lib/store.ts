@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { SUPPORT_EMAIL } from './constants';
 import { fetchAdminCustomers } from '@/app/actions/admin';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -334,7 +335,7 @@ export async function fetchSettings(): Promise<StoreSettings> {
   if (error && error.code !== 'PGRST116') throw error;
   return data || {
     storeName: 'Design Walla',
-    supportEmail: 'info.designwalla.ss@gmail.com',
+    supportEmail: SUPPORT_EMAIL,
     currency: 'INR',
     razorpayEnabled: true,
     stripeEnabled: false,

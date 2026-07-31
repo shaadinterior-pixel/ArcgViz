@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS public.customers (
 CREATE TABLE IF NOT EXISTS public.settings (
   id               INTEGER PRIMARY KEY DEFAULT 1,
   "storeName"      TEXT NOT NULL DEFAULT 'Design Walla',
-  "supportEmail"   TEXT NOT NULL DEFAULT 'support@designwalla.com',
+  "supportEmail"   TEXT NOT NULL DEFAULT 'info.designwalla.ss@gmail.com',
   currency         TEXT NOT NULL DEFAULT 'INR',
   "razorpayEnabled" BOOLEAN NOT NULL DEFAULT TRUE,
   "stripeEnabled"  BOOLEAN NOT NULL DEFAULT FALSE,
@@ -90,7 +90,7 @@ ALTER TABLE public.orders     DISABLE ROW LEVEL SECURITY;
 
 -- Default settings row
 INSERT INTO public.settings (id, "storeName", "supportEmail", currency, "razorpayEnabled", "stripeEnabled", "maintenanceMode")
-VALUES (1, 'Design Walla', 'support@designwalla.com', 'INR', TRUE, FALSE, FALSE)
+VALUES (1, 'Design Walla', 'info.designwalla.ss@gmail.com', 'INR', TRUE, FALSE, FALSE)
 ON CONFLICT (id) DO NOTHING;
 
 -- Sample products

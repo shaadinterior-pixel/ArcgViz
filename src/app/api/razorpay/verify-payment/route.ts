@@ -5,6 +5,7 @@ import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getAdminClient } from '@/lib/supabase-admin';
 import { getRazorpayClient, verifyPaymentSignature } from '@/lib/razorpay';
 import { SUPPORT_EMAIL } from '@/lib/constants';
+import { getRechargePlan, type RechargePlan } from '@/lib/plans';
 
 export const runtime = 'nodejs';
 
@@ -62,18 +63,27 @@ export async function POST(request: Request) {
   // ── 2. Fulfilment — best effort, never invalidates a verified payment ──────
   const warnings: string[] = [];
 
-  // Amount comes from Razorpay, never from the client.
+  // Amount and plan come from Razorpay's copy of the order, never from the client.
+  // The planId was written into `notes` server-side when the order was created,
+  // so a caller cannot claim a bigger pack than they paid for.
   let amountPaise = 0;
+  let plan: RechargePlan | null = null;
+  let purchasedProductIds: string[] = [];
+  let orderKind = 'cart';
   try {
     const order = await getRazorpayClient().orders.fetch(orderId);
     amountPaise = Number(order.amount) || 0;
+    plan = getRechargePlan(String(order.notes?.planId || ''));
+    orderKind = String(order.notes?.kind || 'cart');
+    purchasedProductIds = String(order.notes?.productIds || '')
+      .split(',')
+      .map(id => id.trim())
+      .filter(Boolean);
   } catch (error) {
-    warnings.push('Could not read the order amount from Razorpay.');
+    warnings.push('Could not read the order details from Razorpay.');
     console.error('[razorpay] order fetch failed', error);
   }
 
-  // Optional: unlock the product for the signed-in buyer (mirrors /api/download).
-  const productId = String(body.productId || '').trim();
   const idToken = request.headers.get('authorization')?.replace('Bearer ', '').trim();
 
   let userId: string | null = null;
@@ -91,22 +101,70 @@ export async function POST(request: Request) {
     }
   }
 
-  if (userId && productId) {
+  // Unlock every product in the order for the buyer. The id list comes from the
+  // Razorpay order notes, which were written server-side at create time — the
+  // request body cannot add products the buyer did not pay for.
+  if (userId && purchasedProductIds.length) {
     try {
-      await adminDb
-        .collection('users').doc(userId)
-        .collection('purchases').doc(productId)
-        .set({
-          productId,
-          razorpayOrderId: orderId,
-          razorpayPaymentId: paymentId,
-          amount: amountPaise,
-          purchasedAt: FieldValue.serverTimestamp(),
-        }, { merge: true });
+      const batch = adminDb.batch();
+      for (const purchasedId of purchasedProductIds) {
+        batch.set(
+          adminDb.collection('users').doc(userId).collection('purchases').doc(purchasedId),
+          {
+            productId: purchasedId,
+            razorpayOrderId: orderId,
+            razorpayPaymentId: paymentId,
+            purchasedAt: FieldValue.serverTimestamp(),
+            lifetime: true,
+          },
+          { merge: true },
+        );
+      }
+      await batch.commit();
     } catch (error) {
       warnings.push('Payment succeeded but unlocking the download failed. Please contact support.');
-      console.error('[razorpay] failed to grant purchase', error);
+      console.error('[razorpay] failed to grant purchases', error);
     }
+  } else if (purchasedProductIds.length && !userId) {
+    warnings.push('Payment succeeded but no signed-in account was found to unlock the downloads. Please contact support.');
+  }
+
+  // Recharge: add download credits to the buyer's balance. Keyed on the order id
+  // so replaying this request can never credit the same payment twice.
+  let creditedNow = 0;
+  if (userId && plan) {
+    try {
+      const userRef = adminDb.collection('users').doc(userId);
+      const rechargeRef = userRef.collection('recharges').doc(orderId);
+
+      await adminDb.runTransaction(async (tx) => {
+        const existing = await tx.get(rechargeRef);
+        if (existing.exists) return; // already credited — nothing to do
+
+        tx.set(rechargeRef, {
+          plan: plan.id,
+          credits: plan.credits,
+          amountInr: amountPaise / 100,
+          razorpayOrderId: orderId,
+          razorpayPaymentId: paymentId,
+          purchasedAt: FieldValue.serverTimestamp(),
+        });
+
+        tx.set(userRef, {
+          plan: plan.id,
+          downloadCredits: FieldValue.increment(plan.credits),
+          totalCreditsPurchased: FieldValue.increment(plan.credits),
+          lastRechargeAt: FieldValue.serverTimestamp(),
+        }, { merge: true });
+
+        creditedNow = plan.credits;
+      });
+    } catch (error) {
+      warnings.push('Payment succeeded but your download credits could not be added. Please contact support.');
+      console.error('[razorpay] failed to grant credits', error);
+    }
+  } else if (plan && !userId) {
+    warnings.push('Payment succeeded but no signed-in account was found to credit. Please contact support.');
   }
 
   // Record the sale so it shows up in the admin dashboard.
@@ -115,7 +173,9 @@ export async function POST(request: Request) {
       id: orderId,
       customer: customer || 'Guest',
       email: email || SUPPORT_EMAIL,
-      product: String(body.product || productId || 'Cart checkout'),
+      product: plan
+        ? `${plan.name} recharge — ${plan.credits} downloads`
+        : String(body.product || purchasedProductIds.join(', ') || `${orderKind} checkout`),
       amount: `₹${(amountPaise / 100).toLocaleString('en-IN')}`,
       status: 'Completed',
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
@@ -130,6 +190,10 @@ export async function POST(request: Request) {
     fulfilled: warnings.length === 0,
     order_id: orderId,
     payment_id: paymentId,
+    ...(plan ? { plan: plan.id, credits_added: creditedNow } : {}),
+    ...(purchasedProductIds.length ? { unlocked_product_ids: purchasedProductIds } : {}),
+    kind: orderKind,
+    amount_inr: amountPaise / 100,
     warning: warnings.length ? warnings.join(' ') : undefined,
   });
 }

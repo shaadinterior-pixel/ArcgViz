@@ -3,43 +3,17 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Trash2, ArrowRight, ShieldCheck, CreditCard, ChevronRight, Loader2 } from 'lucide-react';
+import { Trash2, ArrowRight, ShieldCheck, CreditCard, ChevronRight, Loader2, Minus, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { useCart, toOrderItems } from '@/lib/cart';
+import { formatInr } from '@/lib/pricing';
 import { startRazorpayCheckout } from '@/lib/razorpay-checkout';
 
-// Mock data for UI presentation
-const MOCK_CART = [
-  {
-    id: '1',
-    name: 'Modern Minimalist Living Room',
-    author: 'Design Walla Studio',
-    price: 3499,
-    image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=600&h=400',
-    category: 'Interior Scenes'
-  },
-  {
-    id: '3',
-    name: 'Premium Concrete PBR',
-    author: 'TextureMaster',
-    price: 1999,
-    image: 'https://images.unsplash.com/photo-1518002171953-a080ee817e1f?auto=format&fit=crop&q=80&w=600&h=400',
-    category: 'PBR Materials'
-  }
-];
-
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState(MOCK_CART);
+  const { items, ready, remove, setQuantity, clear, totals } = useCart();
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
   const [paySuccess, setPaySuccess] = useState<string | null>(null);
-
-  const removeItem = (id: string) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0);
-  const tax = Math.round(subtotal * 0.18); // 18% GST mock
-  const total = subtotal + tax;
 
   const handleCheckout = async () => {
     setPaying(true);
@@ -47,27 +21,26 @@ export default function CartPage() {
     setPaySuccess(null);
 
     try {
-      // Link the purchase to the signed-in user when there is one; guests can still pay.
+      // A purchase has to be attached to an account, otherwise there is nowhere
+      // to unlock the downloads.
       const { getCurrentUser } = await import('@/lib/auth');
       const user = await getCurrentUser();
-      const idToken = user ? await user.getIdToken() : undefined;
+      if (!user) {
+        setPayError('Please sign in before checking out, so we can attach these downloads to your account.');
+        return;
+      }
 
       const result = await startRazorpayCheckout({
-        amount: total * 100, // Razorpay works in paise
-        currency: 'INR',
-        receipt: `cart_${Date.now()}`,
-        description: `${cartItems.length} item${cartItems.length === 1 ? '' : 's'} from Design Walla`,
-        product: cartItems.map(item => item.name).join(', '),
-        prefill: {
-          name: user?.displayName || undefined,
-          email: user?.email || undefined,
-        },
-        idToken,
+        items: toOrderItems(items),
+        kind: 'cart',
+        description: `${items.length} item${items.length === 1 ? '' : 's'} from Design Walla`,
+        prefill: { name: user.displayName || undefined, email: user.email || undefined },
+        idToken: await user.getIdToken(),
       });
 
       if (result.status === 'success') {
-        setPaySuccess(result.warning || `Payment successful. Order ${result.orderId} is confirmed.`);
-        setCartItems([]);
+        setPaySuccess(result.warning || 'Payment successful! Your downloads are unlocked — find them in your profile.');
+        clear();
       } else if (result.status === 'failed') {
         setPayError(result.message);
       }
@@ -91,7 +64,8 @@ export default function CartPage() {
 
       {paySuccess && (
         <div className="mb-8 rounded-2xl border border-green-500/30 bg-green-500/10 px-6 py-4 text-sm text-green-600 dark:text-green-400">
-          {paySuccess}
+          {paySuccess}{' '}
+          <Link href="/profile" className="font-bold underline">View your purchases</Link>
         </div>
       )}
       {payError && (
@@ -100,8 +74,12 @@ export default function CartPage() {
         </div>
       )}
 
-      {cartItems.length === 0 ? (
-        <motion.div 
+      {!ready ? (
+        <div className="flex items-center justify-center py-24">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      ) : items.length === 0 ? (
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-border/50 rounded-3xl bg-secondary/10"
@@ -110,7 +88,9 @@ export default function CartPage() {
             <ShoppingCartIcon className="w-10 h-10 text-foreground/40" />
           </div>
           <h2 className="text-2xl font-bold mb-3">Your cart is empty</h2>
-          <p className="text-foreground/60 max-w-md mb-8">Looks like you haven't added any 3D assets to your cart yet. Explore our marketplace to find premium models and textures.</p>
+          <p className="text-foreground/60 max-w-md mb-8">
+            Looks like you haven&apos;t added any 3D assets to your cart yet. Explore our marketplace to find premium models and textures.
+          </p>
           <Link href="/products">
             <Button size="lg" className="rounded-full px-8">
               Explore Marketplace
@@ -122,40 +102,70 @@ export default function CartPage() {
           {/* Cart Items */}
           <div className="flex-1 space-y-6">
             <div className="hidden md:grid grid-cols-12 gap-4 pb-4 border-b border-border/50 text-sm font-medium text-foreground/60">
-              <div className="col-span-8">Product</div>
-              <div className="col-span-3 text-right">Price</div>
+              <div className="col-span-6">Product</div>
+              <div className="col-span-3 text-center">Quantity</div>
+              <div className="col-span-2 text-right">Price</div>
               <div className="col-span-1"></div>
             </div>
 
             <div className="space-y-6">
-              {cartItems.map((item, index) => (
-                <motion.div 
-                  key={item.id}
+              {items.map((item, index) => (
+                <motion.div
+                  key={item.productId}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.05 }}
                   className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center p-4 md:p-0 bg-secondary/20 md:bg-transparent rounded-2xl md:rounded-none border border-border/50 md:border-none pb-0 md:pb-6 md:border-b md:border-border/20"
                 >
-                  <div className="col-span-1 md:col-span-8 flex items-center gap-6">
-                    <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-xl overflow-hidden shrink-0 border border-border/50">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={item.image} alt={item.name} className="object-cover w-full h-full" />
+                  <div className="col-span-1 md:col-span-6 flex items-center gap-6">
+                    <div className="relative w-24 h-24 rounded-xl overflow-hidden shrink-0 border border-border/50 bg-secondary/30">
+                      {item.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={item.image} alt={item.name} className="object-cover w-full h-full" />
+                      ) : null}
                     </div>
-                    <div>
-                      <div className="text-xs font-medium text-primary mb-1 uppercase tracking-wider">{item.category}</div>
-                      <h3 className="text-lg md:text-xl font-semibold mb-1 line-clamp-2">{item.name}</h3>
-                      <p className="text-sm text-foreground/60">by {item.author}</p>
+                    <div className="min-w-0">
+                      {item.category && (
+                        <div className="text-xs font-medium text-primary mb-1 uppercase tracking-wider">{item.category}</div>
+                      )}
+                      <Link href={`/products/${item.slug || item.productId}`}>
+                        <h3 className="text-lg font-semibold mb-1 line-clamp-2 hover:text-primary transition-colors">{item.name}</h3>
+                      </Link>
+                      {item.author && <p className="text-sm text-foreground/60">by {item.author}</p>}
                     </div>
                   </div>
-                  
-                  <div className="col-span-1 md:col-span-3 flex justify-between md:justify-end items-center mt-4 md:mt-0 border-t border-border/50 md:border-none pt-4 md:pt-0">
+
+                  {/* Quantity */}
+                  <div className="col-span-1 md:col-span-3 flex items-center justify-between md:justify-center gap-3 mt-4 md:mt-0">
+                    <span className="md:hidden text-foreground/60 text-sm font-medium">Quantity:</span>
+                    <div className="flex items-center gap-1 border border-border/50 rounded-xl p-1">
+                      <button
+                        onClick={() => setQuantity(item.productId, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-secondary/50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        aria-label="Decrease quantity"
+                      >
+                        <Minus className="w-3.5 h-3.5" />
+                      </button>
+                      <span className="w-8 text-center font-bold text-sm">{item.quantity}</span>
+                      <button
+                        onClick={() => setQuantity(item.productId, item.quantity + 1)}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-secondary/50 transition-colors"
+                        aria-label="Increase quantity"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="col-span-1 md:col-span-2 flex justify-between md:justify-end items-center mt-4 md:mt-0 border-t border-border/50 md:border-none pt-4 md:pt-0">
                     <span className="md:hidden text-foreground/60 text-sm font-medium">Price:</span>
-                    <span className="text-xl font-bold">₹{item.price.toLocaleString('en-IN')}</span>
+                    <span className="text-xl font-bold">{item.price || '—'}</span>
                   </div>
-                  
+
                   <div className="col-span-1 flex justify-end absolute md:relative top-4 right-4 md:top-auto md:right-auto">
-                    <button 
-                      onClick={() => removeItem(item.id)}
+                    <button
+                      onClick={() => remove(item.productId)}
                       className="p-2 text-foreground/40 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
                       title="Remove item"
                     >
@@ -169,36 +179,35 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="w-full lg:w-[400px] shrink-0">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="bg-secondary/20 border border-border/50 rounded-3xl p-8 sticky top-24"
             >
               <h3 className="text-xl font-bold mb-6 border-b border-border/50 pb-4">Order Summary</h3>
-              
+
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-foreground/80">
-                  <span>Subtotal ({cartItems.length} items)</span>
-                  <span className="font-medium">₹{subtotal.toLocaleString('en-IN')}</span>
+                  <span>Subtotal ({items.length} item{items.length === 1 ? '' : 's'})</span>
+                  <span className="font-medium">{formatInr(totals.subtotalInr)}</span>
                 </div>
                 <div className="flex justify-between text-foreground/80">
-                  <span>Estimated Tax (18%)</span>
-                  <span className="font-medium">₹{tax.toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex justify-between text-foreground/80">
-                  <span>Discount</span>
-                  <span className="font-medium text-green-500">- ₹0</span>
+                  <span>GST (18%)</span>
+                  <span className="font-medium">{formatInr(totals.taxInr)}</span>
                 </div>
               </div>
-              
-              <div className="flex justify-between items-center text-2xl font-bold border-t border-border/50 pt-6 mb-8">
+
+              <div className="flex justify-between items-center text-2xl font-bold border-t border-border/50 pt-6 mb-2">
                 <span>Total</span>
-                <span className="text-primary">₹{total.toLocaleString('en-IN')}</span>
+                <span className="text-primary">{formatInr(totals.totalInr)}</span>
               </div>
-              
+              <p className="text-xs text-foreground/50 mb-6">
+                Final amount is confirmed by our server from live product prices before payment.
+              </p>
+
               <Button
                 onClick={handleCheckout}
-                disabled={paying || total <= 0}
+                disabled={paying || totals.totalPaise < 100}
                 className="w-full h-14 text-lg rounded-2xl mb-6 bg-primary hover:bg-primary/90 text-primary-foreground group"
               >
                 {paying ? (
@@ -234,7 +243,7 @@ export default function CartPage() {
   );
 }
 
-function ShoppingCartIcon(props: any) {
+function ShoppingCartIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

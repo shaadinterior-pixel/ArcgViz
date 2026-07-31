@@ -20,7 +20,8 @@ export {
   type FirebaseUser as AuthUser,
   type PlanTier,
   type ConfirmationResult,
-  PLAN_LIMITS,
+  FREE_DAILY_DOWNLOADS,
+  RECHARGE_PLANS,
 } from './firebase-auth';
 
 // ── Check if user has purchased a 'Paid' product ──────────────────────────────

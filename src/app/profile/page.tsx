@@ -5,12 +5,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   User, Mail, Calendar, Shield, Download, ShoppingBag,
-  LogOut, Settings, TrendingUp, Star, Zap, Crown,
-  Edit3, Check, X, Camera, ArrowRight, Infinity, Package, Bookmark
+  LogOut, Star, Zap, Crown, Wallet, RefreshCw,
+  Edit3, Check, X, ArrowRight, Infinity, Package, Bookmark
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { getCurrentUser, getUserProfile, signOut, type PlanTier, PLAN_LIMITS, getWishlist, setupRecaptcha, sendPhoneOtp, confirmPhoneOtp, type ConfirmationResult } from '@/lib/auth';
-import { getMonthlyDownloadCount, getUserPurchasedProductIds } from '@/lib/downloads';
+import { getCurrentUser, getUserProfile, signOut, type PlanTier, getWishlist, setupRecaptcha, sendPhoneOtp, confirmPhoneOtp, type ConfirmationResult } from '@/lib/auth';
+import { getUserPurchasedProductIds, getRechargeHistory, type RechargeRecord } from '@/lib/downloads';
+import { resolveAllowance, effectiveTier, RECHARGE_PLANS } from '@/lib/plans';
 import { supabase } from '@/lib/supabase';
 import { updateProfile } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -27,10 +28,10 @@ export default function ProfilePage() {
   const [firebaseUser, setFirebaseUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [downloadsUsed, setDownloadsUsed] = useState(0);
   const [purchases, setPurchases] = useState<any[]>([]);
   const [savedProducts, setSavedProducts] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<'purchases'|'saved'>('purchases');
+  const [recharges, setRecharges] = useState<RechargeRecord[]>([]);
+  const [activeTab, setActiveTab] = useState<'purchases'|'saved'|'recharges'>('purchases');
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [savingName, setSavingName] = useState(false);
@@ -47,14 +48,14 @@ export default function ProfilePage() {
       if (!u) { router.push('/login'); return; }
       setFirebaseUser(u);
 
-      const [prof, used, paidIds, savedIds] = await Promise.all([
+      const [prof, paidIds, savedIds, rechargeList] = await Promise.all([
         getUserProfile(u.uid),
-        getMonthlyDownloadCount(u.uid),
         getUserPurchasedProductIds(u.uid),
-        getWishlist(u.uid)
+        getWishlist(u.uid),
+        getRechargeHistory(u.uid).catch(() => [] as RechargeRecord[]),
       ]);
       setProfile(prof);
-      setDownloadsUsed(used);
+      setRecharges(rechargeList);
       setNewName(prof?.name || u.displayName || '');
 
       if (paidIds.length > 0) {
@@ -142,11 +143,19 @@ export default function ProfilePage() {
     </div>
   );
 
-  const userPlan = (profile?.plan || 'Free') as PlanTier;
+  const userPlan = effectiveTier(profile) as PlanTier;
   const planCfg = PLAN_CONFIG[userPlan];
   const PlanIcon = planCfg.icon;
-  const downloadLimit = PLAN_LIMITS[userPlan];
-  const downloadPercent = Math.min((downloadsUsed / downloadLimit) * 100, 100);
+
+  const allowance = resolveAllowance(profile);
+  const onCredits = allowance.source === 'credits';
+  // Credits bar is measured against the biggest pack so the fill stays meaningful.
+  const creditPercent = Math.min((allowance.credits / RECHARGE_PLANS.Pro.credits) * 100, 100);
+  const dailyPercent = Math.min((allowance.dailyUsed / allowance.dailyLimit) * 100, 100);
+
+  const totalDownloads = Number(profile?.totalDownloads ?? 0);
+  const totalCreditsPurchased = Number(profile?.totalCreditsPurchased ?? 0);
+
   const displayName = profile?.name || firebaseUser?.displayName || 'Creative User';
   const email = firebaseUser?.email || '';
   const initials = displayName.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2);
@@ -246,10 +255,16 @@ export default function ProfilePage() {
         {/* Stats Row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[
-            { icon: Download, label: 'Downloads Used', value: `${downloadsUsed}`, sub: `of ${downloadLimit} this month`, color: planCfg.color },
+            {
+              icon: Wallet,
+              label: 'Credits Left',
+              value: `${allowance.credits}`,
+              sub: onCredits ? 'ready to use' : `free tier · ${allowance.remaining}/${allowance.dailyLimit} today`,
+              color: planCfg.color,
+            },
+            { icon: Download, label: 'Total Downloads', value: `${totalDownloads}`, sub: 'all time', color: '#0EA5E9' },
             { icon: Package, label: 'Paid Purchases', value: `${purchases.length}`, sub: 'lifetime assets', color: '#F59E0B' },
-            { icon: Shield, label: 'Account Status', value: 'Active', sub: 'verified account', color: '#10B981' },
-            { icon: Star, label: 'Member Plan', value: planCfg.label, sub: 'current subscription', color: planCfg.color },
+            { icon: RefreshCw, label: 'Recharges', value: `${recharges.length}`, sub: `${totalCreditsPurchased} credits bought`, color: '#10B981' },
           ].map(stat => {
             const Icon = stat.icon;
             return (
@@ -270,35 +285,42 @@ export default function ProfilePage() {
           {/* Left — Download Quota + Plan */}
           <div className="space-y-5">
 
-            {/* Monthly Download Quota */}
+            {/* Download Balance */}
             <div className="bg-white rounded-3xl p-6 border border-[#E2EDE8] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-black text-[#111111]">Monthly Downloads</h3>
+                <h3 className="font-black text-[#111111]">Download Balance</h3>
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ color: planCfg.color, backgroundColor: `${planCfg.color}12` }}>
-                  {downloadsUsed}/{downloadLimit}
+                  {onCredits ? `${allowance.credits} credits` : `${allowance.remaining}/${allowance.dailyLimit} today`}
                 </span>
               </div>
+
               <div className="relative w-full h-3 bg-zinc-100 rounded-full overflow-hidden mb-3">
                 <div
                   className="absolute left-0 top-0 h-full rounded-full transition-all duration-700"
                   style={{
-                    width: `${downloadPercent}%`,
-                    background: downloadPercent > 85
+                    width: `${onCredits ? creditPercent : 100 - dailyPercent}%`,
+                    background: !onCredits && allowance.remaining === 0
                       ? 'linear-gradient(90deg, #EF4444, #DC2626)'
                       : `linear-gradient(90deg, ${planCfg.color}, ${planCfg.color}cc)`,
                   }}
                 />
               </div>
-              <p className="text-xs text-zinc-400 font-medium">
-                {downloadLimit - downloadsUsed} downloads remaining · Resets 1st of next month
-              </p>
-              {userPlan !== 'Pro' && (
-                <Link href="/pricing" className="block mt-4">
-                  <Button className="w-full h-10 rounded-xl text-xs font-bold bg-[#111111] hover:bg-[#24B86C] text-white transition-all">
-                    Upgrade for more downloads →
-                  </Button>
-                </Link>
+
+              {onCredits ? (
+                <p className="text-xs text-zinc-400 font-medium">
+                  {allowance.credits} paid downloads remaining · Credits never expire
+                </p>
+              ) : (
+                <p className="text-xs text-zinc-400 font-medium">
+                  {allowance.remaining} of {allowance.dailyLimit} free downloads left today · Resets at midnight
+                </p>
               )}
+
+              <Link href="/pricing" className="block mt-4">
+                <Button className="w-full h-10 rounded-xl text-xs font-bold bg-[#111111] hover:bg-[#24B86C] text-white transition-all">
+                  {onCredits ? 'Top up your credits →' : 'Recharge for more downloads →'}
+                </Button>
+              </Link>
             </div>
 
             {/* Plan Card */}
@@ -309,13 +331,17 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <div className="font-black text-lg leading-tight">{planCfg.label}</div>
-                  <div className="text-white/70 text-xs font-medium">Current subscription</div>
+                  <div className="text-white/70 text-xs font-medium">
+                    {onCredits ? 'Active recharge' : 'Free tier — no active credits'}
+                  </div>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <Check className="w-4 h-4 text-white/80" />
-                  {downloadLimit} downloads/month
+                  {onCredits
+                    ? `${allowance.credits} credits remaining`
+                    : `${allowance.dailyLimit} downloads every day`}
                 </div>
                 {userPlan !== 'Free' && (
                   <div className="flex items-center gap-2 text-sm font-medium">
@@ -329,14 +355,16 @@ export default function ProfilePage() {
                     Commercial license
                   </div>
                 )}
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <Check className="w-4 h-4 text-white/80" />
+                  {totalDownloads} downloads all time
+                </div>
               </div>
-              {userPlan !== 'Pro' && (
-                <Link href="/pricing" className="block mt-5">
-                  <div className="flex items-center justify-between w-full bg-white/20 hover:bg-white/30 transition-colors rounded-xl px-4 py-2.5 text-sm font-bold cursor-pointer">
-                    Upgrade plan <ArrowRight className="w-4 h-4" />
-                  </div>
-                </Link>
-              )}
+              <Link href="/pricing" className="block mt-5">
+                <div className="flex items-center justify-between w-full bg-white/20 hover:bg-white/30 transition-colors rounded-xl px-4 py-2.5 text-sm font-bold cursor-pointer">
+                  {onCredits ? 'Top up credits' : 'Recharge now'} <ArrowRight className="w-4 h-4" />
+                </div>
+              </Link>
             </div>
 
             {/* Account Details */}
@@ -444,15 +472,80 @@ export default function ProfilePage() {
                 >
                   My Purchases
                 </button>
-                <button 
+                <button
                   onClick={() => setActiveTab('saved')}
                   className={`pb-2 font-black text-lg transition-colors border-b-2 ${activeTab === 'saved' ? 'text-[#111111] border-[#24B86C]' : 'text-zinc-400 border-transparent hover:text-zinc-600'}`}
                 >
                   Saved Items
                 </button>
+                <button
+                  onClick={() => setActiveTab('recharges')}
+                  className={`pb-2 font-black text-lg transition-colors border-b-2 ${activeTab === 'recharges' ? 'text-[#111111] border-[#24B86C]' : 'text-zinc-400 border-transparent hover:text-zinc-600'}`}
+                >
+                  Recharges
+                </button>
               </div>
 
-              {activeTab === 'purchases' ? (
+              {activeTab === 'recharges' ? (
+                <>
+                  <div className="flex items-center justify-between mb-6">
+                    <p className="text-xs text-zinc-400 font-medium">Every download pack you have bought</p>
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 border border-green-200">
+                      <RefreshCw className="w-3.5 h-3.5 text-green-500" />
+                      <span className="text-xs font-black text-green-600">{totalCreditsPurchased} credits bought</span>
+                    </div>
+                  </div>
+
+                  {recharges.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <div className="w-16 h-16 rounded-2xl bg-zinc-100 flex items-center justify-center mb-4">
+                        <Wallet className="w-8 h-8 text-zinc-300" />
+                      </div>
+                      <h4 className="font-black text-[#111111] mb-2">No recharges yet</h4>
+                      <p className="text-sm text-zinc-500 font-medium mb-6 max-w-xs">
+                        You are on the free tier — {allowance.dailyLimit} downloads every day.
+                        Recharge to get a bigger balance that never expires.
+                      </p>
+                      <Link href="/pricing">
+                        <Button className="h-11 px-6 rounded-xl bg-[#111111] hover:bg-[#24B86C] text-white font-bold text-sm transition-all">
+                          View recharge packs <ArrowRight className="ml-2 w-4 h-4" />
+                        </Button>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {recharges.map(r => {
+                        const when = r.purchasedAt?.toDate
+                          ? r.purchasedAt.toDate().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+                          : '—';
+                        const isPro = r.plan === 'Pro';
+                        return (
+                          <div key={r.id} className="flex items-center gap-4 p-4 rounded-2xl border border-[#E2EDE8]">
+                            <div
+                              className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                              style={{ backgroundColor: isPro ? '#9333EA15' : '#24B86C15' }}
+                            >
+                              {isPro
+                                ? <Crown className="w-5 h-5 text-purple-600" />
+                                : <Zap className="w-5 h-5 text-[#24B86C]" />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-black text-[#111111] text-sm">{r.plan} recharge</h4>
+                              <p className="text-xs text-zinc-400 font-medium mt-0.5">
+                                {when} · Order {r.razorpayOrderId}
+                              </p>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <div className="font-black text-sm text-[#111111]">₹{Number(r.amountInr || 0).toLocaleString('en-IN')}</div>
+                              <div className="text-xs font-bold text-[#24B86C]">+{r.credits} downloads</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
+              ) : activeTab === 'purchases' ? (
                 <>
                   <div className="flex items-center justify-between mb-6">
                     <p className="text-xs text-zinc-400 font-medium">Paid products with lifetime download access</p>

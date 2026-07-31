@@ -23,13 +23,33 @@ declare global {
 }
 
 export type CheckoutResult =
-  | { status: 'success'; orderId: string; paymentId: string; warning?: string }
+  | {
+      status: 'success';
+      orderId: string;
+      paymentId: string;
+      creditsAdded?: number;
+      unlockedProductIds?: string[];
+      amountInr?: number;
+      warning?: string;
+    }
   | { status: 'dismissed' }
   | { status: 'failed'; message: string };
 
 export type CheckoutParams = {
-  /** Amount in paise. Minimum 100 (₹1). */
-  amount: number;
+  /**
+   * Amount in paise. Minimum 100 (₹1). Ignored when `planId` is set — recharge
+   * prices are resolved server-side so they cannot be tampered with.
+   */
+  amount?: number;
+  /** Recharge pack to buy. The server owns the price and the credits granted. */
+  planId?: 'Plus' | 'Pro';
+  /**
+   * Products to buy. Only ids and quantities are sent — the server looks up the
+   * real prices in Supabase, so the amount cannot be tampered with here.
+   */
+  items?: { productId: string; quantity: number }[];
+  /** Labels the order in Razorpay notes and in the admin dashboard. */
+  kind?: 'cart' | 'printing';
   currency?: string;
   receipt?: string;
   /** Shown as the merchant name in the modal. */
@@ -101,6 +121,9 @@ export async function startRazorpayCheckout(params: CheckoutParams): Promise<Che
   await loadRazorpayScript();
 
   const order = await postJson('/api/razorpay/create-order', {
+    planId: params.planId,
+    items: params.items,
+    kind: params.kind,
     amount: params.amount,
     currency: params.currency,
     receipt: params.receipt,
@@ -148,6 +171,9 @@ export async function startRazorpayCheckout(params: CheckoutParams): Promise<Che
             status: 'success',
             orderId: response.razorpay_order_id,
             paymentId: response.razorpay_payment_id,
+            creditsAdded: verification.credits_added,
+            unlockedProductIds: verification.unlocked_product_ids,
+            amountInr: verification.amount_inr,
             warning: verification.warning,
           });
         } catch (error) {

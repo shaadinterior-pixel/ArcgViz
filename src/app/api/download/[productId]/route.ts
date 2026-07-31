@@ -4,8 +4,12 @@ import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { createR2SignedDownloadUrl, extractR2ObjectKey } from '@/lib/storage/r2';
+import { dayKey, resolveAllowance, effectiveTier } from '@/lib/plans';
 
 export const runtime = 'nodejs';
+
+/** Thrown inside the quota transaction to reject a download with a 403. */
+class QuotaError extends Error {}
 
 // ── Firebase Admin (server-side) ────────────────────────────────────────────
 // Initialize Firebase Admin only once
@@ -26,14 +30,6 @@ const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.SUPABASE_SERVICE_ROLE_KEY ?? '',
 );
-
-// Monthly key helper
-function monthKey() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-}
-
-const PLAN_LIMITS: Record<string, number> = { Free: 10, Plus: 50, Pro: 100 };
 
 export async function GET(
   request: NextRequest,
@@ -86,25 +82,26 @@ export async function GET(
   const userRef = adminDb.collection('users').doc(userId);
   const userSnap = await userRef.get();
 
-  let userData = userSnap.data();
   if (!userSnap.exists) {
     try {
       const authUser = await adminAuth.getUser(userId);
-      userData = {
+      await userRef.set({
         name: authUser.displayName || authUser.email?.split('@')[0] || 'User',
         email: authUser.email,
         plan: 'Free',
         joinDate: FieldValue.serverTimestamp(),
-        monthlyDownloads: {}
-      };
-      await userRef.set(userData);
-    } catch (e) {
+        downloadCredits: 0,
+        totalCreditsPurchased: 0,
+        totalDownloads: 0,
+        dailyDownloads: {},
+      });
+    } catch {
       return NextResponse.json({ error: 'Failed to create missing user profile.' }, { status: 500 });
     }
   }
 
-  const userPlan = String(userData?.plan || 'Free');
-  const key = monthKey();
+  const today = dayKey();
+  let spentFrom: 'credits' | 'daily' | 'free-pro' = 'daily';
 
   // PAID product: check individual purchase in Firestore
   if (/^paid$/i.test(productPlan)) {
@@ -119,42 +116,50 @@ export async function GET(
         { status: 403 }
       );
     }
-    // Paid products don't consume monthly quota → go straight to download
+    // Paid products are owned outright — they never consume credits.
   } else {
-    let bypassMonthlyQuota = false;
-    // PRO/PLUS product: check user plan tier
-    if (/^pro$/i.test(productPlan) && userPlan === 'Free') {
-      const freeProRem = (userData?.freeProDownloadsRemaining || 0) as number;
-      if (freeProRem > 0) {
-        // User has free pro downloads remaining, allow and decrement
-        await userRef.update({
-          freeProDownloadsRemaining: FieldValue.increment(-1),
+    // Check the balance and spend from it in one transaction, so parallel
+    // download requests can't push the user past their allowance.
+    try {
+      await adminDb.runTransaction(async (tx) => {
+        const snap = await tx.get(userRef);
+        const data = snap.data() || {};
+
+        // PRO tier assets need an active recharge, or a free-pro bypass.
+        if (/^pro$/i.test(productPlan) && effectiveTier(data) === 'Free') {
+          const freeProRem = Number(data.freeProDownloadsRemaining || 0);
+          if (freeProRem <= 0) {
+            throw new QuotaError('This asset requires an active Plus or Pro recharge.');
+          }
+          spentFrom = 'free-pro';
+          tx.update(userRef, {
+            freeProDownloadsRemaining: FieldValue.increment(-1),
+            totalDownloads: FieldValue.increment(1),
+          });
+          return;
+        }
+
+        const allowance = resolveAllowance(data, today);
+        if (!allowance.allowed) {
+          throw new QuotaError(
+            `Daily free limit reached (${allowance.dailyUsed}/${allowance.dailyLimit}). Recharge for more downloads or try again tomorrow.`,
+          );
+        }
+
+        spentFrom = allowance.source;
+        tx.update(userRef, {
+          ...(allowance.source === 'credits'
+            ? { downloadCredits: FieldValue.increment(-1) }
+            : { [`dailyDownloads.${today}`]: FieldValue.increment(1) }),
+          totalDownloads: FieldValue.increment(1),
         });
-        bypassMonthlyQuota = true;
-      } else {
-        return NextResponse.json(
-          { error: 'This asset requires a Plus + Pro plan. Upgrade to download.' },
-          { status: 403 }
-        );
-      }
-    }
-
-    if (!bypassMonthlyQuota) {
-      // Check monthly download quota
-      const used = (userData?.monthlyDownloads?.[key] || 0) as number;
-      const limit = PLAN_LIMITS[userPlan] ?? 10;
-
-      if (used >= limit) {
-        return NextResponse.json(
-          { error: `Monthly download limit reached (${used}/${limit}). Upgrade your plan for more downloads.` },
-          { status: 403 }
-        );
-      }
-
-      // Increment monthly counter
-      await userRef.update({
-        [`monthlyDownloads.${key}`]: FieldValue.increment(1),
       });
+    } catch (error) {
+      if (error instanceof QuotaError) {
+        return NextResponse.json({ error: error.message }, { status: 403 });
+      }
+      console.error('[download] quota transaction failed', error);
+      return NextResponse.json({ error: 'Could not verify your download allowance.' }, { status: 500 });
     }
   }
 
@@ -163,7 +168,8 @@ export async function GET(
     productId,
     productName: product.name,
     downloadedAt: FieldValue.serverTimestamp(),
-    month: key,
+    day: today,
+    source: spentFrom,
   });
 
   // ── 4. Redirect to download URL ───────────────────────────────────────────

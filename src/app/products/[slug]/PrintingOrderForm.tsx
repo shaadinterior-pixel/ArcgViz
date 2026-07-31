@@ -5,7 +5,9 @@ import { Truck, UploadCloud, Image as ImageIcon, MessageCircle, ShoppingCart, Lo
 import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { computeTotals, parsePriceInr, formatInr } from '@/lib/pricing';
+import { startRazorpayCheckout } from '@/lib/razorpay-checkout';
 
 type Props = {
   product: Product;
@@ -18,17 +20,15 @@ export default function PrintingOrderForm({ product }: Props) {
   const [designUrl, setDesignUrl] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [address, setAddress] = useState('');
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
+  const [paySuccess, setPaySuccess] = useState<string | null>(null);
 
-  const basePrice = parseInt((product.price || '0').replace(/[^0-9]/g, ''), 10) || 200;
-  const pricingOptions = [
-    { qty: '50' },
-    { qty: '100' },
-    { qty: '250' },
-    { qty: '500' },
-  ].map(opt => ({
-    qty: opt.qty,
-    unitPrice: basePrice
-  }));
+  const basePrice = parsePriceInr(product.price);
+  const pricingOptions = ['50', '100', '250', '500'].map(qty => ({ qty, unitPrice: basePrice }));
+
+  // Preview only — the server re-prices from Supabase before charging.
+  const totals = computeTotals(basePrice * (parseInt(quantity, 10) || 0));
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -45,8 +45,8 @@ export default function PrintingOrderForm({ product }: Props) {
       } else {
         throw new Error('No URL returned');
       }
-    } catch (err) {
-      alert('Upload failed. Please try again.');
+    } catch {
+      setPayError('Upload failed. Please try again.');
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -55,7 +55,7 @@ export default function PrintingOrderForm({ product }: Props) {
 
   const submitOrderToDB = async (type: 'checkout' | 'whatsapp') => {
     try {
-      await addDoc(collection(db, 'printing_orders'), {
+      const ref = await addDoc(collection(db, 'printing_orders'), {
         productName: product.name,
         productId: product.id,
         slug: product.slug,
@@ -65,18 +65,23 @@ export default function PrintingOrderForm({ product }: Props) {
         address,
         designUrl,
         type,
+        // 'checkout' orders start unpaid and are marked paid once Razorpay confirms.
+        paymentStatus: type === 'checkout' ? 'pending' : 'not_required',
         createdAt: serverTimestamp(),
       });
+      return ref.id;
     } catch (e) {
       console.error('Error saving printing order:', e);
+      return null;
     }
   };
 
   const handleWhatsApp = async () => {
     if (!customerName.trim() || !address.trim()) {
-      alert("Please fill in your Name/Company Name and Address before proceeding.");
+      setPayError('Please fill in your Name/Company Name and Address before proceeding.');
       return;
     }
+    setPayError(null);
     await submitOrderToDB('whatsapp');
     let text = `Hi Design Walla! 👋\n\nI need customization for this printing service.\n\n*Product:* ${product.name}\n*Quantity:* ${quantity}\n*Corners:* ${corners || 'Standard'}\n*Name/Company:* ${customerName}\n*Address:* ${address}\n*Link:* https://designwalla.com/products/${product.slug || product.id}`;
     if (designUrl) {
@@ -87,12 +92,57 @@ export default function PrintingOrderForm({ product }: Props) {
 
   const handleCheckout = async () => {
     if (!customerName.trim() || !address.trim()) {
-      alert("Please fill in your Name/Company Name and Address before proceeding.");
+      setPayError('Please fill in your Name/Company Name and Address before proceeding.');
       return;
     }
-    await submitOrderToDB('checkout');
-    // Add to cart or direct checkout logic here
-    alert(`Proceeding to checkout for ${quantity} units of ${product.name}.`);
+    if (basePrice <= 0) {
+      setPayError('This product has no price set. Please use "Discuss Customization" instead.');
+      return;
+    }
+
+    setPaying(true);
+    setPayError(null);
+    setPaySuccess(null);
+
+    let orderDocId: string | null = null;
+    try {
+      const { getCurrentUser } = await import('@/lib/auth');
+      const user = await getCurrentUser();
+
+      orderDocId = await submitOrderToDB('checkout');
+
+      const result = await startRazorpayCheckout({
+        // Only the id and quantity are sent — the server prices it from Supabase.
+        items: [{ productId: product.id, quantity: parseInt(quantity, 10) || 1 }],
+        kind: 'printing',
+        description: `${quantity} × ${product.name}`,
+        prefill: {
+          name: customerName || user?.displayName || undefined,
+          email: user?.email || undefined,
+        },
+        idToken: user ? await user.getIdToken() : undefined,
+      });
+
+      if (result.status === 'success') {
+        if (orderDocId) {
+          await updateDoc(doc(db, 'printing_orders', orderDocId), {
+            paymentStatus: 'paid',
+            razorpayOrderId: result.orderId,
+            razorpayPaymentId: result.paymentId,
+            amountInr: result.amountInr ?? null,
+            paidAt: serverTimestamp(),
+          }).catch(e => console.error('Could not mark printing order paid:', e));
+        }
+        setPaySuccess(result.warning || `Payment received! We will start printing ${quantity} × ${product.name} and ship it to your address.`);
+      } else if (result.status === 'failed') {
+        setPayError(result.message);
+      }
+      // 'dismissed' → user closed the modal; the pending order stays for follow-up.
+    } catch (e) {
+      setPayError(e instanceof Error ? e.message : 'Checkout could not be started.');
+    } finally {
+      setPaying(false);
+    }
   };
 
   return (
@@ -172,13 +222,47 @@ export default function PrintingOrderForm({ product }: Props) {
 
       <div className="w-full h-[1px] bg-zinc-200 my-1"></div>
 
+      {/* Price breakdown */}
+      {basePrice > 0 && (
+        <div className="bg-[#F8FAF9] border border-[#E2EDE8] rounded-xl p-4 text-[13px]">
+          <div className="flex justify-between text-zinc-600 mb-1.5">
+            <span>{quantity} × {formatInr(basePrice)}</span>
+            <span className="font-medium">{formatInr(totals.subtotalInr)}</span>
+          </div>
+          <div className="flex justify-between text-zinc-600 mb-2.5">
+            <span>GST (18%)</span>
+            <span className="font-medium">{formatInr(totals.taxInr)}</span>
+          </div>
+          <div className="flex justify-between font-black text-[#111111] text-[15px] pt-2.5 border-t border-[#E2EDE8]">
+            <span>Total</span>
+            <span>{formatInr(totals.totalInr)}</span>
+          </div>
+        </div>
+      )}
+
+      {paySuccess && (
+        <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-[13px] font-medium text-green-700">
+          {paySuccess}
+        </div>
+      )}
+      {payError && (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[13px] font-medium text-red-600">
+          {payError}
+        </div>
+      )}
+
       {/* Checkout and WhatsApp */}
       <div className="flex flex-col gap-3">
-        <Button 
+        <Button
           onClick={handleCheckout}
+          disabled={paying}
           className="w-full h-12 bg-[#24B86C] hover:bg-[#1DA05D] text-white font-bold rounded-xl text-[14px] transition-colors flex items-center justify-center shadow-md"
         >
-          <ShoppingCart className="w-4 h-4 mr-2" /> Direct Checkout
+          {paying ? (
+            <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Opening checkout…</>
+          ) : (
+            <><ShoppingCart className="w-4 h-4 mr-2" /> Pay {basePrice > 0 ? formatInr(totals.totalInr) : 'Now'}</>
+          )}
         </Button>
         <Button 
           onClick={handleWhatsApp}

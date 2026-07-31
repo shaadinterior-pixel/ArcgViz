@@ -65,7 +65,7 @@ ON CONFLICT (id) DO NOTHING;
 CREATE TABLE IF NOT EXISTS public.settings (
   id                INTEGER PRIMARY KEY DEFAULT 1,
   store_name        TEXT DEFAULT 'Design Walla',
-  support_email     TEXT DEFAULT 'support@designwalla.com',
+  support_email     TEXT DEFAULT 'info.designwalla.ss@gmail.com',
   currency          TEXT DEFAULT 'INR',
   razorpay_enabled  BOOLEAN DEFAULT true,
   stripe_enabled    BOOLEAN DEFAULT false,

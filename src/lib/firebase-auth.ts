@@ -20,15 +20,11 @@ export type { ConfirmationResult };
 
 export type FirebaseUser = User;
 
-// Plan types
-export type PlanTier = 'Free' | 'Plus' | 'Pro';
+// Plan types — defined in ./plans so client and server share one source of truth
+import type { PlanTier } from './plans';
 
-// ── Download limits per plan ──────────────────────────────────────────────────
-export const PLAN_LIMITS: Record<PlanTier, number> = {
-  Free: 10,
-  Plus: 50,
-  Pro:  100,
-};
+export type { PlanTier };
+export { FREE_DAILY_DOWNLOADS, RECHARGE_PLANS } from './plans';
 
 // ── Create Firestore user document on first sign up ───────────────────────────
 async function createUserDoc(user: User, name?: string) {
@@ -40,7 +36,11 @@ async function createUserDoc(user: User, name?: string) {
       email:      user.email,
       plan:       'Free' as PlanTier,
       joinDate:   serverTimestamp(),
-      monthlyDownloads: {},
+      // Recharge model: paid credits are spent first, then the free daily allowance.
+      downloadCredits: 0,
+      totalCreditsPurchased: 0,
+      totalDownloads: 0,
+      dailyDownloads: {},
     });
   }
 }
