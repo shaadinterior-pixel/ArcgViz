@@ -6,6 +6,10 @@ import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
 import { fetchProducts, saveProducts, deleteProduct, fetchCategories, saveCategories, onStoreUpdate, generateSlug, type Product, type Category } from '@/lib/store';
+import {
+  RESOURCE_ID_LABEL, formatResourceId, nextResourceNumber, withResourceId,
+  readResourceId, matchesResourceId, normalizeResourceIdQuery,
+} from '@/lib/resource-id';
 
 const FALLBACK_CATEGORIES = [
   'INTERIOR / EXTERIOR DESIGN AND WORK',
@@ -87,20 +91,26 @@ export default function AdminProductsPage() {
   }, [isOpen]);
 
   const filtered = products.filter(p => {
-    const q = search.toLowerCase();
-    return (p.name.toLowerCase().includes(q) || (p.author??'').toLowerCase().includes(q)) &&
-      (statusFilter==='All' || p.status===statusFilter);
+    const q = search.trim().toLowerCase();
+    // '40', 'DW40' and 'DW-40' should all find the product carrying DW-40.
+    const canonicalId = normalizeResourceIdQuery(search);
+    const matchesText =
+      !q ||
+      p.name.toLowerCase().includes(q) ||
+      (p.author ?? '').toLowerCase().includes(q) ||
+      (readResourceId(p.specifications) ?? '').toLowerCase().includes(q) ||
+      (canonicalId !== null && matchesResourceId(p.specifications, canonicalId));
+    return matchesText && (statusFilter === 'All' || p.status === statusFilter);
   });
 
   const resetUploadState = () => { setAttachmentStatus('idle'); setZipUploading(false); setZipProgress(0); setZipError(''); };
-  const openNew = () => { 
-    const nextNumber = products.length + 1;
+  const openNew = () => {
     const emptyProduct = makeEmpty(dbCategories[0]);
-    emptyProduct.specifications = [{ label: 'Resources Id', value: `DW-${nextNumber}` }];
-    setEditing({id:`tmp-${Date.now()}`,...emptyProduct}); 
-    resetUploadState(); 
-    setIsAddingSubcat(false); 
-    setIsOpen(true); 
+    emptyProduct.specifications = [{ label: RESOURCE_ID_LABEL, value: formatResourceId(nextResourceNumber(products)) }];
+    setEditing({id:`tmp-${Date.now()}`,...emptyProduct});
+    resetUploadState();
+    setIsAddingSubcat(false);
+    setIsOpen(true);
   };
   const openEdit = (p: Product) => { setEditing({...p}); setAttachmentStatus(p.google_drive_file_id?'valid':'idle'); setZipUploading(false); setZipProgress(0); setZipError(''); setIsAddingSubcat(false); setIsOpen(true); };
 
@@ -111,11 +121,14 @@ export default function AdminProductsPage() {
   };
 
   const handleDuplicate = (p: Product) => {
+    // A copy must never inherit the original's resource id — issue a fresh one.
+    const freshResourceId = formatResourceId(nextResourceNumber(products));
     setEditing({
       ...p,
       id: `tmp-${Date.now()}`,
       name: `${p.name} (Copy)`,
       slug: `${p.slug}-copy-${Date.now().toString().slice(-4)}`,
+      specifications: withResourceId(p.specifications, freshResourceId),
       google_drive_share_link: '',
       google_drive_file_id: '',
       download_url: '',

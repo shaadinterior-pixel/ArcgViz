@@ -1,41 +1,58 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { getServiceSlug } from '@/lib/service-seo';
+import { normalizeResourceIdQuery, resourceIdVariants, readResourceId } from '@/lib/resource-id';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get('q');
 
-  if (!q || q.length < 2) {
+  const query = (q ?? '').trim();
+  // '40' is a valid resource-id search even though it is shorter than the
+  // two-character minimum we apply to free-text queries.
+  const canonicalResourceId = normalizeResourceIdQuery(query);
+
+  if (!query || (query.length < 2 && !canonicalResourceId)) {
     return NextResponse.json([]);
   }
 
   try {
-    const term = `%${q.trim()}%`;
-    const exactUpper = q.trim().toUpperCase();
-    const isResourceSearch = /^dw-\d+$/i.test(q.trim());
-    
-    const [productsRes, resourceRes, servicesRes] = await Promise.all([
+    const term = `%${query}%`;
+
+    // Older rows may spell the id by hand, so check the common variants.
+    //
+    // NOTE: the JSON string form of .contains() is required. Passing an array
+    // makes supabase-js serialise it as a Postgres array literal (`cs.{...}`)
+    // instead of JSONB containment, which silently matches nothing.
+    const resourceLookups = canonicalResourceId
+      ? resourceIdVariants(canonicalResourceId).map(variant =>
+          supabase
+            .from('products')
+            .select('id, name, category, price, plan, image, slug, thumbnail_url, specifications')
+            .contains('specifications', JSON.stringify([{ value: variant }]))
+            .eq('status', 'Active')
+            .limit(4),
+        )
+      : [];
+
+    const [productsRes, servicesRes, ...resourceResults] = await Promise.all([
       supabase
         .from('products')
-        .select('id, name, category, price, plan, image, slug, thumbnail_url')
+        .select('id, name, category, price, plan, image, slug, thumbnail_url, specifications')
         .or(`name.ilike.${term},category.ilike.${term},description.ilike.${term}`)
         .eq('status', 'Active')
         .limit(8),
-      isResourceSearch 
-        ? supabase
-            .from('products')
-            .select('id, name, category, price, plan, image, slug, thumbnail_url')
-            .contains('specifications', [{ value: exactUpper }])
-            .eq('status', 'Active')
-            .limit(4)
-        : Promise.resolve({ data: [] }),
       supabase
         .from('services')
         .select('id, title, category, image')
         .or(`title.ilike.${term},category.ilike.${term},description.ilike.${term}`)
-        .limit(4)
+        .limit(4),
+      ...resourceLookups,
     ]);
+
+    const resourceRes = {
+      data: resourceResults.flatMap(result => result.data ?? []),
+    };
 
     const baseProducts = productsRes.data || [];
     const resourceProducts = resourceRes.data || [];
@@ -60,6 +77,7 @@ export async function GET(request: Request) {
         plan: p.plan || 'Free',
         image: p.thumbnail_url || p.image || '',
         slug: p.slug || p.id,
+        resourceId: readResourceId(p.specifications),
         type: 'product',
       });
     }
