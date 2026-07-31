@@ -90,6 +90,31 @@ export function resolveAllowance(user: AllowanceInput | null | undefined, today 
   };
 }
 
+function sumCounters(map: unknown): number {
+  if (!map || typeof map !== 'object') return 0;
+  return Object.values(map as Record<string, unknown>)
+    .reduce<number>((total, value) => total + Math.max(0, Number(value) || 0), 0);
+}
+
+/**
+ * True all-time download count.
+ *
+ * `totalDownloads` only started counting when the recharge model shipped, so on
+ * its own it under-reports for anyone who downloaded before that. The per-period
+ * maps together cover the whole history — `monthlyDownloads` is the frozen
+ * legacy record and `dailyDownloads` everything since — so the larger of the two
+ * is the honest number whether or not the counter has been backfilled.
+ */
+export function allTimeDownloads(user: {
+  totalDownloads?: unknown;
+  monthlyDownloads?: unknown;
+  dailyDownloads?: unknown;
+} | null | undefined): number {
+  const counter = Math.max(0, Number(user?.totalDownloads) || 0);
+  const fromPeriods = sumCounters(user?.monthlyDownloads) + sumCounters(user?.dailyDownloads);
+  return Math.max(counter, fromPeriods);
+}
+
 /**
  * The tier a user effectively has right now. A recharge tier only counts while
  * there are credits left to spend — an exhausted balance is back to Free.
