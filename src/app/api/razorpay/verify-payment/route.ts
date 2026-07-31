@@ -4,6 +4,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getAdminClient } from '@/lib/supabase-admin';
 import { getRazorpayClient, verifyPaymentSignature } from '@/lib/razorpay';
+import { SUPPORT_EMAIL } from '@/lib/constants';
 
 export const runtime = 'nodejs';
 
@@ -113,7 +114,7 @@ export async function POST(request: Request) {
     await getAdminClient().from('orders').upsert([{
       id: orderId,
       customer: customer || 'Guest',
-      email: email || 'unknown@designwalla.com',
+      email: email || SUPPORT_EMAIL,
       product: String(body.product || productId || 'Cart checkout'),
       amount: `₹${(amountPaise / 100).toLocaleString('en-IN')}`,
       status: 'Completed',
