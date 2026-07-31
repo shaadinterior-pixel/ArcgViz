@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { getCurrentUser, getUserProfile, signOut, type PlanTier, getWishlist, setupRecaptcha, sendPhoneOtp, confirmPhoneOtp, type ConfirmationResult } from '@/lib/auth';
 import { getUserPurchasedProductIds, getRechargeHistory, type RechargeRecord } from '@/lib/downloads';
-import { resolveAllowance, effectiveTier, RECHARGE_PLANS } from '@/lib/plans';
+import { resolveAllowance, effectiveTier, allTimeDownloads, RECHARGE_PLANS } from '@/lib/plans';
 import { supabase } from '@/lib/supabase';
 import { updateProfile } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -153,7 +153,8 @@ export default function ProfilePage() {
   const creditPercent = Math.min((allowance.credits / RECHARGE_PLANS.Pro.credits) * 100, 100);
   const dailyPercent = Math.min((allowance.dailyUsed / allowance.dailyLimit) * 100, 100);
 
-  const totalDownloads = Number(profile?.totalDownloads ?? 0);
+  // Counts the whole history, including downloads taken before the recharge model.
+  const totalDownloads = allTimeDownloads(profile);
   const totalCreditsPurchased = Number(profile?.totalCreditsPurchased ?? 0);
 
   const displayName = profile?.name || firebaseUser?.displayName || 'Creative User';
