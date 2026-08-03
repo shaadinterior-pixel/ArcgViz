@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { ArrowRight, Play } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Play, X, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { CategoryMarquee } from '@/components/ui/CategoryMarquee';
 import { WhatWeDoSection } from '@/components/ui/WhatWeDoSection';
@@ -118,6 +118,21 @@ function HeroCard({ card, slot, delay }: { card: any; slot: typeof CARD_SLOTS[0]
 
 export default function Home() {
   const [heroContent, setHeroContent] = useState<HeroContent>(DEFAULT_HERO_CONTENT);
+  const [showHireModal, setShowHireModal] = useState(false);
+  const [selectedHireService, setSelectedHireService] = useState('3D Architectural & Interior Visualization');
+
+  const HIRE_SERVICES_LIST = [
+    "3D Architectural & Interior Visualization",
+    "Custom 3D Model & Product Design (OBJ/FBX)",
+    "CNC, Jali & Laser Cut Design Work",
+    "Motion Graphics & Video Animation",
+    "Company Branding & Logo Design",
+    "Website / Web App Design & Templates",
+    "Digital Marketing & SEO Strategy",
+    "Printing Work & Custom Packaging",
+    "Food Cart & Retail Kiosk Design",
+    "Other Custom Design Project"
+  ];
 
   useEffect(() => {
     let mounted = true;
@@ -225,12 +240,17 @@ export default function Home() {
                   Explore Marketplace
                 </Button>
               </Link>
-              <Link href="/#services" className="w-full sm:w-auto">
-                <Button variant="outline" className="w-full sm:w-auto h-12 px-4 sm:px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[13px] sm:text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
+              <div className="w-full sm:w-auto">
+                <Button 
+                  type="button"
+                  onClick={() => setShowHireModal(true)}
+                  variant="outline" 
+                  className="w-full sm:w-auto h-12 px-4 sm:px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[13px] sm:text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap"
+                >
                   Hire Our Team
                 </Button>
-              </Link>
-              <Link href="/resources" className="w-full sm:w-auto">
+              </div>
+              <Link href="/products?tier=Free" className="w-full sm:w-auto">
                 <Button variant="outline" className="w-full sm:w-auto h-12 px-4 sm:px-6 rounded-xl border border-[#E2EDE8] bg-white/60 backdrop-blur-md hover:bg-white hover:border-[#24B86C]/30 text-zinc-700 font-bold text-[13px] sm:text-[14px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
                   Free Assets
                 </Button>
@@ -305,6 +325,86 @@ export default function Home() {
 
       {/* ── Contact Section ── */}
       <ContactSection />
+
+      {/* ── Hire Our Team Service Selection Modal ── */}
+      <AnimatePresence>
+        {showHireModal && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setShowHireModal(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ duration: 0.25, ease: "easeOut" }}
+              className="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-zinc-200 z-10 overflow-hidden text-left"
+            >
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#24B86C] to-[#11998E]" />
+              <button
+                onClick={() => setShowHireModal(false)}
+                className="absolute top-5 right-5 w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-[#24B86C]/10 flex items-center justify-center text-[#24B86C]">
+                  <MessageCircle className="w-6 h-6" />
+                </div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#24B86C] bg-[#24B86C]/10 px-2.5 py-1 rounded-full">Direct Studio Connect</span>
+              </div>
+
+              <h3 className="text-2xl sm:text-3xl font-black text-[#111111] leading-tight mb-2">
+                Hire Design Walla Studio
+              </h3>
+              <p className="text-sm sm:text-base text-zinc-600 mb-6">
+                Select the service you need for your project. We will connect you directly with our design leads via WhatsApp with your inquiry pre-filled.
+              </p>
+
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm font-bold text-zinc-800 mb-2">
+                    Select Required Service
+                  </label>
+                  <select
+                    value={selectedHireService}
+                    onChange={(e) => setSelectedHireService(e.target.value)}
+                    className="w-full h-13 py-3 px-4 rounded-xl border-2 border-zinc-200 bg-zinc-50 hover:bg-white focus:bg-white text-[#111111] font-semibold text-sm sm:text-base focus:border-[#24B86C] focus:outline-none transition-all duration-200 cursor-pointer shadow-sm"
+                  >
+                    {HIRE_SERVICES_LIST.map((srv) => (
+                      <option key={srv} value={srv}>
+                        {srv}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#24B86C]/5 border border-[#24B86C]/15 flex items-start gap-3">
+                  <span className="text-lg">💬</span>
+                  <div className="text-xs sm:text-sm text-zinc-600">
+                    <span className="font-bold text-zinc-800">WhatsApp Preview:</span> &quot;Hi Design Walla! 👋 I want to hire your team for: <span className="font-bold text-[#24B86C]">{selectedHireService}</span>...&quot;
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      const text = `Hi Design Walla! 👋\n\nI want to hire your team for: *${selectedHireService}* work.\n\nPlease let me know the process, timeline, and pricing details.`;
+                      window.open(`https://wa.me/918969688709?text=${encodeURIComponent(text)}`, '_blank');
+                      setShowHireModal(false);
+                    }}
+                    className="flex-1 h-14 rounded-xl bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white font-bold text-base shadow-[0_8px_25px_rgba(36,184,108,0.3)] transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle className="w-5 h-5 fill-current" />
+                    Send Message on WhatsApp
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

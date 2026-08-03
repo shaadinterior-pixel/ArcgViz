@@ -69,8 +69,30 @@ const plans = [
       'Access to ALL asset tiers',
       'Maximum resolution files',
       'Dedicated support',
-      'Commercial license included',
+      'Commercial uses',
       'Bulk download tool',
+    ],
+  },
+  {
+    id: 'Enterprise' as unknown as PlanTier,
+    name: 'Enterprise',
+    price: 'Custom',
+    period: 'unlimited',
+    tagline: 'For large agencies & teams',
+    icon: Infinity,
+    color: '#0D1A12',
+    gradient: 'from-amber-100/70 via-emerald-50/30 to-white',
+    border: 'border-amber-400/80',
+    badge: 'Highest Limit',
+    quota: 'Custom Bulk Credits',
+    quotaSub: 'Tailored limits for large organizations',
+    features: [
+      'Highest download limits & custom quota',
+      'Access to ALL asset tiers & exclusives',
+      'Maximum resolution & raw source files',
+      'Dedicated 24/7 priority account manager',
+      'Commercial uses & team multi-licensing',
+      'Custom asset request capability',
     ],
   },
 ];
@@ -184,28 +206,29 @@ export default function PricingPage() {
         )}
 
         {/* Plan Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 mt-8">
           {plans.map((plan) => {
             const Icon = plan.icon;
             const isFree = plan.id === 'Free';
             const isPro = plan.id === 'Pro';
+            const isEnterprise = (plan.id as string) === 'Enterprise';
             const isPaying = payingPlan === plan.id;
 
             return (
               <div
                 key={plan.id}
-                className={`relative bg-gradient-to-br ${plan.gradient} border-2 ${plan.border} rounded-3xl p-8 flex flex-col ${isPro ? 'shadow-[0_20px_60px_rgba(147,51,234,0.15)]' : 'shadow-[0_8px_30px_rgba(0,0,0,0.05)]'} transition-transform hover:-translate-y-1 duration-300`}
+                className={`relative bg-gradient-to-br ${plan.gradient} border-2 ${plan.border} rounded-3xl p-8 flex flex-col ${isPro || isEnterprise ? 'shadow-[0_20px_60px_rgba(147,51,234,0.15)]' : 'shadow-[0_8px_30px_rgba(0,0,0,0.05)]'} transition-transform hover:-translate-y-1 duration-300`}
               >
                 {/* Badge */}
                 {plan.badge && (
-                  <div className={`absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-black text-white shadow-lg ${isPro ? 'bg-purple-600' : 'bg-[#24B86C]'}`}>
+                  <div className={`absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-black text-white shadow-lg whitespace-nowrap ${isPro ? 'bg-purple-600' : isEnterprise ? 'bg-amber-600' : 'bg-[#24B86C]'}`}>
                     {plan.badge}
                   </div>
                 )}
 
                 {/* Icon + Name */}
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${plan.color}18` }}>
+                  <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${plan.color}18` }}>
                     <Icon className="w-5 h-5" style={{ color: plan.color }} />
                   </div>
                   <div>
@@ -217,7 +240,7 @@ export default function PricingPage() {
                 {/* Price */}
                 <div className="mb-6">
                   <div className="flex items-end gap-1">
-                    <span className="text-5xl font-black text-[#111111]">{plan.price}</span>
+                    <span className="text-4xl sm:text-5xl font-black text-[#111111]">{plan.price}</span>
                     <span className="text-zinc-500 font-semibold mb-1.5">/{plan.period}</span>
                   </div>
                 </div>
@@ -258,6 +281,17 @@ export default function PricingPage() {
                       </Button>
                     </Link>
                   )
+                ) : isEnterprise ? (
+                  <a
+                    href="https://wa.me/918969688709?text=Hi+Design+Walla!+%F0%9F%91%8B%0A%0AI+am+interested+in+your+*Enterprise*+plan+with+highest+limits+and+custom+credits.%0A%0APlease+let+me+know+how+we+can+proceed!"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full"
+                  >
+                    <Button className="w-full h-12 rounded-xl font-bold text-sm bg-gradient-to-r from-[#24B86C] to-[#11998E] hover:from-[#20a661] hover:to-[#0f877d] text-white shadow-md transition-all">
+                      Contact via WhatsApp <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </a>
                 ) : (
                   <Button
                     onClick={() => handleRecharge(plan.id as 'Plus' | 'Pro')}

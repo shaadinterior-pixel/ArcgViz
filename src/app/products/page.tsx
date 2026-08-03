@@ -14,17 +14,53 @@ import { fetchProducts, fetchCategories, onStoreUpdate, type Product, type Categ
 function ProductsContent() {
   const searchParams = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
+  const initialCategory = searchParams.get('category');
+  const initialSubcategory = searchParams.get('subcategory');
+  const initialTier = searchParams.get('tier') || searchParams.get('plan_tier');
 
   const [products, setProducts] = useState<Product[]>([]);
   const [dbCategories, setDbCategories] = useState<Category[]>([]);
 
   // Filter & Search State
   const [searchQuery, setSearchQuery] = useState(initialSearch);
-  const [activeCategories, setActiveCategories] = useState<string[]>([]);
-  const [activeSubcategories, setActiveSubcategories] = useState<string[]>([]);
+  const [activeCategories, setActiveCategories] = useState<string[]>(
+    initialCategory ? [initialCategory] : []
+  );
+  const [activeSubcategories, setActiveSubcategories] = useState<string[]>(
+    initialSubcategory ? [initialSubcategory] : []
+  );
+  const [activeTier, setActiveTier] = useState<string | null>(initialTier);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
   
+  const categoryParam = searchParams.get('category');
+  const subcategoryParam = searchParams.get('subcategory');
+  const tierParam = searchParams.get('tier') || searchParams.get('plan_tier');
+
+  useEffect(() => {
+    if (categoryParam) {
+      setActiveCategories([categoryParam]);
+    } else {
+      setActiveCategories([]);
+    }
+  }, [categoryParam]);
+
+  useEffect(() => {
+    if (subcategoryParam) {
+      setActiveSubcategories([subcategoryParam]);
+    } else {
+      setActiveSubcategories([]);
+    }
+  }, [subcategoryParam]);
+
+  useEffect(() => {
+    if (tierParam) {
+      setActiveTier(tierParam);
+    } else {
+      setActiveTier(null);
+    }
+  }, [tierParam]);
+
 
   useEffect(() => {
     const load = async () => {
@@ -59,14 +95,17 @@ function ProductsContent() {
                               product.tags?.some(t => t.toLowerCase().includes(q));
         
         // If activeCategories is empty, it means "All"
-        const matchesCategory = activeCategories.length === 0 || activeCategories.includes(product.category);
+        const matchesCategory = activeCategories.length === 0 || 
+          activeCategories.some(cat => cat.toLowerCase() === (product.category || '').toLowerCase());
         
         // If activeSubcategories is empty, don't filter by subcategory
-        const matchesSubcategory = activeSubcategories.length === 0 || (product.subcategory && activeSubcategories.includes(product.subcategory));
+        const matchesSubcategory = activeSubcategories.length === 0 || 
+          (product.subcategory && activeSubcategories.some(sub => sub.toLowerCase() === (product.subcategory || '').toLowerCase()));
 
         const matchesProperties = selectedProperties.every(prop => (product.features || []).includes(prop));
+        const matchesTier = !activeTier || (product.plan_tier || 'Free').toLowerCase() === activeTier.toLowerCase();
         
-        return matchesSearch && matchesCategory && matchesSubcategory && matchesProperties;
+        return matchesSearch && matchesCategory && matchesSubcategory && matchesProperties && matchesTier;
       })
       // Latest uploaded first
       .sort((a, b) => {
@@ -74,13 +113,13 @@ function ProductsContent() {
         const db2 = new Date(b.date || b.created_at || 0).getTime();
         return db2 - da;
       }),
-    [products, deferredSearch, activeCategories, activeSubcategories, selectedProperties]
+    [products, deferredSearch, activeCategories, activeSubcategories, selectedProperties, activeTier]
   );
 
-  // Helper to toggle array elements
+  // Helper to toggle array elements case-insensitively
   const toggleArray = (arr: string[], val: string, setter: (val: string[]) => void) => {
-    if (arr.includes(val)) {
-      setter(arr.filter(x => x !== val));
+    if (arr.some(x => x.toLowerCase() === val.toLowerCase())) {
+      setter(arr.filter(x => x.toLowerCase() !== val.toLowerCase()));
     } else {
       setter([...arr, val]);
     }
@@ -91,7 +130,7 @@ function ProductsContent() {
     const subs = new Set<string>();
     // If no category selected, show all subcategories
     const relevantCats = activeCategories.length > 0 
-      ? dbCategories.filter(c => activeCategories.includes(c.title))
+      ? dbCategories.filter(c => activeCategories.some(ac => ac.toLowerCase() === c.title.toLowerCase()))
       : dbCategories;
       
     relevantCats.forEach(c => {
@@ -111,8 +150,16 @@ function ProductsContent() {
           className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6 border-b border-[#E2EDE8] pb-10"
         >
           <div className="w-full md:w-auto flex-1">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-[#0D1A12]">All Products</h1>
-            <p className="text-[#6B7280] max-w-2xl mb-8 text-lg">Browse our premium collection of high-quality 3D models, materials, and templates.</p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-[#0D1A12]">
+              {activeTier?.toLowerCase() === 'free' ? 'Free Assets & Resources' : activeCategories.length === 1 ? activeCategories[0] : 'All Products'}
+            </h1>
+            <p className="text-[#6B7280] max-w-2xl mb-8 text-lg">
+              {activeTier?.toLowerCase() === 'free' 
+                ? 'Explore our premium collection of 100% free design assets, 3D objects, and templates.'
+                : activeCategories.length === 1
+                ? `Browse our exclusive collection of high-quality ${activeCategories[0]} resources and templates.`
+                : 'Browse our premium collection of high-quality 3D models, materials, and templates.'}
+            </p>
             
             <div className="relative max-w-xl w-full group">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-[#9CA3AF] w-5 h-5 group-focus-within:text-[#24B86C] transition-colors" />
@@ -133,9 +180,9 @@ function ProductsContent() {
             >
               <Filter className="w-4 h-4 mr-2 text-[#24B86C]" />
               Filters
-              {(activeCategories.length + activeSubcategories.length + selectedProperties.length) > 0 && (
+              {(activeCategories.length + activeSubcategories.length + selectedProperties.length + (activeTier ? 1 : 0)) > 0 && (
                 <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#24B86C] text-white text-[11px] font-black flex items-center justify-center border-2 border-white shadow-sm">
-                  {activeCategories.length + activeSubcategories.length + selectedProperties.length}
+                  {activeCategories.length + activeSubcategories.length + selectedProperties.length + (activeTier ? 1 : 0)}
                 </span>
               )}
             </button>
@@ -191,32 +238,56 @@ function ProductsContent() {
                         <input type="checkbox" className="hidden" checked={activeCategories.length === 0} onChange={() => { setActiveCategories([]); setActiveSubcategories([]); }} />
                         <span className={`text-[15px] transition-colors ${activeCategories.length === 0 ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>All</span>
                       </label>
-                      {dbCategories.map((cat) => (
-                        <label key={cat.id} className="flex items-center space-x-3.5 cursor-pointer group">
-                          <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeCategories.includes(cat.title) ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
-                            {activeCategories.includes(cat.title) && <div className="w-2 h-2 bg-white rounded-[2px]" />}
-                          </div>
-                          <input type="checkbox" className="hidden" checked={activeCategories.includes(cat.title)} onChange={() => toggleArray(activeCategories, cat.title, setActiveCategories)} />
-                          <span className={`text-[15px] transition-colors ${activeCategories.includes(cat.title) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>{cat.title}</span>
-                        </label>
-                      ))}
+                      {dbCategories.map((cat) => {
+                        const isActive = activeCategories.some(ac => ac.toLowerCase() === cat.title.toLowerCase());
+                        return (
+                          <label key={cat.id} className="flex items-center space-x-3.5 cursor-pointer group">
+                            <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${isActive ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
+                              {isActive && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                            </div>
+                            <input type="checkbox" className="hidden" checked={isActive} onChange={() => toggleArray(activeCategories, cat.title, setActiveCategories)} />
+                            <span className={`text-[15px] transition-colors ${isActive ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>{cat.title}</span>
+                          </label>
+                        );
+                      })}
                     </div>
                     {availableSubcategories.length > 0 && (
                       <>
                         <h3 className="font-bold text-[#0D1A12] text-xl mt-8 mb-5">Subcategories</h3>
                         <div className="space-y-4">
-                          {availableSubcategories.map((sub) => (
-                            <label key={sub} className="flex items-center space-x-3.5 cursor-pointer group">
-                              <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${activeSubcategories.includes(sub) ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
-                                {activeSubcategories.includes(sub) && <div className="w-2 h-2 bg-white rounded-[2px]" />}
-                              </div>
-                              <input type="checkbox" className="hidden" checked={activeSubcategories.includes(sub)} onChange={() => toggleArray(activeSubcategories, sub, setActiveSubcategories)} />
-                              <span className={`text-[15px] transition-colors ${activeSubcategories.includes(sub) ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>{sub}</span>
-                            </label>
-                          ))}
+                          {availableSubcategories.map((sub) => {
+                            const isActiveSub = activeSubcategories.some(as => as.toLowerCase() === sub.toLowerCase());
+                            return (
+                              <label key={sub} className="flex items-center space-x-3.5 cursor-pointer group">
+                                <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${isActiveSub ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
+                                  {isActiveSub && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                                </div>
+                                <input type="checkbox" className="hidden" checked={isActiveSub} onChange={() => toggleArray(activeSubcategories, sub, setActiveSubcategories)} />
+                                <span className={`text-[15px] transition-colors ${isActiveSub ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>{sub}</span>
+                              </label>
+                            );
+                          })}
                         </div>
                       </>
                     )}
+                  </div>
+                  {/* Asset Tier */}
+                  <div className="bg-[#DDF0E9] p-7 rounded-[1.5rem]">
+                    <h3 className="font-bold text-[#0D1A12] text-xl mb-5">Asset Tier</h3>
+                    <div className="space-y-4">
+                      {['Free', 'Plus', 'Pro', 'Paid'].map((tier) => {
+                        const isSelected = activeTier?.toLowerCase() === tier.toLowerCase();
+                        return (
+                          <label key={tier} className="flex items-center space-x-3.5 cursor-pointer group">
+                            <div className={`w-5 h-5 rounded-[6px] flex items-center justify-center transition-all duration-200 ${isSelected ? 'bg-[#24B86C]' : 'bg-white border border-[#B9D9CE] group-hover:border-[#24B86C]'}`}>
+                              {isSelected && <div className="w-2 h-2 bg-white rounded-[2px]" />}
+                            </div>
+                            <input type="checkbox" className="hidden" checked={isSelected} onChange={() => setActiveTier(isSelected ? null : tier)} />
+                            <span className={`text-[15px] transition-colors ${isSelected ? 'text-[#0D1A12] font-bold' : 'text-[#4B5563] group-hover:text-[#0D1A12] font-medium'}`}>{tier} Assets Only</span>
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
                   {/* Properties */}
                   <div className="bg-[#DDF0E9] p-7 rounded-[1.5rem]">
