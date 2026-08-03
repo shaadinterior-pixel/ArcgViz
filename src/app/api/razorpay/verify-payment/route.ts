@@ -167,19 +167,37 @@ export async function POST(request: Request) {
     warnings.push('Payment succeeded but no signed-in account was found to credit. Please contact support.');
   }
 
-  // Record the sale so it shows up in the admin dashboard.
+  // Record the sale so it shows up in the admin dashboard and revenue tracker.
+  const orderRow: Record<string, unknown> = {
+    id: orderId,
+    customer: customer || 'Guest',
+    email: email || SUPPORT_EMAIL,
+    product: plan
+      ? `${plan.name} recharge — ${plan.credits} downloads`
+      : String(body.product || purchasedProductIds.join(', ') || `${orderKind} checkout`),
+    amount: `₹${(amountPaise / 100).toLocaleString('en-IN')}`,
+    status: 'Completed',
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+  };
+
+  // Columns added by supabase_migration_orders_meta.sql. If that has not been run
+  // yet the insert fails, so retry without them rather than losing the order.
+  const orderMeta = {
+    kind: plan ? 'recharge' : orderKind,
+    amount_inr: amountPaise / 100,
+    user_id: userId,
+    payment_id: paymentId,
+    created_at: new Date().toISOString(),
+  };
+
   try {
-    await getAdminClient().from('orders').upsert([{
-      id: orderId,
-      customer: customer || 'Guest',
-      email: email || SUPPORT_EMAIL,
-      product: plan
-        ? `${plan.name} recharge — ${plan.credits} downloads`
-        : String(body.product || purchasedProductIds.join(', ') || `${orderKind} checkout`),
-      amount: `₹${(amountPaise / 100).toLocaleString('en-IN')}`,
-      status: 'Completed',
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-    }]);
+    const supabaseAdmin = getAdminClient();
+    const { error } = await supabaseAdmin.from('orders').upsert([{ ...orderRow, ...orderMeta }]);
+    if (error) {
+      console.warn('[razorpay] order meta columns missing, saving base row only:', error.message);
+      const fallback = await supabaseAdmin.from('orders').upsert([orderRow]);
+      if (fallback.error) throw fallback.error;
+    }
   } catch (error) {
     warnings.push('Payment succeeded but the order could not be recorded.');
     console.error('[razorpay] failed to record order', error);

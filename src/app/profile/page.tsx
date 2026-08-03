@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   User, Mail, Calendar, Shield, Download, ShoppingBag,
-  LogOut, Star, Zap, Crown, Wallet, RefreshCw,
+  LogOut, Star, Zap, Crown, Wallet, RefreshCw, Building2,
   Edit3, Check, X, ArrowRight, Infinity, Package, Bookmark
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -17,10 +17,11 @@ import { updateProfile } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 
-const PLAN_CONFIG = {
-  Free:  { icon: Star,  color: '#6B7280', bg: 'bg-zinc-100',    label: 'Free',        gradient: 'from-zinc-400 to-zinc-600' },
-  Plus:  { icon: Zap,   color: '#24B86C', bg: 'bg-green-50',   label: 'Plus',         gradient: 'from-[#24B86C] to-[#11998E]' },
-  Pro:   { icon: Crown, color: '#9333EA', bg: 'bg-purple-50',  label: 'Plus + Pro',   gradient: 'from-purple-500 to-purple-700' },
+const PLAN_CONFIG: Record<PlanTier, { icon: React.ElementType; color: string; bg: string; label: string; gradient: string }> = {
+  Free:       { icon: Star,      color: '#6B7280', bg: 'bg-zinc-100',   label: 'Free',        gradient: 'from-zinc-400 to-zinc-600' },
+  Plus:       { icon: Zap,       color: '#24B86C', bg: 'bg-green-50',   label: 'Plus',        gradient: 'from-[#24B86C] to-[#11998E]' },
+  Pro:        { icon: Crown,     color: '#9333EA', bg: 'bg-purple-50',  label: 'Plus + Pro',  gradient: 'from-purple-500 to-purple-700' },
+  Enterprise: { icon: Building2, color: '#D97706', bg: 'bg-amber-50',   label: 'Enterprise',  gradient: 'from-amber-500 to-amber-700' },
 };
 
 export default function ProfilePage() {

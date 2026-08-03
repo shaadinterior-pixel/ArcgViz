@@ -97,13 +97,6 @@ export type HeroContent = {
 export type CardEntry = { name: string; count: string; image: string };
 export type Category = { id: string; title: string; description: string; cards: CardEntry[]; subcategories?: string[] };
 
-export type Purchase = {
-  id: string;
-  user_id: string;
-  product_id: string;
-  purchased_at: string;
-};
-
 export type Testimonial = {
   id: string;
   name: string;
@@ -245,19 +238,12 @@ export function generateSlug(name: string): string {
 }
 
 // ─── Customers ─────────────────────────────────────────────────────────────────
+// Customers are consumer data and live in Firestore. Writes go through the
+// admin server actions (saveAdminCustomer / deleteAdminCustomer in
+// @/app/actions/admin), which is why there are no Supabase writers here.
 
 export async function fetchCustomers(): Promise<Customer[]> {
   return await fetchAdminCustomers();
-}
-
-export async function saveCustomers(customers: Customer[]): Promise<void> {
-  const { error } = await supabase.from('customers').upsert(customers);
-  if (error) throw error;
-}
-
-export async function deleteCustomer(id: string): Promise<void> {
-  const { error } = await supabase.from('customers').delete().eq('id', id);
-  if (error) throw error;
 }
 
 // ─── Orders ────────────────────────────────────────────────────────────────────
@@ -400,22 +386,10 @@ export async function deleteService(id: string): Promise<void> {
 }
 
 // ─── Purchases ─────────────────────────────────────────────────────────────────
-
-export async function fetchPurchases(): Promise<Purchase[]> {
-  const { data, error } = await supabase
-    .from('purchases')
-    .select('*')
-    .order('purchased_at', { ascending: false });
-  if (error) throw error;
-  return data || [];
-}
-
-export async function grantPurchase(userId: string, productId: string): Promise<void> {
-  const { error } = await supabase
-    .from('purchases')
-    .upsert({ user_id: userId, product_id: productId });
-  if (error) throw error;
-}
+// Purchases are consumer data and live in Firestore under
+// users/{uid}/purchases — see hasPurchasedProduct / grantLifetimePurchase in
+// ./downloads. The download gate reads Firestore, so nothing here may write
+// purchases to Supabase or paying customers would be locked out of their files.
 
 // ─── Testimonials ───────────────────────────────────────────────────────────────
 

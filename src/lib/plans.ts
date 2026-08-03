@@ -6,13 +6,26 @@
 //
 // This file is imported by both client and server — it must never contain secrets.
 
-export type PlanTier = 'Free' | 'Plus' | 'Pro';
+/**
+ * Enterprise is not self-serve: there is no fixed price or pack size. An admin
+ * negotiates the deal and grants the credits by hand from /admin/users.
+ */
+export type PlanTier = 'Free' | 'Plus' | 'Pro' | 'Enterprise';
+
+/** Tiers an admin can assign manually. */
+export const ASSIGNABLE_TIERS: PlanTier[] = ['Free', 'Plus', 'Pro', 'Enterprise'];
 
 /** Downloads a user with no credits gets each day, reset at midnight. */
 export const FREE_DAILY_DOWNLOADS = 3;
 
+/**
+ * Tiers a customer can buy themselves. Enterprise is excluded on purpose — it has
+ * no fixed price or pack size, so it can only be assigned by an admin.
+ */
+export type RechargePlanId = 'Plus' | 'Pro';
+
 export type RechargePlan = {
-  id: Exclude<PlanTier, 'Free'>;
+  id: RechargePlanId;
   name: string;
   /** Price in rupees. Converted to paise server-side when creating the order. */
   priceInr: number;
@@ -20,12 +33,12 @@ export type RechargePlan = {
   credits: number;
 };
 
-export const RECHARGE_PLANS: Record<Exclude<PlanTier, 'Free'>, RechargePlan> = {
+export const RECHARGE_PLANS: Record<RechargePlanId, RechargePlan> = {
   Plus: { id: 'Plus', name: 'Plus', priceInr: 149, credits: 350 },
   Pro:  { id: 'Pro',  name: 'Pro',  priceInr: 249, credits: 700 },
 };
 
-export function isRechargePlanId(value: unknown): value is Exclude<PlanTier, 'Free'> {
+export function isRechargePlanId(value: unknown): value is RechargePlanId {
   return value === 'Plus' || value === 'Pro';
 }
 
@@ -123,7 +136,13 @@ export function effectiveTier(user: { plan?: string; downloadCredits?: number } 
   const credits = Number(user?.downloadCredits ?? 0);
   if (credits <= 0) return 'Free';
   const plan = String(user?.plan || 'Free');
+  if (plan === 'Enterprise') return 'Enterprise';
   if (plan === 'Pro') return 'Pro';
   if (plan === 'Plus') return 'Plus';
   return 'Free';
+}
+
+/** Enterprise gets the same asset access as Pro. */
+export function tierUnlocksProAssets(tier: PlanTier): boolean {
+  return tier === 'Pro' || tier === 'Enterprise';
 }
