@@ -8,7 +8,7 @@ import { getServicePath } from '@/lib/service-seo';
 
 const FOOTER_LINKS = {
   Marketplace: [
-    { label: 'All Products', href: '/products' },
+    { label: 'All Resources', href: '/products' },
     { label: 'Interior Design', href: '/products?category=interior' },
     { label: '3D Models', href: '/products?category=3d' },
     { label: 'Brand Kits', href: '/products?category=branding' },

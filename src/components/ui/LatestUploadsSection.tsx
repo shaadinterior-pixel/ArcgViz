@@ -204,7 +204,7 @@ export function LatestUploadsSection() {
             href={activeFilter === 'All' ? '/products' : `/products?category=${encodeURIComponent(activeFilter)}`}
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#0D1A12] text-white font-bold text-sm hover:bg-[#24B86C] transition-all duration-300 shadow-lg group"
           >
-            {activeFilter === 'All' ? 'Browse All Products' : `Browse All ${activeFilter}`}
+            {activeFilter === 'All' ? 'Browse All Resources' : `Browse All ${activeFilter}`}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>

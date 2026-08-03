@@ -151,7 +151,7 @@ function ProductsContent() {
         >
           <div className="w-full md:w-auto flex-1">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-[#0D1A12]">
-              {activeTier?.toLowerCase() === 'free' ? 'Free Assets & Resources' : activeCategories.length === 1 ? activeCategories[0] : 'All Products'}
+              {activeTier?.toLowerCase() === 'free' ? 'Free Assets & Resources' : activeCategories.length === 1 ? activeCategories[0] : 'All Resources'}
             </h1>
             <p className="text-[#6B7280] max-w-2xl mb-8 text-lg">
               {activeTier?.toLowerCase() === 'free' 

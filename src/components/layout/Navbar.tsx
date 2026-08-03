@@ -230,7 +230,7 @@ export function Navbar() {
                       <div className="w-8 h-8 rounded-lg bg-[#24B86C]/10 flex items-center justify-center shrink-0 group-hover:bg-[#24B86C]/20 transition-colors">
                         <Grid3X3 className="w-4 h-4 text-[#24B86C]" />
                       </div>
-                      <span className="text-[13px] font-bold text-[#0D1A12]">All Products</span>
+                      <span className="text-[13px] font-bold text-[#0D1A12]">All Resources</span>
                     </Link>
                     
                     {latestProducts.map((prod) => (
@@ -625,7 +625,7 @@ export function Navbar() {
                         <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="overflow-hidden">
                           <div className="flex flex-col space-y-1 pb-3">
                             <Link href="/products" className="text-[13px] font-bold text-zinc-600 py-2 pl-4 border-l-2 border-transparent hover:border-[#24B86C] hover:text-[#24B86C] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                              View All Products
+                              View All Resources
                             </Link>
                             {marketplaceCategories.map((cat) => (
                               <Link

@@ -175,10 +175,10 @@ export default function ServiceDetailPage() {
       {/* ── PRODUCTS IN THIS CATEGORY (MASONRY GRID) ── */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto">
         <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl font-black text-[#111111]">Products we provide in this service</h2>
+          <h2 className="text-3xl font-black text-[#111111]">Resources we provide in this service</h2>
           <Link href={`/products?category=${encodeURIComponent(service.category)}`}>
             <Button variant="outline" className="hidden md:flex rounded-full border-[#E2EDE8] font-bold">
-              View All Products
+              View All Resources
             </Button>
           </Link>
         </div>
