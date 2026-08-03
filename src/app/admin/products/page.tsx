@@ -66,7 +66,9 @@ export default function AdminProductsPage() {
   const [zipError, setZipError] = useState('');
   const [attachmentStatus, setAttachmentStatus] = useState<AttachmentStatus>('idle');
   const [isAddingSubcat, setIsAddingSubcat] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const modalScrollRef = useRef<HTMLDivElement | null>(null);
+  const ITEMS_PER_PAGE = 40;
 
   const load = useCallback(async () => {
     try {
@@ -90,6 +92,10 @@ export default function AdminProductsPage() {
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter]);
+
   const filtered = products.filter(p => {
     const q = search.trim().toLowerCase();
     // '40', 'DW40' and 'DW-40' should all find the product carrying DW-40.
@@ -102,6 +108,32 @@ export default function AdminProductsPage() {
       (canonicalId !== null && matchesResourceId(p.specifications, canonicalId));
     return matchesText && (statusFilter === 'All' || p.status === statusFilter);
   });
+
+  // Ensure latest uploaded products appear at the very top (newest first)
+  const sortedProducts = [...filtered].sort((a, b) => {
+    const timeA = a.created_at ? new Date(a.created_at).getTime() : 
+                  a.updated_at ? new Date(a.updated_at).getTime() : 
+                  !isNaN(Date.parse(a.date)) ? new Date(a.date).getTime() : 0;
+    const timeB = b.created_at ? new Date(b.created_at).getTime() : 
+                  b.updated_at ? new Date(b.updated_at).getTime() : 
+                  !isNaN(Date.parse(b.date)) ? new Date(b.date).getTime() : 0;
+    
+    if (!isNaN(timeA) && !isNaN(timeB) && timeA !== timeB) {
+      return timeB - timeA;
+    }
+    
+    // Fallback: higher Resource ID number (e.g. DW-47 over DW-46) implies later upload
+    const idNumA = parseInt((readResourceId(a.specifications) || '').replace(/\D/g, ''), 10);
+    const idNumB = parseInt((readResourceId(b.specifications) || '').replace(/\D/g, ''), 10);
+    if (!isNaN(idNumA) && !isNaN(idNumB) && idNumA !== idNumB) {
+      return idNumB - idNumA;
+    }
+
+    return (b.id || '').localeCompare(a.id || '');
+  });
+
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / ITEMS_PER_PAGE));
+  const paginatedProducts = sortedProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const resetUploadState = () => { setAttachmentStatus('idle'); setZipUploading(false); setZipProgress(0); setZipError(''); };
   const openNew = () => {
@@ -333,7 +365,7 @@ export default function AdminProductsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {filtered.length>0 ? filtered.map(p=>(
+                {paginatedProducts.length>0 ? paginatedProducts.map(p=>(
                   <tr key={p.id} className="hover:bg-white/5 transition-colors group">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
@@ -388,7 +420,61 @@ export default function AdminProductsPage() {
               </tbody>
             </table>
           </div>
-          <div className="px-5 py-3 border-t border-white/10 text-xs font-medium text-foreground/40 bg-white/5">Showing {filtered.length} of {products.length}</div>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 border-t border-white/10 bg-white/5">
+            <div className="text-xs font-medium text-foreground/60">
+              Showing <span className="font-bold text-foreground">{sortedProducts.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="font-bold text-foreground">{Math.min(currentPage * ITEMS_PER_PAGE, sortedProducts.length)}</span> of <span className="font-bold text-foreground">{sortedProducts.length}</span> entries
+              {sortedProducts.length !== products.length && ` (filtered from ${products.length} total)`}
+            </div>
+            {totalPages > 1 && (
+              <div className="flex items-center gap-1.5">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="h-8 px-3 text-xs border-white/10 hover:bg-white/10 disabled:opacity-40"
+                >
+                  Previous
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  if (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1)
+                  ) {
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`h-8 min-w-[2rem] px-2 rounded-lg text-xs font-bold transition-all ${
+                          currentPage === page
+                            ? 'bg-[#24B86C] text-white shadow-md'
+                            : 'bg-black/20 hover:bg-white/10 text-foreground/70 border border-white/10'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  } else if (
+                    (page === currentPage - 2 && page > 1) ||
+                    (page === currentPage + 2 && page < totalPages)
+                  ) {
+                    return <span key={page} className="text-foreground/30 px-1">...</span>;
+                  }
+                  return null;
+                })}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="h-8 px-3 text-xs border-white/10 hover:bg-white/10 disabled:opacity-40"
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
 
