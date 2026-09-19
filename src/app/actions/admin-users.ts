@@ -13,7 +13,7 @@ import { adminDb, adminAuth } from '@/lib/firebase-admin';
 import { isAdminEmail } from '@/lib/constants';
 import {
   resolveAllowance, effectiveTier, allTimeDownloads, isCreditBalanceExpired,
-  lastCreditEventAt, creditExpiresAt, ASSIGNABLE_TIERS, type PlanTier,
+  lastCreditEventAt, creditExpiryLabel, ASSIGNABLE_TIERS, type PlanTier,
 } from '@/lib/plans';
 
 export type WishlistItem = {
@@ -166,7 +166,7 @@ export async function fetchAdminUsers(idToken: string): Promise<ActionResult<Adm
         spentInr,
         joinDate: toDateString(data.joinDate),
         planTakenOn: hasActiveBalance ? toDateString(lastCreditEventAt(data)) : '—',
-        creditsExpireOn: hasActiveBalance ? toDateString(creditExpiresAt(data)) : '—',
+        creditsExpireOn: creditExpiryLabel(data),
         wishlist,
         status: String(data.status || 'Active'),
       } satisfies AdminUser;
