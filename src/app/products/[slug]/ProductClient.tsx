@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { type Product } from '@/lib/store';
 import { getCurrentUser, hasPurchased, getWishlist, toggleWishlist } from '@/lib/auth';
+import { effectiveTier, tierUnlocksProAssets, tierLabel } from '@/lib/plans';
 import { supabase } from '@/lib/supabase';
 import { useCart } from '@/lib/cart';
 import PrintingOrderForm from './PrintingOrderForm';
@@ -52,7 +53,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   const [isZoomActive, setIsZoomActive] = useState(false);
 
   // ── Auth & purchase state ─────────────────────────────────────────────────
-  const [user, setUser] = useState<{ id: string, plan?: string } | null>(null);
+  const [user, setUser] = useState<{ id: string, plan?: string, downloadCredits?: number } | null>(null);
   const [purchased, setPurchased] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
@@ -63,10 +64,11 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
     (async () => {
       const u = await getCurrentUser();
       if (u) {
-        // Get plan from Firestore instead of Supabase customers table
-        const { getUserPlan } = await import('@/lib/firebase-auth');
-        const plan = await getUserPlan(u.uid);
-        setUser({ id: u.uid, plan });
+        // Real access depends on credits remaining, not just the stored plan
+        // name — a user whose balance hit 0 is effectively back to Free.
+        const { getUserProfile } = await import('@/lib/firebase-auth');
+        const profile = await getUserProfile(u.uid);
+        setUser({ id: u.uid, plan: profile?.plan, downloadCredits: profile?.downloadCredits });
         // Check purchase in Firestore for Paid products
         const { hasPurchasedProduct } = await import('@/lib/downloads');
         const has = await hasPurchasedProduct(u.uid, product.id);
@@ -99,14 +101,18 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
   };
 
   const productPlan = product.plan_tier || 'Free';
-  const productPlanDisplay = productPlan === 'Pro' ? 'Plus + Pro' : productPlan;
-  const userPlan = user?.plan || 'Free';
-  
+  const productPlanDisplay = productPlan === 'Plus' || productPlan === 'Pro' ? 'Plus + Pro' : productPlan;
+  // Plus and Pro are merged into one access tier — either unlocks every asset
+  // tier. Uses the effective tier (not the raw stored plan) so an exhausted
+  // credit balance correctly falls back to Free, same as the download API.
+  const userTier = effectiveTier(user);
+  const userPlan = tierLabel(userTier);
+
   const canDownload = !!user && (
-    purchased || 
+    purchased ||
     (productPlan !== 'Paid' && (
-      productPlan === 'Free' || 
-      userPlan === 'Pro'
+      productPlan === 'Free' ||
+      tierUnlocksProAssets(userTier)
     ))
   );
 
@@ -372,7 +378,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   <div className="border border-zinc-300 rounded-xl p-3 flex justify-between items-center bg-white cursor-pointer hover:border-[#24B86C] transition-colors group">
                     <div>
                       <div className="text-sm font-bold text-[#111111] mb-0.5">
-                        {productPlan === 'Paid' ? `Price: ${product.price || 'N/A'}` : `${productPlan} Tier Resources`}
+                        {productPlan === 'Paid' ? `Price: ${product.price || 'N/A'}` : `${productPlanDisplay} Tier Resources`}
                       </div>
                       {user && (
                         <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-0.5">
@@ -481,7 +487,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                   <div className="border border-zinc-200 rounded-xl p-3 flex justify-between items-center bg-white hover:border-[#24B86C] transition-colors group cursor-pointer">
                     <div>
                       <div className="text-sm font-bold text-[#111111] mb-0.5">
-                        {productPlan === 'Pro' ? 'Plus + Pro' : productPlan} Tier Resources
+                        {productPlanDisplay} Tier Resources
                       </div>
                     {user && (
                       <div className="text-xs text-zinc-500 flex items-center gap-1.5 mt-0.5">
@@ -504,7 +510,7 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                     <Button className="w-full h-12 bg-[#24B86C] hover:bg-[#1E995A] text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-sm mb-3">
                       {productPlan === 'Paid' 
                         ? 'Login Required Before Downloading' 
-                        : `Upgrade to ${productPlan === 'Pro' ? 'Plus + Pro' : productPlan} to Download`}
+                        : `Upgrade to ${productPlanDisplay} to Download`}
                     </Button>
                   </Link>
                 ) : canDownload ? (
@@ -708,11 +714,11 @@ export default function ProductClient({ product, similarProducts = [] }: Props) 
                             <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
                               <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
                                 plan === 'Free' ? 'bg-[#24B86C]' :
-                                plan === 'Pro' ? 'bg-[#9333EA]' :
+                                plan === 'Plus' || plan === 'Pro' ? 'bg-[#9333EA]' :
                                 'bg-[#F59E0B]'
                               }`} />
                               <span className="text-[10px] font-bold uppercase tracking-widest text-white drop-shadow-md">
-                                {plan === 'Pro' ? 'Plus + Pro' : plan}
+                                {plan === 'Plus' || plan === 'Pro' ? 'Plus + Pro' : plan}
                               </span>
                             </div>
 

@@ -225,11 +225,11 @@ export function LiveSearch({ placeholder = 'What are you looking for today?', au
                       <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-50 border border-zinc-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
                         <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${
                           result.plan === 'Free' ? 'bg-[#24B86C]' :
-                          result.plan === 'Pro' ? 'bg-[#9333EA]' :
+                          result.plan === 'Plus' || result.plan === 'Pro' ? 'bg-[#9333EA]' :
                           'bg-[#F59E0B]'
                         }`} />
                         <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-700">
-                          {result.plan === 'Pro' ? 'Plus + Pro' : (result.plan || 'Free')}
+                          {result.plan === 'Plus' || result.plan === 'Pro' ? 'Plus + Pro' : (result.plan || 'Free')}
                         </span>
                       </div>
                     </div>
