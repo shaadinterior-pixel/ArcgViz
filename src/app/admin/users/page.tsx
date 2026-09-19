@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Search, Users, Wallet, Crown, Zap, Star, Building2, Loader2,
-  Plus, Minus, X, ShieldCheck, Download,
+  Plus, Minus, X, ShieldCheck, Download, Heart, Package,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -214,6 +214,11 @@ export default function AdminUsersPage() {
                       <td className="py-3 px-2">
                         <div className="font-bold text-[#111827]">{u.name}</div>
                         <div className="text-xs text-[#6B7280]">{u.email}</div>
+                        {u.wishlist.length > 0 && (
+                          <div className="text-[10px] text-pink-500 font-bold mt-1 flex items-center gap-1">
+                            <Heart className="w-2.5 h-2.5 fill-pink-500" /> {u.wishlist.length} saved
+                          </div>
+                        )}
                       </td>
                       <td className="py-3 px-2">
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${style.bg}`}>
@@ -262,7 +267,7 @@ export default function AdminUsersPage() {
       {/* Manage modal */}
       {editing && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={() => !busy && setEditing(null)}>
-          <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
             <div className="flex items-start justify-between p-6 border-b border-[#E5E7EB]">
               <div>
                 <h2 className="text-lg font-black text-[#111827]">{editing.name}</h2>
@@ -274,7 +279,7 @@ export default function AdminUsersPage() {
               </button>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6 overflow-y-auto">
               {/* Balance */}
               <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-2xl p-4 flex items-center justify-between">
                 <div>
@@ -357,6 +362,41 @@ export default function AdminUsersPage() {
                   Logged against your admin account and shown in the customer&apos;s own recharge history.
                   Manual grants are kept out of revenue totals.
                 </p>
+              </div>
+
+              {/* Wishlist */}
+              <div>
+                <label className="block text-xs font-bold text-[#374151] uppercase tracking-widest mb-2">
+                  Wishlist ({editing.wishlist.length})
+                </label>
+                {editing.wishlist.length === 0 ? (
+                  <p className="text-xs text-[#9CA3AF]">Nothing saved yet.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {editing.wishlist.map(item => (
+                      <a
+                        key={item.id}
+                        href={`/products/${item.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-2 rounded-xl border border-[#E5E7EB] hover:border-[#24B86C] transition-colors"
+                      >
+                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-[#F3F4F6] shrink-0 flex items-center justify-center">
+                          {item.thumbnailUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={item.thumbnailUrl} alt={item.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <Package className="w-4 h-4 text-[#9CA3AF]" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-[#111827] truncate">{item.name}</div>
+                          {item.price && <div className="text-[11px] text-[#9CA3AF]">{item.price}</div>}
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 

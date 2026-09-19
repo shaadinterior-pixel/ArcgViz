@@ -88,6 +88,7 @@ function toMillis(value: TimestampLike): number {
 }
 
 export type ExpiryInput = {
+  plan?: string;
   lastRechargeAt?: TimestampLike;
   lastManualGrantAt?: TimestampLike;
 };
@@ -117,8 +118,13 @@ export function creditExpiresAt(user: ExpiryInput | null | undefined): Date {
  * True once more than CREDIT_EXPIRY_DAYS have passed since the most recent
  * recharge or manual grant (or the rollout date, whichever is later). An
  * expired balance is treated as spent everywhere credits are read.
+ *
+ * Enterprise is exempt — it's not a self-serve pack, it's a custom deal an
+ * admin negotiates by hand (see ASSIGNABLE_TIERS doc comment), and those
+ * terms can run far longer than 30 days.
  */
 export function isCreditBalanceExpired(user: ExpiryInput | null | undefined, now = new Date()): boolean {
+  if (String(user?.plan) === 'Enterprise') return false;
   const lastEvent = Math.max(
     toMillis(user?.lastRechargeAt),
     toMillis(user?.lastManualGrantAt),
@@ -126,6 +132,17 @@ export function isCreditBalanceExpired(user: ExpiryInput | null | undefined, now
   );
   const expiresAt = lastEvent + CREDIT_EXPIRY_DAYS * 24 * 60 * 60 * 1000;
   return now.getTime() > expiresAt;
+}
+
+/**
+ * Human label for when the current balance goes stale, for admin display.
+ * '—' when there's no active balance to show a date for; Enterprise never
+ * auto-expires, so it gets its own label instead of a real date.
+ */
+export function creditExpiryLabel(user: (ExpiryInput & { downloadCredits?: number }) | null | undefined): string {
+  if (effectiveTier(user) === 'Free') return '—';
+  if (String(user?.plan) === 'Enterprise') return 'No auto-expiry (Enterprise)';
+  return creditExpiresAt(user).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export type DownloadAllowance = {
@@ -208,7 +225,7 @@ export function allTimeDownloads(user: {
  * there are credits left to spend — a balance that is exhausted OR expired
  * (see isCreditBalanceExpired) is back to Free.
  */
-export function effectiveTier(user: (ExpiryInput & { plan?: string; downloadCredits?: number }) | null | undefined): PlanTier {
+export function effectiveTier(user: (ExpiryInput & { downloadCredits?: number }) | null | undefined): PlanTier {
   const credits = isCreditBalanceExpired(user) ? 0 : Number(user?.downloadCredits ?? 0);
   if (credits <= 0) return 'Free';
   const plan = String(user?.plan || 'Free');

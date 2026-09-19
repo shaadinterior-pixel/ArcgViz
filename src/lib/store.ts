@@ -38,6 +38,14 @@ export type Product = {
   plan_tier: 'Free' | 'Plus' | 'Pro' | 'Paid';
 };
 
+export type WishlistItem = {
+  id: string;
+  name: string;
+  thumbnailUrl: string;
+  slug: string;
+  price: string;
+};
+
 export type Customer = {
   id: string;
   name: string;
@@ -51,6 +59,8 @@ export type Customer = {
   downloadsUsed?: number;
   downloadsRemaining?: number;
   wishlistCount?: number;
+  /** Products this customer saved, resolved from Supabase — not just the raw id list. */
+  wishlist?: WishlistItem[];
   freeProDownloadsRemaining?: number;
   /** When the current balance was last topped up. '—' if never / not applicable. */
   planTakenOn?: string;

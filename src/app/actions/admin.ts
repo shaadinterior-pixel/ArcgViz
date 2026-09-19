@@ -1,7 +1,7 @@
 'use server';
 
 import { adminDb } from '@/lib/firebase-admin';
-import type { Customer } from '@/lib/store';
+import type { Customer, WishlistItem } from '@/lib/store';
 import {
   resolveAllowance, allTimeDownloads, isCreditBalanceExpired, lastCreditEventAt,
   creditExpiresAt, effectiveTier, ASSIGNABLE_TIERS, type PlanTier,
@@ -33,6 +33,33 @@ export async function fetchAdminCustomers(): Promise<Customer[]> {
       if (!order.user_id || !isRevenueOrder(order)) continue;
       spentByUser.set(order.user_id, (spentByUser.get(order.user_id) || 0) + orderAmountInr(order));
       orderCountByUser.set(order.user_id, (orderCountByUser.get(order.user_id) || 0) + 1);
+    }
+
+    // Wishlists only store product ids — resolve every id used by any
+    // customer in one Supabase query rather than one round trip per customer.
+    const wishlistIds = new Set<string>();
+    usersSnap.docs.forEach(doc => {
+      const raw = doc.data().wishlist;
+      if (Array.isArray(raw)) raw.forEach(id => typeof id === 'string' && wishlistIds.add(id));
+    });
+    const productById = new Map<string, WishlistItem>();
+    if (wishlistIds.size > 0) {
+      try {
+        const { getAdminClient } = await import('@/lib/supabase-admin');
+        const { data: products } = await getAdminClient()
+          .from('products')
+          .select('id, name, thumbnail_url, slug, price')
+          .in('id', Array.from(wishlistIds));
+        (products ?? []).forEach(p => productById.set(p.id, {
+          id: p.id,
+          name: String(p.name || 'Untitled'),
+          thumbnailUrl: String(p.thumbnail_url || ''),
+          slug: String(p.slug || p.id),
+          price: String(p.price || ''),
+        }));
+      } catch {
+        // Wishlist stays as a count-only fallback below if this fails.
+      }
     }
 
     const customers = usersSnap.docs.map((doc) => {
@@ -68,6 +95,9 @@ export async function fetchAdminCustomers(): Promise<Customer[]> {
         downloadsUsed: allTimeDownloads(data),
         downloadsRemaining: allowance.remaining,
         wishlistCount: Array.isArray(data.wishlist) ? data.wishlist.length : 0,
+        wishlist: Array.isArray(data.wishlist)
+          ? data.wishlist.map((id: unknown) => productById.get(String(id))).filter((p): p is WishlistItem => !!p)
+          : [],
         freeProDownloadsRemaining: data.freeProDownloadsRemaining || 0,
         planTakenOn: hasActiveBalance ? fmtDate(lastCreditEventAt(data)) : '—',
         creditsExpireOn: hasActiveBalance ? fmtDate(creditExpiresAt(data)) : '—',

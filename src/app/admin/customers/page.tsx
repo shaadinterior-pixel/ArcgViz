@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit, Trash2, X, Users, ChevronDown } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, X, Users, ChevronDown, Package } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -203,12 +203,12 @@ export default function AdminCustomersPage() {
       {/* Modal */}
       {isOpen && editing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D1A12]/40 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-md rounded-3xl flex flex-col overflow-hidden shadow-2xl">
-            <div className="flex items-center justify-between px-6 py-5 border-b border-[#E2EDE8] bg-[#F8FAF9]">
+          <div className="bg-white w-full max-w-md rounded-3xl flex flex-col overflow-hidden shadow-2xl max-h-[85vh]">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[#E2EDE8] bg-[#F8FAF9] shrink-0">
               <h2 className="text-xl font-black text-[#111111]">{editing.id.startsWith('tmp-') ? 'Add Customer' : 'Edit Customer'}</h2>
               <button onClick={() => setIsOpen(false)} className="p-2 rounded-full text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 transition-colors"><X className="w-5 h-5" /></button>
             </div>
-            <div className="px-6 py-6 space-y-5">
+            <div className="px-6 py-6 space-y-5 overflow-y-auto">
               {[
                 { label: 'Full Name *', key: 'name', placeholder: 'Alex Johnson', type: 'text' },
                 { label: 'Email *',     key: 'email', placeholder: 'alex@example.com', type: 'email' },
@@ -245,6 +245,36 @@ export default function AdminCustomersPage() {
                 </div>
               </div>
 
+              {!!editing.wishlist?.length && (
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Saved products</label>
+                  <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                    {editing.wishlist.map(item => (
+                      <a
+                        key={item.id}
+                        href={`/products/${item.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-2 rounded-xl border border-zinc-100 hover:border-[#24B86C] transition-colors"
+                      >
+                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-zinc-100 shrink-0 flex items-center justify-center">
+                          {item.thumbnailUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={item.thumbnailUrl} alt={item.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <Package className="w-4 h-4 text-zinc-400" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-[#111111] truncate">{item.name}</div>
+                          {item.price && <div className="text-[11px] text-zinc-400">{item.price}</div>}
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Plan Tier</label>
@@ -271,7 +301,7 @@ export default function AdminCustomersPage() {
                 </div>
               </div>
             </div>
-            <div className="px-6 py-5 border-t border-[#E2EDE8] flex justify-end gap-3 bg-[#F8FAF9]">
+            <div className="px-6 py-5 border-t border-[#E2EDE8] flex justify-end gap-3 bg-[#F8FAF9] shrink-0">
               <Button variant="outline" className="border-[#E2EDE8] hover:bg-zinc-100 text-[#111111] font-bold rounded-xl" onClick={() => setIsOpen(false)}>Cancel</Button>
               <Button onClick={handleSave} disabled={saving} className="bg-[#24B86C] hover:bg-[#1E995A] text-white min-w-[100px] font-bold rounded-xl">
                 {saving ? 'Saving…' : 'Save Changes'}

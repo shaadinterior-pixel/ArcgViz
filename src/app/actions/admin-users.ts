@@ -16,6 +16,14 @@ import {
   lastCreditEventAt, creditExpiresAt, ASSIGNABLE_TIERS, type PlanTier,
 } from '@/lib/plans';
 
+export type WishlistItem = {
+  id: string;
+  name: string;
+  thumbnailUrl: string;
+  slug: string;
+  price: string;
+};
+
 export type AdminUser = {
   id: string;
   name: string;
@@ -37,6 +45,8 @@ export type AdminUser = {
   planTakenOn: string;
   /** When the current balance goes stale. '—' for Free/Enterprise or an already-expired balance. */
   creditsExpireOn: string;
+  /** Products this user saved, resolved from Supabase — not just the raw id list. */
+  wishlist: WishlistItem[];
   status: string;
 };
 
@@ -90,9 +100,35 @@ export async function fetchAdminUsers(idToken: string): Promise<ActionResult<Adm
 
     const snap = await adminDb.collection('users').get();
 
+    // Wishlists only store product ids — resolve every id used by any user in
+    // one Supabase query rather than one round trip per user.
+    const wishlistIds = new Set<string>();
+    snap.docs.forEach(doc => {
+      const raw = doc.data().wishlist;
+      if (Array.isArray(raw)) raw.forEach(id => typeof id === 'string' && wishlistIds.add(id));
+    });
+    const productById = new Map<string, WishlistItem>();
+    if (wishlistIds.size > 0) {
+      const { getAdminClient } = await import('@/lib/supabase-admin');
+      const { data: products } = await getAdminClient()
+        .from('products')
+        .select('id, name, thumbnail_url, slug, price')
+        .in('id', Array.from(wishlistIds));
+      (products ?? []).forEach(p => productById.set(p.id, {
+        id: p.id,
+        name: String(p.name || 'Untitled'),
+        thumbnailUrl: String(p.thumbnail_url || ''),
+        slug: String(p.slug || p.id),
+        price: String(p.price || ''),
+      }));
+    }
+
     const users = await Promise.all(snap.docs.map(async (doc) => {
       const data = doc.data();
       const allowance = resolveAllowance(data);
+      const wishlist: WishlistItem[] = Array.isArray(data.wishlist)
+        ? data.wishlist.map((id: unknown) => productById.get(String(id))).filter((p): p is WishlistItem => !!p)
+        : [];
 
       // Subcollection counts drive the tracker, so they have to be real reads.
       const [recharges, purchases] = await Promise.all([
@@ -131,6 +167,7 @@ export async function fetchAdminUsers(idToken: string): Promise<ActionResult<Adm
         joinDate: toDateString(data.joinDate),
         planTakenOn: hasActiveBalance ? toDateString(lastCreditEventAt(data)) : '—',
         creditsExpireOn: hasActiveBalance ? toDateString(creditExpiresAt(data)) : '—',
+        wishlist,
         status: String(data.status || 'Active'),
       } satisfies AdminUser;
     }));
