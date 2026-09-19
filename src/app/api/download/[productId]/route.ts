@@ -4,7 +4,7 @@ import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { createR2SignedDownloadUrl, extractR2ObjectKey } from '@/lib/storage/r2';
-import { dayKey, resolveAllowance, effectiveTier } from '@/lib/plans';
+import { dayKey, resolveAllowance, effectiveTier, tierUnlocksProAssets } from '@/lib/plans';
 
 export const runtime = 'nodejs';
 
@@ -126,7 +126,7 @@ export async function GET(
         const data = snap.data() || {};
 
         // PRO tier assets need an active recharge, or a free-pro bypass.
-        if (/^pro$/i.test(productPlan) && effectiveTier(data) === 'Free') {
+        if (/^pro$/i.test(productPlan) && !tierUnlocksProAssets(effectiveTier(data))) {
           const freeProRem = Number(data.freeProDownloadsRemaining || 0);
           if (freeProRem <= 0) {
             throw new QuotaError('This asset requires an active Plus or Pro recharge.');

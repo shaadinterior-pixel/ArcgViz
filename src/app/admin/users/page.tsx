@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
 import { getCurrentUser } from '@/lib/auth';
-import { ASSIGNABLE_TIERS, type PlanTier } from '@/lib/plans';
+import { ASSIGNABLE_TIERS, tierLabel, type PlanTier } from '@/lib/plans';
 import { formatInr } from '@/lib/pricing';
 import { fetchAdminUsers, grantCreditsToUser, setUserPlan, type AdminUser } from '@/app/actions/admin-users';
 
@@ -217,7 +217,7 @@ export default function AdminUsersPage() {
                       </td>
                       <td className="py-3 px-2">
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${style.bg}`}>
-                          <TierIcon className="w-3 h-3" /> {u.plan}
+                          <TierIcon className="w-3 h-3" /> {tierLabel(u.plan)}
                         </span>
                         {u.plan !== 'Free' && u.downloadCredits === 0 && (
                           <div className="text-[10px] text-amber-600 font-bold mt-1">no credits left</div>

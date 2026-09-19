@@ -45,7 +45,7 @@ const plans = [
     quotaSub: 'Credits never expire — use them anytime',
     features: [
       `${RECHARGE_PLANS.Plus.credits} downloads per recharge`,
-      'Access to Free + Plus tier assets',
+      'Access to ALL asset tiers',
       'High resolution files',
       'Priority email support',
       'Early access to new uploads',
@@ -77,7 +77,7 @@ const plans = [
     id: 'Enterprise' as unknown as PlanTier,
     name: 'Enterprise',
     price: 'Custom',
-    period: 'unlimited',
+    period: null as string | null,
     tagline: 'For large agencies & teams',
     icon: Infinity,
     color: '#0D1A12',
@@ -217,7 +217,7 @@ export default function PricingPage() {
             return (
               <div
                 key={plan.id}
-                className={`relative bg-gradient-to-br ${plan.gradient} border-2 ${plan.border} rounded-3xl p-8 flex flex-col ${isPro || isEnterprise ? 'shadow-[0_20px_60px_rgba(147,51,234,0.15)]' : 'shadow-[0_8px_30px_rgba(0,0,0,0.05)]'} transition-transform hover:-translate-y-1 duration-300`}
+                className={`relative bg-gradient-to-br ${plan.gradient} border-2 ${plan.border} rounded-3xl p-6 xl:p-8 flex flex-col ${isPro ? 'shadow-[0_20px_60px_rgba(147,51,234,0.15)]' : isEnterprise ? 'shadow-[0_20px_60px_rgba(245,158,11,0.18)]' : 'shadow-[0_8px_30px_rgba(0,0,0,0.05)]'} transition-transform hover:-translate-y-1 duration-300`}
               >
                 {/* Badge */}
                 {plan.badge && (
@@ -239,9 +239,15 @@ export default function PricingPage() {
 
                 {/* Price */}
                 <div className="mb-6">
-                  <div className="flex items-end gap-1">
-                    <span className="text-4xl sm:text-5xl font-black text-[#111111]">{plan.price}</span>
-                    <span className="text-zinc-500 font-semibold mb-1.5">/{plan.period}</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className={`font-black text-[#111111] tracking-tight ${isEnterprise ? 'text-3xl sm:text-4xl' : 'text-4xl sm:text-5xl'}`}>
+                      {plan.price}
+                    </span>
+                    {plan.period && (
+                      <span className="text-zinc-500 font-semibold text-sm sm:text-base">
+                        /{plan.period}
+                      </span>
+                    )}
                   </div>
                 </div>
 

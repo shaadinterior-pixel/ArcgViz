@@ -142,7 +142,18 @@ export function effectiveTier(user: { plan?: string; downloadCredits?: number } 
   return 'Free';
 }
 
-/** Enterprise gets the same asset access as Pro. */
+/**
+ * Plus and Pro are merged into one access level: either tier unlocks every
+ * asset tier, including "Pro"-tagged ones. The only difference between the
+ * two recharge packs is how many download credits they add — see
+ * RECHARGE_PLANS (Plus: 350 credits, Pro: 700 credits).
+ */
 export function tierUnlocksProAssets(tier: PlanTier): boolean {
-  return tier === 'Pro' || tier === 'Enterprise';
+  return tier !== 'Free';
+}
+
+/** Display label — Plus and Pro read as one merged tier everywhere a tier badge is shown. */
+export function tierLabel(tier: PlanTier): string {
+  if (tier === 'Plus' || tier === 'Pro') return 'Plus + Pro';
+  return tier;
 }

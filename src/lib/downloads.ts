@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebase';
 import {
-  dayKey, resolveAllowance, effectiveTier,
+  dayKey, resolveAllowance, effectiveTier, tierUnlocksProAssets,
   type DownloadAllowance, type PlanTier,
 } from './plans';
 
@@ -72,7 +72,7 @@ export async function canUserDownload(
   }
 
   // PRO tier assets: need an active recharge (credits remaining) or a free-pro bypass.
-  if (productPlan === 'Pro' && effectiveTier(userData) === 'Free') {
+  if (productPlan === 'Pro' && !tierUnlocksProAssets(effectiveTier(userData))) {
     const freeProRem = userData.freeProDownloadsRemaining || 0;
     if (freeProRem > 0) return { allowed: true, reason: 'FREE_PRO_BYPASS' };
     return { allowed: false, reason: 'Recharge a Plus or Pro pack to download this asset.' };
