@@ -4,7 +4,7 @@ import { adminDb } from '@/lib/firebase-admin';
 import type { Customer, WishlistItem } from '@/lib/store';
 import {
   resolveAllowance, allTimeDownloads, isCreditBalanceExpired, lastCreditEventAt,
-  creditExpiresAt, effectiveTier, ASSIGNABLE_TIERS, type PlanTier,
+  creditExpiryLabel, effectiveTier, ASSIGNABLE_TIERS, type PlanTier,
 } from '@/lib/plans';
 import { orderAmountInr, isRevenueOrder, type OrderRow } from '@/lib/revenue';
 
@@ -100,7 +100,7 @@ export async function fetchAdminCustomers(): Promise<Customer[]> {
           : [],
         freeProDownloadsRemaining: data.freeProDownloadsRemaining || 0,
         planTakenOn: hasActiveBalance ? fmtDate(lastCreditEventAt(data)) : '—',
-        creditsExpireOn: hasActiveBalance ? fmtDate(creditExpiresAt(data)) : '—',
+        creditsExpireOn: creditExpiryLabel(data),
       } as Customer;
     });
 
