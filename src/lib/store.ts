@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import { SUPPORT_EMAIL } from './constants';
 import { fetchAdminCustomers } from '@/app/actions/admin';
+import type { PlanTier } from './plans';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -46,7 +47,7 @@ export type Customer = {
   orders: number;
   status: 'Active' | 'Inactive';
   joinDate: string;
-  plan: 'Free' | 'Pro';
+  plan: PlanTier;
   downloadsUsed?: number;
   downloadsRemaining?: number;
   wishlistCount?: number;
