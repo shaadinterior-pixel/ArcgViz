@@ -229,7 +229,9 @@ export default function AdminUsersPage() {
                         )}
                         {u.creditsExpireOn !== '—' && (
                           <div className="text-[10px] text-[#9CA3AF] font-medium mt-1">
-                            taken {u.planTakenOn} · expires {u.creditsExpireOn}
+                            {u.creditsExpireOn.startsWith('No auto-expiry')
+                              ? `taken ${u.planTakenOn} · ${u.creditsExpireOn}`
+                              : `taken ${u.planTakenOn} · expires ${u.creditsExpireOn}`}
                           </div>
                         )}
                       </td>
@@ -287,7 +289,9 @@ export default function AdminUsersPage() {
                   <div className="text-2xl font-black text-[#111827]">{editing.downloadCredits.toLocaleString('en-IN')} credits</div>
                   {editing.creditsExpireOn !== '—' && (
                     <div className="text-[11px] text-[#9CA3AF] font-medium mt-1">
-                      Taken on {editing.planTakenOn} · valid until {editing.creditsExpireOn}
+                      {editing.creditsExpireOn.startsWith('No auto-expiry')
+                        ? `Taken on ${editing.planTakenOn} · ${editing.creditsExpireOn}`
+                        : `Taken on ${editing.planTakenOn} · valid until ${editing.creditsExpireOn}`}
                     </div>
                   )}
                 </div>
