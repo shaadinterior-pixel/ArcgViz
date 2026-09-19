@@ -2,11 +2,37 @@
 
 import { adminDb } from '@/lib/firebase-admin';
 import type { Customer } from '@/lib/store';
+import { resolveAllowance, allTimeDownloads, ASSIGNABLE_TIERS, type PlanTier } from '@/lib/plans';
+import { orderAmountInr, isRevenueOrder, type OrderRow } from '@/lib/revenue';
 
 export async function fetchAdminCustomers(): Promise<Customer[]> {
   try {
-    const snap = await adminDb.collection('users').get();
-    const customers = snap.docs.map((doc) => {
+    const [usersSnap, orderRows] = await Promise.all([
+      adminDb.collection('users').get(),
+      (async () => {
+        try {
+          const { getAdminClient } = await import('@/lib/supabase-admin');
+          const { data } = await getAdminClient().from('orders').select('*');
+          return (data ?? []) as OrderRow[];
+        } catch {
+          return [] as OrderRow[];
+        }
+      })(),
+    ]);
+
+    // Real per-customer revenue: every completed order linked to this Firestore
+    // user id — recharge packs AND individually purchased Paid products both
+    // land in the same `orders` table, so both count here (Paid products have
+    // their own price, separate from the recharge packs).
+    const spentByUser = new Map<string, number>();
+    const orderCountByUser = new Map<string, number>();
+    for (const order of orderRows) {
+      if (!order.user_id || !isRevenueOrder(order)) continue;
+      spentByUser.set(order.user_id, (spentByUser.get(order.user_id) || 0) + orderAmountInr(order));
+      orderCountByUser.set(order.user_id, (orderCountByUser.get(order.user_id) || 0) + 1);
+    }
+
+    const customers = usersSnap.docs.map((doc) => {
       const data = doc.data();
       let joinDate = 'Unknown';
       if (data.joinDate && typeof data.joinDate.toDate === 'function') {
@@ -17,26 +43,23 @@ export async function fetchAdminCustomers(): Promise<Customer[]> {
         joinDate = new Date(data.joinDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       }
 
-      const plan = (data.plan || 'Free') as 'Free' | 'Plus' | 'Pro';
-      const PLAN_LIMITS = { Free: 10, Plus: 50, Pro: 100 };
-      const limit = PLAN_LIMITS[plan] || 10;
-      
-      const d = new Date();
-      const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      const downloadsUsed = data.monthlyDownloads?.[monthKey] || 0;
-      
+      const plan = (ASSIGNABLE_TIERS.includes(data.plan) ? data.plan : 'Free') as PlanTier;
+      // Same allowance math the download gate itself enforces — never a
+      // separately-hardcoded limit that can drift from the real one.
+      const allowance = resolveAllowance(data);
+
       return {
         id: doc.id,
         name: data.name || 'Unknown',
         email: data.email || 'N/A',
         phone: data.phoneNumber || 'N/A',
-        spent: data.spent || 0,
-        orders: data.orders || 0,
+        spent: spentByUser.get(doc.id) || 0,
+        orders: orderCountByUser.get(doc.id) || 0,
         status: data.status || 'Active',
         joinDate,
         plan,
-        downloadsUsed,
-        downloadsRemaining: Math.max(0, limit - downloadsUsed),
+        downloadsUsed: allTimeDownloads(data),
+        downloadsRemaining: allowance.remaining,
         wishlistCount: Array.isArray(data.wishlist) ? data.wishlist.length : 0,
         freeProDownloadsRemaining: data.freeProDownloadsRemaining || 0,
       } as Customer;
@@ -51,6 +74,9 @@ export async function fetchAdminCustomers(): Promise<Customer[]> {
 
 export async function saveAdminCustomer(customer: Customer, isNew: boolean): Promise<void> {
   try {
+    // `spent` and `orders` are derived from the `orders` table on every fetch —
+    // they are never written here, so a save can never leave a stale number
+    // behind for fetchAdminCustomers to read back.
     const userRef = adminDb.collection('users').doc(customer.id);
     if (isNew) {
       await userRef.set({
@@ -58,8 +84,6 @@ export async function saveAdminCustomer(customer: Customer, isNew: boolean): Pro
         email: customer.email,
         plan: customer.plan,
         status: customer.status,
-        spent: customer.spent || 0,
-        orders: customer.orders || 0,
         joinDate: new Date()
       });
     } else {
@@ -68,8 +92,6 @@ export async function saveAdminCustomer(customer: Customer, isNew: boolean): Pro
         email: customer.email,
         plan: customer.plan,
         status: customer.status,
-        spent: customer.spent || 0,
-        orders: customer.orders || 0
       });
     }
   } catch (error) {

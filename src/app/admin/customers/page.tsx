@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
 import { type Customer } from '@/lib/store';
 import { fetchAdminCustomers, saveAdminCustomer, deleteAdminCustomer } from '@/app/actions/admin';
+import { ASSIGNABLE_TIERS, RECHARGE_PLANS, tierLabel, type PlanTier } from '@/lib/plans';
 
 const EMPTY: Omit<Customer, 'id'> = {
   name: '', email: '', spent: 0, orders: 0,
@@ -162,10 +163,10 @@ export default function AdminCustomersPage() {
                     <td className="px-5 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border ${
                         c.plan === 'Free' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                        c.plan === 'Pro' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                        c.plan === 'Plus' || c.plan === 'Pro' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                         'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
                       }`}>
-                        {c.plan === 'Pro' ? 'Plus + Pro' : (c.plan || 'Free')}
+                        {tierLabel(c.plan)}
                       </span>
                     </td>
                     <td className="px-5 py-4">
@@ -243,9 +244,14 @@ export default function AdminCustomersPage() {
                 <div className="space-y-2">
                   <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Plan Tier</label>
                   <select className="w-full bg-[#F8FAF9] border border-[#E2EDE8] rounded-xl px-4 py-3 h-12 text-sm font-medium text-[#111111] focus:outline-none focus:border-[#24B86C] focus:ring-2 focus:ring-[#24B86C]/20"
-                    value={editing.plan} onChange={e=>setEditing({...editing, plan:e.target.value as 'Free'|'Pro'})}>
-                    <option value="Free">Free</option>
-                    <option value="Pro">Plus + Pro</option>
+                    value={editing.plan} onChange={e=>setEditing({...editing, plan:e.target.value as PlanTier})}>
+                    {ASSIGNABLE_TIERS.map(tier => (
+                      <option key={tier} value={tier}>
+                        {tier === 'Plus' ? `Plus (${RECHARGE_PLANS.Plus.credits} downloads)`
+                          : tier === 'Pro' ? `Pro (${RECHARGE_PLANS.Pro.credits} downloads)`
+                          : tier}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="space-y-2">
