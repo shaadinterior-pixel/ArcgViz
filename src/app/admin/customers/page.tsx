@@ -170,7 +170,9 @@ export default function AdminCustomersPage() {
                       </span>
                       {c.creditsExpireOn && c.creditsExpireOn !== '—' && (
                         <span className="block text-[10px] text-foreground/40 mt-1">
-                          taken {c.planTakenOn} · expires {c.creditsExpireOn}
+                          {c.creditsExpireOn.startsWith('No auto-expiry')
+                            ? `taken ${c.planTakenOn} · ${c.creditsExpireOn}`
+                            : `taken ${c.planTakenOn} · expires ${c.creditsExpireOn}`}
                         </span>
                       )}
                     </td>
