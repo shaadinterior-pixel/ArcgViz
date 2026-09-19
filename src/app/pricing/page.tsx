@@ -42,7 +42,7 @@ const plans = [
     border: 'border-[#24B86C]/30',
     badge: 'Most Popular',
     quota: `${RECHARGE_PLANS.Plus.credits} downloads`,
-    quotaSub: 'Credits never expire — use them anytime',
+    quotaSub: 'Valid for 30 days from your last recharge',
     features: [
       `${RECHARGE_PLANS.Plus.credits} downloads per recharge`,
       'Access to ALL asset tiers',
@@ -63,7 +63,7 @@ const plans = [
     border: 'border-purple-300',
     badge: 'Best Value',
     quota: `${RECHARGE_PLANS.Pro.credits} downloads`,
-    quotaSub: 'Double the Plus pack — credits never expire',
+    quotaSub: 'Double the Plus pack · valid for 30 days',
     features: [
       `${RECHARGE_PLANS.Pro.credits} downloads per recharge`,
       'Access to ALL asset tiers',
@@ -167,8 +167,8 @@ export default function PricingPage() {
             Recharge &amp; Download
           </h1>
           <p className="text-xl text-zinc-500 font-medium max-w-2xl mx-auto">
-            Buy a download pack once. Credits never expire — when they run out, just recharge again.
-            No monthly billing, no auto-renewal.
+            Buy a download pack once. Credits stay valid for 30 days from your last recharge —
+            top up anytime to keep the clock running. No monthly billing, no auto-renewal.
           </p>
         </div>
 
@@ -326,7 +326,7 @@ export default function PricingPage() {
             {[
               { step: '1', title: 'Pick a pack', body: `Plus gives you ${RECHARGE_PLANS.Plus.credits} downloads for ₹${RECHARGE_PLANS.Plus.priceInr}. Pro doubles it to ${RECHARGE_PLANS.Pro.credits} for ₹${RECHARGE_PLANS.Pro.priceInr}.` },
               { step: '2', title: 'Pay securely', body: 'Pay with UPI, card or netbanking through Razorpay. Credits land in your account instantly.' },
-              { step: '3', title: 'Recharge again', body: 'Credits never expire. When the balance hits zero you drop back to the free daily allowance — top up whenever you like.' },
+              { step: '3', title: 'Recharge again', body: 'Credits stay valid for 30 days from your last recharge. If the balance hits zero or 30 days pass, you drop back to the free daily allowance until you top up again.' },
             ].map(s => (
               <div key={s.step} className="flex flex-col items-center text-center">
                 <div className="w-10 h-10 rounded-2xl bg-[#24B86C] text-white font-black flex items-center justify-center mb-3">{s.step}</div>

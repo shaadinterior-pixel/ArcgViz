@@ -168,6 +168,11 @@ export default function AdminCustomersPage() {
                       }`}>
                         {tierLabel(c.plan)}
                       </span>
+                      {c.creditsExpireOn && c.creditsExpireOn !== '—' && (
+                        <span className="block text-[10px] text-foreground/40 mt-1">
+                          taken {c.planTakenOn} · expires {c.creditsExpireOn}
+                        </span>
+                      )}
                     </td>
                     <td className="px-5 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider

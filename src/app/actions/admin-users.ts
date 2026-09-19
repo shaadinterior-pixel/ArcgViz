@@ -11,7 +11,10 @@
 import { FieldValue } from 'firebase-admin/firestore';
 import { adminDb, adminAuth } from '@/lib/firebase-admin';
 import { isAdminEmail } from '@/lib/constants';
-import { resolveAllowance, effectiveTier, allTimeDownloads, ASSIGNABLE_TIERS, type PlanTier } from '@/lib/plans';
+import {
+  resolveAllowance, effectiveTier, allTimeDownloads, isCreditBalanceExpired,
+  lastCreditEventAt, creditExpiresAt, ASSIGNABLE_TIERS, type PlanTier,
+} from '@/lib/plans';
 
 export type AdminUser = {
   id: string;
@@ -30,6 +33,10 @@ export type AdminUser = {
   purchaseCount: number;
   spentInr: number;
   joinDate: string;
+  /** When the current balance was last topped up (recharge or manual grant). '—' if never. */
+  planTakenOn: string;
+  /** When the current balance goes stale. '—' for Free/Enterprise or an already-expired balance. */
+  creditsExpireOn: string;
   status: string;
 };
 
@@ -52,8 +59,11 @@ async function requireAdmin(idToken: string): Promise<string> {
 }
 
 function toDateString(value: unknown): string {
-  const raw = value as { toDate?: () => Date; _seconds?: number } | string | undefined;
+  const raw = value as { toDate?: () => Date; _seconds?: number } | Date | string | undefined;
   try {
+    if (raw instanceof Date) {
+      return raw.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
     if (raw && typeof (raw as { toDate?: () => Date }).toDate === 'function') {
       return (raw as { toDate: () => Date }).toDate().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
     }
@@ -98,6 +108,10 @@ export async function fetchAdminUsers(idToken: string): Promise<ActionResult<Adm
         else spentInr += Number(rec.amountInr) || 0;
       });
 
+      // Only meaningful while the balance is actually active — an expired or
+      // never-recharged account has no "expires on" date to show.
+      const hasActiveBalance = effectiveTier(data) !== 'Free' && !isCreditBalanceExpired(data);
+
       return {
         id: doc.id,
         name: String(data.name || 'Unknown'),
@@ -115,6 +129,8 @@ export async function fetchAdminUsers(idToken: string): Promise<ActionResult<Adm
         purchaseCount: purchases.data().count,
         spentInr,
         joinDate: toDateString(data.joinDate),
+        planTakenOn: hasActiveBalance ? toDateString(lastCreditEventAt(data)) : '—',
+        creditsExpireOn: hasActiveBalance ? toDateString(creditExpiresAt(data)) : '—',
         status: String(data.status || 'Active'),
       } satisfies AdminUser;
     }));
@@ -160,7 +176,11 @@ export async function grantCreditsToUser(
       const snap = await tx.get(userRef);
       if (!snap.exists) throw new Error('That user no longer exists.');
 
-      const current = Math.max(0, Number(snap.data()?.downloadCredits) || 0);
+      // An expired balance is spent — don't let a top-up add on top of a
+      // stale number that resolveAllowance would already be treating as 0.
+      const current = isCreditBalanceExpired(snap.data())
+        ? 0
+        : Math.max(0, Number(snap.data()?.downloadCredits) || 0);
       // Never let a deduction push the balance below zero.
       const applied = amount < 0 ? -Math.min(current, -amount) : amount;
       const balance = current + applied;

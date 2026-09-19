@@ -5,7 +5,7 @@ import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getAdminClient } from '@/lib/supabase-admin';
 import { getRazorpayClient, verifyPaymentSignature } from '@/lib/razorpay';
 import { SUPPORT_EMAIL } from '@/lib/constants';
-import { getRechargePlan, type RechargePlan } from '@/lib/plans';
+import { getRechargePlan, isCreditBalanceExpired, type RechargePlan } from '@/lib/plans';
 
 export const runtime = 'nodejs';
 
@@ -141,6 +141,11 @@ export async function POST(request: Request) {
         const existing = await tx.get(rechargeRef);
         if (existing.exists) return; // already credited — nothing to do
 
+        // A stale (expired) balance is spent, not carried forward — start the
+        // new pack from zero instead of adding on top of it.
+        const userSnap = await tx.get(userRef);
+        const staleBalance = isCreditBalanceExpired(userSnap.data());
+
         tx.set(rechargeRef, {
           plan: plan.id,
           credits: plan.credits,
@@ -152,7 +157,7 @@ export async function POST(request: Request) {
 
         tx.set(userRef, {
           plan: plan.id,
-          downloadCredits: FieldValue.increment(plan.credits),
+          downloadCredits: staleBalance ? plan.credits : FieldValue.increment(plan.credits),
           totalCreditsPurchased: FieldValue.increment(plan.credits),
           lastRechargeAt: FieldValue.serverTimestamp(),
         }, { merge: true });

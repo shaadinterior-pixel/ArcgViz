@@ -2,8 +2,10 @@
 // Consumer data lives in Firebase. Tracks the download credit balance, the free
 // daily allowance, recharge history and lifetime purchases for 'Paid' products.
 //
-// Recharge model: paid credits are spent first and never expire. Once the balance
-// is empty the user falls back to FREE_DAILY_DOWNLOADS per day.
+// Recharge model: paid credits are spent first, and go stale 30 days after the
+// last recharge/grant (see isCreditBalanceExpired in lib/plans). Once the
+// balance is empty — spent or expired — the user falls back to
+// FREE_DAILY_DOWNLOADS per day.
 
 import {
   doc, getDoc, setDoc, updateDoc, collection,

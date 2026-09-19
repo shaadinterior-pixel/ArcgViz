@@ -2,7 +2,10 @@
 
 import { adminDb } from '@/lib/firebase-admin';
 import type { Customer } from '@/lib/store';
-import { resolveAllowance, allTimeDownloads, ASSIGNABLE_TIERS, type PlanTier } from '@/lib/plans';
+import {
+  resolveAllowance, allTimeDownloads, isCreditBalanceExpired, lastCreditEventAt,
+  creditExpiresAt, effectiveTier, ASSIGNABLE_TIERS, type PlanTier,
+} from '@/lib/plans';
 import { orderAmountInr, isRevenueOrder, type OrderRow } from '@/lib/revenue';
 
 export async function fetchAdminCustomers(): Promise<Customer[]> {
@@ -47,6 +50,10 @@ export async function fetchAdminCustomers(): Promise<Customer[]> {
       // Same allowance math the download gate itself enforces — never a
       // separately-hardcoded limit that can drift from the real one.
       const allowance = resolveAllowance(data);
+      const hasActiveBalance = effectiveTier(data) !== 'Free' && !isCreditBalanceExpired(data);
+      const fmtDate = (d: Date | null) => d
+        ? d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+        : '—';
 
       return {
         id: doc.id,
@@ -62,6 +69,8 @@ export async function fetchAdminCustomers(): Promise<Customer[]> {
         downloadsRemaining: allowance.remaining,
         wishlistCount: Array.isArray(data.wishlist) ? data.wishlist.length : 0,
         freeProDownloadsRemaining: data.freeProDownloadsRemaining || 0,
+        planTakenOn: hasActiveBalance ? fmtDate(lastCreditEventAt(data)) : '—',
+        creditsExpireOn: hasActiveBalance ? fmtDate(creditExpiresAt(data)) : '—',
       } as Customer;
     });
 

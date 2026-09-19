@@ -222,6 +222,11 @@ export default function AdminUsersPage() {
                         {u.plan !== 'Free' && u.downloadCredits === 0 && (
                           <div className="text-[10px] text-amber-600 font-bold mt-1">no credits left</div>
                         )}
+                        {u.creditsExpireOn !== '—' && (
+                          <div className="text-[10px] text-[#9CA3AF] font-medium mt-1">
+                            taken {u.planTakenOn} · expires {u.creditsExpireOn}
+                          </div>
+                        )}
                       </td>
                       <td className="py-3 px-2 text-right font-black text-[#111827]">
                         {u.downloadCredits > 0
@@ -275,6 +280,11 @@ export default function AdminUsersPage() {
                 <div>
                   <div className="text-[11px] font-bold text-[#9CA3AF] uppercase tracking-widest">Current balance</div>
                   <div className="text-2xl font-black text-[#111827]">{editing.downloadCredits.toLocaleString('en-IN')} credits</div>
+                  {editing.creditsExpireOn !== '—' && (
+                    <div className="text-[11px] text-[#9CA3AF] font-medium mt-1">
+                      Taken on {editing.planTakenOn} · valid until {editing.creditsExpireOn}
+                    </div>
+                  )}
                 </div>
                 <div className="text-right text-xs text-[#6B7280]">
                   <div>{editing.totalDownloads} downloads</div>

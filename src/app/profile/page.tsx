@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { getCurrentUser, getUserProfile, signOut, type PlanTier, getWishlist, setupRecaptcha, sendPhoneOtp, confirmPhoneOtp, type ConfirmationResult } from '@/lib/auth';
 import { getUserPurchasedProductIds, getRechargeHistory, type RechargeRecord } from '@/lib/downloads';
-import { resolveAllowance, effectiveTier, allTimeDownloads, RECHARGE_PLANS } from '@/lib/plans';
+import { resolveAllowance, effectiveTier, allTimeDownloads, creditExpiresAt, RECHARGE_PLANS } from '@/lib/plans';
 import { supabase } from '@/lib/supabase';
 import { updateProfile } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -153,6 +153,9 @@ export default function ProfilePage() {
   // Credits bar is measured against the biggest pack so the fill stays meaningful.
   const creditPercent = Math.min((allowance.credits / RECHARGE_PLANS.Pro.credits) * 100, 100);
   const dailyPercent = Math.min((allowance.dailyUsed / allowance.dailyLimit) * 100, 100);
+  const creditExpiryDate = onCredits
+    ? creditExpiresAt(profile).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    : null;
 
   // Counts the whole history, including downloads taken before the recharge model.
   const totalDownloads = allTimeDownloads(profile);
@@ -310,7 +313,7 @@ export default function ProfilePage() {
 
               {onCredits ? (
                 <p className="text-xs text-zinc-400 font-medium">
-                  {allowance.credits} paid downloads remaining · Credits never expire
+                  {allowance.credits} paid downloads remaining · Valid until {creditExpiryDate}
                 </p>
               ) : (
                 <p className="text-xs text-zinc-400 font-medium">
@@ -506,7 +509,7 @@ export default function ProfilePage() {
                       <h4 className="font-black text-[#111111] mb-2">No recharges yet</h4>
                       <p className="text-sm text-zinc-500 font-medium mb-6 max-w-xs">
                         You are on the free tier — {allowance.dailyLimit} downloads every day.
-                        Recharge to get a bigger balance that never expires.
+                        Recharge to get a bigger balance, valid for 30 days.
                       </p>
                       <Link href="/pricing">
                         <Button className="h-11 px-6 rounded-xl bg-[#111111] hover:bg-[#24B86C] text-white font-bold text-sm transition-all">

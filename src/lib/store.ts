@@ -52,6 +52,10 @@ export type Customer = {
   downloadsRemaining?: number;
   wishlistCount?: number;
   freeProDownloadsRemaining?: number;
+  /** When the current balance was last topped up. '—' if never / not applicable. */
+  planTakenOn?: string;
+  /** When the current balance goes stale. '—' for Free/Enterprise or an already-expired balance. */
+  creditsExpireOn?: string;
 };
 
 export type Order = {

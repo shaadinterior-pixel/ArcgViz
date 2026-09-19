@@ -1,8 +1,9 @@
 // ─── Download Plans ───────────────────────────────────────────────────────────
 // Recharge model, NOT a subscription: a recharge adds download credits to the
-// user's balance and those credits stay until they are spent. When the balance
-// hits zero the user drops back to the free daily allowance until they recharge
-// again. Nothing resets monthly.
+// user's balance and those credits stay until they are spent OR until they go
+// stale — see CREDIT_EXPIRY_DAYS below. Once the balance is empty (spent or
+// expired) the user drops back to the free daily allowance until they recharge
+// again.
 //
 // This file is imported by both client and server — it must never contain secrets.
 
@@ -54,6 +55,79 @@ export function dayKey(date = new Date()): string {
   return `${year}-${month}-${day}`;
 }
 
+/** A paid balance goes stale this many days after the most recent recharge or grant. */
+export const CREDIT_EXPIRY_DAYS = 30;
+
+/**
+ * Balances that predate the expiry policy get a fresh 30-day countdown from
+ * this rollout date instead of their real (possibly much older) purchase
+ * date — nobody loses credits the instant this shipped just because they
+ * recharged a while back. Once CREDIT_EXPIRY_DAYS have passed since rollout,
+ * every account's own lastRechargeAt/lastManualGrantAt takes over naturally.
+ */
+export const CREDIT_EXPIRY_ROLLOUT_AT = new Date('2026-09-19T00:00:00Z');
+
+/** Firestore Timestamps (client or admin SDK), a REST-style `_seconds`, a Date, or an ISO string. */
+type TimestampLike = { toDate: () => Date } | { _seconds: number } | Date | string | number | null | undefined;
+
+function toMillis(value: TimestampLike): number {
+  if (!value) return 0;
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') {
+    const parsed = new Date(value).getTime();
+    return Number.isNaN(parsed) ? 0 : parsed;
+  }
+  if (typeof (value as { toDate?: () => Date }).toDate === 'function') {
+    return (value as { toDate: () => Date }).toDate().getTime();
+  }
+  if (typeof (value as { _seconds?: number })._seconds === 'number') {
+    return (value as { _seconds: number })._seconds * 1000;
+  }
+  return 0;
+}
+
+export type ExpiryInput = {
+  lastRechargeAt?: TimestampLike;
+  lastManualGrantAt?: TimestampLike;
+};
+
+/**
+ * The real timestamp of the most recent recharge or manual grant — for
+ * display ("plan taken on") — unlike creditExpiresAt this is NOT clamped to
+ * the rollout date. Null if the account has never recharged or been granted
+ * credits.
+ */
+export function lastCreditEventAt(user: ExpiryInput | null | undefined): Date | null {
+  const ms = Math.max(toMillis(user?.lastRechargeAt), toMillis(user?.lastManualGrantAt));
+  return ms > 0 ? new Date(ms) : null;
+}
+
+/** The date a user's current balance goes stale — see isCreditBalanceExpired. */
+export function creditExpiresAt(user: ExpiryInput | null | undefined): Date {
+  const lastEvent = Math.max(
+    toMillis(user?.lastRechargeAt),
+    toMillis(user?.lastManualGrantAt),
+    CREDIT_EXPIRY_ROLLOUT_AT.getTime(),
+  );
+  return new Date(lastEvent + CREDIT_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
+}
+
+/**
+ * True once more than CREDIT_EXPIRY_DAYS have passed since the most recent
+ * recharge or manual grant (or the rollout date, whichever is later). An
+ * expired balance is treated as spent everywhere credits are read.
+ */
+export function isCreditBalanceExpired(user: ExpiryInput | null | undefined, now = new Date()): boolean {
+  const lastEvent = Math.max(
+    toMillis(user?.lastRechargeAt),
+    toMillis(user?.lastManualGrantAt),
+    CREDIT_EXPIRY_ROLLOUT_AT.getTime(),
+  );
+  const expiresAt = lastEvent + CREDIT_EXPIRY_DAYS * 24 * 60 * 60 * 1000;
+  return now.getTime() > expiresAt;
+}
+
 export type DownloadAllowance = {
   /** Where the next download would be taken from. */
   source: 'credits' | 'daily';
@@ -67,18 +141,19 @@ export type DownloadAllowance = {
   allowed: boolean;
 };
 
-type AllowanceInput = {
+type AllowanceInput = ExpiryInput & {
   downloadCredits?: number;
   dailyDownloads?: Record<string, number>;
 };
 
 /**
- * Paid credits are spent first; once they run out the user falls back to the
- * free daily allowance. Shared by the client (to display balances) and the
- * download API (to enforce them) so the two can never disagree.
+ * Paid credits are spent first; once they run out — or once they go stale,
+ * see isCreditBalanceExpired — the user falls back to the free daily
+ * allowance. Shared by the client (to display balances) and the download API
+ * (to enforce them) so the two can never disagree.
  */
 export function resolveAllowance(user: AllowanceInput | null | undefined, today = dayKey()): DownloadAllowance {
-  const credits = Math.max(0, Number(user?.downloadCredits ?? 0));
+  const credits = isCreditBalanceExpired(user) ? 0 : Math.max(0, Number(user?.downloadCredits ?? 0));
   const dailyUsed = Math.max(0, Number(user?.dailyDownloads?.[today] ?? 0));
   const dailyRemaining = Math.max(0, FREE_DAILY_DOWNLOADS - dailyUsed);
 
@@ -130,10 +205,11 @@ export function allTimeDownloads(user: {
 
 /**
  * The tier a user effectively has right now. A recharge tier only counts while
- * there are credits left to spend — an exhausted balance is back to Free.
+ * there are credits left to spend — a balance that is exhausted OR expired
+ * (see isCreditBalanceExpired) is back to Free.
  */
-export function effectiveTier(user: { plan?: string; downloadCredits?: number } | null | undefined): PlanTier {
-  const credits = Number(user?.downloadCredits ?? 0);
+export function effectiveTier(user: (ExpiryInput & { plan?: string; downloadCredits?: number }) | null | undefined): PlanTier {
+  const credits = isCreditBalanceExpired(user) ? 0 : Number(user?.downloadCredits ?? 0);
   if (credits <= 0) return 'Free';
   const plan = String(user?.plan || 'Free');
   if (plan === 'Enterprise') return 'Enterprise';
